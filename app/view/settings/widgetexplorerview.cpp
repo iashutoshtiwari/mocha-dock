@@ -21,7 +21,6 @@
 #include <KSvg/Svg>
 #include <KWindowEffects>
 #include <KWindowSystem>
-#include <KX11Extras>
 #include <KPackage/Package>
 
 namespace Latte {
@@ -190,11 +189,7 @@ void WidgetExplorerView::updateEffects()
         setMask(QRegion());
     }
 
-    if (KX11Extras::compositingActive()) {
-        KWindowEffects::enableBlurBehind(this, true, fixedMask);
-    } else {
-        KWindowEffects::enableBlurBehind(this, false);
-    }
+    KWindowEffects::enableBlurBehind(this, true, fixedMask);
 }
 
 void WidgetExplorerView::hideConfigWindow()

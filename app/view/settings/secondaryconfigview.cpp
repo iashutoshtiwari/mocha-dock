@@ -6,7 +6,6 @@
 #include "secondaryconfigview.h"
 
 // local
-#include <config-latte.h>
 #include "primaryconfigview.h"
 #include "../panelshadows_p.h"
 #include "../view.h"
@@ -23,7 +22,6 @@
 #include <KLocalizedContext>
 #include <KWindowEffects>
 #include <KWindowSystem>
-#include <KX11Extras>
 #include <KPackage/Package>
 
 namespace Latte {
@@ -60,9 +58,6 @@ void SecondaryConfigView::init()
     setSource(source);
     syncGeometry();
 
-    if (m_parent && KWindowSystem::isPlatformX11()) {
-        m_parent->requestActivate();
-    }
 }
 
 QRect SecondaryConfigView::geometryWhenVisible() const
@@ -151,11 +146,6 @@ void SecondaryConfigView::syncGeometry()
     setMinimumSize(size);
     resize(size);
 
-    //! after placement request to activate the main config window in order to avoid
-    //! rare cases of closing settings window from secondaryConfigView->focusOutEvent
-    if (m_parent && KWindowSystem::isPlatformX11()) {
-        m_parent->requestActivate();
-    }
 }
 
 void SecondaryConfigView::showEvent(QShowEvent *ev)
@@ -227,11 +217,7 @@ void SecondaryConfigView::updateEffects()
         setMask(QRegion());
     }
 
-    if (KX11Extras::compositingActive()) {
-        KWindowEffects::enableBlurBehind(this, true, fixedMask);
-    } else {
-        KWindowEffects::enableBlurBehind(this, false);
-    }
+    KWindowEffects::enableBlurBehind(this, true, fixedMask);
 }
 
 //!BEGIN borders

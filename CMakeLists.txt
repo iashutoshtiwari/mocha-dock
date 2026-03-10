@@ -71,27 +71,6 @@ find_package(LayerShellQt REQUIRED)
 find_package(LibTaskManager REQUIRED)
 add_definitions(-DPLASMA_WORKSPACE_VERSION="${LibTaskManager_VERSION}")
 
-find_package(X11 REQUIRED)
-set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
-    URL "http://www.x.org"
-    TYPE OPTIONAL
-    PURPOSE "Required for building the X11 based workspace")
-
-if(X11_FOUND)
-    find_package(XCB MODULE REQUIRED COMPONENTS XCB RANDR SHAPE EVENT)
-    set_package_properties(XCB PROPERTIES TYPE REQUIRED)
-
-    if(NOT X11_SM_FOUND)
-        message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.
-                \nPlease install libSM.\n")
-    endif(NOT X11_SM_FOUND)
-
-endif()
-
-if(X11_FOUND AND XCB_XCB_FOUND)
-    set(HAVE_X11 ON)
-endif()
-
 
 find_package(QtWaylandScanner REQUIRED)
 find_package(Qt${QT_MAJOR_VERSION}WaylandClient)

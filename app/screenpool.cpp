@@ -7,7 +7,6 @@
 #include "screenpool.h"
 
 // local
-#include <config-latte.h>
 #include "primaryoutputwatcher.h"
 
 // Qt
@@ -20,13 +19,6 @@
 #include <KLocalizedString>
 #include <KWindowSystem>
 
-// X11
-#if HAVE_X11
-#include <private/qtx11extras_p.h>
-#include <xcb/randr.h>
-#include <xcb/xcb.h>
-#include <xcb/xcb_event.h>
-#endif
 
 namespace Latte {
 
@@ -87,10 +79,6 @@ void ScreenPool::load()
         }
 
         onScreenAdded(screen);
-    }
-
-    if (KWindowSystem::isPlatformX11()) {
-        connect(qGuiApp, &QGuiApplication::primaryScreenChanged, this, &ScreenPool::primaryScreenChanged, Qt::UniqueConnection);
     }
 
     connect(m_primaryWatcher, &PrimaryOutputWatcher::primaryOutputNameChanged, this, &ScreenPool::onPrimaryOutputNameChanged, Qt::UniqueConnection);

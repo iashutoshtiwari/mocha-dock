@@ -8,7 +8,6 @@
 #include "infoview.h"
 
 // local
-#include <config-latte.h>
 #include "wm/abstractwindowinterface.h"
 #include "view/panelshadows_p.h"
 
@@ -23,7 +22,6 @@
 #include <KLocalizedContext>
 #include <KPackage/Package>
 #include <KWindowSystem>
-#include <KX11Extras>
 
 namespace Latte {
 
@@ -46,12 +44,7 @@ InfoView::InfoView(Latte::Corona *corona, QString message, QScreen *screen, QWin
     setScreen(screen);
     setFlags(wFlags());
 
-    if (KWindowSystem::isPlatformX11()) {
-        m_trackedWindowId = winId();
-        m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
-    } else {
-        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &InfoView::updateWaylandId);
-    }
+    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &InfoView::updateWaylandId);
 
     init();
 }
@@ -160,7 +153,7 @@ bool InfoView::event(QEvent *e)
 
 void InfoView::setOnActivities(QStringList activities)
 {
-    KX11Extras::setOnActivities(winId(), activities);
+    // On Wayland, activity management is handled by the compositor
 }
 
 }

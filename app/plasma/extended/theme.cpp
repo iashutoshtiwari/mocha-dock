@@ -23,9 +23,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-// X11
 #include <KWindowSystem>
-#include <KX11Extras>
 
 #define DEFAULTCOLORSCHEME "default.colors"
 #define REVERSEDCOLORSCHEME "reversed.colors"
@@ -45,23 +43,8 @@ Theme::Theme(KSharedConfig::Ptr config, QObject *parent) :
 
     m_corona = qobject_cast<Latte::Corona *>(parent);
 
-    //! compositing tracking
-    if (KWindowSystem::isPlatformWayland()) {
-        //! TODO: Wayland compositing active
-        m_compositing = true;
-    } else {
-        connect(KX11Extras::self(), &KX11Extras::compositingChanged
-                , this, [&](bool enabled) {
-            if (m_compositing == enabled)
-                return;
-
-            m_compositing = enabled;
-            emit compositingChanged();
-        });
-
-        m_compositing = KX11Extras::compositingActive();
-    }
-    //!
+    //! compositing is always active on Wayland
+    m_compositing = true;
 
     loadConfig();
 

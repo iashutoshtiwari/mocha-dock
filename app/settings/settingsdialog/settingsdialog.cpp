@@ -34,7 +34,6 @@
 #include <KMessageBox>
 #include <KWindowSystem>
 #include <KIO/OpenFileManagerWindowJob>
-#include <KX11Extras>
 
 
 namespace Latte {
@@ -607,9 +606,6 @@ void SettingsDialog::dropEvent(QDropEvent *event)
 
 void SettingsDialog::updateWindowActivities()
 {
-    if (KWindowSystem::isPlatformX11()) {
-        KX11Extras::setOnActivities(winId(), QStringList());
-    }
 }
 
 void SettingsDialog::save()

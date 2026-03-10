@@ -8,7 +8,6 @@
 #include "primaryconfigview.h"
 
 // local
-#include <config-latte.h>
 #include "canvasconfigview.h"
 #include "indicatoruimanager.h"
 #include "secondaryconfigview.h"
@@ -32,7 +31,6 @@
 #include <KWindowEffects>
 #include <KWindowSystem>
 #include <KPackage/Package>
-#include <KX11Extras>
 
 #define CANVASWINDOWINTERVAL 50
 #define PRIMARYWINDOWINTERVAL 250
@@ -130,11 +128,7 @@ void PrimaryConfigView::setOnActivities(QStringList activities)
 void PrimaryConfigView::requestActivate()
 {
     if (m_latteView && m_latteView->visibility()) {
-        if (KWindowSystem::isPlatformX11()) {
-            m_latteView->visibility()->setViewOnFrontLayer();
-        } else {
-            m_corona->wm()->requestActivate(m_latteView->positioner()->trackedWindowId());
-        }
+        m_corona->wm()->requestActivate(m_latteView->positioner()->trackedWindowId());
     }
 
     if (m_secConfigView) {
@@ -640,11 +634,7 @@ void PrimaryConfigView::updateEffects()
         setMask(QRegion());
     }
 
-    if (KX11Extras::compositingActive()) {
-        KWindowEffects::enableBlurBehind(this, true, fixedMask);
-    } else {
-        KWindowEffects::enableBlurBehind(this, false);
-    }
+    KWindowEffects::enableBlurBehind(this, true, fixedMask);
 }
 
 }

@@ -17,8 +17,6 @@
 // KDE
 #include <KWindowSystem>
 
-// X11
-#include <NETWM>
 
 namespace Latte {
 namespace ViewPart {

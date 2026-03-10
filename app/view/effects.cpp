@@ -6,7 +6,6 @@
 #include "effects.h"
 
 // local
-#include <config-latte.h>
 #include <coretypes.h>
 #include "panelshadows_p.h"
 #include "view.h"
@@ -19,7 +18,6 @@
 // KDE
 #include <KWindowEffects>
 #include <KWindowSystem>
-#include <KX11Extras>
 
 
 namespace Latte {
@@ -56,19 +54,6 @@ void Effects::init()
     connect(m_view, &QQuickWindow::widthChanged, this, &Effects::updateMask);
     connect(m_view, &QQuickWindow::heightChanged, this, &Effects::updateMask);
     connect(m_view, &Latte::View::behaveAsPlasmaPanelChanged, this, &Effects::updateMask);
-    connect(KX11Extras::self(), &KX11Extras::compositingChanged, this, [&]() {
-        if (!KX11Extras::compositingActive() && !m_view->behaveAsPlasmaPanel()) {
-            setMask(m_rect);
-        }
-
-        updateMask();
-    });
-
-    connect(this, &Effects::rectChanged, this, [&]() {
-        if (!KX11Extras::compositingActive() && !m_view->behaveAsPlasmaPanel()) {
-            setMask(m_rect);
-        }
-    });
 
     connect(this, &Effects::backgroundRadiusChanged, this, &Effects::updateBackgroundCorners);
 
@@ -308,21 +293,8 @@ void Effects::setInputMask(QRect area)
 
     m_inputMask = area;
 
-    if (KWindowSystem::isPlatformX11()) {
-        if (m_view->devicePixelRatio() != 1.0) {
-            //!Fix for X11 Global Scale
-            auto ratio = m_view->devicePixelRatio();
-            area = QRect(qRound(area.x() * ratio),
-                         qRound(area.y() * ratio),
-                         qRound(area.width()*ratio),
-                         qRound(area.height() * ratio));
-        }
-
-        m_corona->wm()->setInputMask(m_view, area);
-    } else {
-        //under wayland mask() is providing the Input Area
-        m_view->setMask(area);
-    }
+    //under wayland mask() is providing the Input Area
+    m_view->setMask(area);
 
     emit inputMaskChanged();
 }
@@ -471,51 +443,7 @@ void Effects::updateBackgroundCorners()
 
 void Effects::updateMask()
 {
-    if (KX11Extras::compositingActive()) {
-        if (KWindowSystem::isPlatformX11()) {
-            if (m_view->behaveAsPlasmaPanel()) {
-                // set as NULL in order for plasma framrworks to identify NULL Mask properly
-                m_view->setMask(QRect(-1, -1, 0, 0));
-            } else {
-                m_view->setMask(QRect(0, 0, m_view->width(), m_view->height()));
-            }
-        } else {
-            // under wayland do nothing
-        }
-    } else {
-        QRegion fixedMask;
-
-        QRect maskRect = m_view->behaveAsPlasmaPanel() ? QRect(0,0, m_view->width(), m_view->height()) : m_mask;
-
-        if (m_backgroundRadiusEnabled) {
-            //! CustomBackground way
-            fixedMask = customMask(QRect(0,0,maskRect.width(), maskRect.height()));
-        } else {
-            //! Plasma::Theme way
-            //! this is used when compositing is disabled and provides
-            //! the correct way for the mask to be painted in order for
-            //! rounded corners to be shown correctly
-            //! the enabledBorders check was added because there was cases
-            //! that the mask region wasn't calculated correctly after location changes
-            if (!m_panelBackgroundSvg) {
-                return;
-            }
-
-            const QVariant maskProperty = m_panelBackgroundSvg->property("mask");
-            if (static_cast<QMetaType::Type>(maskProperty.type()) == QMetaType::QRegion) {
-                fixedMask = maskProperty.value<QRegion>();
-            }
-        }
-
-        fixedMask.translate(maskRect.x(), maskRect.y());
-
-        //! fix for KF5.32 that return empty QRegion's for the mask
-        if (fixedMask.isEmpty()) {
-            fixedMask = QRegion(maskRect);
-        }
-
-        m_view->setMask(fixedMask);
-    }
+    // compositing is always active on Wayland, nothing to do
 }
 
 void Effects::clearShadows()
@@ -569,14 +497,6 @@ void Effects::updateEffects()
                 //! Latte is now using GtkFrameExtents so Effects geometries must be adjusted
                 //! windows that use GtkFrameExtents and apply Effects on them they take GtkFrameExtents
                 //! as granted
-                if (KWindowSystem::isPlatformX11() && !m_view->byPassWM()) {
-                    if (m_view->location() == Plasma::Types::BottomEdge) {
-                        fY = qMax(0, fY - m_view->headThicknessGap());
-                    } else if (m_view->location() == Plasma::Types::RightEdge) {
-                        fX = qMax(0, fX - m_view->headThicknessGap());
-                    }
-                }
-
                 //! There are cases that mask is NULL even though it should not
                 //! Example: SidebarOnDemand from v0.10 that BEHAVEASPLASMAPANEL in EditMode
                 //! switching multiple times between inConfigureAppletsMode and LiveEditMode

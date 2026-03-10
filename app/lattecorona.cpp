@@ -42,7 +42,6 @@
 #include "wm/abstractwindowinterface.h"
 #include "wm/schemecolors.h"
 #include "wm/waylandinterface.h"
-#include "wm/xwindowinterface.h"
 #include "wm/tracker/lastactivewindow.h"
 #include "wm/tracker/schemes.h"
 #include "wm/tracker/windowstracker.h"
@@ -105,12 +104,8 @@ Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString
 {
     connect(qApp, &QApplication::aboutToQuit, this, &Corona::onAboutToQuit);
 
-    //! create the window manager
-    if (KWindowSystem::isPlatformWayland()) {
-        m_wm = new WindowSystem::WaylandInterface(this);
-    } else {
-        m_wm = new WindowSystem::XWindowInterface(this);
-    }
+    //! create the window manager (Wayland-only)
+    m_wm = new WindowSystem::WaylandInterface(this);
 
     setupWaylandIntegration();
 

@@ -47,7 +47,6 @@
 #include <KActionCollection>
 #include <KPackage/Package>
 #include <KWindowSystem>
-#include <KX11Extras>
 
 // Plasma
 #include <PlasmaActivities/Consumer>
@@ -98,15 +97,6 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
         m_byPassWM = byPassX11WM;
     } else {
         setFlags(flags);
-    }
-
-    if (KWindowSystem::isPlatformX11()) {
-        //! Enable OnAllDesktops during creation in order to protect corner cases that is ignored
-        //! during startup. Such corner case is bug #447689.
-        //! Best guess is that this is needed because OnAllDesktops is set through visibilitymanager
-        //! after containment has been assigned. That delay might lead wm ignoring the flag
-        //! until it is reapplied.
-        KX11Extras::setOnAllDesktops(winId(), true);
     }
 
     if (targetScreen) {
@@ -546,9 +536,6 @@ void View::showConfigurationInterface(Plasma::Applet *applet)
         if (m_appletConfigView->applet() == applet) {
             m_appletConfigView->show();
 
-            if (KWindowSystem::isPlatformX11()) {
-                m_appletConfigView->requestActivate();
-            }
             return;
         } else {
             m_appletConfigView->hide();
@@ -651,15 +638,6 @@ void View::updateAbsoluteGeometry(bool bypassChecks)
         }
     }
 
-    if (KWindowSystem::isPlatformX11() && devicePixelRatio() != 1.0) {
-        //!Fix for X11 Global Scale, I dont think this could be pixel perfect accurate
-        auto factor = devicePixelRatio();
-        absGeometry = QRect(qRound(absGeometry.x() * factor),
-                            qRound(absGeometry.y() * factor),
-                            qRound(absGeometry.width() * factor),
-                            qRound(absGeometry.height() * factor));
-    }
-
     if (m_absoluteGeometry == absGeometry && !bypassChecks) {
         return;
     }
@@ -694,9 +672,6 @@ void View::statusChanged(Plasma::Types::ItemStatus status)
         m_visibility->removeBlockHidingEvent(BLOCKHIDINGNEEDSATTENTIONTYPE);
         setFlags(flags() & ~Qt::WindowDoesNotAcceptFocus);
         m_visibility->initViewFlags();
-        if (KWindowSystem::isPlatformX11()) {
-            KX11Extras::forceActiveWindow(winId());
-        }
     } else {
         updateTransientWindowsTracking();
         m_visibility->removeBlockHidingEvent(BLOCKHIDINGNEEDSATTENTIONTYPE);
@@ -1130,7 +1105,7 @@ QStringList View::activities() const
 {
     QStringList running;
 
-    QStringList runningAll = m_corona->activitiesConsumer()->runningActivities();
+    QStringList runningAll = m_corona->activitiesConsumer()->activities();
 
     for(int i=0; i<m_activities.count(); ++i) {
         if (runningAll.contains(m_activities[i])) {
@@ -1166,11 +1141,7 @@ void View::applyActivitiesToWindows()
         if (m_appletConfigView) {
             Latte::WindowSystem::WindowId appletconfigviewid;
 
-            if (KWindowSystem::isPlatformX11()) {
-                appletconfigviewid = m_appletConfigView->winId();
-            } else {
-                appletconfigviewid = m_corona->wm()->winIdFor("latte-dock", m_appletConfigView->title());
-            }
+            appletconfigviewid = m_corona->wm()->winIdFor("latte-dock", m_appletConfigView->title());
 
             m_positioner->setWindowOnActivities(appletconfigviewid, runningActivities);
         }
@@ -1256,7 +1227,7 @@ void View::setLayout(Layout::GenericLayout *layout)
         });
 
         if (latteCorona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts) {
-            connectionsLayout << connect(latteCorona->activitiesConsumer(), &KActivities::Consumer::runningActivitiesChanged, this, [&]() {
+            connectionsLayout << connect(latteCorona->activitiesConsumer(), &KActivities::Consumer::activitiesChanged, this, [&]() {
                 if (m_layout && m_visibility) {
                     setActivities(m_layout->appliedActivities());
                     qDebug() << "DOCK VIEW FROM LAYOUT (runningActivitiesChanged) ::: " << m_layout->name()

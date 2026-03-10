@@ -21,7 +21,6 @@
 #include <QLatin1String>
 #include <QQuickView>
 #include <QTimer>
-#include <private/qtx11extras_p.h>
 
 // KDE
 #include <KWindowSystem>
@@ -32,8 +31,6 @@
 // LayerShell
 #include <LayerShellQt/Window>
 
-// X11
-#include <NETWM>
 
 using namespace KWayland::Client;
 
@@ -177,8 +174,7 @@ void WaylandInterface::setViewExtraFlags(QWindow *view, bool isPanelWindow, Latt
     //! do not steal keyboard focus
     layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
 
-    KWindowSystem::setSkipTaskbar(view, true);
-    KWindowSystem::setSkipSwitcher(view, true);
+    //! LayerShell windows are not shown in taskbar/switcher by default
 }
 
 void WaylandInterface::setViewStruts(QWindow *view, const QRect &rect, Plasma::Types::Location location)

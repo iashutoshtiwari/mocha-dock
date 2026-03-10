@@ -75,6 +75,7 @@ target_link_libraries(latte-dock
     KF6::NewStuffWidgets
     KF6::Package
     KF6::Svg
+    KF6::WindowSystem
     KF6::XmlGui
     KF6::ConfigQml
     Wayland::Client
@@ -86,14 +87,6 @@ target_link_libraries(latte-dock
 )
 
 
-if(HAVE_X11)
-    target_link_libraries(latte-dock
-        Qt::GuiPrivate
-        KF6::WindowSystem
-        ${X11_LIBRARIES}
-        ${XCB_LIBRARIES}
-    )
-endif()
 
 configure_file(org.kde.latte-dock.desktop.cmake org.kde.latte-dock.desktop)
 configure_file(org.kde.latte-dock.appdata.xml.cmake org.kde.latte-dock.appdata.xml)
