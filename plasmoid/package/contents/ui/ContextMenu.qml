@@ -4,12 +4,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 import org.kde.activities 0.1 as Activities
 import org.kde.taskmanager 0.1 as TaskManager
 
@@ -84,14 +84,14 @@ PlasmaComponents.ContextMenu {
 
     function newMenuItem(parent) {
         return Qt.createQmlObject(
-                    "import org.kde.plasma.components 3.0 as PlasmaComponents;" +
+                    "import org.kde.plasma.components as PlasmaComponents;" +
                     "PlasmaComponents.MenuItem {}",
                     parent);
     }
 
     function newSeparator(parent) {
         return Qt.createQmlObject(
-                    "import org.kde.plasma.components 3.0 as PlasmaComponents;" +
+                    "import org.kde.plasma.components as PlasmaComponents;" +
                     "PlasmaComponents.MenuItem { separator: true }",
                     parent);
     }
@@ -124,7 +124,7 @@ PlasmaComponents.ContextMenu {
 
         // QMenu does not limit its width automatically. Even if we set a maximumWidth
         // it would just cut off text rather than eliding. So we do this manually.
-        var textMetrics = Qt.createQmlObject("import QtQuick 2.4; TextMetrics {}", menu);
+        var textMetrics = Qt.createQmlObject("import QtQuick; TextMetrics {}", menu);
         var maximumWidth = theme.mSize(theme.defaultFont).width * 22;
 
         sections.forEach(function (section) {

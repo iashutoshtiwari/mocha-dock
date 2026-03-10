@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick.Window 2.6
+import QtQuick.Window
 import org.kde.taskmanager 0.1 as TaskManager
 
 TaskManager.PipeWireSourceItem {

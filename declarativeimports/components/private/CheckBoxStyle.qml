@@ -3,15 +3,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
+import QtQuick
 import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.3
+import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 
 import QtQuick.Controls.Styles.Plasma 2.0 as PlasmaStyles
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 
 PlasmaStyles.CheckBoxStyle{
     id: checkboxStyle

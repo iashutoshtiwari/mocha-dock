@@ -4,15 +4,16 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtQuick.Window 2.2
-import QtQuick.Templates 2.2 as T
-import QtQuick.Controls 2.2 as Controls
-import QtQuick.Layouts 1.3
+import QtQuick
+import QtQuick.Window
+import QtQuick.Templates as T
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.kirigami 2.2 as Kirigami
+import org.kde.ksvg 1.0 as KSvg
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kirigami as Kirigami
 import "private" as Private
 
 T.ComboBox {
@@ -86,7 +87,7 @@ T.ComboBox {
         }
     }
 
-    indicator: PlasmaCore.SvgItem {
+    indicator: KSvg.SvgItem {
         implicitWidth: units.iconSizes.small
         implicitHeight: implicitWidth
         anchors {
@@ -94,9 +95,9 @@ T.ComboBox {
             rightMargin: control.buttonIsTransparent ? 0 : surfaceNormal.margins.right
             verticalCenter: parent.verticalCenter
         }
-        svg: PlasmaCore.Svg {
+        svg: KSvg.Svg {
             imagePath: "widgets/arrows"
-            colorGroup: PlasmaCore.Theme.ButtonColorGroup
+            colorGroup: Kirigami.Theme.ButtonColorGroup
         }
         elementId: "down-arrow"
     }
@@ -202,12 +203,10 @@ T.ComboBox {
                 rightMargin: control.mirrored ? 1 : 0
             }
 
-            PlasmaCore.IconItem {
+            Kirigami.Icon {
                 id: selectedIcon
                 implicitWidth: textLabel.height
                 implicitHeight: textLabel.height
-
-                colorGroup: PlasmaCore.Theme.ButtonColorGroup
                 source: {
                     if (control
                             && control.currentIndex>=0
@@ -311,7 +310,7 @@ T.ComboBox {
         y: rect.y + 6
     }*/
 
-    background: PlasmaCore.FrameSvgItem {
+    background: KSvg.FrameSvgItem {
         id: surfaceNormal
         //retrocompatibility with old controls
         implicitWidth: units.gridUnit * 6

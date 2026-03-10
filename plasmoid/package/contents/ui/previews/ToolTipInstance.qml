@@ -7,20 +7,20 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.6
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
-import QtQml.Models 2.2
+import QtQml.Models
 
-import org.kde.kirigami 2.5 as Kirigami
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.kquickcontrolsaddons as KQuickControlsAddons
 
 import org.kde.latte.core 0.2 as LatteCore
 
-import org.kde.draganddrop 2.0
+import org.kde.draganddrop
 
 import org.kde.taskmanager 0.1 as TaskManager
 
@@ -212,8 +212,8 @@ Column {
                     anchors.fill:  previewThumbLoader.item
                     visible: previewThumbLoader.item.visible
                     horizontalOffset: 0
-                    verticalOffset: Math.round(3 * PlasmaCore.Units.devicePixelRatio)
-                    radius: Math.round(8.0 * PlasmaCore.Units.devicePixelRatio)
+                    verticalOffset: Math.round(3 * 1)
+                    radius: Math.round(8.0 * 1)
                     samples: Math.round(radius * 1.5)
                     color: "Black"
                     source: previewThumbLoader.item
@@ -259,13 +259,12 @@ Column {
             }
 
             // when minimized, we don't have a preview, so show the icon
-            PlasmaCore.IconItem {
+            Kirigami.Icon {
                 width: parent.width
                 height: thumbnail.height - playbackLoader.realHeight
                 anchors.horizontalCenter: parent.horizontalCenter
                 source: icon
                 animated: false
-                usesPlasmaTheme: false
                 visible: (thumbnailSourceItem.isMinimized && !albumArtImage.visible) //X11 case
                          || (!previewThumbLoader.active && !albumArtImage.visible) //Wayland case
             }

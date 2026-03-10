@@ -3,15 +3,16 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.0
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.0
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
 import Qt5Compat.GraphicalEffects
 
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
+import org.kde.kirigami as Kirigami
+import org.kde.ksvg as KSvg
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons
 
 import org.kde.latte.core 0.2 as LatteCore
 
@@ -78,7 +79,7 @@ PlasmaCore.ToolTipArea {
             })
         } else {
             popupWindow.mainItem.width = Qt.binding(function() {
-                return PlasmaCore.Theme.mSize(PlasmaCore.Theme.defaultFont).width * 35
+                return Kirigami.Theme.mSize(Kirigami.Theme.defaultFont).width * 35
             })
         }
 
@@ -96,7 +97,7 @@ PlasmaCore.ToolTipArea {
             })
         } else {
             popupWindow.mainItem.height = Qt.binding(function() {
-                return PlasmaCore.Theme.mSize(PlasmaCore.Theme.defaultFont).height * 25
+                return Kirigami.Theme.mSize(Kirigami.Theme.defaultFont).height * 25
             })
         }
 
@@ -132,7 +133,7 @@ PlasmaCore.ToolTipArea {
         opacity: plasmoid.expanded ? 1 : 0
         Behavior on opacity {
             NumberAnimation {
-                duration: PlasmaCore.Units.shortDuration
+                duration: Kirigami.Units.shortDuration
                 easing.type: Easing.InOutQuad
             }
         }

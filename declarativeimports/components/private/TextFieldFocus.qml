@@ -5,14 +5,15 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.1
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import org.kde.ksvg 1.0 as KSvg
+import org.kde.plasma.core as PlasmaCore
 
 Item {
     id: main
     state: parent.state
 
-    PlasmaCore.Svg {
+    KSvg.Svg {
         id: lineEditSvg
         imagePath: "widgets/lineedit"
         onRepaintNeeded: {
@@ -31,7 +32,7 @@ Item {
         }
     }
 
-    PlasmaCore.FrameSvgItem {
+    KSvg.FrameSvgItem {
         id: hover
 
         anchors {

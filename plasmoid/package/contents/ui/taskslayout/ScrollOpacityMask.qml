@@ -4,12 +4,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 import QtQuick.Controls 1.4
 import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 
 PlasmoidItem {
 

@@ -4,11 +4,11 @@
 */
 
 import QtQuick.Controls 1.4
-import QtQuick 2.2
-import QtQuick.Layouts 1.3
+import QtQuick
+import QtQuick.Layouts
 
-import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.components 3.0 as PlasmaComponents3
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.components as PlasmaComponents3
 
 import org.kde.latte.components 1.0 as LatteComponents
 
