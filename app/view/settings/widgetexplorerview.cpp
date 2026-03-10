@@ -21,7 +21,6 @@
 #include <KSvg/Svg>
 #include <KWindowEffects>
 #include <KWindowSystem>
-#include <KWayland/Client/plasmashell.h>
 #include <KX11Extras>
 #include <KPackage/Package>
 
@@ -134,10 +133,6 @@ void WidgetExplorerView::syncGeometry()
 
     setPosition(geometry.topLeft());
 
-    if (m_shellSurface) {
-        m_shellSurface->setPosition(geometry.topLeft());
-    }
-
     setMaximumSize(geometry.size());
     setMinimumSize(geometry.size());
     resize(geometry.size());
@@ -145,11 +140,6 @@ void WidgetExplorerView::syncGeometry()
 
 void WidgetExplorerView::showEvent(QShowEvent *ev)
 {
-    if (m_shellSurface) {
-        //! under wayland it needs to be set again after its hiding
-        m_shellSurface->setPosition(m_geometryWhenVisible.topLeft());
-    }
-
     SubConfigView::showEvent(ev);
 
     if (!m_latteView) {
@@ -179,12 +169,6 @@ void WidgetExplorerView::focusOutEvent(QFocusEvent *ev)
 
 void WidgetExplorerView::updateEffects()
 {
-    //! Don't apply any effect before the wayland surface is created under wayland
-    //! https://bugs.kde.org/show_bug.cgi?id=392890
-    if (KWindowSystem::isPlatformWayland() && !m_shellSurface) {
-        return;
-    }
-
     if (!m_background) {
         m_background = new KSvg::FrameSvg(this);
     }
@@ -220,17 +204,6 @@ void WidgetExplorerView::hideConfigWindow()
     }
 
     deleteLater();
-
-    /*QTimer::singleShot(100, [this]() {
-        //! avoid crashes under wayland because some mouse events are sended after the surface is destroyed
-
-        if (m_shellSurface) {
-            //!NOTE: Avoid crash in wayland environment with qt5.9
-            close();
-        } else {
-            hide();
-        }
-    });*/
 }
 
 void WidgetExplorerView::syncSlideEffect()

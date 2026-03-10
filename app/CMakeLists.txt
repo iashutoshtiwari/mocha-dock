@@ -82,6 +82,7 @@ target_link_libraries(latte-dock
     Plasma::KWaylandClient
     Plasma::Plasma
     Plasma::PlasmaQuick
+    LayerShellQt::Interface
 )
 
 

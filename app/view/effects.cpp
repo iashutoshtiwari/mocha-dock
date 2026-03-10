@@ -534,12 +534,6 @@ void Effects::updateShadows()
 
 void Effects::updateEffects()
 {
-    //! Don't apply any effect before the wayland surface is created under wayland
-    //! https://bugs.kde.org/show_bug.cgi?id=392890
-    if (KWindowSystem::isPlatformWayland() && !m_view->surface()) {
-        return;
-    }
-
     bool clearEffects{true};
 
     if (m_drawEffects) {

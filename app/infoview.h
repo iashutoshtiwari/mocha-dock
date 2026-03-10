@@ -17,12 +17,6 @@
 #include <QQuickView>
 #include <QScreen>
 
-namespace KWayland {
-namespace Client {
-class PlasmaShellSurface;
-}
-}
-
 namespace Latte {
 
 class InfoView : public QQuickView
@@ -55,7 +49,6 @@ protected:
     bool event(QEvent *e) override;
 
 private slots:
-    void setupWaylandIntegration();
     void updateWaylandId();
 
 private:
@@ -68,7 +61,6 @@ private:
     KSvg::FrameSvg::EnabledBorders m_borders{KSvg::FrameSvg::TopBorder | KSvg::FrameSvg::BottomBorder};
 
     Latte::WindowSystem::WindowId m_trackedWindowId;
-    KWayland::Client::PlasmaShellSurface *m_shellSurface{nullptr};
 
     Latte::Corona *m_corona{nullptr};
 };

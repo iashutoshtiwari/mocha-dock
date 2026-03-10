@@ -21,8 +21,6 @@
 
 // KDE
 #include <KLocalizedContext>
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 #include <KWindowSystem>
 
 namespace Latte {
@@ -177,7 +175,7 @@ void SubConfigView::initParentView(Latte::View *view)
 
 void SubConfigView::requestActivate()
 {
-    if (KWindowSystem::isPlatformWayland() && m_shellSurface) {
+    if (KWindowSystem::isPlatformWayland()) {
         updateWaylandId();
         m_corona->wm()->requestActivate(m_waylandWindowId);
     } else {
@@ -229,83 +227,16 @@ void SubConfigView::syncSlideEffect()
     m_corona->wm()->slideWindow(*this, slideLocation);
 }
 
-KWayland::Client::PlasmaShellSurface *SubConfigView::surface()
-{
-    return m_shellSurface;
-}
-
-void SubConfigView::setupWaylandIntegration()
-{
-    if (m_shellSurface || !KWindowSystem::isPlatformWayland() || !m_latteView || !m_latteView->containment()) {
-        // already setup
-        return;
-    }
-
-    if (m_corona) {
-        using namespace KWayland::Client;
-        PlasmaShell *interface = m_corona->waylandCoronaInterface();
-
-        if (!interface) {
-            return;
-        }
-
-        Surface *s = Surface::fromWindow(this);
-
-        if (!s) {
-            return;
-        }
-
-        qDebug() << "wayland " << title() <<  " surface was created...";
-
-        m_shellSurface = interface->createSurface(s, this);
-
-        if (m_isNormalWindow) {
-            m_corona->wm()->setViewExtraFlags(m_shellSurface, false);
-        } else {
-            m_corona->wm()->setViewExtraFlags(m_shellSurface, true);
-        }
-
-        updateWaylandId();
-        syncGeometry();
-    }
-}
-
 void SubConfigView::showEvent(QShowEvent *ev)
 {
     QQuickView::showEvent(ev);
 
-    if (m_shellSurface) {
-        //! readd shadows after hiding because the window shadows are not shown again after first showing
-        m_corona->dialogShadows()->addWindow(this, m_enabledBorders);
-    }
+    //! readd shadows after hiding because the window shadows are not shown again after first showing
+    m_corona->dialogShadows()->addWindow(this, m_enabledBorders);
 }
 
 bool SubConfigView::event(QEvent *e)
 {
-    if (e->type() == QEvent::PlatformSurface) {
-        if (auto pe = dynamic_cast<QPlatformSurfaceEvent *>(e)) {
-            switch (pe->surfaceEventType()) {
-            case QPlatformSurfaceEvent::SurfaceCreated:
-
-                if (m_shellSurface) {
-                    break;
-                }
-
-                setupWaylandIntegration();
-                break;
-
-            case QPlatformSurfaceEvent::SurfaceAboutToBeDestroyed:
-                if (m_shellSurface) {
-                    delete m_shellSurface;
-                    m_shellSurface = nullptr;
-                    qDebug() << "WAYLAND " << title() <<  " window surface was deleted...";
-                }
-
-                break;
-            }
-        }
-    }
-
     return QQuickView::event(e);
 }
 

@@ -65,23 +65,13 @@ XWindowInterface::~XWindowInterface()
 {
 }
 
-void XWindowInterface::setViewExtraFlags(QObject *view,bool isPanelWindow, Latte::Types::Visibility mode)
+void XWindowInterface::setViewExtraFlags(QWindow *view, bool isPanelWindow, Latte::Types::Visibility mode)
 {
-    WId winId = -1;
-
-    QQuickView *quickView = qobject_cast<QQuickView *>(view);
-
-    if (quickView) {
-        winId = quickView->winId();
+    if (!view) {
+        return;
     }
 
-    if (!quickView) {
-        QQuickWindow *quickWindow = qobject_cast<QQuickWindow *>(view);
-
-        if (quickWindow) {
-            winId = quickWindow->winId();
-        }
-    }
+    WId winId = view->winId();
 
     NETWinInfo winfo(QX11Info::connection(),
                      static_cast<xcb_window_t>(winId),
@@ -111,12 +101,16 @@ void XWindowInterface::setViewExtraFlags(QObject *view,bool isPanelWindow, Latte
     }
 }
 
-void XWindowInterface::setViewStruts(QWindow &view, const QRect &rect
+void XWindowInterface::setViewStruts(QWindow *view, const QRect &rect
                                      , Plasma::Types::Location location)
 {
+    if (!view) {
+        return;
+    }
+
     NETExtendedStrut strut;
 
-    const auto screen = view.screen();
+    const auto screen = view->screen();
 
     const QRect currentScreen {screen->geometry()};
     const QRect wholeScreen {{0, 0}, screen->virtualSize()};
@@ -159,7 +153,7 @@ void XWindowInterface::setViewStruts(QWindow &view, const QRect &rect
         return;
     }
 
-    KX11Extras::setExtendedStrut(view.winId(),
+    KX11Extras::setExtendedStrut(view->winId(),
                                  strut.left_width,   strut.left_start,   strut.left_end,
                                  strut.right_width,  strut.right_start,  strut.right_end,
                                  strut.top_width,    strut.top_start,    strut.top_end,
@@ -215,9 +209,13 @@ void XWindowInterface::setWindowOnActivities(const WindowId &wid, const QStringL
     KX11Extras::setOnActivities(wid.toUInt(), activities);
 }
 
-void XWindowInterface::removeViewStruts(QWindow &view)
+void XWindowInterface::removeViewStruts(QWindow *view)
 {
-    KX11Extras::setStrut(view.winId(), 0, 0, 0, 0);
+    if (!view) {
+        return;
+    }
+
+    KX11Extras::setStrut(view->winId(), 0, 0, 0, 0);
 }
 
 WindowId XWindowInterface::activeWindow()

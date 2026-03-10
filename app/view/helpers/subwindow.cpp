@@ -16,8 +16,6 @@
 #include <QTimer>
 
 // KDE
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 #include <KWindowSystem>
 
 // X11
@@ -111,8 +109,6 @@ SubWindow::SubWindow(Latte::View *view, QString debugType) :
         });
     }
 
-    setupWaylandIntegration();
-
     if (KWindowSystem::isPlatformX11()) {
         m_trackedWindowId = winId();
         m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
@@ -138,10 +134,6 @@ SubWindow::~SubWindow()
     m_visibleHackTimer2.stop();
     for (auto &c : connectionsHack) {
         disconnect(c);
-    }
-
-    if (m_shellSurface) {
-        delete m_shellSurface;
     }
 }
 
@@ -179,11 +171,6 @@ Latte::WindowSystem::WindowId SubWindow::trackedWindowId()
     return m_trackedWindowId;
 }
 
-KWayland::Client::PlasmaShellSurface *SubWindow::surface()
-{
-    return m_shellSurface;
-}
-
 void SubWindow::fixGeometry()
 {
     if (!m_calculatedGeometry.isEmpty()
@@ -193,10 +180,6 @@ void SubWindow::fixGeometry()
         setMaximumSize(m_calculatedGeometry.size());
         resize(m_calculatedGeometry.size());
         setPosition(m_calculatedGeometry.x(), m_calculatedGeometry.y());
-
-        if (m_shellSurface) {
-            m_shellSurface->setPosition(m_calculatedGeometry.topLeft());
-        }
     }
 }
 
@@ -217,36 +200,6 @@ void SubWindow::updateWaylandId()
 void SubWindow::startGeometryTimer()
 {
     m_fixGeometryTimer.start();
-}
-
-void SubWindow::setupWaylandIntegration()
-{
-    if (m_shellSurface || !KWindowSystem::isPlatformWayland() || !m_latteView || !m_latteView->containment()) {
-        // already setup
-        return;
-    }
-
-    if (m_corona) {
-        using namespace KWayland::Client;
-
-        PlasmaShell *interface = m_corona->waylandCoronaInterface();
-
-        if (!interface) {
-            return;
-        }
-
-        Surface *s = Surface::fromWindow(this);
-
-        if (!s) {
-            return;
-        }
-
-        qDebug() << "wayland screen edge ghost window surface was created...";
-        m_shellSurface = interface->createSurface(s, this);
-        m_corona->wm()->setViewExtraFlags(m_shellSurface);
-
-        m_shellSurface->setPanelTakesFocus(false);
-    }
 }
 
 bool SubWindow::event(QEvent *e)

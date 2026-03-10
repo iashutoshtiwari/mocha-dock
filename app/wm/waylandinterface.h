@@ -20,18 +20,12 @@
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 #include <KWindowInfo>
 #include <KWindowEffects>
 
 
 namespace Latte {
 class Corona;
-namespace Private {
-//! this class is used to create the struts inside wayland
-class GhostWindow;
-}
 }
 
 namespace Latte {
@@ -45,12 +39,14 @@ public:
     explicit WaylandInterface(QObject *parent = nullptr);
     ~WaylandInterface() override;
 
-    void setViewExtraFlags(QObject *view, bool isPanelWindow = true, Latte::Types::Visibility mode = Latte::Types::WindowsGoBelow) override;
-    void setViewStruts(QWindow &view, const QRect &rect
+    void setViewExtraFlags(QWindow *view, bool isPanelWindow = true, Latte::Types::Visibility mode = Latte::Types::WindowsGoBelow) override;
+    void setViewStruts(QWindow *view, const QRect &rect
                        , Plasma::Types::Location location) override;
     void setWindowOnActivities(const WindowId &wid, const QStringList &nextactivities) override;
 
-    void removeViewStruts(QWindow &view) override;
+    void removeViewStruts(QWindow *view) override;
+
+    void setWindowPosition(QWindow *window, const Plasma::Types::Location &location, const QRect &geometry);
 
     WindowId activeWindow() override;
     WindowInfoWrap requestInfo(WindowId wid) override;
@@ -112,7 +108,6 @@ private:
     void untrackWindow(KWayland::Client::PlasmaWindow *w);
 
     KWayland::Client::PlasmaWindow *windowFor(WindowId wid);
-    KWayland::Client::PlasmaShell *waylandCoronaInterface() const;
 
     //! VirtualDesktopsSupport
     void setCurrentDesktop(QString desktop);
@@ -120,9 +115,6 @@ private:
 
 
 private:
-    friend class Private::GhostWindow;
-    mutable QHash<WindowId, Private::GhostWindow *> m_ghostWindows;
-
     KWayland::Client::PlasmaWindowManagement *m_windowManagement{nullptr};
 
     //! VirtualDesktopsSupport
@@ -137,5 +129,3 @@ private:
 }
 
 #endif // WAYLANDINTERFACE_H
-
-

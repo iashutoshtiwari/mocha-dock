@@ -36,6 +36,9 @@
 #include <KAboutData>
 #include <KDBusService>
 
+// LayerShell
+#include <LayerShellQt/Shell>
+
 //! COLORS
 #define CNORMAL  "\e[0m"
 #define CIGREEN  "\e[1;32m"
@@ -74,6 +77,10 @@ int main(int argc, char **argv)
     qputenv("QT_WAYLAND_DISABLE_FIXED_POSITIONS", {});
     const bool qpaVariable = qEnvironmentVariableIsSet("QT_QPA_PLATFORM");
     detectPlatform(argc, argv);
+
+    //! initialize LayerShell before creating the application
+    LayerShellQt::Shell::useLayerShell();
+
     QApplication app(argc, argv);
     qunsetenv("QT_WAYLAND_DISABLE_FIXED_POSITIONS");
 
@@ -246,15 +253,8 @@ int main(int argc, char **argv)
         return 0;
     }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     //! disable restore from session management
-    //! based on spectacle solution at:
-    //!   - https://bugs.kde.org/show_bug.cgi?id=430411
-    //!   - https://invent.kde.org/graphics/spectacle/-/commit/8db27170d63f8a4aaff09615e51e3cc0fb115c4d
-    // FIXME:
-    // Remove this later when I'm sure nothing is broken in Qt6.
     QGuiApplication::setFallbackSessionManagementEnabled(false);
-#endif
 
     auto disableSessionManagement = [](QSessionManager &sm) {
         sm.setRestartHint(QSessionManager::RestartNever);

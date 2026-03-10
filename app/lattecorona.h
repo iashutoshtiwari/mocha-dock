@@ -39,11 +39,6 @@ namespace KActivities {
 class Consumer;
 }
 
-namespace KWayland {
-namespace Client {
-class PlasmaShell;
-}
-}
 
 namespace Latte {
 class CentralLayout;
@@ -115,8 +110,6 @@ public:
                                               bool desktopUse = false) const;
 
     int screenForContainment(const Plasma::Containment *containment) const override;
-
-    KWayland::Client::PlasmaShell *waylandCoronaInterface() const;
 
     KActivities::Consumer *activitiesConsumer() const;
     GlobalShortcuts *globalShortcuts() const;
@@ -248,8 +241,6 @@ private:
     WindowSystem::AbstractWindowInterface *m_wm{nullptr};
 
     PanelShadows *m_dialogShadows{nullptr};
-
-    KWayland::Client::PlasmaShell *m_waylandCorona{nullptr};
 
     friend class GlobalShortcuts;
     friend class Layouts::Manager;

@@ -29,8 +29,6 @@
 
 // KDE
 #include <KLocalizedContext>
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 #include <KWindowEffects>
 #include <KWindowSystem>
 #include <KPackage/Package>
@@ -134,7 +132,7 @@ void PrimaryConfigView::requestActivate()
     if (m_latteView && m_latteView->visibility()) {
         if (KWindowSystem::isPlatformX11()) {
             m_latteView->visibility()->setViewOnFrontLayer();
-        } else if (m_shellSurface) {
+        } else {
             m_corona->wm()->requestActivate(m_latteView->positioner()->trackedWindowId());
         }
     }
@@ -163,12 +161,7 @@ void PrimaryConfigView::showConfigWindow()
 
 void PrimaryConfigView::hideConfigWindow()
 {
-    if (m_shellSurface) {
-        //!NOTE: Avoid crash in wayland environment with qt5.9
-        close();
-    } else {
-        hide();
-    }
+    close();
 
     hideCanvasWindow();
     hideSecondaryWindow();
@@ -401,10 +394,6 @@ void PrimaryConfigView::syncGeometry()
 
     setPosition(position);
 
-    if (m_shellSurface) {
-        m_shellSurface->setPosition(position);
-    }
-
     setMaximumSize(size);
     setMinimumSize(size);
     resize(size);
@@ -415,11 +404,6 @@ void PrimaryConfigView::syncGeometry()
 void PrimaryConfigView::showEvent(QShowEvent *ev)
 {
     updateAvailableScreenGeometry();
-
-    if (m_shellSurface) {
-        //! under wayland it needs to be set again after its hiding
-        m_shellSurface->setPosition(m_geometryWhenVisible.topLeft());
-    }
 
     SubConfigView::showEvent(ev);
 
@@ -635,12 +619,6 @@ void PrimaryConfigView::updateEnabledBorders()
 
 void PrimaryConfigView::updateEffects()
 {
-    //! Don't apply any effect before the wayland surface is created under wayland
-    //! https://bugs.kde.org/show_bug.cgi?id=392890
-    if (KWindowSystem::isPlatformWayland() && !m_shellSurface) {
-        return;
-    }
-
     if (!m_background) {
         m_background = new KSvg::FrameSvg(this);
     }
