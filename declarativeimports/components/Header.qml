@@ -4,17 +4,18 @@
 */
 
 import QtQuick
-import QtQuick.Controls 1.4
+import QtQuick.Controls
 import QtQuick.Layouts
 
 import org.kde.plasma.plasmoid
+import org.kde.kirigami as Kirigami
 
 Label {
     Layout.alignment: Qt.AlignLeft
-    Layout.topMargin: units.smallSpacing
-    Layout.bottomMargin: units.smallSpacing
-    color: theme.textColor
+    Layout.topMargin: Kirigami.Units.smallSpacing
+    Layout.bottomMargin: Kirigami.Units.smallSpacing
+    color: Kirigami.Theme.textColor
     font.weight: Font.DemiBold
     font.letterSpacing: 1.05
-    font.pixelSize: 1.2 * theme.mSize(theme.defaultFont).height
+    font.pixelSize: 1.2 * Kirigami.Units.gridUnit
 }

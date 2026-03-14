@@ -5,14 +5,15 @@
 */
 
 import QtQuick
-import QtQuick.Controls 1.0
+import QtQuick.Controls
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 
-PlasmoidItem {
+Item {
     id: mainItem
 
     width: childrenRect.width
@@ -147,7 +148,7 @@ PlasmoidItem {
         horizontalAlignment: Text.AlignHCenter
         //  font.bold: true
         font.italic: true
-        font.pointSize: 1.2 * theme.defaultFont.pointSize
+        font.pointSize: 1.2 * Kirigami.Theme.defaultFont.pointSize
 
         wrapMode: Text.WordWrap
     }

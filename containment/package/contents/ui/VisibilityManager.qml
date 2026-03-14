@@ -10,8 +10,8 @@ import QtQuick.Window
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.core as LatteCore
+import org.kde.latte.private.containment as LatteContainment
 
 Item{
     id: manager
@@ -455,11 +455,13 @@ Item{
 
         ScriptAction{
             script: {
-                latteView.visibility.isHidden = true;
+                if (latteView && latteView.visibility) {
+                    latteView.visibility.isHidden = true;
 
-                if (root.behaveAsPlasmaPanel && latteView.positioner.slideOffset !== 0) {
-                    //! hide real panels when they slide-out
-                    latteView.visibility.hide();
+                    if (root.behaveAsPlasmaPanel && latteView.positioner.slideOffset !== 0) {
+                        //! hide real panels when they slide-out
+                        latteView.visibility.hide();
+                    }
                 }
             }
         }
@@ -480,7 +482,9 @@ Item{
                 }
             }
 
-            latteView.visibility.slideOutFinished();
+            if (latteView && latteView.visibility) {
+                latteView.visibility.slideOutFinished();
+            }
             manager.updateInputGeometry();
 
             if (root.inStartup) {

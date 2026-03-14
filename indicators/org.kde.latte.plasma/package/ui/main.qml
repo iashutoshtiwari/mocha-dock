@@ -8,7 +8,7 @@ import QtQuick
 import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.components as LatteComponents
 
 LatteComponents.IndicatorItem {
     id: root

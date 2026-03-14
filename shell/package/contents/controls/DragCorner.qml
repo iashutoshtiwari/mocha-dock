@@ -5,6 +5,7 @@
 
 import QtQuick
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 
 Rectangle {
     id: _corner
@@ -13,7 +14,7 @@ Rectangle {
     anchors.horizontalCenter: parent.right
     anchors.verticalCenter: parent.top
     rotation: 45
-    color: resizeWindowMouseArea.isActive ? theme.buttonFocusColor : theme.textColor
+    color: resizeWindowMouseArea.isActive ? Kirigami.Theme.focusColor : Kirigami.Theme.textColor
     opacity: resizeWindowMouseArea.isActive ? 1 : 0.2
 
     readonly property alias isActive: resizeWindowMouseArea.isActive

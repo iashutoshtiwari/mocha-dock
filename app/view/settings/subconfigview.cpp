@@ -22,6 +22,9 @@
 #include <KLocalizedContext>
 #include <KWindowSystem>
 
+// Plasma
+#include <PlasmaQuick/AppletQuickItem>
+
 namespace Latte {
 namespace ViewPart {
 
@@ -154,7 +157,7 @@ void SubConfigView::initParentView(Latte::View *view)
     viewconnections << connect(m_latteView->positioner(), &ViewPart::Positioner::canvasGeometryChanged, this, &SubConfigView::syncGeometry);
 
     //! Assign app interfaces in be accessible through containment graphic item
-    QQuickItem *containmentGraphicItem = qobject_cast<QQuickItem *>(m_latteView->containment()->property("_plasma_graphicObject").value<QObject *>());
+    QQuickItem *containmentGraphicItem = PlasmaQuick::AppletQuickItem::itemForApplet(m_latteView->containment());
     rootContext()->setContextProperty(QStringLiteral("plasmoid"), containmentGraphicItem);
     rootContext()->setContextProperty(QStringLiteral("latteView"), m_latteView);
 }

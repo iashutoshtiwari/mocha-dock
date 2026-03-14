@@ -5,23 +5,23 @@
 */
 
 import QtQuick
-import QtQuick.Controls 1.4
+import QtQuick.Controls
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import QtQuick.Dialogs
 
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
-import org.kde.plasma.components as PlasmaComponents3
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.core as LatteCore
+import org.kde.latte.components as LatteComponents
+import org.kde.latte.private.containment as LatteContainment
 
 PlasmaComponents.Page {
     id: page
     width: content.width + content.Layout.leftMargin * 2
-    height: content.height + units.smallSpacing * 2
+    height: content.height + Kirigami.Units.smallSpacing * 2
 
     Timer {
         id: syncGeometry
@@ -35,31 +35,31 @@ PlasmaComponents.Page {
     ColumnLayout {
         id: content
 
-        width: (dialog.appliedWidth - units.smallSpacing * 2) - Layout.leftMargin * 2
+        width: (dialog.appliedWidth - Kirigami.Units.smallSpacing * 2) - Layout.leftMargin * 2
         spacing: dialog.subGroupSpacing
         anchors.horizontalCenter: parent.horizontalCenter
-        Layout.leftMargin: units.smallSpacing * 2
+        Layout.leftMargin: Kirigami.Units.smallSpacing * 2
 
         //! BEGIN: Items
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.topMargin: units.smallSpacing
+            Layout.topMargin: Kirigami.Units.smallSpacing
 
-            spacing: units.smallSpacing
+            spacing: Kirigami.Units.smallSpacing
 
             LatteComponents.Header {
                 text: i18n("Items")
             }
 
             ColumnLayout {
-                Layout.leftMargin: units.smallSpacing * 2
-                Layout.rightMargin: units.smallSpacing * 2
+                Layout.leftMargin: Kirigami.Units.smallSpacing * 2
+                Layout.rightMargin: Kirigami.Units.smallSpacing * 2
                 spacing: 0
 
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
                     enabled: proportionSizeSlider.value === 1
 
                     PlasmaComponents.Label {
@@ -100,15 +100,15 @@ PlasmaComponents.Page {
                     PlasmaComponents.Label {
                         text: i18nc("number in pixels, e.g. 12 px.", "%1 px.", appletsSizeSlider.value)//.arg(appletsSizeSlider.value)
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
                     }
                 }
 
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
                     visible: dialog.advancedLevel || plasmoid.configuration.proportionIconSize>0
 
                     PlasmaComponents.Label {
@@ -151,8 +151,8 @@ PlasmaComponents.Page {
 
                     PlasmaComponents.Label {
                         id: absoluteSizeLbl
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
                         text: proportionSizeSlider.value !== proportionSizeSlider.from ?
                                   (absoluteSizeLblMouseArea.containsMouse ?
@@ -173,7 +173,7 @@ PlasmaComponents.Page {
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
                     enabled: LatteCore.WindowSystem.compositingActive && plasmoid.configuration.animationsEnabled
 
                     PlasmaComponents.Label {
@@ -213,8 +213,8 @@ PlasmaComponents.Page {
                     PlasmaComponents.Label {
                         text: i18nc("number in percentage, e.g. 85 %","%1 %", Number((zoomSlider.value * 100) - 100).toFixed(0))
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
                     }
                 }
             }
@@ -225,7 +225,7 @@ PlasmaComponents.Page {
         ColumnLayout {
             Layout.fillWidth: true
 
-            spacing: units.smallSpacing
+            spacing: Kirigami.Units.smallSpacing
 
             LatteComponents.Header {
                 text: i18n("Length")
@@ -233,8 +233,8 @@ PlasmaComponents.Page {
 
             ColumnLayout {
                 id: lengthColumn
-                Layout.leftMargin: units.smallSpacing * 2
-                Layout.rightMargin: units.smallSpacing * 2
+                Layout.leftMargin: Kirigami.Units.smallSpacing * 2
+                Layout.rightMargin: Kirigami.Units.smallSpacing * 2
                 spacing: 0
 
                 readonly property int labelsMaxWidth: Math.max(maxLengthLbl.implicitWidth,
@@ -244,7 +244,7 @@ PlasmaComponents.Page {
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
 
                     PlasmaComponents.Label {
                         id: maxLengthLbl
@@ -320,8 +320,8 @@ PlasmaComponents.Page {
                     PlasmaComponents.Label {
                         text: i18nc("number in percentage, e.g. 85 %","%1 %", maxLengthSlider.value)
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
                         LatteComponents.ScrollArea {
                             anchors.fill: parent
@@ -353,7 +353,7 @@ PlasmaComponents.Page {
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
                     visible: dialog.advancedLevel
                     enabled: (plasmoid.configuration.alignment !== LatteCore.Types.Justify)
 
@@ -403,8 +403,8 @@ PlasmaComponents.Page {
                     PlasmaComponents.Label {
                         text: i18nc("number in percentage, e.g. 85 %","%1 %", minLengthSlider.value)
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
                         LatteComponents.ScrollArea {
                             anchors.fill: parent
@@ -436,7 +436,7 @@ PlasmaComponents.Page {
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
                     visible: dialog.advancedLevel
                     enabled: offsetSlider.to > offsetSlider.from
 
@@ -470,6 +470,7 @@ PlasmaComponents.Page {
                         Binding {
                             target: offsetSlider
                             property: "from"
+                            restoreMode: Binding.RestoreNone
                             when: viewConfig.isReady
                             value: offsetSlider.fromValue
                         }
@@ -477,6 +478,7 @@ PlasmaComponents.Page {
                         Binding {
                             target: offsetSlider
                             property: "to"
+                            restoreMode: Binding.RestoreNone
                             when: viewConfig.isReady
                             value: offsetSlider.toValue
                         }
@@ -533,8 +535,8 @@ PlasmaComponents.Page {
                     PlasmaComponents.Label {
                         text: i18nc("number in percentage, e.g. 85 %","%1 %", offsetSlider.value)
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
                         LatteComponents.ScrollArea {
                             anchors.fill: parent
@@ -593,7 +595,7 @@ PlasmaComponents.Page {
             id: marginsColumn
             Layout.fillWidth: true
 
-            spacing: units.smallSpacing
+            spacing: Kirigami.Units.smallSpacing
             visible: dialog.advancedLevel
 
             readonly property int maxMargin: 25
@@ -603,15 +605,15 @@ PlasmaComponents.Page {
             }
 
             ColumnLayout{
-                Layout.leftMargin: units.smallSpacing * 2
-                Layout.rightMargin: units.smallSpacing * 2
+                Layout.leftMargin: Kirigami.Units.smallSpacing * 2
+                Layout.rightMargin: Kirigami.Units.smallSpacing * 2
                 spacing: 0
 
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
 
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
 
                     PlasmaComponents.Label {
                         text: i18n("Length")
@@ -640,8 +642,8 @@ PlasmaComponents.Page {
                                   i18nc("number in pixels, e.g. 8 px.","%1 px.", currentValueInPixels) :
                                   i18nc("number in percentage, e.g. 85 %","%1 %", lengthExtMarginSlider.value)
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
                         readonly property int currentValueInPixels: (lengthExtMarginSlider.value/100) * latteView.metrics.maxIconSize
 
@@ -656,7 +658,7 @@ PlasmaComponents.Page {
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
 
                     PlasmaComponents.Label {
                         text: i18n("Thickness")
@@ -686,8 +688,8 @@ PlasmaComponents.Page {
                                   i18nc("number in pixels, e.g. 8 px.","%1 px.", currentValueInPixels) :
                                   i18nc("number in percentage, e.g. 85 %","%1 %", currentValue)
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
                         readonly property int currentValue: Math.max(thickMarginSlider.minimumInternalValue, thickMarginSlider.value)
                         readonly property int currentValueInPixels: (currentValue/100) * latteView.metrics.maxIconSize
@@ -703,7 +705,7 @@ PlasmaComponents.Page {
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
 
                     PlasmaComponents.Label {
                         text: i18n("Floating gap")
@@ -730,8 +732,8 @@ PlasmaComponents.Page {
                     PlasmaComponents.Label {
                         text: currentValue < 0 ? "---" : i18nc("number in pixels, e.g. 85 px.","%1 px.", currentValue)
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
                         readonly property int currentValue: screenEdgeMarginSlider.value
                     }
@@ -742,7 +744,7 @@ PlasmaComponents.Page {
 
         //! BEGIN: Colors
         ColumnLayout {
-            spacing: units.smallSpacing
+            spacing: Kirigami.Units.smallSpacing
             visible: dialog.advancedLevel
 
             LatteComponents.Header {
@@ -754,11 +756,11 @@ PlasmaComponents.Page {
                 id: colorsGridLayout
                 Layout.minimumWidth: dialog.optionsWidth
                 Layout.maximumWidth: Layout.minimumWidth
-                Layout.leftMargin: units.smallSpacing * 2
-                Layout.rightMargin: units.smallSpacing * 2
-                Layout.topMargin: units.smallSpacing
-                columnSpacing: units.smallSpacing
-                rowSpacing: units.smallSpacing
+                Layout.leftMargin: Kirigami.Units.smallSpacing * 2
+                Layout.rightMargin: Kirigami.Units.smallSpacing * 2
+                Layout.topMargin: Kirigami.Units.smallSpacing
+                columnSpacing: Kirigami.Units.smallSpacing
+                rowSpacing: Kirigami.Units.smallSpacing
                 columns: 2
 
                 readonly property bool colorsScriptIsPresent: universalSettings.colorsScriptIsPresent
@@ -856,14 +858,14 @@ PlasmaComponents.Page {
         //! BEGIN: Background
         ColumnLayout {
             Layout.fillWidth: true
-            spacing: units.smallSpacing
+            spacing: Kirigami.Units.smallSpacing
 
             LatteComponents.HeaderSwitch {
                 id: showBackground
-                Layout.minimumWidth: dialog.optionsWidth + 2 *units.smallSpacing
+                Layout.minimumWidth: dialog.optionsWidth + 2 *Kirigami.Units.smallSpacing
                 Layout.maximumWidth: Layout.minimumWidth
                 Layout.minimumHeight: implicitHeight
-                Layout.bottomMargin: units.smallSpacing
+                Layout.bottomMargin: Kirigami.Units.smallSpacing
                 enabled: LatteCore.WindowSystem.compositingActive
 
                 checked: plasmoid.configuration.useThemePanel
@@ -876,8 +878,8 @@ PlasmaComponents.Page {
             }
 
             ColumnLayout {
-                Layout.leftMargin: units.smallSpacing * 2
-                Layout.rightMargin: units.smallSpacing * 2
+                Layout.leftMargin: Kirigami.Units.smallSpacing * 2
+                Layout.rightMargin: Kirigami.Units.smallSpacing * 2
                 spacing: 0
 
                 RowLayout {
@@ -924,8 +926,8 @@ PlasmaComponents.Page {
                         enabled: showBackground.checked
                         text: i18nc("number in percentage, e.g. 85 %","%1 %", panelSizeSlider.value)
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
                     }
                 }
 
@@ -974,8 +976,8 @@ PlasmaComponents.Page {
                         enabled: transparencySlider.enabled
                         text: transparencySlider.value >= 0 ? i18nc("number in percentage, e.g. 85 %","%1 %", transparencySlider.value) : i18nc("Default word abbreviation", "Def.")
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
                     }
                 }
 
@@ -1016,8 +1018,8 @@ PlasmaComponents.Page {
                         enabled: radiusSlider.enabled
                         text: radiusSlider.value >= 0 ? i18nc("number in percentage, e.g. 85 %","%1 %", radiusSlider.value) : i18nc("Default word abbreviation", "Def.")
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
                     }
                 }
 
@@ -1059,15 +1061,15 @@ PlasmaComponents.Page {
                         enabled: shadowSlider.enabled
                         text: shadowSlider.value >= 0 ? i18nc("number in pixels, e.g. 12 px.", "%1 px.", shadowSlider.value ) : i18nc("Default word abbreviation", "Def.")
                         horizontalAlignment: Text.AlignRight
-                        Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                        Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+                        Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+                        Layout.maximumWidth: Kirigami.Units.gridUnit * 4
                     }
                 }
 
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    Layout.topMargin: units.smallSpacing
+                    Layout.topMargin: Kirigami.Units.smallSpacing
                     spacing: 2
                     visible: dialog.advancedLevel
 

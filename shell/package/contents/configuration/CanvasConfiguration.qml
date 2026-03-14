@@ -7,11 +7,12 @@ import QtQuick
 import Qt5Compat.GraphicalEffects
 
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.private.app 0.1 as LatteApp
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.private.app as LatteApp
+import org.kde.latte.core as LatteCore
+import org.kde.latte.private.containment as LatteContainment
 
 import "canvas" as CanvasComponent
 
@@ -40,7 +41,7 @@ Loader {
 
         property string appChosenShadowColor: {
             if (plasmoid.configuration.shadowColorType === LatteContainment.Types.ThemeColorShadow) {
-                var strC = String(theme.textColor);
+                var strC = String(Kirigami.Theme.textColor);
                 return strC.indexOf("#") === 0 ? strC.substr(1) : strC;
             } else if (plasmoid.configuration.shadowColorType === LatteContainment.Types.UserColorShadow) {
                 return plasmoid.configuration.shadowColor;

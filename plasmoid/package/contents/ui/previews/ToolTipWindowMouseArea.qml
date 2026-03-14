@@ -8,11 +8,11 @@ import QtQuick
 
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 MouseArea {
     property var modelIndex
-    property int winId // FIXME Legacy
+    property var winId // Plasma 6: window IDs are UUIDs (strings), not ints
     property Item rootTask
 
     acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
@@ -20,7 +20,7 @@ MouseArea {
     enabled: LatteCore.WindowSystem.isPlatformWayland ||
              (!LatteCore.WindowSystem.isPlatformWayland && winId != 0)
 
-    onClicked: {
+    onClicked: (mouse) => {
         //!used mainly to not close the previews window when the user closes many windows simultaneously
         var keepVisibility = false;
 

@@ -11,12 +11,13 @@ import Qt5Compat.GraphicalEffects
 
 import org.kde.plasma.plasmoid
 
+import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 import "../colorizer" as Colorizer
 
@@ -288,24 +289,18 @@ BackgroundProperties{
     property QtObject themeExtendedBackground: null
 
     Behavior on opacity{
-        enabled: LatteCore.WindowSystem.compositingActive
         NumberAnimation {
-            duration: barLine.animationTime
-        }
-    }
-
-    Behavior on opacity{
-        enabled: !LatteCore.WindowSystem.compositingActive
-        NumberAnimation {
-            duration: 0
+            duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0
         }
     }
 
     Binding {
         target: barLine
         property: "themeExtendedBackground"
+        restoreMode: Binding.RestoreNone
         when: themeExtended
         value: {
+            if (!themeExtended) return null;
             switch(plasmoid.location) {
             case PlasmaCore.Types.BottomEdge: return themeExtended.backgroundBottomEdge;
             case PlasmaCore.Types.LeftEdge: return themeExtended.backgroundLeftEdge;
@@ -343,14 +338,7 @@ BackgroundProperties{
                                            || customShadowedRectangleIsEnabled
 
         Behavior on opacity {
-            enabled: LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: barLine.animationTime }
-        }
-
-
-        Behavior on opacity{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: 0 }
+            NumberAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
     }
 
@@ -369,13 +357,7 @@ BackgroundProperties{
         readonly property real appliedOpacity: visible ? solidBackground.appliedOpacity : 0
 
         Behavior on opacity{
-            enabled: LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: barLine.animationTime }
-        }
-
-        Behavior on opacity{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: 0 }
+            NumberAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
     }
 
@@ -508,13 +490,7 @@ BackgroundProperties{
         enabledBorders: latteView && latteView.effects ? latteView.effects.enabledBorders : KSvg.FrameSvg.NoBorder
 
         Behavior on opacity{
-            enabled: LatteCore.WindowSystem.compositingActive && !solidBackground.paintInstantly
-            NumberAnimation { duration: barLine.animationTime }
-        }
-
-        Behavior on opacity{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: 0 }
+            NumberAnimation { duration: (LatteCore.WindowSystem.compositingActive && !solidBackground.paintInstantly) ? barLine.animationTime : 0 }
         }
 
         function adjustPrefix() {
@@ -551,7 +527,7 @@ BackgroundProperties{
 
         readonly property bool busyBackground: root.forcePanelForBusyBackground
                                                && (solidBackground.opacity === 0 || !solidBackground.paintInstantly)
-        readonly property bool coloredView: colorizerManager.mustBeShown && colorizerManager.applyTheme !== theme
+        readonly property bool coloredView: colorizerManager.mustBeShown && colorizerManager.applyTheme !== colorizerManager._defaultTheme
 
         backgroundOpacity: {
             if (busyBackground && !forceSolidness) {
@@ -590,23 +566,11 @@ BackgroundProperties{
         readonly property bool forceSolidness: root.forceSolidPanel || !LatteCore.WindowSystem.compositingActive
 
         Behavior on backgroundOpacity{
-            enabled: LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: barLine.animationTime }
-        }
-
-        Behavior on backgroundOpacity{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: 0 }
+            NumberAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
 
         Behavior on backgroundColor{
-            enabled: LatteCore.WindowSystem.compositingActive
-            ColorAnimation { duration: barLine.animationTime }
-        }
-
-        Behavior on backgroundColor{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            ColorAnimation { duration: 0 }
+            ColorAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
     }
 

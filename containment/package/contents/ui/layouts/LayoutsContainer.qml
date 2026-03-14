@@ -11,9 +11,9 @@ import org.kde.plasma.plasmoid
 
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.private.app 0.1 as LatteApp
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.private.app as LatteApp
+import org.kde.latte.core as LatteCore
+import org.kde.latte.private.containment as LatteContainment
 
 import "../debugger" as Debugger
 
@@ -39,6 +39,7 @@ Item{
     Binding {
         target: layoutsContainer
         property: "x"
+        restoreMode: Binding.RestoreNone
         when: !visibilityManager.inRelocationAnimation
         value: {
             if (root.behaveAsPlasmaPanel) {
@@ -72,6 +73,7 @@ Item{
     Binding{
         target: layoutsContainer
         property: "y"
+        restoreMode: Binding.RestoreNone
         when: !visibilityManager.inRelocationAnimation
         value: {
             if (root.behaveAsPlasmaPanel) {
@@ -375,6 +377,7 @@ Item{
         Binding{
             target: _mainLayout
             property:"inJustifyCenterOffset"
+            restoreMode: Binding.RestoreNone
             when: !layouter.appletsInParentChange && layouter.inNormalFillCalculationsState
             value: {
                 if (root.myView.alignment !== LatteCore.Types.Justify) {

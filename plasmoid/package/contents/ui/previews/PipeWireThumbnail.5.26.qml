@@ -8,8 +8,8 @@ import QtQuick.Window
 
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
-import org.kde.pipewire 0.1 as PipeWire
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.pipewire as PipeWire
+import org.kde.taskmanager as TaskManager
 
 // opacity doesn't work in the root item
 Item {

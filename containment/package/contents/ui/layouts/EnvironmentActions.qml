@@ -8,11 +8,11 @@ import QtQuick
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.private.containment as LatteContainment
 
-import org.kde.latte.abilities.items 0.1 as AbilityItem
+import org.kde.latte.abilities.items as AbilityItem
 
 import "loaders" as Loaders
 

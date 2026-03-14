@@ -9,20 +9,21 @@ import QtQuick.Layouts
 
 import Qt5Compat.GraphicalEffects
 
+import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.plasmoid
 
-import org.kde.taskmanager 0.1 as TaskManager
-import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
+import org.kde.taskmanager as TaskManager
+import org.kde.taskmanager as TaskManagerApplet
 
-import org.kde.activities 0.1 as Activities
+import org.kde.activities as Activities
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.core as LatteCore
+import org.kde.latte.components as LatteComponents
 
-import org.kde.latte.private.tasks 0.1 as LatteTasks
+import org.kde.latte.private.tasks as LatteTasks
 
 import "abilities" as Ability
 import "previews" as Previews
@@ -46,6 +47,12 @@ PlasmoidItem {
 
     LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft && !root.vertical
     LayoutMirroring.childrenInherit: true
+
+    //! Plasma version flags — Plasma 6, so all are true
+    readonly property bool plasmaAtLeast524: true
+    readonly property bool plasmaAtLeast525: true
+    readonly property bool plasmaAtLeast526: true
+    readonly property bool plasmaGreaterThan522: true
 
     property bool disableRestoreZoom: false //blocks restore animation in rightClick
     property bool disableAllWindowsFunctionality: plasmoid.configuration.hideAllTasks
@@ -90,8 +97,8 @@ PlasmoidItem {
 
     property real textColorBrightness: ColorizerTools.colorBrightness(themeTextColor)
 
-    property color themeTextColor: theme.textColor
-    property color themeBackgroundColor: theme.backgroundColor
+    property color themeTextColor: Kirigami.Theme.textColor
+    property color themeBackgroundColor: Kirigami.Theme.backgroundColor
 
     property color lightTextColor: textColorBrightness > 127.5 ? themeTextColor : themeBackgroundColor
 
@@ -195,7 +202,6 @@ PlasmoidItem {
     readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
     //END  Latte Dock Communicator
 
-    Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
     Plasmoid.backgroundHints: inPlasmaDesktop ? PlasmaCore.Types.StandardBackground : PlasmaCore.Types.NoBackground
 
     signal draggingFinished();
@@ -242,7 +248,7 @@ PlasmoidItem {
 
         onIsReadyChanged: {
             if (appletAbilities.myView.isReady) {
-                plasmoid.action("configure").visible = false;
+                plasmoid.internalAction("configure").visible = false;
                 plasmoid.configuration.isInLatteDock = true;
             }
         }
@@ -260,6 +266,7 @@ PlasmoidItem {
     Binding {
         target: root
         property: "hasTaskDemandingAttention"
+        restoreMode: Binding.RestoreNone
         when: appletAbilities.indexer.isReady
         value: {
             for (var i=0; i<appletAbilities.indexer.layout.children.length; ++i){
@@ -407,8 +414,35 @@ PlasmoidItem {
                 //! when switching between single thumbnail to another single thumbnail
                 //! maybe is not needed any more, let's disable it
                 //mainItem.visible = false;
-                visible = true;
+
+                //! Plasma 6: Dialog asserts if shown with zero-size content.
+                //! Delay showing until content has valid dimensions.
+                if (toolTipDelegate.contentItem && toolTipDelegate.contentItem.width > 0 && toolTipDelegate.contentItem.height > 0) {
+                    visible = true;
+                } else {
+                    previewShowTimer.start();
+                }
                 //mainItem.visible = true;
+            }
+        }
+    }
+
+    //! Delay showing preview dialog until content has valid size (Plasma 6 fix)
+    Timer {
+        id: previewShowTimer
+        interval: 50
+        repeat: true
+        property int attempts: 0
+        onTriggered: {
+            attempts++;
+            if (toolTipDelegate.contentItem && toolTipDelegate.contentItem.width > 0 && toolTipDelegate.contentItem.height > 0) {
+                windowsPreviewDlg.visible = true;
+                stop();
+                attempts = 0;
+            } else if (attempts > 20) {
+                // Give up after 1 second
+                stop();
+                attempts = 0;
             }
         }
     }
@@ -527,6 +561,8 @@ PlasmoidItem {
             }
         }
 
+        onCountChanged: {}
+
         Component.onCompleted: {
             ActivitiesTools.launchersOnActivities = root.launchersOnActivities
             ActivitiesTools.currentActivity = String(activityInfo.currentActivity);
@@ -559,30 +595,29 @@ PlasmoidItem {
     }
 
 
-    TaskManagerApplet.Backend {
+    //! TODO: TaskManagerApplet.Backend was removed in Plasma 6.
+    //! Window highlighting and launcher adding need alternative implementation.
+    QtObject {
         id: backend
-        taskManagerItem: root
-        highlightWindows: root.highlightWindows
+        property Item taskManagerItem: root
+        property bool highlightWindows: root.highlightWindows
+        signal addLauncher(string url)
 
-        onAddLauncher: {
-            tasksModel.requestAddLauncher(url);
-        }
-
-        Component.onCompleted: {
-            //! In Plasma 5.9 TaskManagerBackend required a groupDialog setting
-            //! otherwise it crashes.
-            //! frameworks 5.29.0 provide id 335104
-            //! work only after Plasma 5.9 and frameworks 5.29
-            //! + added a check for groupDialog also when it is present
-            //!   in plasma 5.8 (that was introduced after 5.8.5)
-            if (LatteCore.Environment.frameworksVersion >= 335104 || (groupDialog !== undefined)) {
-                groupDialog = groupDialogGhost;
+        //! Stubs for removed TaskManagerApplet.Backend methods
+        property bool windowViewAvailable: false
+        property bool canPresentWindows: false
+        function activateWindowView(winId) { }
+        function windowsHovered(ids, hovered) { }
+        function cancelHighlightWindows() { }
+        function isApplication(item) { return true; }
+        function jsonArrayToUrlList(urls) { return []; }
+        function generateMimeData(mimeType, mimeData, launcherUrl) { return {}; }
+        function globalRect(item) {
+            if (item) {
+                var pos = item.mapToGlobal(0, 0);
+                return Qt.rect(pos.x, pos.y, item.width, item.height);
             }
-
-            //! In Plasma 5.22 toolTipItem was dropped
-            if (!root.plasmaGreaterThan522) {
-                toolTipItem = toolTipDelegate;
-            }
+            return Qt.rect(0, 0, 0, 0);
         }
     }
 
@@ -610,80 +645,23 @@ PlasmoidItem {
         Component.onCompleted: previousActivity = currentActivity;
     }
 
-    PlasmaCore.DataSource {
+    //! TODO: PlasmaCore.DataSource was removed in Plasma 6.
+    //! MPRIS2 integration needs to be reimplemented using D-Bus or Plasma's new MPRIS model.
+    QtObject {
         id: mpris2Source
-        engine: "mpris2"
-        connectedSources: sources
-        function sourceNameForLauncherUrl(launcherUrl, pid) {
-            if (!launcherUrl || launcherUrl === "") {
-                return "";
-            }
-
-            // MPRIS spec explicitly mentions that "DesktopEntry" is with .desktop extension trimmed
-            // Moreover, remove URL parameters, like wmClass (part after the question mark)
-            var desktopFileName = launcherUrl.toString().split('/').pop().split('?')[0].replace(".desktop", "")
-            if (desktopFileName.indexOf("applications:") === 0) {
-                desktopFileName = desktopFileName.substr(13)
-            }
-
-            for (var i = 0, length = connectedSources.length; i < length; ++i) {
-                var source = connectedSources[i];
-                // we intend to connect directly, otherwise the multiplexer steals the connection away
-                if (source === "@multiplex") {
-                    continue;
-                }
-
-                var sourceData = data[source];
-                if (!sourceData) {
-                    continue;
-                }
-
-                if (sourceData.DesktopEntry === desktopFileName || (pid && sourceData.InstancePid === pid)) {
-                    return source;
-                }
-
-                var metadata = sourceData.Metadata;
-                if (metadata) {
-                    var kdePid = metadata["kde:pid"];
-                    if (kdePid && pid === kdePid) {
-                        return source;
-                    }
-                }
-            }
-
-            return ""
-        }
-
-        function startOperation(source, op) {
-            var service = serviceForSource(source)
-            var operation = service.operationDescription(op)
-            return service.startOperationCall(operation)
-        }
-
-        function goPrevious(source) {
-            startOperation(source, "Previous");
-        }
-        function goNext(source) {
-            startOperation(source, "Next");
-        }
-        function play(source) {
-            startOperation(source, "Play");
-        }
-        function pause(source) {
-            startOperation(source, "Pause");
-        }
-        function playPause(source) {
-            startOperation(source, "PlayPause");
-        }
-        function stop(source) {
-            startOperation(source, "Stop");
-        }
-        function raise(source) {
-            startOperation(source, "Raise");
-        }
-        function quit(source) {
-            startOperation(source, "Quit");
-        }
+        property var sources: []
+        property var connectedSources: []
+        property var data: ({})
+        function sourceNameForLauncherUrl(launcherUrl, pid) { return ""; }
+        function startOperation(source, op) { return null; }
+        function goPrevious(source) {}
+        function goNext(source) {}
+        function play(source) {}
+        function pause(source) {}
+        function playPause(source) {}
+        function stop(source) {}
+        function raise(source) {}
+        function quit(source) {}
     }
 
     Loader {
@@ -947,6 +925,7 @@ PlasmoidItem {
             Binding {
                 target: scrollableList
                 property: "thickness"
+                restoreMode: Binding.RestoreNone
                 when: !appletAbilities.myView.inRelocationHiding
                 value: {
                     if (appletAbilities.myView.isReady) {
@@ -960,6 +939,7 @@ PlasmoidItem {
             Binding {
                 target: scrollableList
                 property: "length"
+                restoreMode: Binding.RestoreNone
                 when: !appletAbilities.myView.inRelocationHiding
                 value: root.vertical ? Math.min(root.height, root.tasksLength) : Math.min(root.width, root.tasksLength)
             }
@@ -1281,6 +1261,10 @@ PlasmoidItem {
         initialArgs.modelIndex = modelIndex;
         initialArgs.mpris2Source = mpris2Source;
         initialArgs.backend = backend;
+
+        if (root.contextMenuComponent.status !== Component.Ready) {
+            return null;
+        }
 
         root.contextMenu = root.contextMenuComponent.createObject(rootTask, initialArgs);
 

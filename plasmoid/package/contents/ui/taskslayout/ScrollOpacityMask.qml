@@ -5,13 +5,13 @@
 */
 
 import QtQuick
-import QtQuick.Controls 1.4
+import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
 
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-PlasmoidItem {
+Item {
 
     readonly property int gradientLength: appletAbilities.metrics.iconSize / 3
 

@@ -73,6 +73,7 @@ public:
                                , Plasma::Types::Location location) = 0;
     virtual void setWindowOnActivities(const WindowId &wid, const QStringList &activities) = 0;
 
+    virtual void setWindowPosition(QWindow *window, const Plasma::Types::Location &location, const QRect &geometry) = 0;
     virtual void removeViewStruts(QWindow *view) = 0;
 
     virtual WindowId activeWindow() = 0;

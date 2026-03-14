@@ -44,6 +44,7 @@ Item{
     Binding {
         target: totalsItem
         property: "minThickness"
+        restoreMode: Binding.RestoreNone
         when: !(hideThickScreenGap || hideLengthScreenGaps)
         value: (paddings.headThickness + paddings.tailThickness)
     }

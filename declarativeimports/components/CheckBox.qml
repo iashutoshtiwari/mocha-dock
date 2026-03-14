@@ -4,19 +4,16 @@
 */
 
 import org.kde.plasma.components as PlasmaComponents
-import "private" as Private
 
 PlasmaComponents.CheckBox {
     property int value: 0
 
     onValueChanged: {
-        if (partiallyCheckedEnabled) {
-            checkedState = value;
+        if (tristate) {
+            checkState = value;
         } else {
             checked = value;
         }
     }
-
-    style: Private.CheckBoxStyle {}
 }
 

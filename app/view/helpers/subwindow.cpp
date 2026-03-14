@@ -61,6 +61,11 @@ SubWindow::SubWindow(Latte::View *view, QString debugType) :
     connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &SubWindow::updateWaylandId);
 
     setScreen(m_latteView->screen());
+
+    //! Set up LayerShellQt before the first show() to avoid
+    //! "already has a shell integration" warning on subsequent shows
+    m_corona->wm()->setViewExtraFlags(this);
+
     show();
     hideWithMask();
 }
@@ -148,9 +153,9 @@ void SubWindow::startGeometryTimer()
 
 bool SubWindow::event(QEvent *e)
 {
-    if (e->type() == QEvent::Show) {
-        m_corona->wm()->setViewExtraFlags(this);
-    }
+    //! LayerShellQt is configured once in the constructor before the first show().
+    //! Calling setViewExtraFlags() again on subsequent Show events would trigger
+    //! "already has a shell integration" warnings from LayerShellQt::Window::get().
 
     return QQuickView::event(e);
 }

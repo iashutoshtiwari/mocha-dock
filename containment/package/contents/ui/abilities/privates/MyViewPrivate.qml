@@ -4,13 +4,14 @@
 */
 
 import QtQuick
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.latte.abilities.host as AbilityHost
 
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.private.containment as LatteContainment
 
 AbilityHost.MyView {
     id: _myView
@@ -24,7 +25,7 @@ AbilityHost.MyView {
 
     readonly property string itemShadowCurrentColor: {
         if (plasmoid.configuration.shadowColorType === LatteContainment.Types.ThemeColorShadow) {
-            var strC = String(theme.textColor);
+            var strC = String(Kirigami.Theme.textColor);
             return strC.indexOf("#") === 0 ? strC.substr(1) : strC;
         } else if (plasmoid.configuration.shadowColorType === LatteContainment.Types.UserColorShadow) {
             return plasmoid.configuration.shadowColor;
@@ -51,6 +52,7 @@ AbilityHost.MyView {
     Binding{
         target: _myView
         property: "isHidingBlockedFromApplet"
+        restoreMode: Binding.RestoreNone
         when: isBindingUpdateEnabled
         value: {
             var grid;

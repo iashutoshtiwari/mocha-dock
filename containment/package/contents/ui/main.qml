@@ -15,12 +15,12 @@ import org.kde.plasma.components as PlasmaComponents
 import org.kde.kquickcontrolsaddons
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.latte.abilities.host as AbilityHost
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
-import org.kde.latte.private.app 0.1 as LatteApp
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.core as LatteCore
+import org.kde.latte.components as LatteComponents
+import org.kde.latte.private.app as LatteApp
+import org.kde.latte.private.containment as LatteContainment
 
 import "abilities" as Ability
 import "applet" as Applet
@@ -389,6 +389,7 @@ ContainmentItem {
     Binding {
         target: root
         property: "hideThickScreenGap"
+        restoreMode: Binding.RestoreNone
         when: !(plasmoid.configuration.floatingGapHidingWaitsMouse && dockContainsMouse)
         value: screenEdgeMarginEnabled
                && plasmoid.configuration.hideFloatingGapForMaximized
@@ -401,6 +402,7 @@ ContainmentItem {
     Binding{
         target: root
         property: "hideLengthScreenGaps"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.positioner && latteView.visibility
               && ((root.behaveAsPlasmaPanel && latteView.positioner.slideOffset === 0)
                   || root.behaveAsDockWithMask)
@@ -531,8 +533,8 @@ ContainmentItem {
         upgrader_v010_alignment();
 
         fastLayoutManager.restore();
-        plasmoid.action("configure").visible = !plasmoid.immutable;
-        plasmoid.action("configure").enabled = !plasmoid.immutable;
+        plasmoid.internalAction("configure").visible = !plasmoid.immutable;
+        plasmoid.internalAction("configure").enabled = !plasmoid.immutable;
     }
 
     Component.onDestruction: {
@@ -555,16 +557,26 @@ ContainmentItem {
         }
     }
 
-    Containment.onAppletAdded: {
-        if (fastLayoutManager.isMasqueradedIndex(x, y)) {
-            var index = fastLayoutManager.masquearadedIndex(x, y);
-            fastLayoutManager.addAppletItem(applet, index);
-        } else {
-            fastLayoutManager.addAppletItem(applet, x, y);
+    //! In Plasma 6, appletAdded/appletRemoved signals are on Plasma::Containment (C++ object),
+    //! not on ContainmentItem. Use Connections targeting plasmoid (the C++ containment).
+    Connections {
+        target: plasmoid
+        function onAppletAdded(applet, geometryHint) {
+            console.log("=== onAppletAdded === applet:", applet, "geometryHint:", geometryHint,
+                        "type:", typeof applet);
+            var x = geometryHint.x;
+            var y = geometryHint.y;
+            if (fastLayoutManager.isMasqueradedIndex(x, y)) {
+                var index = fastLayoutManager.masquearadedIndex(x, y);
+                fastLayoutManager.addAppletItem(applet, index);
+            } else {
+                fastLayoutManager.addAppletItem(applet, x, y);
+            }
+        }
+        function onAppletRemoved(applet) {
+            fastLayoutManager.removeAppletItem(applet);
         }
     }
-
-    Containment.onAppletRemoved: fastLayoutManager.removeAppletItem(applet);
 
     Plasmoid.onUserConfiguringChanged: {
         if (plasmoid.userConfiguring) {
@@ -575,14 +587,16 @@ ContainmentItem {
     }
 
     Plasmoid.onImmutableChanged: {
-        plasmoid.action("configure").visible = !plasmoid.immutable;
-        plasmoid.action("configure").enabled = !plasmoid.immutable;
+        plasmoid.internalAction("configure").visible = !plasmoid.immutable;
+        plasmoid.internalAction("configure").enabled = !plasmoid.immutable;
     }
     //////////////END OF CONNECTIONS
 
     //////////////START OF FUNCTIONS
     function createAppletItem(applet) {
+        console.log("=== createAppletItem === applet:", applet, "type:", typeof applet);
         var appletContainer = appletItemComponent.createObject(dndSpacer.parent);
+        console.log("=== createAppletItem === container:", appletContainer, "appletWrapper:", appletContainer ? appletContainer.appletWrapper : "null");
         initAppletContainer(appletContainer, applet);
 
         // don't show applet if it chooses to be hidden but still make it  accessible in the panelcontroller
@@ -1039,7 +1053,9 @@ ContainmentItem {
         plasmoidInterface: plasmoid
 
         Component.onCompleted: {
-            view.interfacesGraphicObj = _interfaces;
+            if (view) {
+                view.interfacesGraphicObj = _interfaces;
+            }
         }
 
         onViewChanged: {

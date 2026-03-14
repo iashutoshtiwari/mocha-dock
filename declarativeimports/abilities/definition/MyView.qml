@@ -5,9 +5,10 @@
 
 import QtQuick
 
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 import "./myview" as MyViewTypes
 
@@ -46,7 +47,19 @@ Item {
 
     property var containmentActions: []
 
-    property QtObject palette: theme
+    property QtObject palette: _defaultPaletteObj
+    readonly property QtObject defaultPalette: _defaultPaletteObj
+
+    QtObject {
+        id: _defaultPaletteObj
+        readonly property color textColor: Kirigami.Theme.textColor
+        readonly property color backgroundColor: Kirigami.Theme.backgroundColor
+        readonly property color highlightColor: Kirigami.Theme.highlightColor
+        readonly property color highlightedTextColor: Kirigami.Theme.highlightedTextColor
+        readonly property color positiveTextColor: Kirigami.Theme.positiveTextColor
+        readonly property color neutralTextColor: Kirigami.Theme.neutralTextColor
+        readonly property color negativeTextColor: Kirigami.Theme.negativeTextColor
+    }
 
     property MyViewTypes.ItemShadow itemShadow: MyViewTypes.ItemShadow {
         isEnabled: true

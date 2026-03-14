@@ -8,8 +8,8 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.tasks 0.1 as LatteTasks
+import org.kde.latte.core as LatteCore
+import org.kde.latte.private.tasks as LatteTasks
 
 MouseArea {
     id: taskMouseArea
@@ -24,8 +24,8 @@ MouseArea {
 
     Connections {
         target: taskMouseArea
-        onPressed: taskItem.mousePressed(mouse.x, mouse.y, mouse.button)
-        onReleased: taskItem.mouseReleased(mouse.x, mouse.y, mouse.button)
+        function onPressed(mouse) { taskItem.mousePressed(mouse.x, mouse.y, mouse.button); }
+        function onReleased(mouse) { taskItem.mouseReleased(mouse.x, mouse.y, mouse.button); }
     }
 
     onEntered: {
@@ -72,7 +72,7 @@ MouseArea {
     }
 
     // IMPORTANT: This must be improved ! even for small milliseconds  it reduces performance
-    onPositionChanged: {
+    onPositionChanged: (mouse) => {
         if (taskItem.abilities.myView.isReady && !taskItem.abilities.myView.isShownFully) {
             return;
         }
@@ -105,8 +105,7 @@ MouseArea {
         }
     }
 
-    onPressed: {
-        //console.log("Pressed Task Delegate..");
+    onPressed: (mouse) => {
         if (LatteCore.WindowSystem.compositingActive && !LatteCore.WindowSystem.isPlatformWayland) {
             if(root.leftClickAction !== LatteTasks.Types.PreviewWindows) {
                 isAbleToShowPreview = false;
@@ -139,8 +138,7 @@ MouseArea {
         }
     }
 
-    onReleased: {
-        //console.log("Released Task Delegate...");
+    onReleased: (mouse) => {
         _resistanerTimer.stop();
 
         if(pressed && (!inBlockingAnimation || inAttentionBuiltinAnimation) && !isSeparator){
@@ -198,24 +196,12 @@ MouseArea {
                 }
 
                 if( !taskItem.isLauncher && !root.disableAllWindowsFunctionality ){
-                    if ( (root.leftClickAction === LatteTasks.Types.PreviewWindows && isGroupParent)
-                            || ( !canPresentWindowsIsSupported
-                                && root.leftClickAction === LatteTasks.Types.PresentWindows
-                                && isGroupParent) ) {
-                        if(windowsPreviewDlg.activeItem !== taskItem || !windowsPreviewDlg.visible){
-                            showPreviewWindow();
-                        } else {
-                            forceHidePreview(21.1);
-                        }
-                    } else if ( (root.leftClickAction === LatteTasks.Types.PresentWindows && !(isGroupParent && !LatteCore.WindowSystem.compositingActive))
-                               || ((root.leftClickAction === LatteTasks.Types.PreviewWindows && !isGroupParent)) ) {
+                    //! Plasma 6: Preview/PresentWindows for grouped tasks needs PipeWire
+                    //! thumbnails which may not be available. Simplified to always activate.
+                    if (root.leftClickAction === LatteTasks.Types.CycleThroughTasks && isGroupParent) {
+                        subWindows.activateNextTask();
+                    } else {
                         activateTask();
-                    } else if (root.leftClickAction === LatteTasks.Types.CycleThroughTasks) {
-                        if (isGroupParent) {
-                            subWindows.activateNextTask();
-                        } else {
-                            activateTask();
-                        }
                     }
                 } else {
                     activateTask();
@@ -228,7 +214,7 @@ MouseArea {
         pressed = false;
     }
 
-    onWheel: {
+    onWheel: (wheel) => {
         var wheelActionsEnabled = (root.taskScrollAction !== LatteTasks.Types.ScrollNone || root.manualScrollTasksEnabled);
 
         if (isSeparator

@@ -7,7 +7,7 @@
 import QtQuick
 
 import org.kde.plasma.core as PlasmaCore
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 Item{
     id: hiddenSpacer
@@ -33,6 +33,7 @@ Item{
     Binding{
         target: hiddenSpacer
         property: "nHiddenSize"
+        restoreMode: Binding.RestoreNone
         when: !hiddenSizeDelayer.running && itemIndex > -1 //! helps to solve BUGLOCALREF: #1
         value: {
             if (abilityItem.isHidden) {
@@ -55,15 +56,9 @@ Item{
     }
 
     Behavior on nHiddenSize {
-        id: animatedBehavior
-        enabled: abilityItem.isHiddenSpacerAnimated || restoreAnimation.running
-        NumberAnimation{ duration: 3 * abilityItem.animationTime }
-    }
-
-    Behavior on nHiddenSize {
-        id: directBehavior
-        enabled: !animatedBehavior.enabled
-        NumberAnimation { duration: 0 }
+        NumberAnimation {
+            duration: (abilityItem.isHiddenSpacerAnimated || restoreAnimation.running) ? 3 * abilityItem.animationTime : 0
+        }
     }
 
     Loader{

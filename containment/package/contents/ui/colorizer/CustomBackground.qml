@@ -7,6 +7,7 @@ import QtQuick
 
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
+import org.kde.ksvg as KSvg
 
 Item{
     id: main
@@ -53,7 +54,7 @@ Item{
         return i;
     }
 
-    readonly property bool allBorders: (latteView && latteView.effects && (latteView.effects.enabledBorders === PlasmaCore.FrameSvg.AllBorders))
+    readonly property bool allBorders: (latteView && latteView.effects && (latteView.effects.enabledBorders === KSvg.FrameSvg.AllBorders))
 
     readonly property bool bothVerticals: (leftBorder && rightBorder)
     readonly property bool bothHorizontals: (bottomBorder && topBorder)
@@ -65,36 +66,40 @@ Item{
     Binding{
         target: main
         property: "topBorder"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & PlasmaCore.FrameSvg.TopBorder)) > 0) || allBorders;
+            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & KSvg.FrameSvg.TopBorder)) > 0) || allBorders;
         }
     }
 
     Binding{
         target: main
         property: "leftBorder"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & PlasmaCore.FrameSvg.LeftBorder)) > 0) || allBorders;
+            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & KSvg.FrameSvg.LeftBorder)) > 0) || allBorders;
         }
     }
 
     Binding{
         target: main
         property: "bottomBorder"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & PlasmaCore.FrameSvg.BottomBorder)) > 0) || allBorders;
+            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & KSvg.FrameSvg.BottomBorder)) > 0) || allBorders;
         }
     }
 
     Binding{
         target: main
         property: "rightBorder"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & PlasmaCore.FrameSvg.RightBorder)) > 0) || allBorders;
+            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & KSvg.FrameSvg.RightBorder)) > 0) || allBorders;
         }
     }
 

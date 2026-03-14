@@ -174,7 +174,44 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
 
         if (m_positioner) {
             //! immediateSyncGeometry helps avoiding binding loops from containment qml side
+            qDebug() << "containmentChanged: about to sync geometry, location=" << location()
+                     << "containment location=" << containment()->location();
             m_positioner->immediateSyncGeometry();
+        }
+
+        //! Assign app interfaces - must happen after setContainment() so itemForApplet() returns non-null
+        QQuickItem *containmentGraphicItem = PlasmaQuick::AppletQuickItem::itemForApplet(this->containment());
+        qDebug() << "containmentChanged: containmentGraphicItem =" << containmentGraphicItem;
+
+        if (containmentGraphicItem) {
+            containmentGraphicItem->setProperty("_latte_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
+            containmentGraphicItem->setProperty("_latte_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
+            containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
+            containmentGraphicItem->setProperty("_latte_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
+            containmentGraphicItem->setProperty("_latte_view_object", QVariant::fromValue(this));
+
+            //! Try to find the Interfaces QML object directly since _latte_view_interfacesobject
+            //! may not be set yet (Component.onCompleted ran before we set _latte_view_object)
+            Latte::Interfaces *ifacesGraphicObject = qobject_cast<Latte::Interfaces *>(containmentGraphicItem->property("_latte_view_interfacesobject").value<QObject *>());
+
+            if (!ifacesGraphicObject) {
+                //! Search for it as a child of the containment graphic item
+                ifacesGraphicObject = containmentGraphicItem->findChild<Latte::Interfaces *>();
+            }
+
+            if (ifacesGraphicObject) {
+                qDebug() << "containmentChanged: setting up interfaces directly (Plasma 6 path)";
+                ifacesGraphicObject->setupInterfaces(
+                    this,
+                    m_corona->globalShortcuts()->shortcutsTracker(),
+                    m_corona->layoutsManager(),
+                    m_corona->themeExtended(),
+                    m_corona->universalSettings()
+                );
+                setInterfacesGraphicObj(ifacesGraphicObject);
+            } else {
+                qDebug() << "containmentChanged: ifacesGraphicObject not found yet";
+            }
         }
 
         connect(this->containment(), SIGNAL(statusChanged(Plasma::Types::ItemStatus)), SLOT(statusChanged(Plasma::Types::ItemStatus)));
@@ -268,6 +305,8 @@ View::~View()
 
 void View::init(Plasma::Containment *plasma_containment)
 {
+    qDebug() << "View::init containment location:" << plasma_containment->location()
+             << "formFactor:" << plasma_containment->formFactor();
     connect(this, &QQuickWindow::xChanged, this, &View::geometryChanged);
     connect(this, &QQuickWindow::yChanged, this, &View::geometryChanged);
     connect(this, &QQuickWindow::widthChanged, this, &View::geometryChanged);
@@ -363,28 +402,11 @@ void View::init(Plasma::Containment *plasma_containment)
 
     connect(m_corona->indicatorFactory(), &Latte::Indicator::Factory::indicatorRemoved, this, &View::indicatorPluginRemoved);
 
-    //! Assign app interfaces in be accessible through containment graphic item
-    QQuickItem *containmentGraphicItem = qobject_cast<QQuickItem *>(plasma_containment->property("_plasma_graphicObject").value<QObject *>());
-
-    if (containmentGraphicItem) {
-        containmentGraphicItem->setProperty("_latte_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
-        containmentGraphicItem->setProperty("_latte_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
-        containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
-        containmentGraphicItem->setProperty("_latte_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
-        containmentGraphicItem->setProperty("_latte_view_object", QVariant::fromValue(this));
-
-        Latte::Interfaces *ifacesGraphicObject = qobject_cast<Latte::Interfaces *>(containmentGraphicItem->property("_latte_view_interfacesobject").value<QObject *>());
-
-        if (ifacesGraphicObject) {
-            ifacesGraphicObject->updateView();
-            setInterfacesGraphicObj(ifacesGraphicObject);
-        }
-    }
+    //! NOTE: Interface assignment moved to containmentChanged handler because in Plasma 6,
+    //! itemForApplet() returns null before setContainment() is called by the base class.
+    //! The containmentChanged signal fires after setContainment() completes.
 
     setSource(corona()->kPackage().filePath("lattedockui"));
-
-    //! immediateSyncGeometry helps avoiding binding loops from containment qml side
-    m_positioner->immediateSyncGeometry();
 
     qDebug() << "SOURCE:" << source();
 }
@@ -1422,7 +1444,7 @@ void View::setInterfacesGraphicObj(Latte::Interfaces *ifaces)
     m_interfacesGraphicObj = ifaces;
 
     if (containment()) {
-        QQuickItem *containmentGraphicItem = qobject_cast<QQuickItem *>(containment()->property("_plasma_graphicObject").value<QObject *>());
+        QQuickItem *containmentGraphicItem = PlasmaQuick::AppletQuickItem::itemForApplet(containment());
 
         if (containmentGraphicItem) {
             containmentGraphicItem->setProperty("_latte_view_interfacesobject", QVariant::fromValue(m_interfacesGraphicObj));

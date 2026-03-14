@@ -4,6 +4,7 @@
 */
 
 import QtQuick
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasmoid
 
 Item{
@@ -104,7 +105,15 @@ Item{
 
         readonly property alias screenEdgeMargin: _indicator.screenEdgeMargin
 
-        readonly property QtObject palette: _indicator.palette ? _indicator.palette : theme
+        readonly property QtObject palette: _indicator.palette ? _indicator.palette : _defaultPalette
+
+        QtObject {
+            id: _defaultPalette
+            readonly property color textColor: Kirigami.Theme.textColor
+            readonly property color backgroundColor: Kirigami.Theme.backgroundColor
+            readonly property color highlightColor: Kirigami.Theme.highlightColor
+            readonly property color highlightedTextColor: Kirigami.Theme.highlightedTextColor
+        }
 
         //!icon colors
         readonly property alias iconBackgroundColor: _indicator.iconBackgroundColor

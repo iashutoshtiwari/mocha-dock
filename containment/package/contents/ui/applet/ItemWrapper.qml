@@ -13,8 +13,8 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.extras as PlasmaExtras
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.core as LatteCore
+import org.kde.latte.components as LatteComponents
 
 import "../../code/MathTools.js" as MathTools
 
@@ -69,6 +69,7 @@ Item{
     }
 
     opacity: appletColorizer.mustBeShown && appletItem.environment.isGraphicsSystemAccelerated ? 0 : 1
+    layer.enabled: opacity < 1
 
     property bool disableLengthScale: false
     property bool disableThicknessScale: false
@@ -277,6 +278,7 @@ Item{
     Binding {
         target: wrapper
         property: "layoutThickness"
+        restoreMode: Binding.RestoreNone
         when: latteView && (wrapper.zoomScale === 1 || communicator.parabolicEffectIsSupported)
         value: {
             if (appletItem.isInternalViewSplitter){
@@ -295,6 +297,7 @@ Item{
     Binding {
         target: wrapper
         property: "layoutLength"
+        restoreMode: Binding.RestoreNone
         when: latteView && !appletItem.isAutoFillApplet && (wrapper.zoomScale === 1)
         value: {
             if (applet && ( appletMaximumLength < appletItem.metrics.iconSize
@@ -319,6 +322,7 @@ Item{
     Binding {
         target: wrapper
         property: "disableLengthScale"
+        restoreMode: Binding.RestoreNone
         when: latteView && !(appletItem.isAutoFillApplet || appletItem.indexerIsSupported)
         value: {
             var blockParabolicEffectInLength = false;
@@ -357,6 +361,7 @@ Item{
     Binding {
         target: wrapper
         property: "marginsLength"
+        restoreMode: Binding.RestoreNone
         when: latteView && (!root.inStartup || visibilityManager.inRelocationHiding)
         value: localLengthMargins
     }
@@ -481,6 +486,7 @@ Item{
         Binding {
             target: _wrapperContainer
             property: "_thickness"
+            restoreMode: Binding.RestoreNone
             when: !visibilityManager.inRelocationHiding
             value: {
                 if (appletItem.isInternalViewSplitter) {
@@ -496,6 +502,7 @@ Item{
         Binding {
             target: _wrapperContainer
             property: "_length"
+            restoreMode: Binding.RestoreNone
             when: !visibilityManager.inRelocationHiding
             value: {
                 if (appletItem.isAutoFillApplet && (appletItem.maxAutoFillLength>-1)){
@@ -556,7 +563,6 @@ Item{
                 }
 
                 providesColors: source != ""
-                usesPlasmaTheme: communicator.appletIconItem && communicator.appletIconItem.visible ? communicator.appletIconItem.usesPlasmaTheme : false
 
                 Binding{
                     target: _overlayIconLoader
@@ -705,16 +711,9 @@ Item{
     }
 
     Behavior on zoomScale {
-        id: animatedScaleBehavior
-        enabled: !appletItem.parabolic.directRenderingEnabled || restoreAnimation.running
         NumberAnimation {
-            duration: 3 * appletItem.animationTime
+            duration: (!appletItem.parabolic.directRenderingEnabled || restoreAnimation.running) ? 3 * appletItem.animationTime : 0
             easing.type: Easing.OutCubic
         }
-    }
-
-    Behavior on zoomScale {
-        enabled: !animatedScaleBehavior.enabled
-        NumberAnimation { duration: 0 }
     }
 }// Main task area // id:wrapper

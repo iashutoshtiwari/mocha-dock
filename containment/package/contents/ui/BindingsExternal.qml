@@ -5,11 +5,12 @@
 
 import QtQuick
 
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.core as LatteCore
+import org.kde.latte.private.containment as LatteContainment
 
 Item {
     property bool updateIsEnabled: autosize.inCalculatedIconSize
@@ -21,6 +22,7 @@ Item {
     Binding{
         target: latteView
         property:"maxThickness"
+        restoreMode: Binding.RestoreNone
         //! prevents updating window geometry during closing window in wayland and such fixes a crash
         when: latteView && !visibilityManager.inRelocationHiding && !visibilityManager.inClientSideScreenEdgeSliding //&& !inStartup
         value: root.behaveAsPlasmaPanel ? visibilityManager.thicknessAsPanel : metrics.maxThicknessForView
@@ -29,6 +31,7 @@ Item {
     Binding{
         target: latteView
         property:"normalThickness"
+        restoreMode: Binding.RestoreNone
         when: latteView && updateIsEnabled
         value: root.behaveAsPlasmaPanel ? visibilityManager.thicknessAsPanel : metrics.mask.screenEdge + metrics.mask.thickness.maxNormalForItemsWithoutScreenEdge
     }
@@ -36,6 +39,7 @@ Item {
     Binding{
         target: latteView
         property:"maxNormalThickness"
+        restoreMode: Binding.RestoreNone
         when: latteView && updateIsEnabled
         value: metrics.mask.thickness.maxNormal
     }
@@ -43,6 +47,7 @@ Item {
     Binding {
         target: latteView
         property: "headThicknessGap"
+        restoreMode: Binding.RestoreNone
         when: latteView && updateIsEnabled && !visibilityManager.inClientSideScreenEdgeSliding
         value: {
             if (root.behaveAsPlasmaPanel || root.viewType === LatteCore.Types.PanelView || (latteView && latteView.byPassWM)) {
@@ -56,6 +61,7 @@ Item {
     Binding{
         target: latteView
         property: "type"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: root.viewType
     }
@@ -63,6 +69,7 @@ Item {
     Binding{
         target: latteView
         property: "behaveAsPlasmaPanel"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: root.behaveAsPlasmaPanel
     }
@@ -70,13 +77,13 @@ Item {
     Binding{
         target: latteView
         property: "fontPixelSize"
-        when: theme
-        value: theme.defaultFont.pixelSize
+        value: Kirigami.Theme.defaultFont.pixelSize
     }
 
     Binding{
         target: latteView
         property: "maxLength"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: root.maxLengthPerCentage/100
     }
@@ -84,6 +91,7 @@ Item {
     Binding{
         target: latteView
         property: "offset"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: plasmoid.configuration.offset/100
     }
@@ -91,6 +99,7 @@ Item {
     Binding{
         target: latteView
         property: "screenEdgeMargin"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: Math.max(0, plasmoid.configuration.screenEdgeMargin)
     }
@@ -98,6 +107,7 @@ Item {
     Binding{
         target: latteView
         property: "screenEdgeMarginEnabled"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: root.screenEdgeMarginEnabled && !root.hideThickScreenGap
     }
@@ -105,6 +115,7 @@ Item {
     Binding{
         target: latteView
         property: "alignment"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: myView.alignment
     }
@@ -112,6 +123,7 @@ Item {
     Binding{
         target: latteView
         property: "isTouchingTopViewAndIsBusy"
+        restoreMode: Binding.RestoreNone
         when: root.viewIsAvailable
         value: {
             if (!root.viewIsAvailable) {
@@ -129,6 +141,7 @@ Item {
     Binding{
         target: latteView
         property: "isTouchingBottomViewAndIsBusy"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: {
             if (!root.viewIsAvailable) {
@@ -149,6 +162,7 @@ Item {
     Binding{
         target: latteView
         property: "colorizer"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: colorizerManager
     }
@@ -156,6 +170,7 @@ Item {
     Binding{
         target: latteView
         property: "metrics"
+        restoreMode: Binding.RestoreNone
         when: latteView
         value: metrics
     }
@@ -164,6 +179,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property: "backgroundAllCorners"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects
         value: plasmoid.configuration.backgroundAllCorners
                && (!root.screenEdgeMarginEnabled /*no-floating*/
@@ -176,6 +192,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property: "backgroundRadius"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects
         value: background.customRadius
     }
@@ -183,6 +200,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property: "backgroundRadiusEnabled"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects
         value: background.customRadiusIsEnabled
     }
@@ -190,6 +208,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property: "backgroundOpacity"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects
         value: plasmoid.configuration.panelTransparency===-1 /*Default option*/ ? -1 : background.currentOpacity
     }
@@ -197,6 +216,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property: "drawEffects"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects && !root.inStartup
         value: LatteCore.WindowSystem.compositingActive
                && (((root.blurEnabled && root.useThemePanel) || (root.blurEnabled && root.forceSolidPanel))
@@ -206,6 +226,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property: "drawShadows"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects
         value: root.drawShadowsExternal && (!root.inStartup || visibilityManager.inRelocationHiding) && !(latteView && latteView.visibility.isHidden)
     }
@@ -213,6 +234,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property:"editShadow"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects
         value: root.editShadow
     }
@@ -220,6 +242,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property:"innerShadow"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects
         value: background.shadows.headThickness
     }
@@ -227,6 +250,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property: "panelBackgroundSvg"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects
         value: background.panelBackgroundSvg
     }
@@ -234,6 +258,7 @@ Item {
     Binding{
         target: latteView && latteView.effects ? latteView.effects : null
         property:"appletsLayoutGeometry"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.effects && visibilityManager.inNormalState
         value: {
             if (root.behaveAsPlasmaPanel
@@ -263,6 +288,7 @@ Item {
     Binding{
         target: latteView && latteView.positioner ? latteView.positioner : null
         property: "isStickedOnTopEdge"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.positioner
         value: plasmoid.configuration.isStickedOnTopEdge
     }
@@ -270,6 +296,7 @@ Item {
     Binding{
         target: latteView && latteView.positioner ? latteView.positioner : null
         property: "isStickedOnBottomEdge"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.positioner
         value: plasmoid.configuration.isStickedOnBottomEdge
     }
@@ -278,6 +305,7 @@ Item {
     Binding{
         target: latteView && latteView.visibility ? latteView.visibility : null
         property: "isShownFully"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.visibility
         value: myView.isShownFully
     }
@@ -285,6 +313,7 @@ Item {
     Binding{
         target: latteView && latteView.visibility ? latteView.visibility : null
         property: "strutsThickness"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.visibility
         value: {
             var isCapableToHideScreenGap = root.screenEdgeMarginEnabled && plasmoid.configuration.hideFloatingGapForMaximized
@@ -313,6 +342,7 @@ Item {
     Binding {
         target: latteView && latteView.visibility ? latteView.visibility : null
         property: "isFloatingGapWindowEnabled"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.visibility
         value: root.hasFloatingGapInputEventsDisabled
                && (latteView.visibility.mode === LatteCore.Types.AutoHide
@@ -326,6 +356,7 @@ Item {
     Binding{
         target: latteView && latteView.windowsTracker ? latteView.windowsTracker : null
         property: "enabled"
+        restoreMode: Binding.RestoreNone
         //! During startup phase windows tracking is not enabled and does not
         //! influence startup sequence at all. At the same time no windows tracking
         //! takes place during startup and as such startup time is reduced
@@ -348,6 +379,7 @@ Item {
     Binding{
         target: latteView && latteView.extendedInterface ? latteView.extendedInterface : null
         property: "plasmoid"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.extendedInterface
         value: plasmoid
     }
@@ -355,6 +387,7 @@ Item {
     Binding{
         target: latteView && latteView.extendedInterface ? latteView.extendedInterface : null
         property: "layoutManager"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.extendedInterface
         value: fastLayoutManager
     }

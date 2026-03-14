@@ -6,7 +6,7 @@
 import QtQuick
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.latte.abilities.host as AbilityHost
 
 AbilityHost.Animations {
     id: animationsPrivate
@@ -19,6 +19,7 @@ AbilityHost.Animations {
     Binding{
         target: animationsPrivate.requirements
         property: "zoomFactor"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var zoom = 1.0;

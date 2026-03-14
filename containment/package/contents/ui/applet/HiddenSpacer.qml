@@ -6,7 +6,7 @@
 
 import QtQuick
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 Item{
     id: hiddenSpacer
@@ -35,15 +35,9 @@ Item{
     property real nScale: 0
 
     Behavior on nHiddenSize {
-        id: animatedBehavior
-        enabled: !appletItem.parabolic.directRenderingEnabled || restoreAnimation.running
-        NumberAnimation { duration: 3 * appletItem.animationTime }
-    }
-
-    Behavior on nHiddenSize {
-        id: directBehavior
-        enabled: !animatedBehavior.enabled
-        NumberAnimation { duration: 0 }
+        NumberAnimation {
+            duration: (!appletItem.parabolic.directRenderingEnabled || restoreAnimation.running) ? 3 * appletItem.animationTime : 0
+        }
     }
 
     Connections{

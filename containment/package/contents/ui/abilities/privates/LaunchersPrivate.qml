@@ -20,6 +20,7 @@ Item {
     Binding {
         target: _launchersprivate
         property: "appletIdStealingDroppedLaunchers"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var sLayout = layouts.startLayout;
@@ -67,6 +68,7 @@ Item {
     Binding {
         target: _launchersprivate
         property: "appletStealingDroppedLaunchers"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var sLayout = layouts.startLayout;

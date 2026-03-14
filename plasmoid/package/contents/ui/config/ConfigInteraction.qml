@@ -5,15 +5,15 @@
 */
 
 import QtQuick
-import QtQuick.Controls 1.0
+import QtQuick.Controls
 import QtQuick.Layouts
 
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.private.tasks 0.1 as LatteTasks
+import org.kde.latte.private.tasks as LatteTasks
 
-PlasmoidItem {
+Item {
     width: childrenRect.width
     height: childrenRect.height
 

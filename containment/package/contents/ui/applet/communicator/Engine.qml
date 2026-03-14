@@ -5,7 +5,7 @@
 
 import QtQuick
 
-import org.kde.latte.abilities.definition 0.1 as AbilityDefinition
+import org.kde.latte.abilities.definition as AbilityDefinition
 
 import "../../../code/AppletIdentifier.js" as AppletIdentifier
 
@@ -32,7 +32,8 @@ Item{
 
     property Item appletRootItem: appletDiscoveredRootItem ? appletDiscoveredRootItem : appletDefaultRootItem
     property Item appletDiscoveredRootItem: null
-    property Item appletDefaultRootItem: applet && applet.children && applet.children.length>0 ? applet.children[0] : null
+    //! In Plasma 6, the PlasmoidItem IS the applet root (not applet.children[0] as in Plasma 5)
+    property Item appletDefaultRootItem: applet ? applet : null
 
     property Item appletIconItem: null //first applet's IconItem to be used by Latte
     property Item appletImageItem: null //first applet's ImageItem to be used by Latte
@@ -93,10 +94,6 @@ Item{
             AppletIdentifier.checkAndUpdateAppletRootItem();
             AppletIdentifier.reconsiderAppletIconItem();
             mainCommunicator.inStartup = false;
-
-            if (appletItem.debug.timersEnabled) {
-                console.log("containment timer: appletItem fakeInitTimer called...");
-            }
         }
     }
 

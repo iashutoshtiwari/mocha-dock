@@ -5,7 +5,7 @@
 
 import QtQuick
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.latte.abilities.host as AbilityHost
 
 AbilityHost.Indicators {
     id: _indicators
@@ -33,6 +33,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator : null
         property:"enabledForApplets"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.enabledForApplets
     }
@@ -41,6 +42,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"needsIconColors"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.needsIconColors
     }
@@ -48,6 +50,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"needsMouseEventCoordinates"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.needsMouseEventCoordinates
     }
@@ -55,6 +58,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"providesClickedAnimation"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.providesClickedAnimation
     }
@@ -62,6 +66,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"providesHoveredAnimation"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.providesHoveredAnimation
     }
@@ -69,6 +74,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"providesInAttentionAnimation"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.providesInAttentionAnimation
     }
@@ -76,6 +82,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"providesTaskLauncherAnimation"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.providesTaskLauncherAnimation
     }
@@ -83,6 +90,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"providesGroupedWindowAddedAnimation"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.providesGroupedWindowAddedAnimation
     }
@@ -90,6 +98,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"providesGroupedWindowRemovedAnimation"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.providesGroupedWindowRemovedAnimation
     }
@@ -97,6 +106,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"providesFrontLayer"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.providesFrontLayer
     }
@@ -104,6 +114,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"extraMaskThickness"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.extraMaskThickness
     }
@@ -111,6 +122,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"minLengthPadding"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.minLengthPadding
     }
@@ -118,6 +130,7 @@ AbilityHost.Indicators {
     Binding{
         target: view && view.indicator ? view.indicator.info : null
         property:"minThicknessPadding"
+        restoreMode: Binding.RestoreNone
         when: view && view.indicator
         value: _indicators.info.minThicknessPadding
     }

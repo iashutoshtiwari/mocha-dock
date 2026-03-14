@@ -6,7 +6,7 @@
 import QtQuick
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.latte.abilities.host as AbilityHost
 
 AbilityHost.Debug {
     eventsSinkEnabled: Qt.application.arguments.indexOf("--events-sink")>=0

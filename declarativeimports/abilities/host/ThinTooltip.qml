@@ -11,8 +11,8 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.abilities.definition 0.1 as AbilityDefinition
+import org.kde.latte.core as LatteCore
+import org.kde.latte.abilities.definition as AbilityDefinition
 
 AbilityDefinition.ThinTooltip {
     id: _thinTooltip

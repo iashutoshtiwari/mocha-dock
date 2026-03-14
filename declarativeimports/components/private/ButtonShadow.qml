@@ -17,8 +17,9 @@ Properties:
 **/
 
 import QtQuick
-import org.kde.ksvg 1.0 as KSvg
+import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 
 Item {
     id: main
@@ -111,7 +112,7 @@ Item {
         Transition {
             PropertyAnimation {
                 properties: "opacity"
-                duration: units.longDuration
+                duration: Kirigami.Units.longDuration
                 easing.type: Easing.OutQuad
             }
         }

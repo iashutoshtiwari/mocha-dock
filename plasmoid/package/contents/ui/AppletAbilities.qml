@@ -7,8 +7,8 @@ import QtQuick
 
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.abilities.client 0.1 as AbilityClient
+import org.kde.latte.core as LatteCore
+import org.kde.latte.abilities.client as AbilityClient
 
 import "abilities" as Ability
 

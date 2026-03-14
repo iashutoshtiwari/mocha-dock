@@ -9,7 +9,7 @@ import Qt5Compat.GraphicalEffects
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-PlasmoidItem {
+Item {
     ColorOverlay {
         id: colorizer
         anchors.fill: parent
@@ -23,7 +23,7 @@ PlasmoidItem {
         anchors.fill: colorizer
 
         active: appletItem.environment.isGraphicsSystemAccelerated
-                && plasmoid.configuration.appletShadowsEnabled
+                && plasmoid && plasmoid.configuration && plasmoid.configuration.appletShadowsEnabled
                 && (appletColorizer.opacity>0)
 
         sourceComponent: DropShadow{

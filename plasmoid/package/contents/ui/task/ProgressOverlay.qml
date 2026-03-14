@@ -6,9 +6,10 @@
 
 import QtQuick
 
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.components as LatteComponents
 
 Item {
     id: background
@@ -68,22 +69,22 @@ Item {
             fullCircle: true
             showNumber: true
 
-            color: theme.backgroundColor
+            color: Kirigami.Theme.backgroundColor
             textColor: {
                 if (showsInfoBadge) {
-                    return root.infoBadgeProminentColorEnabled ? prominentTextColor : theme.highlightedTextColor
+                    return root.infoBadgeProminentColorEnabled ? prominentTextColor : Kirigami.Theme.highlightedTextColor
                 }
 
-                return theme.textColor;
+                return Kirigami.Theme.textColor;
             }
             borderColor: root.lightTextColor
 
             highlightedColor: {
                 if (showsInfoBadge) {
-                    return root.infoBadgeProminentColorEnabled ? prominentBackColor : theme.highlightColor
+                    return root.infoBadgeProminentColorEnabled ? prominentBackColor : Kirigami.Theme.highlightColor
                 }
 
-                return theme.buttonFocusColor;
+                return Kirigami.Theme.focusColor;
             }
 
             style3d: taskItem.abilities.myView.badgesIn3DStyle

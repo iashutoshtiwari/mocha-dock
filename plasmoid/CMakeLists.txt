@@ -4,6 +4,7 @@ plasma_install_package(package org.kde.latte.plasmoid)
 
 set(tasks_SRCS
     plugin/types.cpp
+    plugin/launcherhelper.cpp
     plugin/lattetasksplugin.cpp
 )
 

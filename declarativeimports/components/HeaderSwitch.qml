@@ -5,10 +5,11 @@
 
 import QtQuick
 import Qt5Compat.GraphicalEffects
-import QtQuick.Controls 1.4
+import QtQuick.Controls
 import QtQuick.Layouts
 
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
 import org.kde.plasma.plasmoid
@@ -22,14 +23,14 @@ PlasmoidItem {
 
     Layout.rightMargin: {
         if (level === 1) {
-            return Qt.application.layoutDirection === Qt.RightToLeft ? 0 : 2 * units.smallSpacing
+            return Qt.application.layoutDirection === Qt.RightToLeft ? 0 : 2 * Kirigami.Units.smallSpacing
         }
 
         return 0;
     }
     Layout.leftMargin: {
         if (level === 1) {
-            return Qt.application.layoutDirection === Qt.RightToLeft ? 2 * units.smallSpacing : 0
+            return Qt.application.layoutDirection === Qt.RightToLeft ? 2 * Kirigami.Units.smallSpacing : 0
         }
 
         return 0;
@@ -110,8 +111,6 @@ PlasmoidItem {
         anchors.right: row.right
         checked: item.checked
         enabled: item.enabled
-
-        style: Private.SwitchStyle {}
 
         PlasmaComponents.Button {
             //tooltip ghost

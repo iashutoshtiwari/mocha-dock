@@ -12,12 +12,12 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.plasmoid
 
-import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
+import org.kde.taskmanager as TaskManagerApplet
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.tasks 0.1 as LatteTasks
+import org.kde.latte.core as LatteCore
+import org.kde.latte.private.tasks as LatteTasks
 
-import org.kde.latte.abilities.items 0.1 as AbilityItem
+import org.kde.latte.abilities.items as AbilityItem
 
 import "animations" as TaskAnimations
 
@@ -422,10 +422,19 @@ AbilityItem.BasicItem {
             tasksExtendedManager.addWaitingLauncher(taskItem.launcherUrl);
         }
 
-        if (root.disableAllWindowsFunctionality) {
-            tasksModel.requestNewInstance(modelIndex());
+        //! Use KIO::ApplicationLauncherJob via our helper for clean process isolation.
+        //! requestNewInstance from libtaskmanager causes slow launch and missing
+        //! window decorations on Wayland.
+        var url = taskItem.launcherUrl;
+        var desktopFile = "";
+        if (url.indexOf("applications:") === 0) {
+            desktopFile = url.substring("applications:".length);
+        }
+
+        if (desktopFile !== "") {
+            LatteTasks.LauncherHelper.launchDesktopFile(desktopFile);
         } else {
-            tasksModel.requestActivate(modelIndex());
+            tasksModel.requestNewInstance(modelIndex());
         }
     }
 
@@ -434,11 +443,9 @@ AbilityItem.BasicItem {
             activateLauncher();
         } else{
             if (model.IsGroupParent) {
-                //! At least Plasma 5.25 case
-                var isWindowViewAvailable = LatteCore.WindowSystem.compositingActive && backend.windowViewAvailable;
-                if (isWindowViewAvailable) {
-                    root.activateWindowView(model.WinIdList);
-                }
+                //! Plasma 6 fallback: windowView/PresentWindows not available on Wayland,
+                //! cycle through group children instead
+                subWindows.activateNextTask();
             } else {
                 if (windowsPreviewDlg.visible) {
                     forceHidePreview(8.3);
@@ -597,7 +604,7 @@ AbilityItem.BasicItem {
 
         if (!root.contextMenu) {
             contextMenu = root.createContextMenu(taskItem, modelIndex(), args);
-            contextMenu.show();
+            contextMenu.open();
         } else {
             //! make sure that context menu isnt deleted multiple times and creates a crash
             //! bug case: 397635
@@ -944,7 +951,8 @@ AbilityItem.BasicItem {
     }
 
     ///Item's Removal Animation
-    ListView.onRemove: TaskAnimations.RealRemovalAnimation{ id: taskRealRemovalAnimation }
+    TaskAnimations.RealRemovalAnimation { id: taskRealRemovalAnimation }
+    ListView.onRemove: taskRealRemovalAnimation.start()
 
     onIsLauncherAnimationRunningChanged: {
         if (!isLauncherAnimationRunning && taskRealRemovalAnimation.paused) {

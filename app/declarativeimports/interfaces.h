@@ -38,6 +38,10 @@ public:
     QObject *plasmoidInterface() const;
     void setPlasmoidInterface(QObject *interface);
 
+    //! Direct setup method for Plasma 6 where plasmoidInterface doesn't work
+    void setupInterfaces(QObject *view, QObject *globalShortcuts, QObject *layoutsManager,
+                         QObject *themeExtended, QObject *universalSettings);
+
 public slots:
     Q_INVOKABLE void updateView();
 

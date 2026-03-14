@@ -5,12 +5,12 @@
 */
 
 import QtQuick
-import QtQuick.Controls 1.4
+import QtQuick.Controls
 
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 Flickable{
     id: flickableContainer

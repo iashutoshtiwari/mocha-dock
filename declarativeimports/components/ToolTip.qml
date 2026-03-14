@@ -4,7 +4,7 @@
 */
 
 import QtQuick
-import QtQuick.Controls 1.4
+import QtQuick.Controls
 import QtQuick.Templates as T
 import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
@@ -19,7 +19,7 @@ T.ToolTip {
     implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
     implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
 
-    margins: units.gridUnit
+    margins: Kirigami.Units.gridUnit
     leftPadding: background.margins.left
     topPadding: background.margins.top
     rightPadding: background.margins.right

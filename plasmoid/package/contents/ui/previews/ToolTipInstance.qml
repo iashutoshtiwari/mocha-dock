@@ -18,11 +18,11 @@ import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.kquickcontrolsaddons as KQuickControlsAddons
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 import org.kde.draganddrop
 
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.taskmanager as TaskManager
 
 Column {
     id: instance
@@ -37,7 +37,7 @@ Column {
     property int virtualDesktop: (typeof model !== 'undefined') && (typeof model.VirtualDesktop !== 'undefined') ? VirtualDesktop : 0
     property var activities : (typeof model !== 'undefined') && (typeof model.Activities !== 'undefined') ? Activities : []
 
-    spacing: units.smallSpacing
+    spacing: Kirigami.Units.smallSpacing
 
     readonly property bool descriptionIsVisible: winDescription.text !== ""
 
@@ -91,11 +91,10 @@ Column {
 
         // launcher icon
         Kirigami.Icon {
-            Layout.preferredWidth: units.iconSizes.medium
-            Layout.preferredHeight: units.iconSizes.medium
+            Layout.preferredWidth: Kirigami.Units.iconSizes.medium
+            Layout.preferredHeight: Kirigami.Units.iconSizes.medium
             source: icon
             animated: false
-            usesPlasmaTheme: false
             visible: !isWin
         }
         // all textlabels
@@ -144,7 +143,7 @@ Column {
             id: closeButton
             Layout.alignment: Qt.AlignRight | Qt.AlignTop
             visible: isWin && !hideCloseButtons
-            iconSource: "window-close"
+            icon.name: "window-close"
             onClicked: {
                 if (!isGroup) {
                     //! force windowsPreviewDlg hiding when the last instance is closed
@@ -180,18 +179,18 @@ Column {
             // TODO: this causes XCB error message when being visible the first time
             readonly property var winId: isWin && windows[flatIndex] !== undefined ? windows[flatIndex] : 0
 
-            // There's no PlasmaComponents3 version
-            PlasmaComponents.Highlight {
+            Rectangle {
                 anchors.fill: hoverHandler
                 visible: hoverHandler.containsMouse
-                pressed: hoverHandler.containsPress
+                color: hoverHandler.containsPress ? Kirigami.Theme.highlightColor : Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.3)
+                radius: 3
             }
 
             Loader{
                 id:previewThumbLoader
                 anchors.fill: parent
                 anchors.margins: Math.max(2, previewShadow.radius)
-                active: LatteCore.WindowSystem.isPlatformX11 || (root.plasma520 && LatteCore.WindowSystem.isPlatformWayland)
+                active: LatteCore.WindowSystem.isPlatformWayland
                 visible: !albumArtImage.visible && !thumbnailSourceItem.isMinimized
                 source:  {
                     if (LatteCore.WindowSystem.isPlatformWayland) {
@@ -210,7 +209,7 @@ Column {
                 DropShadow {
                     id: previewShadow
                     anchors.fill:  previewThumbLoader.item
-                    visible: previewThumbLoader.item.visible
+                    visible: previewThumbLoader.item ? previewThumbLoader.item.visible : false
                     horizontalOffset: 0
                     verticalOffset: Math.round(3 * 1)
                     radius: Math.round(8.0 * 1)
@@ -314,7 +313,7 @@ Column {
                         anchors.bottom: parent.bottom
                         width: parent.width
                         height: playerControlsRow.height
-                        color: theme.backgroundColor
+                        color: Kirigami.Theme.backgroundColor
                         opacity: 0.8
                     }
                 }
@@ -364,7 +363,7 @@ Column {
                             elide: Text.ElideRight
                             text: artist || ""
                             visible: text != ""
-                            font.pointSize: theme.smallestFont.pointSize
+                            font.pointSize: Kirigami.Theme.smallFont.pointSize
                         }
                     }
 
@@ -372,7 +371,7 @@ Column {
                        //! It creates issues with Valgrind and needs to be completely removed in that case
                        id: canGoBackButton
                        enabled: canGoBack
-                       iconSource: LayoutMirroring.enabled ? "media-skip-forward" : "media-skip-backward"
+                       icon.name: LayoutMirroring.enabled ? "media-skip-forward" : "media-skip-backward"
                        onClicked: mpris2Source.goPrevious(mprisSourceName)
                    }
 
@@ -380,7 +379,7 @@ Column {
                        //! It creates issues with Valgrind and needs to be completely removed in that case
                        id: playingButton
                        enabled: playing ? canPause : canPlay
-                       iconSource: playing ? "media-playback-pause" : "media-playback-start"
+                       icon.name: playing ? "media-playback-pause" : "media-playback-start"
                        onClicked: {
                            if (!playing) {
                                mpris2Source.play(mprisSourceName);
@@ -394,7 +393,7 @@ Column {
                        //! It creates issues with Valgrind and needs to be completely removed in that case
                        id: canGoNextButton
                        enabled: canGoNext
-                       iconSource: LayoutMirroring.enabled ? "media-skip-backward" : "media-skip-forward"
+                       icon.name: LayoutMirroring.enabled ? "media-skip-backward" : "media-skip-forward"
                        onClicked: mpris2Source.goNext(mprisSourceName)
                    }
 
@@ -408,7 +407,7 @@ Column {
             width: header.width
             height: 3
             opacity: isTaskActive() ? 1 : 0
-            color: theme.buttonFocusColor
+            color: Kirigami.Theme.focusColor
         }
     }
 

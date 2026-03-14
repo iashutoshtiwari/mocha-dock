@@ -851,6 +851,19 @@ void Positioner::updatePosition(QRect availableScreenRect)
     }
 
     m_view->setPosition(position);
+
+    //! Always set LayerShell anchors for proper Wayland positioning.
+    //! For full-width panels, use setViewStruts (3-edge anchoring) which correctly
+    //! positions the panel. During startup, use panel height as struts even though
+    //! the real struts are managed later by VisibilityManager.
+    if (!m_inStartup) {
+        m_corona->wm()->setWindowPosition(m_view, m_view->location(), m_validGeometry);
+    } else {
+        //! During startup, at minimum set the edge anchors so the panel appears
+        //! on the correct edge. Use setViewStruts with the current window geometry.
+        QRect strutsRect = m_view->geometry();
+        m_corona->wm()->setViewStruts(m_view, strutsRect, m_view->location());
+    }
 }
 
 int Positioner::slideOffset() const

@@ -8,6 +8,7 @@ import org.kde.plasma.core as PlasmaCore
 
 Item {
     id: _parabolicArea
+    anchors.fill: parent
     signal parabolicEntered(real mouseX, real mouseY);
     signal parabolicMove(real mouseX, real mouseY);
     signal parabolicExited();
@@ -53,7 +54,7 @@ Item {
         }
     }
 
-    onParabolicEntered: {
+    onParabolicEntered: function(mouseX, mouseY) {
         lastMousePoint.x = mouseX;
         lastMousePoint.y = mouseY;
 
@@ -84,7 +85,7 @@ Item {
         }
     }
 
-    onParabolicMove: {
+    onParabolicMove: function(mouseX, mouseY) {
         lastMousePoint.x = mouseX;
         lastMousePoint.y = mouseY;
 

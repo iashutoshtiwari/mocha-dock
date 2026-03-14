@@ -8,17 +8,19 @@
 */
 
 import QtQuick
+import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import QtQml.Models
 
 import org.kde.draganddrop
 
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kquickcontrolsaddons as KQuickControlsAddons
 
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.taskmanager as TaskManager
 
 PlasmaComponents.ScrollView {
     id: mainToolTip
@@ -56,16 +58,10 @@ PlasmaComponents.ScrollView {
     LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
 
-    property int textWidth: theme.mSize(theme.defaultFont).width * 20
+    property int textWidth: Kirigami.Units.gridUnit * 20
 
-    verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-
-    Component.onCompleted: {
-        flickableItem.interactive = Qt.binding(function() {
-            return isVerticalPanel ? contentItem.height > viewport.height : contentItem.width > viewport.width
-        });
-    }
+    QQC2.ScrollBar.vertical.policy: QQC2.ScrollBar.AlwaysOff
+    QQC2.ScrollBar.horizontal.policy: QQC2.ScrollBar.AlwaysOff
 
     Item{
         width: contentItem.width
@@ -101,7 +97,7 @@ PlasmaComponents.ScrollView {
                 rows: !isVerticalPanel
                 columns: isVerticalPanel
                 flow: isVerticalPanel ? Grid.TopToBottom : Grid.LeftToRight
-                spacing: units.largeSpacing
+                spacing: Kirigami.Units.largeSpacing
 
                 readonly property bool hasVisibleDescription: {
                     for (var i=0; i<children.length; ++i) {

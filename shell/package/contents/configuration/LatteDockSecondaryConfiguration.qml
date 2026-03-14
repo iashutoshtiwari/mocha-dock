@@ -5,20 +5,21 @@
 */
 
 import QtQuick
-import QtQuick.Controls 1.4
+import QtQuick.Controls
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import QtQuick.Window
 
 import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.extras as PlasmaExtras
-import QtQuick.Controls.Styles.Plasma 2.0 as Styles
+//! QtQuick.Controls.Styles.Plasma removed in Plasma 6
 
 import org.kde.kquickcontrolsaddons as KQuickControlAddons
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 import "../controls" as LatteExtraControls
 
@@ -28,8 +29,8 @@ Loader {
     sourceComponent: FocusScope {
         id: dialog
 
-        width: typeSettings.width + units.smallSpacing * 4
-        height: typeSettings.height + units.smallSpacing * 4
+        width: typeSettings.width + Kirigami.Units.smallSpacing * 4
+        height: typeSettings.height + Kirigami.Units.smallSpacing * 4
         Layout.minimumWidth: width
         Layout.minimumHeight: height
         LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft

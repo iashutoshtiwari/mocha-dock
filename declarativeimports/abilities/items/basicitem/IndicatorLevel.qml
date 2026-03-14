@@ -8,7 +8,7 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.abilities.items 0.1 as AbilityItem
+import org.kde.latte.abilities.items as AbilityItem
 
 AbilityItem.IndicatorLevel {
     id: indicatorLevel

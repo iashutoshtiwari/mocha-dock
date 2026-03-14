@@ -6,31 +6,32 @@
 
 import QtQuick
 import Qt5Compat.GraphicalEffects
-import QtQuick.Controls 1.4
+import QtQuick.Controls
 import QtQuick.Layouts
 
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.core as LatteCore
+import org.kde.latte.private.containment as LatteContainment
 
 Grid {
     id: typeRow
 
-    width: horizontal ? content.width - 4*units.smallSpacing : 9 * theme.defaultFont.pixelSize
-    anchors.leftMargin: horizontal ? units.smallSpacing : 0
-    anchors.rightMargin: horizontal ? units.smallSpacing : 0
+    width: horizontal ? content.width - 4*Kirigami.Units.smallSpacing : 9 * Kirigami.Theme.defaultFont.pixelSize
+    anchors.leftMargin: horizontal ? Kirigami.Units.smallSpacing : 0
+    anchors.rightMargin: horizontal ? Kirigami.Units.smallSpacing : 0
 
     Layout.minimumWidth: width
     Layout.maximumWidth: width
     Layout.minimumHeight: height
     Layout.maximumHeight: height
 
-    Layout.leftMargin: units.smallSpacing * 2
-    Layout.rightMargin: units.smallSpacing * 2
+    Layout.leftMargin: Kirigami.Units.smallSpacing * 2
+    Layout.rightMargin: Kirigami.Units.smallSpacing * 2
 
     rows: horizontal ? 1 : 0
     columns: horizontal ? 0 : 1
@@ -41,7 +42,7 @@ Grid {
 
     property bool horizontal: false
 
-    ExclusiveGroup {
+    ButtonGroup {
         id: viewTypeGroup
     }
 
@@ -53,7 +54,7 @@ Grid {
         checkable: true
         checked: latteView.type === LatteCore.Types.DockView
         text: i18nc("dock type","Dock")
-        exclusiveGroup: viewTypeGroup
+        ButtonGroup.group: viewTypeGroup
         tooltip: i18n("Change the behavior and appearance to Dock type")
 
         onPressedChanged: {
@@ -97,7 +98,7 @@ Grid {
         checkable: true
         checked: latteView.type === LatteCore.Types.PanelView
         text: i18nc("panel type","Panel")
-        exclusiveGroup: viewTypeGroup
+        ButtonGroup.group: viewTypeGroup
         tooltip: i18n("Change the behavior and appearance to Panel type")
 
         onPressedChanged: {
