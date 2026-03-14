@@ -78,12 +78,14 @@ target_link_libraries(latte-dock
     KF6::WindowSystem
     KF6::XmlGui
     KF6::ConfigQml
+    Qt::WaylandClient
     Wayland::Client
     Plasma::Activities
     Plasma::KWaylandClient
     Plasma::Plasma
     Plasma::PlasmaQuick
     LayerShellQt::Interface
+    PW::LibTaskManager
 )
 
 

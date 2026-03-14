@@ -22,6 +22,7 @@
 #include <KWayland/Client/plasmawindowmanagement.h>
 #include <KWindowInfo>
 #include <KWindowEffects>
+#include <taskmanager/virtualdesktopinfo.h>
 
 
 namespace Latte {
@@ -73,7 +74,7 @@ public:
     WindowId winIdFor(QString appId, QRect geometry) override;
     WindowId winIdFor(QString appId, QString title) override;
 
-    AppData appDataFor(WindowId wid) override;
+    TaskManager::AppData appDataFor(WindowId wid) override;
 
     void setActiveEdge(QWindow *view, bool active)  override;
 
@@ -88,8 +89,7 @@ public:
 
     void initWindowManagement(KWayland::Client::PlasmaWindowManagement *windowManagement);
 
-    //! VirtualDesktopsSupport
-    void initVirtualDesktopManagement(KWayland::Client::PlasmaVirtualDesktopManagement *virtualDesktopManagement);
+    //! VirtualDesktopsSupport — initialized internally via TaskManager::VirtualDesktopInfo
 
 
 private slots:
@@ -111,15 +111,12 @@ private:
 
     //! VirtualDesktopsSupport
     void setCurrentDesktop(QString desktop);
-    void addDesktop(const QString &id, quint32 position);
-
 
 private:
     KWayland::Client::PlasmaWindowManagement *m_windowManagement{nullptr};
 
-    //! VirtualDesktopsSupport
-    KWayland::Client::PlasmaVirtualDesktopManagement *m_virtualDesktopManagement{nullptr};
-    QStringList m_desktops;
+    //! VirtualDesktopsSupport via TaskManager::VirtualDesktopInfo
+    TaskManager::VirtualDesktopInfo *m_virtualDesktopInfo{nullptr};
 
 
     Latte::Corona *m_corona{nullptr};

@@ -329,16 +329,8 @@ void Corona::setupWaylandIntegration()
         }
     });
 
-    QObject::connect(registry, &KWayland::Client::Registry::plasmaVirtualDesktopManagementAnnounced,
-                     [this, registry] (quint32 name, quint32 version) {
-        KWayland::Client::PlasmaVirtualDesktopManagement *vdm = registry->createPlasmaVirtualDesktopManagement(name, version, this);
-
-        WindowSystem::WaylandInterface *wI = qobject_cast<WindowSystem::WaylandInterface *>(m_wm);
-
-        if (wI) {
-            wI->initVirtualDesktopManagement(vdm);
-        }
-    });
+    //! VirtualDesktopManagement is now handled internally by WaylandInterface
+    //! via TaskManager::VirtualDesktopInfo — no KWayland registry binding needed.
 
     registry->setup();
     connection->roundtrip();

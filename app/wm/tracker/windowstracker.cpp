@@ -604,7 +604,7 @@ QIcon Windows::iconFor(const WindowId &wid)
     }
 
     if (m_windows[wid].icon().isNull()) {
-        AppData data = m_wm->appDataFor(wid);
+        TaskManager::AppData data = m_wm->appDataFor(wid);
 
         QIcon icon = data.icon;
 
@@ -631,7 +631,7 @@ QString Windows::appNameFor(const WindowId &wid)
     }
 
     if (m_windows[wid].appName().isEmpty()) {
-        AppData data = m_wm->appDataFor(wid);
+        TaskManager::AppData data = m_wm->appDataFor(wid);
 
         m_windows[wid].setAppName(data.name);
 
@@ -648,7 +648,7 @@ void Windows::updateApplicationData()
             auto wid = m_delayedApplicationData[i];
 
             if (m_windows.contains(wid)) {
-                AppData data = m_wm->appDataFor(wid);
+                TaskManager::AppData data = m_wm->appDataFor(wid);
 
                 QIcon icon = data.icon;
 

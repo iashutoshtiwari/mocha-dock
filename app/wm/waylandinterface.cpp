@@ -27,6 +27,7 @@
 #include <KWindowInfo>
 
 #include <KWayland/Client/plasmavirtualdesktop.h>
+#include <taskmanager/tasktools.h>
 
 // LayerShell
 #include <LayerShellQt/Window>
@@ -41,6 +42,12 @@ WaylandInterface::WaylandInterface(QObject *parent)
     : AbstractWindowInterface(parent)
 {
     m_corona = qobject_cast<Latte::Corona *>(parent);
+
+    //! VirtualDesktopInfo self-initializes via Wayland protocols
+    m_virtualDesktopInfo = new TaskManager::VirtualDesktopInfo(this);
+    connect(m_virtualDesktopInfo, &TaskManager::VirtualDesktopInfo::currentDesktopChanged, this, [this]() {
+        setCurrentDesktop(m_virtualDesktopInfo->currentDesktop().toString());
+    });
 }
 
 WaylandInterface::~WaylandInterface()
@@ -69,49 +76,8 @@ void WaylandInterface::initWindowManagement(KWayland::Client::PlasmaWindowManage
     }, Qt::QueuedConnection);
 }
 
-void WaylandInterface::initVirtualDesktopManagement(KWayland::Client::PlasmaVirtualDesktopManagement *virtualDesktopManagement)
-{
-    if (m_virtualDesktopManagement == virtualDesktopManagement) {
-        return;
-    }
-
-    m_virtualDesktopManagement = virtualDesktopManagement;
-
-    connect(m_virtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopCreated, this,
-            [this](const QString &id, quint32 position) {
-        addDesktop(id, position);
-    });
-
-    connect(m_virtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopRemoved, this,
-            [this](const QString &id) {
-        m_desktops.removeAll(id);
-
-        if (m_currentDesktop == id) {
-            setCurrentDesktop(QString());
-        }
-    });
-}
-
-void WaylandInterface::addDesktop(const QString &id, quint32 position)
-{
-    if (m_desktops.contains(id)) {
-        return;
-    }
-
-    m_desktops.append(id);
-
-    const KWayland::Client::PlasmaVirtualDesktop *desktop = m_virtualDesktopManagement->getVirtualDesktop(id);
-
-    QObject::connect(desktop, &KWayland::Client::PlasmaVirtualDesktop::activated, this,
-                     [desktop, this]() {
-        setCurrentDesktop(desktop->id());
-    }
-    );
-
-    if (desktop->isActive()) {
-        setCurrentDesktop(id);
-    }
-}
+    //! VirtualDesktopManagement is now handled by TaskManager::VirtualDesktopInfo
+    //! initialized in the constructor. No separate init needed.
 
 void WaylandInterface::setCurrentDesktop(QString desktop)
 {
@@ -270,50 +236,44 @@ void WaylandInterface::setWindowPosition(QWindow *window, const Plasma::Types::L
 
 void WaylandInterface::switchToNextVirtualDesktop()
 {
-    if (!m_virtualDesktopManagement || m_desktops.count() <= 1) {
+    QVariantList desktops = m_virtualDesktopInfo->desktopIds();
+    if (desktops.count() <= 1) {
         return;
     }
 
-    int curPos = m_desktops.indexOf(m_currentDesktop);
+    int curPos = desktops.indexOf(m_virtualDesktopInfo->currentDesktop());
     int nextPos = curPos + 1;
 
-    if (curPos >= m_desktops.count()-1) {
-        if (isVirtualDesktopNavigationWrappingAround()) {
+    if (curPos >= desktops.count() - 1) {
+        if (m_virtualDesktopInfo->navigationWrappingAround()) {
             nextPos = 0;
         } else {
             return;
         }
     }
 
-    KWayland::Client::PlasmaVirtualDesktop *desktopObj = m_virtualDesktopManagement->getVirtualDesktop(m_desktops[nextPos]);
-
-    if (desktopObj) {
-        desktopObj->requestActivate();
-    }
+    m_virtualDesktopInfo->requestActivate(desktops[nextPos]);
 }
 
 void WaylandInterface::switchToPreviousVirtualDesktop()
 {
-    if (!m_virtualDesktopManagement || m_desktops.count() <= 1) {
+    QVariantList desktops = m_virtualDesktopInfo->desktopIds();
+    if (desktops.count() <= 1) {
         return;
     }
 
-    int curPos = m_desktops.indexOf(m_currentDesktop);
+    int curPos = desktops.indexOf(m_virtualDesktopInfo->currentDesktop());
     int nextPos = curPos - 1;
 
     if (curPos <= 0) {
-        if (isVirtualDesktopNavigationWrappingAround()) {
-            nextPos = m_desktops.count()-1;
+        if (m_virtualDesktopInfo->navigationWrappingAround()) {
+            nextPos = desktops.count() - 1;
         } else {
             return;
         }
     }
 
-    KWayland::Client::PlasmaVirtualDesktop *desktopObj = m_virtualDesktopManagement->getVirtualDesktop(m_desktops[nextPos]);
-
-    if (desktopObj) {
-        desktopObj->requestActivate();
-    }
+    m_virtualDesktopInfo->requestActivate(desktops[nextPos]);
 }
 
 void WaylandInterface::setWindowOnActivities(const WindowId &wid, const QStringList &nextactivities)
@@ -504,20 +464,16 @@ WindowInfoWrap WaylandInterface::requestInfo(WindowId wid)
     return winfoWrap;
 }
 
-AppData WaylandInterface::appDataFor(WindowId wid)
+TaskManager::AppData WaylandInterface::appDataFor(WindowId wid)
 {
     auto window = windowFor(wid);
 
     if (window) {
-        const AppData &data = appDataFromUrl(windowUrlFromMetadata(window->appId(),
-                                                                   window->pid(), rulesConfig));
-
-        return data;
+        return TaskManager::appDataFromUrl(TaskManager::windowUrlFromMetadata(window->appId(),
+                                                                              window->pid()));
     }
 
-    AppData empty;
-
-    return empty;
+    return TaskManager::AppData();
 }
 
 KWayland::Client::PlasmaWindow *WaylandInterface::windowFor(WindowId wid)
@@ -649,7 +605,7 @@ void WaylandInterface::requestToggleIsOnAllDesktops(WindowId wid)
 {
     auto w = windowFor(wid);
 
-    if (w && isValidWindow(w) && m_desktops.count() > 1) {
+    if (w && isValidWindow(w) && m_virtualDesktopInfo->numberOfDesktops() > 1) {
         if (w->isOnAllDesktops()) {
             w->requestEnterVirtualDesktop(m_currentDesktop);
         } else {

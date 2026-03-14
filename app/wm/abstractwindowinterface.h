@@ -10,7 +10,7 @@
 // local
 #include <coretypes.h>
 #include "schemecolors.h"
-#include "tasktools.h"
+#include <taskmanager/tasktools.h>
 #include "windowinfowrap.h"
 #include "tracker/windowstracker.h"
 
@@ -31,7 +31,7 @@
 #include <QTimer>
 
 // KDE
-#include <KSharedConfig>
+
 #include <PlasmaActivities/Consumer>
 
 // Plasma
@@ -101,7 +101,7 @@ public:
     virtual QIcon iconFor(WindowId wid) = 0;
     virtual WindowId winIdFor(QString appId, QRect geometry) = 0;
     virtual WindowId winIdFor(QString appId, QString title) = 0;
-    virtual AppData appDataFor(WindowId wid) = 0;
+    virtual TaskManager::AppData appDataFor(WindowId wid) = 0;
 
     bool isKWinRunning() const;
 
@@ -167,9 +167,6 @@ protected:
     //! can delay the batch sending of signals for the same window
     WindowId m_windowChangedWaiting;
     QTimer m_windowWaitingTimer;
-
-    //! Plasma taskmanager rules ile
-    KSharedConfig::Ptr rulesConfig;
 
     void considerWindowChanged(WindowId wid);
 

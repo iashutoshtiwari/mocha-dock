@@ -40,8 +40,6 @@ AbstractWindowInterface::AbstractWindowInterface(QObject *parent)
     m_windowsTracker = new Tracker::Windows(this);
     m_schemesTracker = new Tracker::Schemes(this);
 
-    rulesConfig = KSharedConfig::openConfig(QStringLiteral("taskmanagerrulesrc"));
-
     m_windowWaitingTimer.setInterval(150);
     m_windowWaitingTimer.setSingleShot(true);
 

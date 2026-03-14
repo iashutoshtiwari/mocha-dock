@@ -4,6 +4,5 @@ set(lattedock-app_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/schemecolors.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/waylandinterface.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/windowinfowrap.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tasktools.cpp
     PARENT_SCOPE
 )
