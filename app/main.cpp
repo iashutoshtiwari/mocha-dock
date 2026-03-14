@@ -78,8 +78,11 @@ int main(int argc, char **argv)
     const bool qpaVariable = qEnvironmentVariableIsSet("QT_QPA_PLATFORM");
     detectPlatform(argc, argv);
 
-    //! initialize LayerShell before creating the application
-    LayerShellQt::Shell::useLayerShell();
+    //! NOTE: Do NOT call LayerShellQt::Shell::useLayerShell() here.
+    //! It sets QT_WAYLAND_SHELL_INTEGRATION=layer-shell globally, causing ALL
+    //! windows (including QDialogs, config windows, launched apps) to render
+    //! without decorations. Instead, LayerShell is configured per-view in
+    //! waylandinterface.cpp via LayerShellQt::Window::get().
 
     QApplication app(argc, argv);
     qunsetenv("QT_WAYLAND_DISABLE_FIXED_POSITIONS");

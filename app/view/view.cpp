@@ -1498,7 +1498,7 @@ bool View::event(QEvent *e)
 
         case QEvent::MouseButtonPress:
             if (auto me = dynamic_cast<QMouseEvent *>(e)) {
-                emit mousePressed(me->pos(), me->button());
+                emit mousePressed(me->position().toPoint(), me->button());
                 sinkableevent = true;
                 verticalUnityViewHasFocus();
             }
@@ -1506,7 +1506,7 @@ bool View::event(QEvent *e)
 
         case QEvent::MouseButtonRelease:
             if (auto me = dynamic_cast<QMouseEvent *>(e)) {
-                emit mouseReleased(me->pos(), me->button());
+                emit mouseReleased(me->position().toPoint(), me->button());
                 sinkableevent = true;
             }
             break;
@@ -1582,7 +1582,7 @@ void View::releaseGrab()
     setMouseGrabEnabled(false);
 
     //! Send a fake QEvent::Leave to inform applets for mouse leaving the view
-    QHoverEvent e(QEvent::Leave, QPoint(-5,-5),  QPoint(m_releaseGrab_x, m_releaseGrab_y));
+    QHoverEvent e(QEvent::Leave, QPointF(-5,-5), QPointF(-5,-5), QPointF(m_releaseGrab_x, m_releaseGrab_y));
     QCoreApplication::instance()->sendEvent(this, &e);
 }
 
