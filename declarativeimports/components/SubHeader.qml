@@ -3,15 +3,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
-import QtQuick.Layouts 1.3
+import QtQuick
+import QtQuick.Layouts
 
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kirigami as Kirigami
 
 PlasmaComponents.Label {
     Layout.fillWidth: true
-    Layout.topMargin: isFirstSubCategory ? 0 : units.smallSpacing * 2
-    Layout.bottomMargin: units.smallSpacing
+    Layout.topMargin: isFirstSubCategory ? 0 : Kirigami.Units.smallSpacing * 2
+    Layout.bottomMargin: Kirigami.Units.smallSpacing
     horizontalAlignment: Text.AlignHCenter
     opacity: 0.4
 

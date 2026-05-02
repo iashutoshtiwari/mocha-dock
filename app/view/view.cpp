@@ -43,14 +43,13 @@
 #include <QQuickItem>
 #include <QMenu>
 
-// KDe
+// KDE
 #include <KActionCollection>
-#include <KActivities/Consumer>
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
+#include <KPackage/Package>
 #include <KWindowSystem>
 
 // Plasma
+#include <PlasmaActivities/Consumer>
 #include <Plasma/Containment>
 #include <Plasma/ContainmentActions>
 #include <PlasmaQuick/AppletQuickItem>
@@ -84,7 +83,9 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
     setIcon(qGuiApp->windowIcon());
     setResizeMode(QuickViewSharedEngine::SizeRootObjectToView);
     setColor(QColor(Qt::transparent));
-    setClearBeforeRendering(true);
+    // FIXME:
+    // This was removed in Qt6. Investigate if something else is needed.
+    //setClearBeforeRendering(true);
 
     const auto flags = Qt::FramelessWindowHint
             | Qt::NoDropShadowWindowHint
@@ -96,15 +97,6 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
         m_byPassWM = byPassX11WM;
     } else {
         setFlags(flags);
-    }
-
-    if (KWindowSystem::isPlatformX11()) {
-        //! Enable OnAllDesktops during creation in order to protect corner cases that is ignored
-        //! during startup. Such corner case is bug #447689.
-        //! Best guess is that this is needed because OnAllDesktops is set through visibilitymanager
-        //! after containment has been assigned. That delay might lead wm ignoring the flag
-        //! until it is reapplied.
-        KWindowSystem::setOnAllDesktops(winId(), true);
     }
 
     if (targetScreen) {
@@ -182,7 +174,44 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
 
         if (m_positioner) {
             //! immediateSyncGeometry helps avoiding binding loops from containment qml side
+            qDebug() << "containmentChanged: about to sync geometry, location=" << location()
+                     << "containment location=" << containment()->location();
             m_positioner->immediateSyncGeometry();
+        }
+
+        //! Assign app interfaces - must happen after setContainment() so itemForApplet() returns non-null
+        QQuickItem *containmentGraphicItem = PlasmaQuick::AppletQuickItem::itemForApplet(this->containment());
+        qDebug() << "containmentChanged: containmentGraphicItem =" << containmentGraphicItem;
+
+        if (containmentGraphicItem) {
+            containmentGraphicItem->setProperty("_latte_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
+            containmentGraphicItem->setProperty("_latte_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
+            containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
+            containmentGraphicItem->setProperty("_latte_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
+            containmentGraphicItem->setProperty("_latte_view_object", QVariant::fromValue(this));
+
+            //! Try to find the Interfaces QML object directly since _latte_view_interfacesobject
+            //! may not be set yet (Component.onCompleted ran before we set _latte_view_object)
+            Latte::Interfaces *ifacesGraphicObject = qobject_cast<Latte::Interfaces *>(containmentGraphicItem->property("_latte_view_interfacesobject").value<QObject *>());
+
+            if (!ifacesGraphicObject) {
+                //! Search for it as a child of the containment graphic item
+                ifacesGraphicObject = containmentGraphicItem->findChild<Latte::Interfaces *>();
+            }
+
+            if (ifacesGraphicObject) {
+                qDebug() << "containmentChanged: setting up interfaces directly (Plasma 6 path)";
+                ifacesGraphicObject->setupInterfaces(
+                    this,
+                    m_corona->globalShortcuts()->shortcutsTracker(),
+                    m_corona->layoutsManager(),
+                    m_corona->themeExtended(),
+                    m_corona->universalSettings()
+                );
+                setInterfacesGraphicObj(ifacesGraphicObject);
+            } else {
+                qDebug() << "containmentChanged: ifacesGraphicObject not found yet";
+            }
         }
 
         connect(this->containment(), SIGNAL(statusChanged(Plasma::Types::ItemStatus)), SLOT(statusChanged(Plasma::Types::ItemStatus)));
@@ -276,6 +305,8 @@ View::~View()
 
 void View::init(Plasma::Containment *plasma_containment)
 {
+    qDebug() << "View::init containment location:" << plasma_containment->location()
+             << "formFactor:" << plasma_containment->formFactor();
     connect(this, &QQuickWindow::xChanged, this, &View::geometryChanged);
     connect(this, &QQuickWindow::yChanged, this, &View::geometryChanged);
     connect(this, &QQuickWindow::widthChanged, this, &View::geometryChanged);
@@ -371,28 +402,11 @@ void View::init(Plasma::Containment *plasma_containment)
 
     connect(m_corona->indicatorFactory(), &Latte::Indicator::Factory::indicatorRemoved, this, &View::indicatorPluginRemoved);
 
-    //! Assign app interfaces in be accessible through containment graphic item
-    QQuickItem *containmentGraphicItem = qobject_cast<QQuickItem *>(plasma_containment->property("_plasma_graphicObject").value<QObject *>());
-
-    if (containmentGraphicItem) {
-        containmentGraphicItem->setProperty("_latte_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
-        containmentGraphicItem->setProperty("_latte_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
-        containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
-        containmentGraphicItem->setProperty("_latte_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
-        containmentGraphicItem->setProperty("_latte_view_object", QVariant::fromValue(this));
-
-        Latte::Interfaces *ifacesGraphicObject = qobject_cast<Latte::Interfaces *>(containmentGraphicItem->property("_latte_view_interfacesobject").value<QObject *>());
-
-        if (ifacesGraphicObject) {
-            ifacesGraphicObject->updateView();
-            setInterfacesGraphicObj(ifacesGraphicObject);
-        }
-    }
+    //! NOTE: Interface assignment moved to containmentChanged handler because in Plasma 6,
+    //! itemForApplet() returns null before setContainment() is called by the base class.
+    //! The containmentChanged signal fires after setContainment() completes.
 
     setSource(corona()->kPackage().filePath("lattedockui"));
-
-    //! immediateSyncGeometry helps avoiding binding loops from containment qml side
-    m_positioner->immediateSyncGeometry();
 
     qDebug() << "SOURCE:" << source();
 }
@@ -447,39 +461,6 @@ void View::availableScreenRectChangedFromSlot(View *origin)
         //! must be in same activity
         m_positioner->syncGeometry();
     }
-}
-
-void View::setupWaylandIntegration()
-{
-    if (m_shellSurface)
-        return;
-
-    if (Latte::Corona *c = qobject_cast<Latte::Corona *>(corona())) {
-        using namespace KWayland::Client;
-        PlasmaShell *interface {c->waylandCoronaInterface()};
-
-        if (!interface)
-            return;
-
-        Surface *s{Surface::fromWindow(this)};
-
-        if (!s)
-            return;
-
-        m_shellSurface = interface->createSurface(s, this);
-        qDebug() << "WAYLAND dock window surface was created...";
-        if (m_visibility) {
-            m_visibility->initViewFlags();
-        }
-        if (m_positioner) {
-            m_positioner->updateWaylandId();
-        }
-    }
-}
-
-KWayland::Client::PlasmaShellSurface *View::surface()
-{
-    return m_shellSurface;
 }
 
 //! the main function which decides if this dock is at the
@@ -577,9 +558,6 @@ void View::showConfigurationInterface(Plasma::Applet *applet)
         if (m_appletConfigView->applet() == applet) {
             m_appletConfigView->show();
 
-            if (KWindowSystem::isPlatformX11()) {
-                m_appletConfigView->requestActivate();
-            }
             return;
         } else {
             m_appletConfigView->hide();
@@ -682,15 +660,6 @@ void View::updateAbsoluteGeometry(bool bypassChecks)
         }
     }
 
-    if (KWindowSystem::isPlatformX11() && devicePixelRatio() != 1.0) {
-        //!Fix for X11 Global Scale, I dont think this could be pixel perfect accurate
-        auto factor = devicePixelRatio();
-        absGeometry = QRect(qRound(absGeometry.x() * factor),
-                            qRound(absGeometry.y() * factor),
-                            qRound(absGeometry.width() * factor),
-                            qRound(absGeometry.height() * factor));
-    }
-
     if (m_absoluteGeometry == absGeometry && !bypassChecks) {
         return;
     }
@@ -721,27 +690,15 @@ void View::statusChanged(Plasma::Types::ItemStatus status)
         m_visibility->addBlockHidingEvent(BLOCKHIDINGNEEDSATTENTIONTYPE);
         setFlags(flags() | Qt::WindowDoesNotAcceptFocus);
         m_visibility->initViewFlags();
-        if (m_shellSurface) {
-            m_shellSurface->setPanelTakesFocus(false);
-        }
     } else if (status == Plasma::Types::AcceptingInputStatus) {
         m_visibility->removeBlockHidingEvent(BLOCKHIDINGNEEDSATTENTIONTYPE);
         setFlags(flags() & ~Qt::WindowDoesNotAcceptFocus);
         m_visibility->initViewFlags();
-        if (KWindowSystem::isPlatformX11()) {
-            KWindowSystem::forceActiveWindow(winId());
-        }
-        if (m_shellSurface) {
-            m_shellSurface->setPanelTakesFocus(true);
-        }
     } else {
         updateTransientWindowsTracking();
         m_visibility->removeBlockHidingEvent(BLOCKHIDINGNEEDSATTENTIONTYPE);
         setFlags(flags() | Qt::WindowDoesNotAcceptFocus);
         m_visibility->initViewFlags();
-        if (m_shellSurface) {
-            m_shellSurface->setPanelTakesFocus(false);
-        }
     }
 }
 
@@ -1170,7 +1127,7 @@ QStringList View::activities() const
 {
     QStringList running;
 
-    QStringList runningAll = m_corona->activitiesConsumer()->runningActivities();
+    QStringList runningAll = m_corona->activitiesConsumer()->activities();
 
     for(int i=0; i<m_activities.count(); ++i) {
         if (runningAll.contains(m_activities[i])) {
@@ -1206,11 +1163,7 @@ void View::applyActivitiesToWindows()
         if (m_appletConfigView) {
             Latte::WindowSystem::WindowId appletconfigviewid;
 
-            if (KWindowSystem::isPlatformX11()) {
-                appletconfigviewid = m_appletConfigView->winId();
-            } else {
-                appletconfigviewid = m_corona->wm()->winIdFor("latte-dock", m_appletConfigView->title());
-            }
+            appletconfigviewid = m_corona->wm()->winIdFor("latte-dock", m_appletConfigView->title());
 
             m_positioner->setWindowOnActivities(appletconfigviewid, runningActivities);
         }
@@ -1296,7 +1249,7 @@ void View::setLayout(Layout::GenericLayout *layout)
         });
 
         if (latteCorona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts) {
-            connectionsLayout << connect(latteCorona->activitiesConsumer(), &KActivities::Consumer::runningActivitiesChanged, this, [&]() {
+            connectionsLayout << connect(latteCorona->activitiesConsumer(), &KActivities::Consumer::activitiesChanged, this, [&]() {
                 if (m_layout && m_visibility) {
                     setActivities(m_layout->appliedActivities());
                     qDebug() << "DOCK VIEW FROM LAYOUT (runningActivitiesChanged) ::: " << m_layout->name()
@@ -1369,7 +1322,7 @@ bool View::mimeContainsPlasmoid(QMimeData *mimeData, QString name)
 
     if (mimeData->hasFormat(QStringLiteral("text/x-plasmoidservicename"))) {
         QString data = mimeData->data(QStringLiteral("text/x-plasmoidservicename"));
-        const QStringList appletNames = data.split('\n', QString::SkipEmptyParts);
+        const QStringList appletNames = data.split('\n', Qt::SkipEmptyParts);
 
         for (const QString &appletName : appletNames) {
             if (appletName == name)
@@ -1491,7 +1444,7 @@ void View::setInterfacesGraphicObj(Latte::Interfaces *ifaces)
     m_interfacesGraphicObj = ifaces;
 
     if (containment()) {
-        QQuickItem *containmentGraphicItem = qobject_cast<QQuickItem *>(containment()->property("_plasma_graphicObject").value<QObject *>());
+        QQuickItem *containmentGraphicItem = PlasmaQuick::AppletQuickItem::itemForApplet(containment());
 
         if (containmentGraphicItem) {
             containmentGraphicItem->setProperty("_latte_view_interfacesobject", QVariant::fromValue(m_interfacesGraphicObj));
@@ -1545,7 +1498,7 @@ bool View::event(QEvent *e)
 
         case QEvent::MouseButtonPress:
             if (auto me = dynamic_cast<QMouseEvent *>(e)) {
-                emit mousePressed(me->pos(), me->button());
+                emit mousePressed(me->position().toPoint(), me->button());
                 sinkableevent = true;
                 verticalUnityViewHasFocus();
             }
@@ -1553,7 +1506,7 @@ bool View::event(QEvent *e)
 
         case QEvent::MouseButtonRelease:
             if (auto me = dynamic_cast<QMouseEvent *>(e)) {
-                emit mouseReleased(me->pos(), me->button());
+                emit mouseReleased(me->position().toPoint(), me->button());
                 sinkableevent = true;
             }
             break;
@@ -1562,24 +1515,15 @@ bool View::event(QEvent *e)
             if (auto pe = dynamic_cast<QPlatformSurfaceEvent *>(e)) {
                 switch (pe->surfaceEventType()) {
                 case QPlatformSurfaceEvent::SurfaceCreated:
-                    setupWaylandIntegration();
-
-                    if (m_shellSurface) {
-                        //! immediateSyncGeometry helps avoiding binding loops from containment qml side
-                        m_positioner->immediateSyncGeometry();
-                        m_effects->updateShadows();
+                    if (m_visibility) {
+                        m_visibility->initViewFlags();
                     }
-
+                    m_positioner->immediateSyncGeometry();
+                    m_effects->updateShadows();
                     break;
 
                 case QPlatformSurfaceEvent::SurfaceAboutToBeDestroyed:
-                    if (m_shellSurface) {
-                        delete m_shellSurface;
-                        m_shellSurface = nullptr;
-                        qDebug() << "WAYLAND dock window surface was deleted...";
-                        m_effects->clearShadows();
-                    }
-
+                    m_effects->clearShadows();
                     break;
                 }
             }
@@ -1638,7 +1582,7 @@ void View::releaseGrab()
     setMouseGrabEnabled(false);
 
     //! Send a fake QEvent::Leave to inform applets for mouse leaving the view
-    QHoverEvent e(QEvent::Leave, QPoint(-5,-5),  QPoint(m_releaseGrab_x, m_releaseGrab_y));
+    QHoverEvent e(QEvent::Leave, QPointF(-5,-5), QPointF(-5,-5), QPointF(m_releaseGrab_x, m_releaseGrab_y));
     QCoreApplication::instance()->sendEvent(this, &e);
 }
 
@@ -1648,7 +1592,7 @@ QAction *View::action(const QString &name)
         return nullptr;
     }
 
-    return this->containment()->actions()->action(name);
+    return this->containment()->internalAction(name);
 }
 
 QVariantList View::containmentActions() const

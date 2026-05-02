@@ -4,18 +4,20 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.2
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
+import org.kde.kirigami as Kirigami
+import org.kde.ksvg as KSvg
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 import "../colorizer" as Colorizer
 
@@ -34,11 +36,11 @@ BackgroundProperties{
 
     isShown: (solidBackground.opacity > 0) || (overlayedBackground.backgroundOpacity > 0)
 
-    hasAllBorders: solidBackground.enabledBorders === PlasmaCore.FrameSvg.AllBorders
-    hasLeftBorder: hasAllBorders || ((solidBackground.enabledBorders & PlasmaCore.FrameSvg.LeftBorder) > 0)
-    hasRightBorder: hasAllBorders || ((solidBackground.enabledBorders & PlasmaCore.FrameSvg.RightBorder) > 0)
-    hasTopBorder: hasAllBorders || ((solidBackground.enabledBorders & PlasmaCore.FrameSvg.TopBorder) > 0)
-    hasBottomBorder: hasAllBorders || ((solidBackground.enabledBorders & PlasmaCore.FrameSvg.BottomBorder) > 0)
+    hasAllBorders: solidBackground.enabledBorders === KSvg.FrameSvg.AllBorders
+    hasLeftBorder: hasAllBorders || ((solidBackground.enabledBorders & KSvg.FrameSvg.LeftBorder) > 0)
+    hasRightBorder: hasAllBorders || ((solidBackground.enabledBorders & KSvg.FrameSvg.RightBorder) > 0)
+    hasTopBorder: hasAllBorders || ((solidBackground.enabledBorders & KSvg.FrameSvg.TopBorder) > 0)
+    hasBottomBorder: hasAllBorders || ((solidBackground.enabledBorders & KSvg.FrameSvg.BottomBorder) > 0)
 
     shadows.left: hasLeftBorder && root.behaveAsDockWithMask ? (customShadowIsEnabled ? customShadow : shadowsSvgItem.margins.left) : 0
     shadows.right: hasRightBorder && root.behaveAsDockWithMask ? (customShadowIsEnabled ? customShadow : shadowsSvgItem.margins.right) : 0
@@ -287,24 +289,18 @@ BackgroundProperties{
     property QtObject themeExtendedBackground: null
 
     Behavior on opacity{
-        enabled: LatteCore.WindowSystem.compositingActive
         NumberAnimation {
-            duration: barLine.animationTime
-        }
-    }
-
-    Behavior on opacity{
-        enabled: !LatteCore.WindowSystem.compositingActive
-        NumberAnimation {
-            duration: 0
+            duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0
         }
     }
 
     Binding {
         target: barLine
         property: "themeExtendedBackground"
+        restoreMode: Binding.RestoreNone
         when: themeExtended
         value: {
+            if (!themeExtended) return null;
             switch(plasmoid.location) {
             case PlasmaCore.Types.BottomEdge: return themeExtended.backgroundBottomEdge;
             case PlasmaCore.Types.LeftEdge: return themeExtended.backgroundLeftEdge;
@@ -322,11 +318,11 @@ BackgroundProperties{
     //! Layer 1: Shadows that are drawn around the background but always inside the View window (these are internal drawn shadows).
     //!          When the container has chosen external shadows (these are shadows that are drawn out of the View window from the compositor)
     //!          in such case the internal drawn shadows are NOT drawn at all.
-    PlasmaCore.FrameSvgItem{
+    KSvg.FrameSvgItem{
         id: shadowsSvgItem
         width: root.isVertical ?  background.thickness + totals.shadowsThickness : totals.visualLength
         height: root.isVertical ? totals.visualLength : background.thickness + totals.shadowsThickness
-        enabledBorders: latteView && latteView.effects ? latteView.effects.enabledBorders : PlasmaCore.FrameSvg.NoBorder
+        enabledBorders: latteView && latteView.effects ? latteView.effects.enabledBorders : KSvg.FrameSvg.NoBorder
         imagePath: "widgets/panel-background"
         prefix: "shadow"
         opacity: hideShadow || !root.useThemePanel || (root.forceTransparentPanel && !root.forcePanelForBusyBackground) ? 0 : 1
@@ -342,14 +338,7 @@ BackgroundProperties{
                                            || customShadowedRectangleIsEnabled
 
         Behavior on opacity {
-            enabled: LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: barLine.animationTime }
-        }
-
-
-        Behavior on opacity{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: 0 }
+            NumberAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
     }
 
@@ -368,13 +357,7 @@ BackgroundProperties{
         readonly property real appliedOpacity: visible ? solidBackground.appliedOpacity : 0
 
         Behavior on opacity{
-            enabled: LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: barLine.animationTime }
-        }
-
-        Behavior on opacity{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: 0 }
+            NumberAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
     }
 
@@ -382,7 +365,7 @@ BackgroundProperties{
     //!          the original background when to special settings and options exist from the user. It is also
     //!          doing one very important job which is to calculate the Effects Rectangle which is used from
     //!          the compositor to provide blurriness and from Mask calculations to provide the View Local Geometry
-    PlasmaCore.FrameSvgItem{
+    KSvg.FrameSvgItem{
         id: solidBackground
         anchors.leftMargin: shadows.left
         anchors.rightMargin: shadows.right
@@ -504,16 +487,10 @@ BackgroundProperties{
                 adjustPrefix();
         }
 
-        enabledBorders: latteView && latteView.effects ? latteView.effects.enabledBorders : PlasmaCore.FrameSvg.NoBorder
+        enabledBorders: latteView && latteView.effects ? latteView.effects.enabledBorders : KSvg.FrameSvg.NoBorder
 
         Behavior on opacity{
-            enabled: LatteCore.WindowSystem.compositingActive && !solidBackground.paintInstantly
-            NumberAnimation { duration: barLine.animationTime }
-        }
-
-        Behavior on opacity{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: 0 }
+            NumberAnimation { duration: (LatteCore.WindowSystem.compositingActive && !solidBackground.paintInstantly) ? barLine.animationTime : 0 }
         }
 
         function adjustPrefix() {
@@ -550,7 +527,7 @@ BackgroundProperties{
 
         readonly property bool busyBackground: root.forcePanelForBusyBackground
                                                && (solidBackground.opacity === 0 || !solidBackground.paintInstantly)
-        readonly property bool coloredView: colorizerManager.mustBeShown && colorizerManager.applyTheme !== theme
+        readonly property bool coloredView: colorizerManager.mustBeShown && colorizerManager.applyTheme !== colorizerManager._defaultTheme
 
         backgroundOpacity: {
             if (busyBackground && !forceSolidness) {
@@ -589,23 +566,11 @@ BackgroundProperties{
         readonly property bool forceSolidness: root.forceSolidPanel || !LatteCore.WindowSystem.compositingActive
 
         Behavior on backgroundOpacity{
-            enabled: LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: barLine.animationTime }
-        }
-
-        Behavior on backgroundOpacity{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            NumberAnimation { duration: 0 }
+            NumberAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
 
         Behavior on backgroundColor{
-            enabled: LatteCore.WindowSystem.compositingActive
-            ColorAnimation { duration: barLine.animationTime }
-        }
-
-        Behavior on backgroundColor{
-            enabled: !LatteCore.WindowSystem.compositingActive
-            ColorAnimation { duration: 0 }
+            ColorAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
     }
 

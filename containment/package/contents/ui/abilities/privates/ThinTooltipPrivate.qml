@@ -3,9 +3,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.latte.abilities.host as AbilityHost
 
 AbilityHost.ThinTooltip {
     id: _tooltip
@@ -20,6 +20,7 @@ AbilityHost.ThinTooltip {
     Binding{
         target: _tooltip
         property: "showIsBlockedFromApplet"
+        restoreMode: Binding.RestoreNone
         when: isBindingUpdateEnabled
         value: {
             var grid;

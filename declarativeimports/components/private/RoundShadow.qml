@@ -16,8 +16,10 @@ Properties:
         TODO needs more info??
 **/
 
-import QtQuick 2.1
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import org.kde.ksvg as KSvg
+import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 
 Item {
     id: main
@@ -30,12 +32,12 @@ Item {
     //used to tell apart this implementation with the touch components one
     property bool hasOverState: true
 
-    PlasmaCore.Svg {
+    KSvg.Svg {
         id: shadowSvg
         imagePath: "widgets/actionbutton"
     }
 
-    PlasmaCore.SvgItem {
+    KSvg.SvgItem {
         id: hover
         svg: shadowSvg
         elementId: "hover"
@@ -45,7 +47,7 @@ Item {
         opacity: 0
     }
 
-    PlasmaCore.SvgItem {
+    KSvg.SvgItem {
         id: shadow
         svg: shadowSvg
         elementId: "shadow"
@@ -108,7 +110,7 @@ Item {
         Transition {
             PropertyAnimation {
                 properties: "opacity"
-                duration: units.longDuration
+                duration: Kirigami.Units.longDuration
                 easing.type: Easing.OutQuad
             }
         }

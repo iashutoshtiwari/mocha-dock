@@ -23,8 +23,6 @@
 #include <QDebug>
 
 // KDE
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 #include <KWindowSystem>
 
 #define RELOCATIONSHOWINGEVENT "viewInRelocationShowing"
@@ -56,19 +54,8 @@ Positioner::Positioner(Latte::View *parent)
     m_corona = qobject_cast<Latte::Corona *>(m_view->corona());
 
     if (m_corona) {
-        if (KWindowSystem::isPlatformX11()) {
-            m_trackedWindowId = m_view->winId();
-            m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
-
-            connect(m_view, &Latte::View::forcedShown, this, [&]() {
-                m_corona->wm()->unregisterIgnoredWindow(m_trackedWindowId);
-                m_trackedWindowId = m_view->winId();
-                m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
-            });
-        } else {
-            connect(m_view, &QWindow::windowTitleChanged, this, &Positioner::updateWaylandId);
-            connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &Positioner::updateWaylandId);
-        }
+        connect(m_view, &QWindow::windowTitleChanged, this, &Positioner::updateWaylandId);
+        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &Positioner::updateWaylandId);
 
         connect(m_corona->layoutsManager(), &Layouts::Manager::currentLayoutIsSwitching, this, &Positioner::onCurrentLayoutIsSwitching);
         /////
@@ -285,7 +272,7 @@ int Positioner::currentScreenId() const
 
 Latte::WindowSystem::WindowId Positioner::trackedWindowId()
 {
-    if (KWindowSystem::isPlatformWayland() && m_trackedWindowId.toInt() <= 0) {
+    if (m_trackedWindowId.toInt() <= 0) {
         updateWaylandId();
     }
 
@@ -865,8 +852,17 @@ void Positioner::updatePosition(QRect availableScreenRect)
 
     m_view->setPosition(position);
 
-    if (m_view->surface()) {
-        m_view->surface()->setPosition(position);
+    //! Always set LayerShell anchors for proper Wayland positioning.
+    //! For full-width panels, use setViewStruts (3-edge anchoring) which correctly
+    //! positions the panel. During startup, use panel height as struts even though
+    //! the real struts are managed later by VisibilityManager.
+    if (!m_inStartup) {
+        m_corona->wm()->setWindowPosition(m_view, m_view->location(), m_validGeometry);
+    } else {
+        //! During startup, at minimum set the edge anchors so the panel appears
+        //! on the correct edge. Use setViewStruts with the current window geometry.
+        QRect strutsRect = m_view->geometry();
+        m_corona->wm()->setViewStruts(m_view, strutsRect, m_view->location());
     }
 }
 
@@ -982,7 +978,7 @@ void Positioner::initSignalingForLocationChangeSliding()
         //[1] if panels are not excluded from confirmed geometry check then they are stuck in sliding out end
         //and they do not switch to new screen geometry
         //[2] under wayland view geometry may be delayed to be updated even though the screen has been updated correctly
-        bool confirmedgeometry = KWindowSystem::isPlatformWayland() || m_view->behaveAsPlasmaPanel() || (!m_view->behaveAsPlasmaPanel() && m_nextScreen->geometry().contains(m_view->geometry().center()));
+        bool confirmedgeometry = true;
 
         if (m_nextScreen
                 && m_nextScreen == m_view->screen()

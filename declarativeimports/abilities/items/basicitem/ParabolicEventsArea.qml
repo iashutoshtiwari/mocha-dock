@@ -3,11 +3,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import org.kde.plasma.core as PlasmaCore
 
 Item {
     id: _parabolicArea
+    anchors.fill: parent
     signal parabolicEntered(real mouseX, real mouseY);
     signal parabolicMove(real mouseX, real mouseY);
     signal parabolicExited();

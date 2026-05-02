@@ -46,29 +46,29 @@ void TabPreferences::initUi()
     m_thicknessMarginInfluenceButtons->addButton(m_ui->fullMarginInfluenceBtn, 100); // 100%
     m_thicknessMarginInfluenceButtons->setExclusive(true);
 
-    m_ui->noMarginInfluenceBtn->setText(i18nc("number in percentage, e.g. 85%","%1%").arg(0));
-    m_ui->halfMarginInfluenceBtn->setText(i18nc("number in percentage, e.g. 85%","%1%").arg(50));
-    m_ui->fullMarginInfluenceBtn->setText(i18nc("number in percentage, e.g. 85%","%1%").arg(100));
+    m_ui->noMarginInfluenceBtn->setText(i18nc("number in percentage, e.g. 85%","%1%", 0));
+    m_ui->halfMarginInfluenceBtn->setText(i18nc("number in percentage, e.g. 85%","%1%", 50));
+    m_ui->fullMarginInfluenceBtn->setText(i18nc("number in percentage, e.g. 85%","%1%", 100));
 
     //! Buttons
     connect(m_ui->contextMenuActionsBtn, &QPushButton::clicked, this, &TabPreferences::onActionsBtnPressed);
 
     //! signals
-    connect(m_parabolicSpreadButtons, static_cast<void(QButtonGroup::*)(int, bool)>(&QButtonGroup::buttonToggled),
+    connect(m_parabolicSpreadButtons, &QButtonGroup::idToggled,
             [ = ](int id, bool checked) {
-        if (checked) {
-            m_preferences.parabolicSpread = id;
-            emit dataChanged();
-        }
+                if (checked) {
+                    m_preferences.parabolicSpread = id;
+                    emit dataChanged();
+                }
     });
 
-    connect(m_thicknessMarginInfluenceButtons, static_cast<void(QButtonGroup::*)(int, bool)>(&QButtonGroup::buttonToggled),
-            [ = ](int id, bool checked) {
-        if (checked) {
-            m_preferences.thicknessMarginInfluence = (id / 100.0f);
-            emit dataChanged();
-        }
-    });
+    connect(m_thicknessMarginInfluenceButtons, &QButtonGroup::idToggled,
+        [ = ](int id, bool checked) {
+            if (checked) {
+                m_preferences.thicknessMarginInfluence = (id / 100.0f);
+                emit dataChanged();
+            }
+        });
 
     connect(m_ui->screenTrackerSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), [ = ](int i) {
         m_preferences.screensDelay = m_ui->screenTrackerSpinBox->value();

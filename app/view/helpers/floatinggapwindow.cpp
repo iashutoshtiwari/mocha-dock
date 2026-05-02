@@ -15,12 +15,8 @@
 #include <QTimer>
 
 // KDE
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 #include <KWindowSystem>
 
-// X11
-#include <NETWM>
 
 namespace Latte {
 namespace ViewPart {

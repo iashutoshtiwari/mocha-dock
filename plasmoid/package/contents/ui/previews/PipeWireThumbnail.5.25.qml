@@ -3,11 +3,12 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick
+import QtQuick.Window
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.core as PlasmaCore
+import org.kde.taskmanager as TaskManager
 
 // opacity doesn't work in the root item
 Item {
@@ -31,7 +32,7 @@ Item {
 
         /*Behavior on opacity {
             OpacityAnimator {
-                duration: PlasmaCore.Units.longDuration
+                duration: Kirigami.Units.longDuration
                 easing.type: Easing.OutCubic
             }
         }*/

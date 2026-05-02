@@ -3,18 +3,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtGraphicalEffects 1.0
+import QtQuick
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.plasmoid
+import org.kde.taskmanager as TaskManagerApplet
 
-import org.kde.kirigami 2.0 as Kirigami
+import org.kde.kirigami as Kirigami
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.core as LatteCore
+import org.kde.latte.components as LatteComponents
 
 import "animations" as TaskAnimations
 
@@ -23,8 +23,8 @@ Item {
     anchors.fill: parent
     property bool toBeDestroyed: false
 
-    readonly property color backgroundColor: iconColorsLoader.active ? iconColorsLoader.item.backgroundColor : theme.backgroundColor
-    readonly property color glowColor: iconColorsLoader.active ? iconColorsLoader.item.glowColor : theme.textColor
+    readonly property color backgroundColor: iconColorsLoader.active ? iconColorsLoader.item.backgroundColor : Kirigami.Theme.backgroundColor
+    readonly property color glowColor: iconColorsLoader.active ? iconColorsLoader.item.glowColor : Kirigami.Theme.textColor
 
     readonly property bool smartLauncherEnabled: (taskItem.isStartup === false) //! it needs to be enabled independent of user-set option because it is used from indicators
     readonly property bool progressVisible: smartLauncherItem && smartLauncherItem.progressVisible
@@ -42,20 +42,25 @@ Item {
         radius: 3
         anchors.margins: 5
 
-        property color tempColor: theme.highlightColor
+        property color tempColor: Kirigami.Theme.highlightColor
         color: tempColor
         border.width: 1
-        border.color: theme.highlightColor
+        border.color: Kirigami.Theme.highlightColor
 
         onTempColorChanged: tempColor.a = 0.35;
     }
 
+    //! TODO: SmartLauncherItem was removed in Plasma 6.
+    //! Progress/count badges need alternative implementation.
     Loader {
         id: smartLauncherLoader
-        active: taskIconContainer.smartLauncherEnabled
-        sourceComponent: TaskManagerApplet.SmartLauncherItem {
-            //! It creates issues with Valgrind and needs to be completely removed in that case
-            launcherUrl: taskItem.launcherUrlWithIcon
+        active: false
+        sourceComponent: QtObject {
+            property url launcherUrl
+            property int count: 0
+            property bool countVisible: false
+            property real progress: 0
+            property bool progressVisible: false
         }
     }
 

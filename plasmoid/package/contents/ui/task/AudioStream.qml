@@ -4,12 +4,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
+import QtQuick
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.core as LatteCore
+import org.kde.latte.components as LatteComponents
 
 Item {
     id: background
@@ -51,7 +52,7 @@ Item {
             showNumber: false
             showText: true
 
-            color: theme.backgroundColor
+            color: Kirigami.Theme.backgroundColor
             borderColor: root.lightTextColor
             proportion: 0
             radiusPerCentage: 100
@@ -63,9 +64,6 @@ Item {
                 anchors.centerIn: parent
                 width: 0.9*parent.width
                 height: width
-                colorGroup: PlasmaCore.Theme.ButtonColorGroup
-                usesPlasmaTheme: true
-
                 //opacity: taskItem.playingAudio && !taskItem.muted ? 1 : 0.85
                 source: {
                     if (taskItem.volume <= 0 || taskItem.muted) {

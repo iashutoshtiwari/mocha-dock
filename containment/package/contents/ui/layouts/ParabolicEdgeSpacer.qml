@@ -3,8 +3,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import org.kde.latte.core 0.2 as LatteCore
+import QtQuick
+import org.kde.latte.core as LatteCore
 
 Item {
     id: edgeSpacer
@@ -27,17 +27,11 @@ Item {
     property real length: 0
 
     Behavior on length {
-        id: animatedLengthBehavior
-        enabled: !parabolic.directRenderingEnabled || restoreAnimation.running
+        enabled: true
         NumberAnimation {
-            duration: 3 * edgeSpacer.animationTime
+            duration: (!parabolic.directRenderingEnabled || restoreAnimation.running) ? 3 * edgeSpacer.animationTime : 0
             easing.type: Easing.OutCubic
         }
-    }
-
-    Behavior on length {
-        enabled: !animatedLengthBehavior.enabled
-        NumberAnimation { duration: 0 }
     }
 
     ParallelAnimation{

@@ -5,14 +5,16 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.1
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import org.kde.ksvg as KSvg
+import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 
 Item {
     id: main
     state: parent.state
 
-    PlasmaCore.Svg {
+    KSvg.Svg {
         id: lineEditSvg
         imagePath: "widgets/lineedit"
         onRepaintNeeded: {
@@ -31,7 +33,7 @@ Item {
         }
     }
 
-    PlasmaCore.FrameSvgItem {
+    KSvg.FrameSvgItem {
         id: hover
 
         anchors {
@@ -77,7 +79,7 @@ Item {
         Transition {
             PropertyAnimation {
                 properties: "opacity"
-                duration: units.longDuration
+                duration: Kirigami.Units.longDuration
                 easing.type: Easing.OutQuad
             }
         }

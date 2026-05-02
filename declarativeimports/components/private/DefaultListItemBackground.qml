@@ -4,12 +4,13 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.1
+import QtQuick
+import org.kde.ksvg as KSvg
 //for Settings
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.kirigami 2.2 as Kirigami
+import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 
-PlasmaCore.FrameSvgItem {
+KSvg.FrameSvgItem {
     id: background
 
     property bool separatorVisible: false
@@ -18,17 +19,17 @@ PlasmaCore.FrameSvgItem {
 
     visible: control.ListView.view ? control.ListView.view.highlight === null : true
 
-    PlasmaCore.FrameSvgItem {
+    KSvg.FrameSvgItem {
         imagePath: "widgets/listitem"
         visible: !Kirigami.Settings.isMobile
         prefix: "hover"
         anchors.fill: parent
         opacity: control.hovered && !control.pressed ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: units.longDuration } }
+        Behavior on opacity { NumberAnimation { duration: Kirigami.Units.longDuration } }
     }
 
-    PlasmaCore.SvgItem {
-        svg: PlasmaCore.Svg {imagePath: "widgets/listitem"}
+    KSvg.SvgItem {
+        svg: KSvg.Svg {imagePath: "widgets/listitem"}
         elementId: "separator"
         anchors {
             left: parent.left

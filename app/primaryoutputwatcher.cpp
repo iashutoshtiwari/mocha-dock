@@ -13,30 +13,16 @@
 #include <QScreen>
 
 #include "qwayland-kde-primary-output-v1.h"
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/registry.h>
+#include <QtWaylandClient/QWaylandClientExtensionTemplate>
 
-#include <config-latte.h>
-#if HAVE_X11
-#include <QTimer> //Used only in x11 case
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-#include <private/qtx11extras_p.h>
-#else
-#include <QX11Info>
-#endif
-#include <xcb/randr.h>
-#include <xcb/xcb.h>
-#include <xcb/xcb_event.h>
-#endif
-
-class WaylandPrimaryOutput : public QObject, public QtWayland::kde_primary_output_v1
+class WaylandPrimaryOutput : public QWaylandClientExtensionTemplate<WaylandPrimaryOutput>, public QtWayland::kde_primary_output_v1
 {
     Q_OBJECT
 public:
-    WaylandPrimaryOutput(struct ::wl_registry *registry, int id, int version, QObject *parent)
-        : QObject(parent)
-        , QtWayland::kde_primary_output_v1(registry, id, version)
+    WaylandPrimaryOutput()
+        : QWaylandClientExtensionTemplate(1 /* version */)
     {
+        initialize();
     }
 
     void kde_primary_output_v1_primary_output(const QString &outputName) override
@@ -51,21 +37,7 @@ Q_SIGNALS:
 PrimaryOutputWatcher::PrimaryOutputWatcher(QObject *parent)
     : QObject(parent)
 {
-#if HAVE_X11
-    if (KWindowSystem::isPlatformX11()) {
-        m_primaryOutputName = qGuiApp->primaryScreen()->name();
-        qGuiApp->installNativeEventFilter(this);
-        const xcb_query_extension_reply_t *reply = xcb_get_extension_data(QX11Info::connection(), &xcb_randr_id);
-        m_xrandrExtensionOffset = reply->first_event;
-        setPrimaryOutputName(qGuiApp->primaryScreen()->name());
-        connect(qGuiApp, &QGuiApplication::primaryScreenChanged, this, [this](QScreen *newPrimary) {
-            setPrimaryOutputName(newPrimary->name());
-        });
-    }
-#endif
-    if (KWindowSystem::isPlatformWayland()) {
-        setupRegistry();
-    }
+    setupRegistry();
 }
 
 void PrimaryOutputWatcher::setPrimaryOutputName(const QString &newOutputName)
@@ -79,25 +51,14 @@ void PrimaryOutputWatcher::setPrimaryOutputName(const QString &newOutputName)
 
 void PrimaryOutputWatcher::setupRegistry()
 {
-    auto m_connection = KWayland::Client::ConnectionThread::fromApplication(this);
-    if (!m_connection) {
-        return;
-    }
-
-    // Asking for primaryOutputName() before this happened, will return qGuiApp->primaryScreen()->name() anyways, so set it so the primaryOutputNameChange will
-    // have parameters that are coherent
     m_primaryOutputName = qGuiApp->primaryScreen()->name();
-    m_registry = new KWayland::Client::Registry(this);
-    connect(m_registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this](const QByteArray &interface, quint32 name, quint32 version) {
-        if (interface == WaylandPrimaryOutput::interface()->name) {
-            auto m_outputManagement = new WaylandPrimaryOutput(m_registry->registry(), name, version, this);
-            connect(m_outputManagement, &WaylandPrimaryOutput::primaryOutputChanged, this, [this](const QString &outputName) {
-                m_primaryOutputWayland = outputName;
-                // Only set the outputName when there's a QScreen attached to it
-                if (screenForName(outputName)) {
-                    setPrimaryOutputName(outputName);
-                }
-            });
+
+    auto *primaryOutput = new WaylandPrimaryOutput();
+
+    connect(primaryOutput, &WaylandPrimaryOutput::primaryOutputChanged, this, [this](const QString &outputName) {
+        m_primaryOutputWayland = outputName;
+        if (screenForName(outputName)) {
+            setPrimaryOutputName(outputName);
         }
     });
 
@@ -107,37 +68,13 @@ void PrimaryOutputWatcher::setupRegistry()
             setPrimaryOutputName(m_primaryOutputWayland);
         }
     });
-
-    m_registry->create(m_connection);
-    m_registry->setup();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-bool PrimaryOutputWatcher::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
-#else
 bool PrimaryOutputWatcher::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
-#endif
 {
     Q_UNUSED(result);
-#if HAVE_X11
-    // a particular edge case: when we switch the only enabled screen
-    // we don't have any signal about it, the primary screen changes but we have the same old QScreen* getting recycled
-    // see https://bugs.kde.org/show_bug.cgi?id=373880
-    // if this slot will be invoked many times, their//second time on will do nothing as name and primaryOutputName will be the same by then
-    if (eventType[0] != 'x') {
-        return false;
-    }
-
-    xcb_generic_event_t *ev = static_cast<xcb_generic_event_t *>(message);
-
-    const auto responseType = XCB_EVENT_RESPONSE_TYPE(ev);
-
-    if (responseType == m_xrandrExtensionOffset + XCB_RANDR_SCREEN_CHANGE_NOTIFY) {
-        QTimer::singleShot(0, this, [this]() {
-            setPrimaryOutputName(qGuiApp->primaryScreen()->name());
-        });
-    }
-#endif
+    Q_UNUSED(eventType);
+    Q_UNUSED(message);
     return false;
 }
 
@@ -163,4 +100,3 @@ QScreen *PrimaryOutputWatcher::primaryScreen() const
 }
 
 #include "primaryoutputwatcher.moc"
-

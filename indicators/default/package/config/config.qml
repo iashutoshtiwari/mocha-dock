@@ -3,17 +3,17 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.3
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.components as LatteComponents
 
 ColumnLayout {
     id: root
@@ -32,7 +32,7 @@ ColumnLayout {
         readonly property int buttonsCount: 2
         readonly property int buttonSize: (dialog.optionsWidth - (spacing * buttonsCount-1)) / buttonsCount
 
-        ExclusiveGroup {
+        ButtonGroup {
             id: activeIndicatorTypeGroup
         }
 
@@ -42,7 +42,7 @@ ColumnLayout {
             text: i18nc("line indicator","Line")
             checked: parent.indicatorType === indicatorType
             checkable: false
-            exclusiveGroup: activeIndicatorTypeGroup
+            ButtonGroup.group: activeIndicatorTypeGroup
             tooltip: i18n("Show a line indicator for active items")
 
             readonly property int indicatorType: 0 /*Line*/
@@ -60,7 +60,7 @@ ColumnLayout {
             text: i18nc("dots indicator", "Dots")
             checked: parent.indicatorType === indicatorType
             checkable: false
-            exclusiveGroup: activeIndicatorTypeGroup
+            ButtonGroup.group: activeIndicatorTypeGroup
             tooltip: i18n("Show a dot indicator for active items")
 
             readonly property int indicatorType: 1 /*Dot*/
@@ -75,7 +75,7 @@ ColumnLayout {
 
     RowLayout {
         Layout.fillWidth: true
-        spacing: units.smallSpacing
+        spacing: Kirigami.Units.smallSpacing
 
         PlasmaComponents.Label {
             text: i18n("Thickness")
@@ -102,8 +102,8 @@ ColumnLayout {
         PlasmaComponents.Label {
             text: i18nc("number in percentage, e.g. 85 %","%1 %", currentValue)
             horizontalAlignment: Text.AlignRight
-            Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-            Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+            Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
             readonly property int currentValue: sizeSlider.value
         }
@@ -111,7 +111,7 @@ ColumnLayout {
 
     RowLayout {
         Layout.fillWidth: true
-        spacing: units.smallSpacing
+        spacing: Kirigami.Units.smallSpacing
 
         PlasmaComponents.Label {
             text: i18n("Position")
@@ -138,8 +138,8 @@ ColumnLayout {
         PlasmaComponents.Label {
             text: i18nc("number in percentage, e.g. 85 %","%1 %", currentValue)
             horizontalAlignment: Text.AlignRight
-            Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-            Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+            Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
             readonly property int currentValue: thickMarginSlider.value
         }
@@ -147,7 +147,7 @@ ColumnLayout {
 
     RowLayout {
         Layout.fillWidth: true
-        spacing: units.smallSpacing
+        spacing: Kirigami.Units.smallSpacing
 
         PlasmaComponents.Label {
             text: i18n("Padding")
@@ -176,8 +176,8 @@ ColumnLayout {
         PlasmaComponents.Label {
             text: i18nc("number in percentage, e.g. 85 %","%1 %", currentValue)
             horizontalAlignment: Text.AlignRight
-            Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-            Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+            Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
             readonly property int currentValue: lengthIntMarginSlider.value
         }
@@ -185,7 +185,7 @@ ColumnLayout {
 
     RowLayout {
         Layout.fillWidth: true
-        spacing: units.smallSpacing
+        spacing: Kirigami.Units.smallSpacing
 
         PlasmaComponents.Label {
             text: i18n("Corner Margin")
@@ -212,8 +212,8 @@ ColumnLayout {
         PlasmaComponents.Label {
             text: i18nc("number in percentage, e.g. 85 %","%1 %", currentValue)
             horizontalAlignment: Text.AlignRight
-            Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-            Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+            Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
             readonly property int currentValue: backgroundCornerMarginSlider.value
         }
@@ -223,7 +223,7 @@ ColumnLayout {
         id: glowEnabled
         Layout.fillWidth: true
         Layout.minimumHeight: implicitHeight
-        Layout.bottomMargin: units.smallSpacing
+        Layout.bottomMargin: Kirigami.Units.smallSpacing
 
         checked: indicator.configuration.glowEnabled
         level: 2
@@ -245,7 +245,7 @@ ColumnLayout {
         readonly property int buttonsCount: 2
         readonly property int buttonSize: (dialog.optionsWidth - (spacing * buttonsCount-1)) / buttonsCount
 
-        ExclusiveGroup {
+        ButtonGroup {
             id: glowGroup
         }
 
@@ -255,7 +255,7 @@ ColumnLayout {
             text: i18nc("glow only to active task/applet indicators","On Active")
             checked: parent.option === option
             checkable: false
-            exclusiveGroup:  glowGroup
+            ButtonGroup.group: glowGroup
             tooltip: i18n("Add glow only to active task/applet indicator")
 
             readonly property int option: 1 /*OnActive*/
@@ -273,7 +273,7 @@ ColumnLayout {
             text: i18nc("glow to all task/applet indicators","All")
             checked: parent.option === option
             checkable: false
-            exclusiveGroup: glowGroup
+            ButtonGroup.group: glowGroup
             tooltip: i18n("Add glow to all task/applet indicators")
 
             readonly property int option: 2 /*All*/
@@ -295,7 +295,7 @@ ColumnLayout {
         PlasmaComponents.Label {
             Layout.minimumWidth: implicitWidth
             horizontalAlignment: Text.AlignLeft
-            Layout.rightMargin: units.smallSpacing
+            Layout.rightMargin: Kirigami.Units.smallSpacing
             text: i18n("Opacity")
         }
 
@@ -331,8 +331,8 @@ ColumnLayout {
         PlasmaComponents.Label {
             text: i18nc("number in percentage, e.g. 85 %","%1 %", glowOpacitySlider.value)
             horizontalAlignment: Text.AlignRight
-            Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-            Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
+            Layout.minimumWidth: Kirigami.Units.gridUnit * 4
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 4
         }
     }
 

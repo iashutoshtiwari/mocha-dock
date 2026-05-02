@@ -102,6 +102,16 @@ void Interfaces::setUniversalSettings(QObject *settings)
     emit universalSettingsChanged();
 }
 
+void Interfaces::setupInterfaces(QObject *view, QObject *globalShortcuts, QObject *layoutsManager,
+                                  QObject *themeExtended, QObject *universalSettings)
+{
+    setGlobalShortcuts(globalShortcuts);
+    setLayoutsManager(layoutsManager);
+    setThemeExtended(themeExtended);
+    setUniversalSettings(universalSettings);
+    setView(view);
+}
+
 void Interfaces::updateView()
 {
     if (m_plasmoid) {

@@ -3,9 +3,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.latte.abilities.definition 0.1 as AbilityDefinition
+import org.kde.latte.abilities.definition as AbilityDefinition
 
 AbilityDefinition.PositionShortcuts {
     id: _shortcutsprivate
@@ -25,13 +25,15 @@ AbilityDefinition.PositionShortcuts {
     Binding {
         target: _shortcutsprivate
         property: "badges"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked && shortcutsEngine
-        value: shortcutsEngine.badgesForActivate
+        value: shortcutsEngine ? shortcutsEngine.badgesForActivate : []
     }
 
     Binding {
         target: _shortcutsprivate
         property: "appletIdStealingPositionShortcuts"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var sLayout = layouts.startLayout;

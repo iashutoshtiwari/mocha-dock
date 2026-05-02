@@ -112,8 +112,7 @@
         "Version": "0.1",
         "Website": "https://userbase.kde.org/LatteDock"
     },
-    "X-Plasma-API": "declarativeappletscript",
-    "X-Plasma-MainScript": "ui/main.qml",
+    "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-Provides": [
         "org.kde.plasma.multitasking"
     ]

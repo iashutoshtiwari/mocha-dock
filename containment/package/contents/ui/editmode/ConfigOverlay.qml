@@ -4,16 +4,17 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtQuick.Layouts 1.0
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 MouseArea {
     id: configurationArea
@@ -54,7 +55,7 @@ MouseArea {
     property int appletY
 
     readonly property int thickness: metrics.mask.thickness.maxNormal - metrics.extraThicknessForNormal
-    readonly property int spacerHandleSize: units.smallSpacing
+    readonly property int spacerHandleSize: Kirigami.Units.smallSpacing
 
     onHeightChanged: tooltip.visible = false;
     onWidthChanged: tooltip.visible = false;
@@ -298,12 +299,12 @@ MouseArea {
 
             Rectangle{
                 anchors.fill: parent
-                color: theme.backgroundColor
+                color: Kirigami.Theme.backgroundColor
                 radius: 3
                 opacity: 0.35
             }
 
-            PlasmaCore.IconItem {
+            Kirigami.Icon {
                 source: "transform-move"
                 width: Math.min(144, root.metrics.iconSize)
                 height: width
@@ -436,17 +437,18 @@ MouseArea {
             Row {
                 id: handleRow
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 2*units.smallSpacing
+                spacing: 2*Kirigami.Units.smallSpacing
 
                 Row{
-                    spacing: units.smallSpacing
+                    spacing: Kirigami.Units.smallSpacing
                     PlasmaComponents.ToolButton {
                         id: configureButton
                         anchors.verticalCenter: parent.verticalCenter
-                        iconSource: "configure"
-                        tooltip: i18n("Configure applet")
+                        icon.name: "configure"
+                        // XXX: Tooltips are gone now? Investigate.
+                        // tooltip: i18n("Configure applet")
                         onClicked: {
-                            tooltip.visible = false;
+                            // tooltip.visible = false;
                             currentApplet.applet.action("configure").trigger();
                         }
                     }
@@ -454,19 +456,19 @@ MouseArea {
                     PlasmaComponents.Label {
                         id: label
                         anchors.verticalCenter: parent.verticalCenter
-                        anchors.rightMargin: units.smallSpacing
+                        anchors.rightMargin: Kirigami.Units.smallSpacing
                         textFormat: Text.PlainText
                         maximumLineCount: 1
                     }
 
                     Row{
-                        spacing: units.smallSpacing/2
+                        spacing: Kirigami.Units.smallSpacing/2
 
                         PlasmaComponents.ToolButton{
                             id: colorizingButton
                             checkable: true
-                            iconSource: "color-picker"
-                            tooltip: i18n("Enable painting  for this applet")
+                            icon.name: "color-picker"
+                            // tooltip: i18n("Enable painting for this applet")
 
                             onClicked: {
                                 fastLayoutManager.setOption(currentApplet.applet.id, "userBlocksColorizing", !checked);
@@ -476,8 +478,8 @@ MouseArea {
                         PlasmaComponents.ToolButton{
                             id: lockButton
                             checkable: true
-                            iconSource: checked ? "lock" : "unlock"
-                            tooltip: i18n("Disable parabolic effect for this applet")
+                            icon.name: checked ? "lock" : "unlock"
+                            // tooltip: i18n("Disable parabolic effect for this applet")
 
                             onClicked: {
                                 fastLayoutManager.setOption(currentApplet.applet.id, "lockZoom", checked);
@@ -487,10 +489,10 @@ MouseArea {
                         PlasmaComponents.ToolButton {
                             id: closeButton
                             anchors.verticalCenter: parent.verticalCenter
-                            iconSource: "delete"
-                            tooltip: i18n("Remove applet")
+                            icon.name: "delete"
+                            // tooltip: i18n("Remove applet")
                             onClicked: {
-                                tooltip.visible = false;
+                                // tooltip.visible = false;
                                 if(currentApplet && currentApplet.applet)
                                     currentApplet.applet.action("remove").trigger();
                             }

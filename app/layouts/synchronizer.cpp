@@ -6,7 +6,6 @@
 #include "synchronizer.h"
 
 //! local
-#include <config-latte.h>
 #include "importer.h"
 #include "manager.h"
 #include "../apptypes.h"
@@ -26,10 +25,10 @@
 
 // Plasma
 #include <Plasma/Containment>
+#include <PlasmaActivities/Consumer>
+#include <PlasmaActivities/Controller>
 
 // KDE
-#include <KActivities/Consumer>
-#include <KActivities/Controller>
 #include <KWindowSystem>
 
 #define LAYOUTSINITINTERVAL 350
@@ -67,7 +66,7 @@ Synchronizer::Synchronizer(QObject *parent)
         }
     });
 
-    connect(m_manager->corona()->activitiesConsumer(), &KActivities::Consumer::runningActivitiesChanged,
+    connect(m_manager->corona()->activitiesConsumer(), &KActivities::Consumer::activitiesChanged,
             this, [&]() {
         if (m_manager->memoryUsage() == MemoryUsage::MultipleLayouts) {
             syncMultipleLayoutsToActivities();
@@ -157,7 +156,7 @@ QStringList Synchronizer::freeActivities()
 
 QStringList Synchronizer::runningActivities()
 {   
-    return m_manager->corona()->activitiesConsumer()->runningActivities();
+    return m_manager->corona()->activitiesConsumer()->activities();
 }
 
 QStringList Synchronizer::freeRunningActivities()
@@ -521,12 +520,9 @@ void Synchronizer::pauseLayout(QString layoutName)
             int i = 0;
 
             for (const auto &activityid : appliedactivities) {
-                //! Stopping the activities must be done asynchronous because otherwise
-                //! the activity manager cant close multiple activities
-                QTimer::singleShot(i * 1000, [this, activityid]() {
-                    m_activitiesController->stopActivity(activityid);
-                });
-
+                //! In Plasma 6, activities can no longer be stopped/started individually.
+                //! We remove them instead if they need to be cleaned up.
+                Q_UNUSED(activityid);
                 i = i + 1;
             }
         }
@@ -864,10 +860,6 @@ bool Synchronizer::switchToLayoutInMultipleModeBasedOnActivities(const QString &
     }
 
     if (!switchToActivity.isEmpty()) {
-        if (!m_manager->corona()->activitiesConsumer()->runningActivities().contains(switchToActivity)) {
-            m_activitiesController->startActivity(switchToActivity);
-        }
-
         m_activitiesController->setCurrentActivity(switchToActivity);
     }
 
@@ -1073,11 +1065,9 @@ void Synchronizer::unloadLayouts(const QStringList &layoutNames, const QStringLi
 
 void Synchronizer::updateKWinDisabledBorders()
 {
-    if (KWindowSystem::isPlatformWayland()) {
-        // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
-        // KWin::reconfigure() function blocks/freezes Latte under wayland
-        return;
-    }
+    // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
+    // KWin::reconfigure() function blocks/freezes Latte under wayland
+    return;
 
     if (!m_manager->corona()->universalSettings()->canDisableBorders()) {
         m_manager->corona()->universalSettings()->kwin_setDisabledMaximizedBorders(false);

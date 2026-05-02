@@ -16,9 +16,6 @@
 #include <QIcon>
 #include <QString>
 
-//! KActivities
-#include <KActivities/Info>
-
 namespace Latte {
 namespace Data {
 
@@ -31,8 +28,9 @@ public:
 
     //! Layout data
     bool isCurrent{false};
+    bool isRunningState{false};
+    bool isValidState{true};
     QString icon;
-    KActivities::Info::State state;
 
     bool isValid() const;
     bool isRunning() const;

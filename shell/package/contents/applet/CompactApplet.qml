@@ -3,27 +3,29 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.0
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.0
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
+import org.kde.kirigami as Kirigami
+import org.kde.ksvg as KSvg
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.latte.core as LatteCore
 
 PlasmaCore.ToolTipArea {
     id: root
     objectName: "org.kde.desktop-CompactApplet"
     anchors.fill: parent
 
-    mainText: plasmoid.toolTipMainText
-    subText: plasmoid.toolTipSubText
+    mainText: plasmoid.toolTipMainText ?? ""
+    subText: plasmoid.toolTipSubText ?? ""
     location: plasmoid.location
     active: !plasmoid.expanded
-    textFormat: plasmoid.toolTipTextFormat
+    textFormat: plasmoid.toolTipTextFormat ?? 0
     mainItem: plasmoid.toolTipItem ? plasmoid.toolTipItem : null
 
     property Item fullRepresentation: null
@@ -77,7 +79,7 @@ PlasmaCore.ToolTipArea {
             })
         } else {
             popupWindow.mainItem.width = Qt.binding(function() {
-                return PlasmaCore.Theme.mSize(PlasmaCore.Theme.defaultFont).width * 35
+                return Kirigami.Units.gridUnit * 35
             })
         }
 
@@ -95,7 +97,7 @@ PlasmaCore.ToolTipArea {
             })
         } else {
             popupWindow.mainItem.height = Qt.binding(function() {
-                return PlasmaCore.Theme.mSize(PlasmaCore.Theme.defaultFont).height * 25
+                return Kirigami.Units.gridUnit * 25
             })
         }
 
@@ -103,7 +105,7 @@ PlasmaCore.ToolTipArea {
         fullRepresentation.anchors.fill = fullRepresentation.parent;
     }
 
-   /* PlasmaCore.FrameSvgItem {
+   /* KSvg.FrameSvgItem {
         id: expandedItem
         anchors.fill: parent
         imagePath: "widgets/tabbar"
@@ -131,7 +133,7 @@ PlasmaCore.ToolTipArea {
         opacity: plasmoid.expanded ? 1 : 0
         Behavior on opacity {
             NumberAnimation {
-                duration: PlasmaCore.Units.shortDuration
+                duration: Kirigami.Units.shortDuration
                 easing.type: Easing.InOutQuad
             }
         }
@@ -146,7 +148,7 @@ PlasmaCore.ToolTipArea {
     }
 
     Connections {
-        target: plasmoid.action("configure")
+        target: plasmoid.internalAction("configure")
         function onTriggered() { plasmoid.expanded = false }
     }
 
@@ -159,12 +161,12 @@ PlasmaCore.ToolTipArea {
         id: popupWindow
         objectName: "popupWindow"
         flags: Qt.WindowStaysOnTopHint
-        visible: plasmoid.expanded && fullRepresentation
+        visible: (plasmoid.expanded ?? false) && fullRepresentation
         visualParent: compactRepresentationVisualParent ? compactRepresentationVisualParent : (compactRepresentation ? compactRepresentation : null)
        // location: PlasmaCore.Types.Floating //plasmoid.location
         edge: plasmoid.location /*this way dialog borders are not updated and it is used only for adjusting dialog position*/
-        hideOnWindowDeactivate: plasmoid.hideOnWindowDeactivate
-        backgroundHints: (plasmoid.containmentDisplayHints & PlasmaCore.Types.DesktopFullyCovered) ? PlasmaCore.Dialog.SolidBackground : PlasmaCore.Dialog.StandardBackground
+        hideOnWindowDeactivate: plasmoid.hideOnWindowDeactivate ?? true
+        backgroundHints: (plasmoid.containmentDisplayHints ?? 0) & PlasmaCore.Types.DesktopFullyCovered ? PlasmaCore.Dialog.SolidBackground : PlasmaCore.Dialog.StandardBackground
 
         property var oldStatus: PlasmaCore.Types.UnknownStatus
 
@@ -215,6 +217,7 @@ PlasmaCore.ToolTipArea {
     Binding {
         target: compactRepresentation ? compactRepresentation.anchors : null
         property: "horizontalCenterOffset"
+        restoreMode: Binding.RestoreNone
         when: compactRepresentation
         value: appletItem ? appletItem.iconOffsetX : 0
     }
@@ -222,6 +225,7 @@ PlasmaCore.ToolTipArea {
     Binding {
         target: compactRepresentation ? compactRepresentation.anchors : null
         property: "verticalCenterOffset"
+        restoreMode: Binding.RestoreNone
         when: compactRepresentation
         value: appletItem ? appletItem.iconOffsetY : 0
     }

@@ -15,13 +15,6 @@
 #include <QQuickView>
 #include <QTimer>
 
-// KDE
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
-#include <KWindowSystem>
-
-// X11
-#include <NETWM>
 
 namespace Latte {
 namespace ViewPart {
@@ -65,62 +58,14 @@ SubWindow::SubWindow(Latte::View *view, QString debugType) :
         updateGeometry();
     });
 
-    if (!KWindowSystem::isPlatformWayland()) {
-        //! IMPORTANT!!! ::: This fixes a bug when closing an Activity all views from all Activities are
-        //!  disappearing! With this code parts they reappear!!!
-        m_visibleHackTimer1.setInterval(400);
-        m_visibleHackTimer2.setInterval(2500);
-        m_visibleHackTimer1.setSingleShot(true);
-        m_visibleHackTimer2.setSingleShot(true);
-
-        connectionsHack << connect(this, &QWindow::visibleChanged, this, [&]() {
-            if (!m_inDelete && m_latteView && m_latteView->layout() && !isVisible()) {
-                m_visibleHackTimer1.start();
-                m_visibleHackTimer2.start();
-            } else if (!m_inDelete) {
-                //! For some reason when the window is hidden in the edge under X11 afterwards
-                //! is losing its window flags
-                m_corona->wm()->setViewExtraFlags(this);
-            }
-        });
-
-        connectionsHack << connect(&m_visibleHackTimer1, &QTimer::timeout, this, [&]() {
-            if (!m_inDelete && m_latteView && m_latteView->layout() && !isVisible()) {
-                show();
-                emit forcedShown();
-                //qDebug() << m_debugType + ":: Enforce reshow from timer 1...";
-            } else {
-                //qDebug() << m_debugType + ":: No needed reshow from timer 1...";
-            }
-        });
-
-        connectionsHack << connect(&m_visibleHackTimer2, &QTimer::timeout, this, [&]() {
-            if (!m_inDelete && m_latteView && m_latteView->layout() && !isVisible()) {
-                show();
-                emit forcedShown();
-                //qDebug() << m_debugType + ":: Enforce reshow from timer 2...";
-            } else {
-                //qDebug() << m_debugType + ":: No needed reshow from timer 2...";
-            }
-        });
-
-        connectionsHack << connect(this, &SubWindow::forcedShown, this, [&]() {
-            m_corona->wm()->unregisterIgnoredWindow(m_trackedWindowId);
-            m_trackedWindowId = winId();
-            m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
-        });
-    }
-
-    setupWaylandIntegration();
-
-    if (KWindowSystem::isPlatformX11()) {
-        m_trackedWindowId = winId();
-        m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
-    } else {
-        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &SubWindow::updateWaylandId);
-    }
+    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &SubWindow::updateWaylandId);
 
     setScreen(m_latteView->screen());
+
+    //! Set up LayerShellQt before the first show() to avoid
+    //! "already has a shell integration" warning on subsequent shows
+    m_corona->wm()->setViewExtraFlags(this);
+
     show();
     hideWithMask();
 }
@@ -129,7 +74,7 @@ SubWindow::~SubWindow()
 {
     m_inDelete = true;
 
-    m_corona->wm()->unregisterIgnoredWindow(KWindowSystem::isPlatformX11() ? winId() : m_trackedWindowId);
+    m_corona->wm()->unregisterIgnoredWindow(m_trackedWindowId);
 
     m_latteView = nullptr;
 
@@ -138,10 +83,6 @@ SubWindow::~SubWindow()
     m_visibleHackTimer2.stop();
     for (auto &c : connectionsHack) {
         disconnect(c);
-    }
-
-    if (m_shellSurface) {
-        delete m_shellSurface;
     }
 }
 
@@ -172,16 +113,11 @@ Latte::View *SubWindow::parentView()
 
 Latte::WindowSystem::WindowId SubWindow::trackedWindowId()
 {
-    if (KWindowSystem::isPlatformWayland() && m_trackedWindowId.toInt() <= 0) {
+    if (m_trackedWindowId.toInt() <= 0) {
         updateWaylandId();
     }
 
     return m_trackedWindowId;
-}
-
-KWayland::Client::PlasmaShellSurface *SubWindow::surface()
-{
-    return m_shellSurface;
 }
 
 void SubWindow::fixGeometry()
@@ -193,10 +129,6 @@ void SubWindow::fixGeometry()
         setMaximumSize(m_calculatedGeometry.size());
         resize(m_calculatedGeometry.size());
         setPosition(m_calculatedGeometry.x(), m_calculatedGeometry.y());
-
-        if (m_shellSurface) {
-            m_shellSurface->setPosition(m_calculatedGeometry.topLeft());
-        }
     }
 }
 
@@ -219,41 +151,11 @@ void SubWindow::startGeometryTimer()
     m_fixGeometryTimer.start();
 }
 
-void SubWindow::setupWaylandIntegration()
-{
-    if (m_shellSurface || !KWindowSystem::isPlatformWayland() || !m_latteView || !m_latteView->containment()) {
-        // already setup
-        return;
-    }
-
-    if (m_corona) {
-        using namespace KWayland::Client;
-
-        PlasmaShell *interface = m_corona->waylandCoronaInterface();
-
-        if (!interface) {
-            return;
-        }
-
-        Surface *s = Surface::fromWindow(this);
-
-        if (!s) {
-            return;
-        }
-
-        qDebug() << "wayland screen edge ghost window surface was created...";
-        m_shellSurface = interface->createSurface(s, this);
-        m_corona->wm()->setViewExtraFlags(m_shellSurface);
-
-        m_shellSurface->setPanelTakesFocus(false);
-    }
-}
-
 bool SubWindow::event(QEvent *e)
 {
-    if (e->type() == QEvent::Show) {
-        m_corona->wm()->setViewExtraFlags(this);
-    }
+    //! LayerShellQt is configured once in the constructor before the first show().
+    //! Calling setViewExtraFlags() again on subsequent Show events would trigger
+    //! "already has a shell integration" warnings from LayerShellQt::Window::get().
 
     return QQuickView::event(e);
 }

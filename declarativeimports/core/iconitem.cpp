@@ -21,13 +21,15 @@
 #include <QQuickWindow>
 #include <QPixmap>
 #include <QSGSimpleTextureNode>
-#include <QuickAddons/ManagedTextureNode>
 #include <QLatin1String>
 
 // KDE
 #include <KIconTheme>
-#include <KIconThemes/KIconLoader>
-#include <KIconThemes/KIconEffect>
+#include <KIconLoader>
+#include <KIconEffect>
+#include <KSvg/Svg>
+
+#include "ManagedTextureNode.h"
 
 namespace Latte {
 
@@ -38,8 +40,10 @@ IconItem::IconItem(QQuickItem *parent)
       m_textureChanged(false),
       m_sizeChanged(false),
       m_usesPlasmaTheme(false),
-      m_lastValidSourceName(QString()),
-      m_colorGroup(Plasma::Theme::NormalColorGroup)
+      m_lastValidSourceName(QString())
+      // FIXME:
+      // See the comment in the header
+      // m_colorGroup(Plasma::Theme::NormalColorGroup)
 {
     setFlag(ItemHasContents, true);
     connect(KIconLoader::global(), SIGNAL(iconLoaderSettingsChanged()),
@@ -93,12 +97,14 @@ void IconItem::setSource(const QVariant &source)
             m_svgIcon.reset();
         } else {
             if (!m_svgIcon) {
-                m_svgIcon = std::make_unique<Plasma::Svg>(this);
-                m_svgIcon->setColorGroup(m_colorGroup);
-                m_svgIcon->setStatus(Plasma::Svg::Normal);
+                m_svgIcon = std::make_unique<KSvg::Svg>(this);
+                // FIXME:
+                // See the comment in the header
+                //m_svgIcon->setColorGroup(m_colorGroup);
+                m_svgIcon->setStatus(KSvg::Svg::Normal);
                 m_svgIcon->setUsingRenderingCache(false);
                 m_svgIcon->setDevicePixelRatio((window() ? window()->devicePixelRatio() : qApp->devicePixelRatio()));
-                connect(m_svgIcon.get(), &Plasma::Svg::repaintNeeded, this, &IconItem::schedulePixmapUpdate);
+                connect(m_svgIcon.get(), &KSvg::Svg::repaintNeeded, this, &IconItem::schedulePixmapUpdate);
             }
 
             if (m_usesPlasmaTheme) {
@@ -116,7 +122,7 @@ void IconItem::setSource(const QVariant &source)
                 m_svgIconName = sourceString;
                 //ok, svg not available from the plasma theme
             } else {
-                //try to load from iconloader an svg with Plasma::Svg
+                //try to load from iconloader an svg with KSvg::Svg
                 const auto *iconTheme = KIconLoader::global()->theme();
                 QString iconPath;
 
@@ -213,24 +219,24 @@ void IconItem::setLastValidSourceName(QString name)
     emit lastValidSourceNameChanged();
 }
 
-void IconItem::setColorGroup(Plasma::Theme::ColorGroup group)
+void IconItem::setColorSet(KSvg::Svg::ColorSet s)
 {
-    if (m_colorGroup == group) {
+    if (m_colorSet == s) {
         return;
     }
 
-    m_colorGroup = group;
+    m_colorSet = s;
 
     if (m_svgIcon) {
-        m_svgIcon->setColorGroup(group);
+        m_svgIcon->setColorSet(s);
     }
 
-    emit colorGroupChanged();
+    emit colorSetChanged();
 }
 
-Plasma::Theme::ColorGroup IconItem::colorGroup() const
+KSvg::Svg::ColorSet IconItem::colorSet() const
 {
-    return m_colorGroup;
+    return m_colorSet;
 }
 
 
@@ -352,13 +358,13 @@ QSGNode *IconItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *update
         return nullptr;
     }
 
-    ManagedTextureNode *textureNode = dynamic_cast<ManagedTextureNode *>(oldNode);
+    Latte::Legacy::ManagedTextureNode *textureNode = dynamic_cast<Latte::Legacy::ManagedTextureNode *>(oldNode);
 
     if (!textureNode || m_textureChanged) {
         if (oldNode)
             delete oldNode;
 
-        textureNode = new ManagedTextureNode;
+        textureNode = new Latte::Legacy::ManagedTextureNode;
         textureNode->setTexture(QSharedPointer<QSGTexture>(window()->createTextureFromImage(m_iconPixmap.toImage(), QQuickWindow::TextureCanUseAtlas)));
         textureNode->setFiltering(smooth() ? QSGTexture::Linear : QSGTexture::Nearest);
 
@@ -557,7 +563,7 @@ void IconItem::itemChange(ItemChange change, const ItemChangeData &value)
     QQuickItem::itemChange(change, value);
 }
 
-void IconItem::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
+void IconItem::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
     if (newGeometry.size() != oldGeometry.size()) {
         m_sizeChanged = true;
@@ -576,7 +582,7 @@ void IconItem::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeome
         }
     }
 
-    QQuickItem::geometryChanged(newGeometry, oldGeometry);
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
 }
 
 void IconItem::componentComplete()

@@ -16,12 +16,7 @@
 #include <QTimer>
 
 // KDE
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 #include <KWindowSystem>
-
-// X11
-#include <NETWM>
 
 namespace Latte {
 namespace ViewPart {
@@ -77,11 +72,7 @@ void ScreenEdgeGhostWindow::updateGeometry()
 
     QRect newGeometry = m_latteView->absoluteGeometry();
 
-    if (KWindowSystem::compositingActive()) {
-        m_thickness = 6;
-    } else {
-        m_thickness = 2;
-    }
+    m_thickness = 6;
 
     int length{30};
     int lengthDifference{0};

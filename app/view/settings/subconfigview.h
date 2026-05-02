@@ -16,14 +16,8 @@
 #include <QQuickView>
 #include <QTimer>
 
-// Plasma
-#include <Plasma/FrameSvg>
-
-namespace KWayland {
-namespace Client {
-class PlasmaShellSurface;
-}
-}
+//KF
+#include <KSvg/FrameSvg>
 
 namespace Latte {
 class Corona;
@@ -37,7 +31,7 @@ namespace ViewPart {
 class SubConfigView : public QQuickView
 {
     Q_OBJECT
-    Q_PROPERTY(Plasma::FrameSvg::EnabledBorders enabledBorders READ enabledBorders NOTIFY enabledBordersChanged)
+    Q_PROPERTY(KSvg::FrameSvg::EnabledBorders enabledBorders READ enabledBorders NOTIFY enabledBordersChanged)
 
 public:
     SubConfigView(Latte::View *view, const QString &title, const bool &isNormalWindow = true);
@@ -47,7 +41,7 @@ public:
 
     QString validTitle() const;
 
-    Plasma::FrameSvg::EnabledBorders enabledBorders() const;
+    KSvg::FrameSvg::EnabledBorders enabledBorders() const;
 
     Latte::Corona *corona() const;
     Latte::View *parentView() const;
@@ -55,7 +49,6 @@ public:
     virtual void showAfter(int msecs = 0);
 
     Latte::WindowSystem::WindowId trackedWindowId();
-    KWayland::Client::PlasmaShellSurface *surface();
 
 public slots:
     virtual void syncGeometry() = 0;
@@ -84,16 +77,12 @@ protected:
     QList<QMetaObject::Connection> connections;
     QList<QMetaObject::Connection> viewconnections;
 
-    Plasma::FrameSvg::EnabledBorders m_enabledBorders{Plasma::FrameSvg::AllBorders};
+    KSvg::FrameSvg::EnabledBorders m_enabledBorders{KSvg::FrameSvg::AllBorders};
 
     Latte::Corona *m_corona{nullptr};
-    KWayland::Client::PlasmaShellSurface *m_shellSurface{nullptr};
 
 private slots:
     void updateWaylandId();
-
-private:
-    void setupWaylandIntegration();
 
 private:
     QString m_validTitle;
@@ -106,4 +95,3 @@ private:
 }
 }
 #endif //SUBCONFIGVIEW_H
-

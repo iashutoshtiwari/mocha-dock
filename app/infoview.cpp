@@ -8,7 +8,6 @@
 #include "infoview.h"
 
 // local
-#include <config-latte.h>
 #include "wm/abstractwindowinterface.h"
 #include "view/panelshadows_p.h"
 
@@ -17,16 +16,12 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QScreen>
+#include <QRandomGenerator>
 
 // KDE
 #include <KLocalizedContext>
-#include <KDeclarative/KDeclarative>
+#include <KPackage/Package>
 #include <KWindowSystem>
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
-
-// Plasma
-#include <Plasma/Package>
 
 namespace Latte {
 
@@ -36,11 +31,9 @@ InfoView::InfoView(Latte::Corona *corona, QString message, QScreen *screen, QWin
       m_message(message),
       m_screen(screen)
 {
-    m_id = QString::number(qrand() % 1000);
+    m_id = QString::number(QRandomGenerator::global()->generate() % 1000);
 
     setTitle(validTitle());
-
-    setupWaylandIntegration();
 
     setResizeMode(QQuickView::SizeViewToRootObject);
     setColor(QColor(Qt::transparent));
@@ -51,12 +44,7 @@ InfoView::InfoView(Latte::Corona *corona, QString message, QScreen *screen, QWin
     setScreen(screen);
     setFlags(wFlags());
 
-    if (KWindowSystem::isPlatformX11()) {
-        m_trackedWindowId = winId();
-        m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
-    } else {
-        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &InfoView::updateWaylandId);
-    }
+    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &InfoView::updateWaylandId);
 
     init();
 }
@@ -66,22 +54,15 @@ InfoView::~InfoView()
     PanelShadows::self()->removeWindow(this);
 
     qDebug() << "InfoView deleting ...";
-
-    if (m_shellSurface) {
-        delete m_shellSurface;
-        m_shellSurface = nullptr;
-    }
 }
 
 void InfoView::init()
 {
     rootContext()->setContextProperty(QStringLiteral("infoWindow"), this);
 
-    KDeclarative::KDeclarative kdeclarative;
-    kdeclarative.setDeclarativeEngine(engine());
-    kdeclarative.setTranslationDomain(QStringLiteral("latte-dock"));
-    kdeclarative.setupContext();
-    kdeclarative.setupEngine(engine());
+    KLocalizedContext *context = new KLocalizedContext(engine());
+    context->setTranslationDomain(QStringLiteral("latte-dock"));
+    engine()->rootContext()->setContextObject(context);
 
     auto source = QUrl::fromLocalFile(m_corona->kPackage().filePath("infoviewui"));
     setSource(source);
@@ -96,7 +77,7 @@ QString InfoView::validTitle() const
     return "#layoutinfowindow#" + m_id;
 }
 
-Plasma::FrameSvg::EnabledBorders InfoView::enabledBorders() const
+KSvg::FrameSvg::EnabledBorders InfoView::enabledBorders() const
 {
     return m_borders;
 }
@@ -119,10 +100,6 @@ void InfoView::syncGeometry()
     QPoint position{sGeometry.center().x() - size.width() / 2, sGeometry.center().y() - size.height() / 2 };
 
     setPosition(position);
-
-    if (m_shellSurface) {
-        m_shellSurface->setPosition(position);
-    }
 }
 
 void InfoView::showEvent(QShowEvent *ev)
@@ -156,54 +133,15 @@ void InfoView::updateWaylandId()
     }
 }
 
-void InfoView::setupWaylandIntegration()
-{
-    if (m_shellSurface) {
-        // already setup
-        return;
-    }
-
-    if (m_corona) {
-        using namespace KWayland::Client;
-        PlasmaShell *interface = m_corona->waylandCoronaInterface();
-
-        if (!interface) {
-            return;
-        }
-
-        Surface *s = Surface::fromWindow(this);
-
-        if (!s) {
-            return;
-        }
-
-        qDebug() << "wayland dock window surface was created...";
-
-        m_shellSurface = interface->createSurface(s, this);
-        m_corona->wm()->setViewExtraFlags(m_shellSurface);
-    }
-}
-
 bool InfoView::event(QEvent *e)
 {
     if (e->type() == QEvent::PlatformSurface) {
         if (auto pe = dynamic_cast<QPlatformSurfaceEvent *>(e)) {
             switch (pe->surfaceEventType()) {
                 case QPlatformSurfaceEvent::SurfaceCreated:
-
-                    if (m_shellSurface) {
-                        break;
-                    }
-
-                    setupWaylandIntegration();
                     break;
 
                 case QPlatformSurfaceEvent::SurfaceAboutToBeDestroyed:
-                    if (m_shellSurface) {
-                        delete m_shellSurface;
-                        m_shellSurface = nullptr;
-                    }
-
                     PanelShadows::self()->removeWindow(this);
                     break;
             }
@@ -215,7 +153,7 @@ bool InfoView::event(QEvent *e)
 
 void InfoView::setOnActivities(QStringList activities)
 {
-    KWindowSystem::setOnActivities(winId(), activities);
+    // On Wayland, activity management is handled by the compositor
 }
 
 }

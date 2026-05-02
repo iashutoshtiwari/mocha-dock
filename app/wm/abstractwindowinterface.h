@@ -10,7 +10,7 @@
 // local
 #include <coretypes.h>
 #include "schemecolors.h"
-#include "tasktools.h"
+#include <taskmanager/tasktools.h>
 #include "windowinfowrap.h"
 #include "tracker/windowstracker.h"
 
@@ -31,11 +31,11 @@
 #include <QTimer>
 
 // KDE
-#include <KSharedConfig>
-#include <KActivities/Consumer>
+
+#include <PlasmaActivities/Consumer>
 
 // Plasma
-#include <Plasma>
+#include <Plasma/Plasma>
 
 
 namespace Latte {
@@ -68,12 +68,13 @@ public:
     explicit AbstractWindowInterface(QObject *parent = nullptr);
     virtual ~AbstractWindowInterface();
 
-    virtual void setViewExtraFlags(QObject *view,bool isPanelWindow = true, Latte::Types::Visibility mode = Latte::Types::WindowsGoBelow) = 0;
-    virtual void setViewStruts(QWindow &view, const QRect &rect
+    virtual void setViewExtraFlags(QWindow *view, bool isPanelWindow = true, Latte::Types::Visibility mode = Latte::Types::WindowsGoBelow) = 0;
+    virtual void setViewStruts(QWindow *view, const QRect &rect
                                , Plasma::Types::Location location) = 0;
     virtual void setWindowOnActivities(const WindowId &wid, const QStringList &activities) = 0;
 
-    virtual void removeViewStruts(QWindow &view) = 0;
+    virtual void setWindowPosition(QWindow *window, const Plasma::Types::Location &location, const QRect &geometry) = 0;
+    virtual void removeViewStruts(QWindow *view) = 0;
 
     virtual WindowId activeWindow() = 0;
     virtual WindowInfoWrap requestInfo(WindowId wid) = 0;
@@ -100,7 +101,7 @@ public:
     virtual QIcon iconFor(WindowId wid) = 0;
     virtual WindowId winIdFor(QString appId, QRect geometry) = 0;
     virtual WindowId winIdFor(QString appId, QString title) = 0;
-    virtual AppData appDataFor(WindowId wid) = 0;
+    virtual TaskManager::AppData appDataFor(WindowId wid) = 0;
 
     bool isKWinRunning() const;
 
@@ -166,9 +167,6 @@ protected:
     //! can delay the batch sending of signals for the same window
     WindowId m_windowChangedWaiting;
     QTimer m_windowWaitingTimer;
-
-    //! Plasma taskmanager rules ile
-    KSharedConfig::Ptr rulesConfig;
 
     void considerWindowChanged(WindowId wid);
 

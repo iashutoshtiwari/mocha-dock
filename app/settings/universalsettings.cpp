@@ -21,8 +21,9 @@
 #include <QtDBus>
 
 // KDE
-#include <KActivities/Consumer>
+#include <PlasmaActivities/Consumer>
 #include <KDirWatch>
+#include <KPackage/Package>
 #include <KWindowSystem>
 
 #define KWINMETAFORWARDTOLATTESTRING "org.kde.lattedock,/Latte,org.kde.LatteDock,activateLauncherMenu"
@@ -387,11 +388,9 @@ void UniversalSettings::kwin_forwardMetaToLatte(bool forward)
         return;
     }
 
-    if (KWindowSystem::isPlatformWayland()) {
-        // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
-        // KWin::reconfigure() function blocks/freezes Latte under wayland
-        return;
-    }
+    // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
+    // KWin::reconfigure() function blocks/freezes Latte under wayland
+    return;
 
     QString forwardStr = (forward ? KWINMETAFORWARDTOLATTESTRING : KWINMETAFORWARDTOPLASMASTRING);
     m_kwinrcModifierOnlyShortcutsGroup.writeEntry("Meta", forwardStr);
@@ -411,11 +410,9 @@ void UniversalSettings::kwin_setDisabledMaximizedBorders(bool disable)
         return;
     }
 
-    if (KWindowSystem::isPlatformWayland()) {
-        // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
-        // KWin::reconfigure() function blocks/freezes Latte under wayland
-        return;
-    }
+    // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
+    // KWin::reconfigure() function blocks/freezes Latte under wayland
+    return;
 
     bool serviceavailable{false};
 
@@ -639,13 +636,13 @@ QQmlListProperty<QScreen> UniversalSettings::screens()
     return QQmlListProperty<QScreen>(this, nullptr, &countScreens, &atScreens);
 }
 
-int UniversalSettings::countScreens(QQmlListProperty<QScreen> *property)
+qsizetype UniversalSettings::countScreens(QQmlListProperty<QScreen> *property)
 {
     Q_UNUSED(property)
     return qGuiApp->screens().count();
 }
 
-QScreen *UniversalSettings::atScreens(QQmlListProperty<QScreen> *property, int index)
+QScreen *UniversalSettings::atScreens(QQmlListProperty<QScreen> *property, qsizetype index)
 {
     Q_UNUSED(property)
     return qGuiApp->screens().at(index);

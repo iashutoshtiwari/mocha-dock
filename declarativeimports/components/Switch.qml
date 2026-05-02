@@ -3,9 +3,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick.Controls 1.4
-import "private" as Private
+import QtQuick.Controls
 
 Switch {
-    style: Private.SwitchStyle {}
 }

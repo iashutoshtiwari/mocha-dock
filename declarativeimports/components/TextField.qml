@@ -2,11 +2,12 @@
     SPDX-FileCopyrightText: 2019 Michail Vourlakos <mvourlakos@gmail.com>
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.0
-import QtQuick.Layouts 1.3
-import QtQuick.Controls 1.4
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
 
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kirigami as Kirigami
 
 PlasmaComponents.TextField {
     id: textField
@@ -26,7 +27,7 @@ PlasmaComponents.TextField {
     placeholderText: i18n("none")
     horizontalAlignment: Text.AlignLeft
 
-    readonly property int implicitWidth: internalContent.width + theme.mSize(theme.defaultFont).width * 3.5
+    readonly property int implicitWidth: internalContent.width + Kirigami.Units.gridUnit * 3.5
 
     readonly property int value: text === "" ? minValue : parseInt(text)
     property int step: 100
@@ -67,8 +68,8 @@ PlasmaComponents.TextField {
             Layout.fillHeight: true
             Layout.preferredWidth: height
             Layout.maximumWidth: height
-            Layout.leftMargin: Qt.application.layoutDirection === Qt.RightToLeft ? 0 : 0.7 * theme.mSize(theme.defaultFont).width
-            Layout.rightMargin: Qt.application.layoutDirection === Qt.RightToLeft ? 0.7 * theme.mSize(theme.defaultFont).width : 0
+            Layout.leftMargin: Qt.application.layoutDirection === Qt.RightToLeft ? 0 : 0.7 * Kirigami.Units.gridUnit
+            Layout.rightMargin: Qt.application.layoutDirection === Qt.RightToLeft ? 0.7 * Kirigami.Units.gridUnit : 0
 
             text: "-"
             onClicked: decrement()

@@ -604,7 +604,7 @@ QIcon Windows::iconFor(const WindowId &wid)
     }
 
     if (m_windows[wid].icon().isNull()) {
-        AppData data = m_wm->appDataFor(wid);
+        TaskManager::AppData data = m_wm->appDataFor(wid);
 
         QIcon icon = data.icon;
 
@@ -631,7 +631,7 @@ QString Windows::appNameFor(const WindowId &wid)
     }
 
     if (m_windows[wid].appName().isEmpty()) {
-        AppData data = m_wm->appDataFor(wid);
+        TaskManager::AppData data = m_wm->appDataFor(wid);
 
         m_windows[wid].setAppName(data.name);
 
@@ -648,7 +648,7 @@ void Windows::updateApplicationData()
             auto wid = m_delayedApplicationData[i];
 
             if (m_windows.contains(wid)) {
-                AppData data = m_wm->appDataFor(wid);
+                TaskManager::AppData data = m_wm->appDataFor(wid);
 
                 QIcon icon = data.icon;
 
@@ -695,15 +695,6 @@ bool Windows::isActiveInViewScreen(Latte::View *view, const WindowInfoWrap &winf
 {
     auto screenGeometry = m_views[view]->screenGeometry();
 
-    if (KWindowSystem::isPlatformX11() && view->devicePixelRatio() != 1.0) {
-        //!Fix for X11 Global Scale, I dont think this could be pixel perfect accurate
-        auto factor = view->devicePixelRatio();
-        screenGeometry = QRect(qRound(screenGeometry.x() * factor),
-                               qRound(screenGeometry.y() * factor),
-                               qRound(screenGeometry.width() * factor),
-                               qRound(screenGeometry.height() * factor));
-    }
-
     return (winfo.isValid()
             && winfo.isActive()
             && !winfo.isMinimized()
@@ -713,15 +704,6 @@ bool Windows::isActiveInViewScreen(Latte::View *view, const WindowInfoWrap &winf
 bool Windows::isMaximizedInViewScreen(Latte::View *view, const WindowInfoWrap &winfo)
 {
     auto screenGeometry = m_views[view]->screenGeometry();
-
-    if (KWindowSystem::isPlatformX11() && view->devicePixelRatio() != 1.0) {
-        //!Fix for X11 Global Scale, I dont think this could be pixel perfect accurate
-        auto factor = view->devicePixelRatio();
-        screenGeometry = QRect(qRound(screenGeometry.x() * factor),
-                               qRound(screenGeometry.y() * factor),
-                               qRound(screenGeometry.width() * factor),
-                               qRound(screenGeometry.height() * factor));
-    }
 
     //! updated implementation to identify the screen that the maximized window is present
     //! in order to avoid: https://bugs.kde.org/show_bug.cgi?id=397700
@@ -747,15 +729,6 @@ bool Windows::isTouchingViewEdge(Latte::View *view, const QRect &windowgeometry)
     bool inViewLengthBoundaries{false};
 
     QRect screenGeometry = view->screenGeometry();
-
-    if (KWindowSystem::isPlatformX11() && view->devicePixelRatio() != 1.0) {
-        //!Fix for X11 Global Scale, I dont think this could be pixel perfect accurate
-        auto factor = view->devicePixelRatio();
-        screenGeometry = QRect(qRound(screenGeometry.x() * factor),
-                               qRound(screenGeometry.y() * factor),
-                               qRound(screenGeometry.width() * factor),
-                               qRound(screenGeometry.height() * factor));
-    }
 
     bool inCurrentScreen{screenGeometry.contains(windowgeometry.topLeft()) || screenGeometry.contains(windowgeometry.bottomRight())};
 
@@ -809,7 +782,7 @@ void Windows::cleanupFaultyWindows()
         auto winfo = m_windows[key];
 
         //! garbage windows removing
-        if (winfo.wid()<=0 || winfo.geometry() == QRect(0, 0, 0, 0)) {
+        if (winfo.wid().toInt()<=0 || winfo.geometry() == QRect(0, 0, 0, 0)) {
             //qDebug() << "Faulty Geometry ::: " << winfo.wid();
             m_windows.remove(key);
         }
@@ -925,7 +898,7 @@ void Windows::updateHints(Latte::View *view)
             break;
         }
 
-        if (!existsFaultyWindow && (winfo.wid()<=0 || winfo.geometry() == QRect(0, 0, 0, 0))) {
+        if (!existsFaultyWindow && (winfo.wid().toInt()<=0 || winfo.geometry() == QRect(0, 0, 0, 0))) {
             existsFaultyWindow = true;
         }
 
@@ -1095,7 +1068,7 @@ void Windows::updateHints(Latte::Layout::GenericLayout *layout) {
             break;
         }
 
-        if (!existsFaultyWindow && (winfo.wid()<=0 || winfo.geometry() == QRect(0, 0, 0, 0))) {
+        if (!existsFaultyWindow && (winfo.wid().toInt()<=0 || winfo.geometry() == QRect(0, 0, 0, 0))) {
             existsFaultyWindow = true;
         }
 

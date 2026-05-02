@@ -24,8 +24,6 @@
 
 // KDE
 #include <KWindowSystem>
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 
 //! Hide Timer can create cases that when it is low it does not allow the
 //! view to be show. For example !compositing+kwin_edges+hide interval<50ms
@@ -157,7 +155,7 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view)
 VisibilityManager::~VisibilityManager()
 {
     qDebug() << "VisibilityManager deleting...";
-    m_wm->removeViewStruts(*m_latteView);
+    m_wm->removeViewStruts(m_latteView);
 
     if (m_edgeGhostWindow) {
         m_edgeGhostWindow->deleteLater();
@@ -208,9 +206,6 @@ void VisibilityManager::setViewOnFrontLayer()
 {
     m_wm->setViewExtraFlags(m_latteView, true);
     setIsBelowLayer(false);
-    if (KWindowSystem::isPlatformX11()) {
-        m_latteView->raise();
-    }
 }
 
 void VisibilityManager::setMode(Latte::Types::Visibility mode)
@@ -234,7 +229,7 @@ void VisibilityManager::setMode(Latte::Types::Visibility mode)
 
     if (m_mode == Types::AlwaysVisible) {
         //! remove struts for old always visible mode
-        m_wm->removeViewStruts(*m_latteView);
+        m_wm->removeViewStruts(m_latteView);
     }
 
     m_timerShow.stop();
@@ -399,7 +394,7 @@ void VisibilityManager::updateSidebarState()
         return;
     }
 
-    m_isSidebar == cursidebarstate;
+    m_isSidebar = cursidebarstate;
     emit isSidebarChanged();
 
 }
@@ -419,11 +414,11 @@ void VisibilityManager::updateStrutsBasedOnLayoutsAndActivities(bool forceUpdate
             //! though they should not. In such case setting struts when the windows are hidden
             //! the struts do not take any effect
             m_publishedStruts = computedStruts;
-            m_wm->setViewStruts(*m_latteView, m_publishedStruts, m_latteView->location());
+            m_wm->setViewStruts(m_latteView, m_publishedStruts, m_latteView->location());
         }
     } else {
         m_publishedStruts = QRect();
-        m_wm->removeViewStruts(*m_latteView);
+        m_wm->removeViewStruts(m_latteView);
     }
 }
 
@@ -433,54 +428,7 @@ bool VisibilityManager::canSetStrut() const
         return false;
     }
 
-    if (!KWindowSystem::isPlatformX11() || m_wm->isKWinRunning()) {
-        // we always trust wayland and kwin to provide proper struts
-        return true;
-    }
-
-    if (qGuiApp->screens().count() < 2) {
-        return true;
-    }
-
-    /*Alternative DEs*/
-
-    const QRect thisScreen = m_latteView->screen()->geometry();
-
-    // Extended struts against a screen edge near to another screen are really harmful, so windows maximized under the panel is a lesser pain
-    // TODO: force "windows can cover" in those cases?
-    for (QScreen *screen : qGuiApp->screens()) {
-        if (!screen || m_latteView->screen() == screen) {
-            continue;
-        }
-
-        const QRect otherScreen = screen->geometry();
-
-        switch (m_latteView->location()) {
-        case Plasma::Types::TopEdge:
-            if (otherScreen.bottom() <= thisScreen.top()) {
-                return false;
-            }
-            break;
-        case Plasma::Types::BottomEdge:
-            if (otherScreen.top() >= thisScreen.bottom()) {
-                return false;
-            }
-            break;
-        case Plasma::Types::RightEdge:
-            if (otherScreen.left() >= thisScreen.right()) {
-                return false;
-            }
-            break;
-        case Plasma::Types::LeftEdge:
-            if (otherScreen.right() <= thisScreen.left()) {
-                return false;
-            }
-            break;
-        default:
-            return false;
-        }
-    }
-
+    // we always trust wayland and kwin to provide proper struts
     return true;
 }
 
@@ -510,6 +458,7 @@ QRect VisibilityManager::acceptableStruts()
         calcs = QRect(x, m_latteView->y(), m_strutsThickness, m_latteView->height());
         break;
     }
+    default: break;
     }
 
     return calcs;
@@ -675,11 +624,6 @@ void VisibilityManager::publishFrameExtents(bool forceUpdate)
         m_frameExtentsLocation = m_latteView->location();
         m_frameExtentsHeadThicknessGap = m_latteView->headThicknessGap();
 
-        if (KWindowSystem::isPlatformX11() && m_latteView->devicePixelRatio()!=1.0) {
-            //!Fix for X11 Global Scale
-            m_frameExtentsHeadThicknessGap = qRound(m_frameExtentsHeadThicknessGap * m_latteView->devicePixelRatio());
-        }
-
         QMargins frameExtents(0, 0, 0, 0);
 
         if (m_latteView->location() == Plasma::Types::LeftEdge) {
@@ -692,7 +636,7 @@ void VisibilityManager::publishFrameExtents(bool forceUpdate)
             frameExtents.setTop(m_frameExtentsHeadThicknessGap);
         }
 
-        bool bypasswm{m_latteView->byPassWM() && KWindowSystem::isPlatformX11()};
+        bool bypasswm{false};
 
         qDebug() << " -> Frame Extents :: " << m_frameExtentsLocation << " __ " << " extents :: " << frameExtents << " bypasswm :: " << bypasswm;
 
@@ -776,16 +720,10 @@ void VisibilityManager::updateGhostWindowState()
 
 void VisibilityManager::hide()
 {
-    if (KWindowSystem::isPlatformX11()) {
-        m_latteView->setVisible(false);
-    }
 }
 
 void VisibilityManager::show()
 {
-    if (KWindowSystem::isPlatformX11()) {
-        m_latteView->setVisible(true);
-    }
 }
 
 void VisibilityManager::toggleHiddenState()
@@ -921,12 +859,6 @@ void VisibilityManager::startTimerHide(const int &msec)
 {
     if (msec == 0) {
         int secs = m_timerHideInterval;
-
-        if (!KWindowSystem::compositingActive()) {
-            //! this is needed in order to give view time to show and
-            //! for floating case to give time to user to reach the view with its mouse
-            secs = qMax(m_timerHideInterval, m_latteView->screenEdgeMargin() > 0 ? 700 : 200);
-        }
 
         m_timerHide.start(secs);
     } else {

@@ -4,19 +4,20 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.core as LatteCore
+import org.kde.latte.components as LatteComponents
 
-import org.kde.latte.abilities.items 0.1 as AbilityItem
+import org.kde.latte.abilities.items as AbilityItem
 
 import "colorizer" as Colorizer
 import "communicator" as Communicator
@@ -50,7 +51,7 @@ Item {
     readonly property bool isMarginsAreaSeparator: applet && applet.hasOwnProperty("constraintHints")
                                                    && ((applet.constraintHints & PlasmaCore.Types.MarginAreasSeparator) === PlasmaCore.Types.MarginAreasSeparator);
 
-    readonly property color highlightColor: theme.buttonFocusColor
+    readonly property color highlightColor: Kirigami.Theme.focusColor
 
     //! Fill Applet(s)
     property bool inFillCalculations: false //temp record, is used in calculations for fillWidth,fillHeight applets
@@ -81,27 +82,27 @@ Item {
     property bool appletBlocksParabolicEffect: communicator.requires.parabolicEffectLocked
     readonly property bool lockZoom: !parabolicEffectIsSupported
                                      || appletBlocksParabolicEffect
-                                     || (fastLayoutManager && applet && (fastLayoutManager.lockedZoomApplets.indexOf(applet.id)>=0))
+                                     || (fastLayoutManager && applet && (fastLayoutManager.lockedZoomApplets.indexOf(appletItem.appletId)>=0))
     readonly property bool userBlocksColorizing: appletBlocksColorizing
-                                                 || (fastLayoutManager && applet && (fastLayoutManager.userBlocksColorizingApplets.indexOf(applet.id)>=0))
+                                                 || (fastLayoutManager && applet && (fastLayoutManager.userBlocksColorizingApplets.indexOf(appletItem.appletId)>=0))
 
     property bool isActive: (isExpanded
                              && !appletItem.communicator.indexerIsSupported
-                             && applet.pluginName !== "org.kde.activeWindowControl"
-                             && applet.pluginName !== "org.kde.plasma.appmenu")
+                             && appletItem.appletPluginName !== "org.kde.activeWindowControl"
+                             && appletItem.appletPluginName !== "org.kde.plasma.appmenu")
 
     property bool isExpanded: false
 
-    property bool isScheduledForDestruction: (fastLayoutManager && applet && fastLayoutManager.appletsInScheduledDestruction.indexOf(applet.id)>=0)
-    property bool isHidden: (!root.inConfigureAppletsMode && ((applet && applet.status === PlasmaCore.Types.HiddenStatus ) || isInternalViewSplitter)) || isScheduledForDestruction
+    property bool isScheduledForDestruction: (fastLayoutManager && applet && fastLayoutManager.appletsInScheduledDestruction.indexOf(appletItem.appletId)>=0)
+    property bool isHidden: (!root.inConfigureAppletsMode && ((applet && appletItem.appletStatus === PlasmaCore.Types.HiddenStatus ) || isInternalViewSplitter)) || isScheduledForDestruction
     property bool isInternalViewSplitter: (internalSplitterId > 0)
     property bool isZoomed: false
     property bool isPlaceHolder: false
     property bool isPressed: viewSignalsConnector.pressed
-    property bool isSeparator: applet && (applet.pluginName === "audoban.applet.separator"
-                                          || applet.pluginName === "org.kde.latte.separator")
-    property bool isSpacer: applet && (applet.pluginName === "org.kde.latte.spacer")
-    property bool isSystray: applet && (applet.pluginName === "org.kde.plasma.systemtray" || applet.pluginName === "org.nomad.systemtray" )
+    property bool isSeparator: applet && (appletItem.appletPluginName === "audoban.applet.separator"
+                                          || appletItem.appletPluginName === "org.kde.latte.separator")
+    property bool isSpacer: applet && (appletItem.appletPluginName === "org.kde.latte.spacer")
+    property bool isSystray: applet && (appletItem.appletPluginName === "org.kde.plasma.systemtray" || appletItem.appletPluginName === "org.nomad.systemtray" )
 
     property bool firstChildOfStartLayout: index === appletItem.layouter.startLayout.firstVisibleIndex
     property bool firstChildOfMainLayout: index === appletItem.layouter.mainLayout.firstVisibleIndex
@@ -195,7 +196,7 @@ Item {
 
     property int previousIndex: -1
     property int spacersMaxSize: Math.max(0,Math.ceil(0.55 * metrics.iconSize) - metrics.totals.lengthEdges)
-    property int status: applet ? applet.status : -1
+    property int status: applet ? appletItem.appletStatus : -1
 
     //! some metrics
     readonly property int appletMinimumLength: _wrapper.appletMinimumLength
@@ -290,7 +291,7 @@ Item {
     property int internalWidthMargins: root.isVertical ? metrics.totals.thicknessEdges : 2 * lengthAppletPadding
     property int internalHeightMargins: root.isHorizontal ? root.metrics.totals.thicknessEdges : 2 * lengthAppletPadding
 
-    readonly property string pluginName: isInternalViewSplitter ? "org.kde.latte.splitter" : (applet ? applet.pluginName : "")
+    readonly property string pluginName: isInternalViewSplitter ? "org.kde.latte.splitter" : (applet ? appletItem.appletPluginName : "")
 
     //! are set by the indicator
     readonly property int iconOffsetX: indicatorBackLayer.level.requested.iconOffsetX
@@ -307,7 +308,16 @@ Item {
                                                    wrapper.height
 
     property Item applet: null
-    property Item latteStyleApplet: applet && ((applet.pluginName === "org.kde.latte.spacer") || (applet.pluginName === "org.kde.latte.separator")) ?
+
+    //! In Plasma 6, status/pluginName/busy/id moved from AppletQuickItem to the
+    //! C++ Plasma::Applet, accessed via applet.plasmoid property.
+    readonly property var appletPlasmoid: applet && applet.plasmoid ? applet.plasmoid : null
+    readonly property string appletPluginName: appletPlasmoid ? appletPlasmoid.pluginName ?? "" : ""
+    readonly property int appletStatus: appletPlasmoid ? appletPlasmoid.status ?? -1 : -1
+    readonly property bool appletBusy: appletPlasmoid ? appletPlasmoid.busy ?? false : false
+    readonly property int appletId: appletPlasmoid ? appletPlasmoid.id ?? 0 : 0
+
+    property Item latteStyleApplet: applet && (appletPluginName === "org.kde.latte.spacer" || appletPluginName === "org.kde.latte.separator") ?
                                         (applet.children[0] ? applet.children[0] : null) : null
 
     property Item appletWrapper: wrapper.wrapperContainer
@@ -462,7 +472,7 @@ Item {
 
         if (appletItemContainsMouse && !wrapperContainsMouse && appletNeutralAreaEnabled) {
             //console.log("PASSED");
-            latteView.extendedInterface.toggleAppletExpanded(applet.id);
+            latteView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
         } else {
             //console.log("REJECTED");
         }
@@ -618,6 +628,7 @@ Item {
         //! is used to aboid loop binding warnings on startup
         target: appletItem
         property: "lengthAppletFullMargin"
+        restoreMode: Binding.RestoreNone
         when: !communicator.inStartup
         value: lengthAppletPadding + metrics.margin.length;
     }
@@ -634,7 +645,7 @@ Item {
             var visibleIndex = appletItem.indexer.visibleIndex(appletItem.index);
 
             if (visibleIndex === entryIndex && !communicator.positionShortcutsAreSupported) {
-                latteView.extendedInterface.toggleAppletExpanded(applet.id);
+                latteView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
             }
         }
 
@@ -646,7 +657,7 @@ Item {
             var visibleIndex = appletItem.indexer.visibleIndex(appletItem.index);
 
             if (visibleIndex === entryIndex && !communicator.positionShortcutsAreSupported) {
-                latteView.extendedInterface.toggleAppletExpanded(applet.id);
+                latteView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
             }
         }
     }
@@ -659,7 +670,7 @@ Item {
         property bool pressed: false
         property bool blockWheel: false
 
-        onMousePressed: {
+        onMousePressed: function(pos, button) {
             if (appletItem.containsPos(pos)) {
                 viewSignalsConnector.pressed = true;
                 var local = appletItem.mapFromItem(root, pos.x, pos.y);
@@ -668,7 +679,7 @@ Item {
             }
         }
 
-        onMouseReleased: {
+        onMouseReleased: function(pos, button) {
             if (appletItem.containsPos(pos)) {
                 viewSignalsConnector.pressed = false;
                 var local = appletItem.mapFromItem(root, pos.x, pos.y);
@@ -676,7 +687,7 @@ Item {
             }
         }
 
-        onWheelScrolled: {
+        onWheelScrolled: function(pos, angleDelta, buttons) {
             if (!appletItem.applet || !root.mouseWheelActions || viewSignalsConnector.blockWheel || !appletItem.myView.isShownFully) {
                 return;
             }
@@ -685,14 +696,14 @@ Item {
             scrollDelayer.start();
 
             if (appletItem.containsPos(pos)
-                    && (root.latteView.extendedInterface.appletIsExpandable(applet.id)
-                        || (root.latteView.extendedInterface.appletIsActivationTogglesExpanded(applet.id)))) {
+                    && (root.latteView.extendedInterface.appletIsExpandable(appletItem.appletId)
+                        || (root.latteView.extendedInterface.appletIsActivationTogglesExpanded(appletItem.appletId)))) {
                 var angle = angleDelta.y / 8;
-                var expanded = root.latteView.extendedInterface.appletIsExpanded(applet.id);
+                var expanded = root.latteView.extendedInterface.appletIsExpanded(appletItem.appletId);
 
                 if ((angle > 12 && !expanded) /*positive direction*/
                         || (angle < -12 && expanded) /*negative direction*/) {
-                    latteView.extendedInterface.toggleAppletExpanded(applet.id);
+                    latteView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
                 }
             }
         }
@@ -704,8 +715,8 @@ Item {
 
         onExpandedAppletStateChanged: {
             if (latteView.extendedInterface.hasExpandedApplet && appletItem.applet) {
-                appletItem.isExpanded = latteView.extendedInterface.appletIsExpandable(appletItem.applet.id)
-                        && latteView.extendedInterface.appletIsExpanded(appletItem.applet.id);
+                appletItem.isExpanded = latteView.extendedInterface.appletIsExpandable(appletItem.appletId)
+                        && latteView.extendedInterface.appletIsExpanded(appletItem.appletId);
             } else {
                 appletItem.isExpanded = false;
             }
@@ -897,7 +908,7 @@ Item {
     //Busy Indicator
     PlasmaComponents.BusyIndicator {
         z: 1000
-        visible: applet && applet.busy
+        visible: applet && appletItem.appletBusy
         running: visible
         anchors.centerIn: parent
         width: Math.min(parent.width, parent.height)
@@ -911,6 +922,7 @@ Item {
         //! must be enabled even for applets that are hidden in order to forward
         //! parabolic effect messages properly to surrounding plasma applets
         active: isParabolicEnabled || isThinTooltipEnabled || hasParabolicMessagesEnabled
+
 
         //! in hidden state applets must pass on parabolic messages to neighbours
         readonly property bool isParabolicEnabled: appletItem.parabolic.isEnabled && !lockZoom

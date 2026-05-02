@@ -6,12 +6,12 @@
 
 pragma Singleton
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.2
-import QtQuick.Window 2.2
-import QtQuick.Controls 2.2
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.kirigami 2.5 as Kirigami
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
+import QtQuick.Controls
+import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 
 Popup {
     id: root
@@ -33,7 +33,7 @@ Popup {
         if (desiredY >= 0) {
             return Math.min(desiredY, controlRoot.Window.contentItem.height - root.height);
         } else {
-            return Math.min(Math.max(0, controlRoot.mapToItem(root.parent, 0, controlRoot.positionToRectangle(controlRoot.selectionEnd).y + Math.round(units.gridUnit*1.5)).y), controlRoot.Window.contentItem.height - root.height);
+            return Math.min(Math.max(0, controlRoot.mapToItem(root.parent, 0, controlRoot.positionToRectangle(controlRoot.selectionEnd).y + Math.round(Kirigami.Units.gridUnit*1.5)).y), controlRoot.Window.contentItem.height - root.height);
         }
     }
 

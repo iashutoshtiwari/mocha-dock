@@ -7,7 +7,6 @@
 #include "screenpool.h"
 
 // local
-#include <config-latte.h>
 #include "primaryoutputwatcher.h"
 
 // Qt
@@ -20,13 +19,6 @@
 #include <KLocalizedString>
 #include <KWindowSystem>
 
-// X11
-#if HAVE_X11
-#include <QtX11Extras/QX11Info>
-#include <xcb/xcb.h>
-#include <xcb/randr.h>
-#include <xcb/xcb_event.h>
-#endif
 
 namespace Latte {
 
@@ -89,10 +81,6 @@ void ScreenPool::load()
         onScreenAdded(screen);
     }
 
-    if (KWindowSystem::isPlatformX11()) {
-        connect(qGuiApp, &QGuiApplication::primaryScreenChanged, this, &ScreenPool::primaryScreenChanged, Qt::UniqueConnection);
-    }
-
     connect(m_primaryWatcher, &PrimaryOutputWatcher::primaryOutputNameChanged, this, &ScreenPool::onPrimaryOutputNameChanged, Qt::UniqueConnection);
 }
 
@@ -141,11 +129,7 @@ void ScreenPool::updateScreenGeometry(const int &screenId, const QRect &screenGe
     emit screenGeometryChanged();
 }
 
-
-Latte::Data::ScreensTable ScreenPool::screensTable()
-{   
-    return m_screensTable;
-}
+Latte::Data::ScreensTable ScreenPool::screensTable() { return m_screensTable; }
 
 void ScreenPool::reload(QString path)
 {
@@ -242,8 +226,7 @@ int ScreenPool::id(const QString &connector) const
     return screenId.isEmpty() ? NOSCREENID : screenId.toInt();
 }
 
-QString ScreenPool::connector(int id) const
-{   
+QString ScreenPool::connector(int id) const {
     QString idStr = QString::number(id);
     return (m_screensTable.containsId(idStr) ? m_screensTable[idStr].name : QString());
 }

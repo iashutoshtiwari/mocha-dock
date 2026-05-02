@@ -123,7 +123,7 @@ QPoint ContextMenuLayerQuickItem::popUpRelevantToGlobalPoint(const QRect &parent
 
 QPoint ContextMenuLayerQuickItem::popUpTopLeft(Plasma::Applet *applet, const QRect popUpRect)
 {
-    PlasmaQuick::AppletQuickItem *ai = applet->property("_plasma_graphicObject").value<PlasmaQuick::AppletQuickItem *>();
+    PlasmaQuick::AppletQuickItem *ai = PlasmaQuick::AppletQuickItem::itemForApplet(applet);
 
     QRect globalItemRect = m_latteView->absoluteGeometry();
 
@@ -214,7 +214,7 @@ void ContextMenuLayerQuickItem::mousePressEvent(QMouseEvent *event)
     }
 
     for (const Plasma::Applet *appletTemp : m_latteView->containment()->applets()) {
-        PlasmaQuick::AppletQuickItem *ai = appletTemp->property("_plasma_graphicObject").value<PlasmaQuick::AppletQuickItem *>();
+        PlasmaQuick::AppletQuickItem *ai = PlasmaQuick::AppletQuickItem::itemForApplet(const_cast<Plasma::Applet *>(appletTemp));
 
         bool appletContainsMouse = false;
 
@@ -292,7 +292,7 @@ void ContextMenuLayerQuickItem::mousePressEvent(QMouseEvent *event)
     //in .exec before oxygen can polish it and set the following attribute
     desktopMenu->setAttribute(Qt::WA_TranslucentBackground);
     //end workaround
-    QPoint globalPos = event->globalPos();
+    QPoint globalPos = event->globalPosition().toPoint();
     desktopMenu->adjustSize();
 
     QRect popUpRect(globalPos.x(), globalPos.y(), desktopMenu->width(), desktopMenu->height());
@@ -377,19 +377,19 @@ void ContextMenuLayerQuickItem::addAppletActions(QMenu *desktopMenu, Plasma::App
     }
 
     if (!applet->failedToLaunch()) {
-        QAction *runAssociatedApplication = applet->actions()->action(QStringLiteral("run associated application"));
+        QAction *runAssociatedApplication = applet->internalAction(QStringLiteral("run associated application"));
 
         if (runAssociatedApplication && runAssociatedApplication->isEnabled()) {
             desktopMenu->addAction(runAssociatedApplication);
         }
 
-        QAction *configureApplet = applet->actions()->action(QStringLiteral("configure"));
+        QAction *configureApplet = applet->internalAction(QStringLiteral("configure"));
 
         if (configureApplet && configureApplet->isEnabled()) {
             desktopMenu->addAction(configureApplet);
         }
 
-        QAction *appletAlternatives = applet->actions()->action(QStringLiteral("alternatives"));
+        QAction *appletAlternatives = applet->internalAction(QStringLiteral("alternatives"));
 
         if (appletAlternatives && appletAlternatives->isEnabled() && m_latteView->containment()->isUserConfiguring()) {
             desktopMenu->addAction(appletAlternatives);
@@ -434,8 +434,8 @@ void ContextMenuLayerQuickItem::addAppletActions(QMenu *desktopMenu, Plasma::App
     }
 
     if (m_latteView->containment()->immutability() == Plasma::Types::Mutable &&
-            (m_latteView->containment()->containmentType() != Plasma::Types::PanelContainment || m_latteView->containment()->isUserConfiguring())) {
-        QAction *closeApplet = applet->actions()->action(QStringLiteral("remove"));
+            (m_latteView->containment()->containmentType() != Plasma::Containment::Type::Panel || m_latteView->containment()->isUserConfiguring())) {
+        QAction *closeApplet = applet->internalAction(QStringLiteral("remove"));
 
         //qDebug() << "checking for removal" << closeApplet;
         if (closeApplet) {

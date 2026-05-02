@@ -120,5 +120,81 @@ QString configPath()
     return configPaths[0];
 }
 
+// Predicates.
+// If this grows out of proportions, consider moving this out of here.
+
+template<typename... Inputs>
+Predicate<Inputs...>& Predicate<Inputs...>::operator=(const Predicate<Inputs...>& other) {
+    this->m_pred = other.m_pred;
+    return *this;
+}
+
+template<typename... Inputs>
+bool Predicate<Inputs...>::operator()(Inputs&... i) {
+    return m_pred(i...);
+}
+
+template<typename... Inputs>
+Predicate<Inputs...> Predicate<Inputs...>::operator|(const Predicate<Inputs...>& other) {
+    // We must copy the predicate function here, otherwise
+    // we will lose it when this is destroyed.
+    auto p = this->m_pred;
+    // Lambdas here must capture values for the same reason.
+    const std::function<bool(Inputs...)> f = [p, other](Inputs&... i) {
+        return p(i...) || other.m_pred(i...);
+    };
+    return Predicate{std::move(f)};
+}
+
+template<typename... Inputs>
+Predicate<Inputs...> Predicate<Inputs...>::operator&(const Predicate<Inputs...>& other) {
+    auto p = this->m_pred;
+    const std::function<bool(Inputs...)> f = [p, other](Inputs&... i) {
+        return p(i...) && other.m_pred(i...);
+    };
+    return Predicate{std::move(f)};
+}
+
+template<typename... Inputs>
+Predicate<Inputs...> Predicate<Inputs...>::operator^(const Predicate<Inputs...>& other) {
+    auto p = this->m_pred;
+    const std::function<bool(Inputs...)> f = [p, other](Inputs&... i) {
+        return p(i...) != other.m_pred(i...);
+    };
+    return Predicate{std::move(f)};
+}
+
+template<typename... Inputs>
+Predicate<Inputs...> Predicate<Inputs...>::operator~() {
+    auto p = this->m_pred;
+    const std::function<bool(Inputs...)> f = [p](Inputs&... i) {
+        return !p(i...);
+    };
+    return Predicate{std::move(f)};
+}
+
+template<typename... Inputs>
+Predicate<Inputs...> PredicateList<Inputs...>::all() {
+    Predicate<Inputs...> r = [](Inputs&...) { return true; };
+    for(auto& p: this->elems()) {
+        r = r & p;
+    }
+    return r;
+}
+
+template<typename... Inputs>
+Predicate<Inputs...> PredicateList<Inputs...>::any() {
+    Predicate<Inputs...> r = [](Inputs&...) { return false; };
+    for(auto& p: this->elems()) {
+        r = r | p;
+    }
+    return r;
+}
+
+template<typename... Inputs>
+Predicate<Inputs...> PredicateList<Inputs...>::none() {
+    auto p = this->any();
+    return ~p;
+}
 
 }

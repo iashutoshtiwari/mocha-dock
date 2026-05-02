@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.1
-import QtGraphicalEffects 1.0
+import QtQuick
+import Qt5Compat.GraphicalEffects
 
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.components as LatteComponents
 
 Loader{
     id: appletNumberLoader
@@ -41,6 +41,7 @@ Loader{
     Binding{
         target: appletNumberLoader
         property:"badgeString"
+        restoreMode: Binding.RestoreNone
         when: appletItem.shortcuts.showMetaBadge || appletItem.shortcuts.showAppletShortcutBadges
         value: {
             if (appletItem.shortcuts.showMetaBadge && applet && applet.id === appletItem.shortcuts.applicationLauncherId) {

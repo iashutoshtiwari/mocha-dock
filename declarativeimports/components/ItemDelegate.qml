@@ -4,12 +4,13 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.5
-import QtQuick.Layouts 1.3
-import QtQuick.Templates 2.2 as T
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Templates as T
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.latte.components as LatteComponents
 
 import "private" as Private
 
@@ -23,7 +24,7 @@ T.CheckDelegate {
     bottomPadding: margin
     leftPadding: isSeparator ? 0 : margin
     rightPadding: isSeparator ? 0 : margin
-    spacing: units.smallSpacing
+    spacing: Kirigami.Units.smallSpacing
 
     property bool isSeparator: false
 
@@ -41,7 +42,7 @@ T.CheckDelegate {
     contentItem: RowLayout {
         Layout.leftMargin: control.mirrored && !isSeparator ? (control.indicator ? control.indicator.width : 0) + control.spacing : 0
         Layout.rightMargin: !control.mirrored && !isSeparator ? (control.indicator ? control.indicator.width : 0) + control.spacing : 0
-        spacing: isSeparator ? 0 : units.smallSpacing
+        spacing: isSeparator ? 0 : Kirigami.Units.smallSpacing
         enabled: control.enabled
 
         Rectangle {
@@ -50,12 +51,11 @@ T.CheckDelegate {
             Layout.minimumHeight: parent.height
             Layout.maximumHeight: parent.height
             visible: !isSeparator && icon && (!control.iconOnlyWhenHovered || (control.iconOnlyWhenHovered && control.isHovered))
-            color: control.iconToolTip && iconMouseArea.containsMouse ? theme.highlightColor : "transparent"
+            color: control.iconToolTip && iconMouseArea.containsMouse ? Kirigami.Theme.highlightColor : "transparent"
 
-            PlasmaCore.IconItem {
+            Kirigami.Icon {
                 id: iconElement
                 anchors.fill: parent
-                colorGroup: PlasmaCore.Theme.ButtonColorGroup
                 source: control.icon
             }
 
@@ -63,7 +63,7 @@ T.CheckDelegate {
                 parent: iconElement
                 text: iconToolTip
                 visible: iconMouseArea.containsMouse
-                delay: 6 * units.longDuration
+                delay: 6 * Kirigami.Units.longDuration
             }
 
             MouseArea {
@@ -88,7 +88,7 @@ T.CheckDelegate {
             Layout.fillWidth: true
             text: control.text
             font: control.font
-            color: theme.viewTextColor
+            color: Kirigami.Theme.textColor
             elide: Text.ElideRight
             visible: !isSeparator && control.text
             horizontalAlignment: control.textHorizontalAlignment
@@ -98,7 +98,7 @@ T.CheckDelegate {
         Rectangle {
             width: parent.width
             height: 1
-            color: theme.textColor
+            color: Kirigami.Theme.textColor
             opacity: 0.25
             visible: isSeparator
         }
@@ -118,6 +118,6 @@ T.CheckDelegate {
             return 0;
         }
 
-        color: theme.highlightColor
+        color: Kirigami.Theme.highlightColor
     }
 }

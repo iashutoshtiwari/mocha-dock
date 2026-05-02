@@ -48,7 +48,7 @@ void Parabolic::setCurrentParabolicItem(QQuickItem *item)
     }
 
     if (m_currentParabolicItem) {
-        QMetaObject::invokeMethod(m_currentParabolicItem, "parabolicExited", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(m_currentParabolicItem, "parabolicExited", Qt::DirectConnection);
     }
 
     m_currentParabolicItem = item;
@@ -69,23 +69,27 @@ void Parabolic::onEvent(QEvent *e)
     case QEvent::MouseMove:
         if (auto me = dynamic_cast<QMouseEvent *>(e)) {
             if (m_currentParabolicItem) {
-                QPointF internal = m_currentParabolicItem->mapFromScene(me->windowPos());
+                //! Use the parent (Loader) geometry for contains check since
+                //! the item itself may resize during parabolic zoom animation.
+                QQuickItem *hitArea = m_currentParabolicItem->parentItem()
+                                      ? m_currentParabolicItem->parentItem()
+                                      : m_currentParabolicItem.data();
+                QPointF internal = hitArea->mapFromScene(me->scenePosition());
 
-                if (m_currentParabolicItem->contains(internal)) {
+                if (hitArea->contains(internal)) {
                     m_parabolicItemNullifier.stop();
-                    //! sending move event to parabolic item
+                    //! Use DirectConnection for lower latency parabolic response
                     QMetaObject::invokeMethod(m_currentParabolicItem,
                                               "parabolicMove",
-                                              Qt::QueuedConnection,
+                                              Qt::DirectConnection,
                                               Q_ARG(qreal, internal.x()),
                                               Q_ARG(qreal, internal.y()));
                 } else {
-                    m_lastOrphanParabolicMove = me->windowPos();
-                    //! clearing parabolic item
+                    m_lastOrphanParabolicMove = me->scenePosition();
                     m_parabolicItemNullifier.start();
                 }
             } else {
-                m_lastOrphanParabolicMove = me->windowPos();
+                m_lastOrphanParabolicMove = me->scenePosition();
             }
         }
     default:
@@ -105,7 +109,7 @@ void Parabolic::onCurrentParabolicItemChanged()
             //! sending enter event to parabolic item
             QMetaObject::invokeMethod(m_currentParabolicItem,
                                       "parabolicEntered",
-                                      Qt::QueuedConnection,
+                                      Qt::DirectConnection,
                                       Q_ARG(qreal, internal.x()),
                                       Q_ARG(qreal, internal.y()));
         }

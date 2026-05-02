@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import org.kde.plasma.plasmoid 2.0
+import QtQuick
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.latte.abilities.host as AbilityHost
 
 AbilityHost.Animations {
     id: animationsPrivate
@@ -19,6 +19,7 @@ AbilityHost.Animations {
     Binding{
         target: animationsPrivate.requirements
         property: "zoomFactor"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var zoom = 1.0;

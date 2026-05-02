@@ -3,7 +3,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
 Item {
     id: _launchersprivate
@@ -20,6 +20,7 @@ Item {
     Binding {
         target: _launchersprivate
         property: "appletIdStealingDroppedLaunchers"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var sLayout = layouts.startLayout;
@@ -67,6 +68,7 @@ Item {
     Binding {
         target: _launchersprivate
         property: "appletStealingDroppedLaunchers"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var sLayout = layouts.startLayout;

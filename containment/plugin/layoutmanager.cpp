@@ -11,12 +11,10 @@
 // Qt
 #include <QtMath>
 
-// KDE
-#include <KDeclarative/ConfigPropertyMap>
-
 // Plasma
-#include <Plasma>
+#include <Plasma/Plasma>
 #include <Plasma/Applet>
+#include <Plasma/Containment>
 #include <PlasmaQuick/AppletQuickItem>
 
 #define ISAPPLETLOCKEDOPTION "lockZoom"
@@ -169,7 +167,7 @@ void LayoutManager::setPlasmoid(QObject *plasmoid)
     m_plasmoid = plasmoid;
 
     if (m_plasmoid) {
-        m_configuration = qobject_cast<KDeclarative::ConfigPropertyMap *>(m_plasmoid->property("configuration").value<QObject *>());
+        m_configuration = qobject_cast<KConfigPropertyMap *>(m_plasmoid->property("configuration").value<QObject *>());
     }
 
     emit plasmoidChanged();
@@ -303,12 +301,15 @@ bool LayoutManager::isValidApplet(const int &id)
         return false;
     }
 
-    QList<QObject *> applets = m_plasmoid->property("applets").value<QList<QObject *>>();
-
-    for(int i=0; i<applets.count(); ++i) {
-        uint appletid = applets[i]->property("id").toUInt();
-        if (id>0 && appletid == (uint)id) {
-            return true;
+    //! In Plasma 6, m_plasmoid->property("applets").value<QList<QObject*>>() returns empty
+    //! because Qt6 won't implicitly convert QList<Plasma::Applet*> to QList<QObject*>.
+    //! Use Plasma::Containment directly instead.
+    Plasma::Containment *containment = qobject_cast<Plasma::Containment *>(m_plasmoid);
+    if (containment) {
+        for (Plasma::Applet *applet : containment->applets()) {
+            if (id > 0 && applet->id() == (uint)id) {
+                return true;
+            }
         }
     }
 
@@ -319,7 +320,16 @@ bool LayoutManager::isValidApplet(const int &id)
 void LayoutManager::restore()
 {
     QList<int> appletIdsOrder = toIntList((*m_configuration)["appletOrder"].toString());
-    QList<QObject *> applets = m_plasmoid->property("applets").value<QList<QObject *>>();
+
+    //! In Plasma 6, QVariant::value<QList<QObject*>>() can't convert QList<Plasma::Applet*>.
+    //! Get applets directly from Plasma::Containment.
+    QList<QObject *> applets;
+    Plasma::Containment *containment = qobject_cast<Plasma::Containment *>(m_plasmoid);
+    if (containment) {
+        for (Plasma::Applet *applet : containment->applets()) {
+            applets << applet;
+        }
+    }
 
     Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
     int splitterPosition = (*m_configuration)["splitterPosition"].toInt();
@@ -406,11 +416,28 @@ void LayoutManager::restore()
                 continue;
             }
 
+            //! In Plasma 6, orderedApplets contains Plasma::Applet* objects.
+            //! createAppletItem() QML expects a visual AppletQuickItem, not the C++ Applet.
+            QObject *appletObj = orderedApplets[i];
+            Plasma::Applet *plasmaApplet = qobject_cast<Plasma::Applet *>(appletObj);
+            if (plasmaApplet) {
+                PlasmaQuick::AppletQuickItem *quickItem = PlasmaQuick::AppletQuickItem::itemForApplet(plasmaApplet);
+                if (quickItem) {
+                    appletObj = quickItem;
+                } else {
+                    qDebug() << "restore: itemForApplet returned null for applet" << plasmaApplet->id();
+                }
+            }
+
             QVariant appletItemVariant;
-            QVariant appletVariant; appletVariant.setValue(orderedApplets[i]);
+            QVariant appletVariant; appletVariant.setValue(appletObj);
             m_createAppletItemMethod.invoke(m_rootItem, Q_RETURN_ARG(QVariant, appletItemVariant), Q_ARG(QVariant, appletVariant));
             QQuickItem *appletItem = appletItemVariant.value<QQuickItem *>();
-            appletItem->setParentItem(m_mainLayout);
+            if (appletItem) {
+                appletItem->setParentItem(m_mainLayout);
+            } else {
+                qDebug() << "restore: createAppletItem returned null for applet" << (plasmaApplet ? (int)plasmaApplet->id() : -1);
+            }
         }
     } else {
         QQuickItem *parentlayout = m_startLayout;
@@ -434,8 +461,18 @@ void LayoutManager::restore()
                 continue;
             }
 
+            //! Convert Plasma::Applet* to AppletQuickItem* for QML
+            QObject *appletObj = orderedApplets[i];
+            Plasma::Applet *plasmaApplet = qobject_cast<Plasma::Applet *>(appletObj);
+            if (plasmaApplet) {
+                PlasmaQuick::AppletQuickItem *quickItem = PlasmaQuick::AppletQuickItem::itemForApplet(plasmaApplet);
+                if (quickItem) {
+                    appletObj = quickItem;
+                }
+            }
+
             QVariant appletItemVariant;
-            QVariant appletVariant; appletVariant.setValue(orderedApplets[i]);
+            QVariant appletVariant; appletVariant.setValue(appletObj);
             m_createAppletItemMethod.invoke(m_rootItem, Q_RETURN_ARG(QVariant, appletItemVariant), Q_ARG(QVariant, appletVariant));
             QQuickItem *appletItem = appletItemVariant.value<QQuickItem *>();
             appletItem->setParentItem(parentlayout);
@@ -1098,9 +1135,19 @@ void LayoutManager::addAppletItem(QObject *applet, int index)
         return;
     }
 
+    //! Convert Plasma::Applet* to AppletQuickItem* for QML
+    QObject *appletForQml = applet;
+    Plasma::Applet *plasmaApplet = qobject_cast<Plasma::Applet *>(applet);
+    if (plasmaApplet) {
+        PlasmaQuick::AppletQuickItem *quickItem = PlasmaQuick::AppletQuickItem::itemForApplet(plasmaApplet);
+        if (quickItem) {
+            appletForQml = quickItem;
+        }
+    }
+
     Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
     QVariant appletItemVariant;
-    QVariant appletVariant; appletVariant.setValue(applet);
+    QVariant appletVariant; appletVariant.setValue(appletForQml);
     m_createAppletItemMethod.invoke(m_rootItem, Q_RETURN_ARG(QVariant, appletItemVariant), Q_ARG(QVariant, appletVariant));
     QQuickItem *aitem = appletItemVariant.value<QQuickItem *>();
 
@@ -1143,25 +1190,40 @@ void LayoutManager::addAppletItem(QObject *applet, int index)
 
 void LayoutManager::addAppletItem(QObject *applet, int x, int y)
 {
+    qDebug() << "LayoutManager::addAppletItem(x,y) applet:" << applet << "x:" << x << "y:" << y
+             << "startLayout:" << m_startLayout << "mainLayout:" << m_mainLayout << "endLayout:" << m_endLayout;
     if (!m_startLayout || !m_mainLayout || !m_endLayout) {
+        qDebug() << "LayoutManager::addAppletItem(x,y) ABORTING - missing layouts";
         return;
-    }    
+    }
 
+    //! In Plasma 6, applet from onAppletAdded may be Plasma::Applet* (C++ object).
+    //! Convert to AppletQuickItem* for QML visual operations.
+    QObject *appletForQml = applet;
+    Plasma::Applet *plasmaApplet = qobject_cast<Plasma::Applet *>(applet);
     PlasmaQuick::AppletQuickItem *aqi = qobject_cast<PlasmaQuick::AppletQuickItem *>(applet);
+
+    if (!aqi && plasmaApplet) {
+        aqi = PlasmaQuick::AppletQuickItem::itemForApplet(plasmaApplet);
+        if (aqi) {
+            appletForQml = aqi;
+        }
+    }
 
     if (aqi && aqi->applet() && !aqi->applet()->destroyed() && m_appletsInScheduledDestruction.contains(aqi->applet()->id())) {
         int id = aqi->applet()->id();
         QVariant appletContainerVariant; appletContainerVariant.setValue(m_appletsInScheduledDestruction[id]);
-        QVariant appletVariant; appletVariant.setValue(applet);
+        QVariant appletVariant; appletVariant.setValue(appletForQml);
         m_initAppletContainerMethod.invoke(m_rootItem, Q_ARG(QVariant, appletContainerVariant), Q_ARG(QVariant, appletVariant));
         setAppletInScheduledDestruction(id, false);
         return;
     }
 
     QVariant appletItemVariant;
-    QVariant appletVariant; appletVariant.setValue(applet);
-    m_createAppletItemMethod.invoke(m_rootItem, Q_RETURN_ARG(QVariant, appletItemVariant), Q_ARG(QVariant, appletVariant));
+    QVariant appletVariant; appletVariant.setValue(appletForQml);
+    bool invokeResult = m_createAppletItemMethod.invoke(m_rootItem, Q_RETURN_ARG(QVariant, appletItemVariant), Q_ARG(QVariant, appletVariant));
     QQuickItem *appletItem = appletItemVariant.value<QQuickItem *>();
+    qDebug() << "LayoutManager::addAppletItem createAppletItem invoke:" << invokeResult << "appletItem:" << appletItem;
 
     if (m_dndSpacer->parentItem() == m_mainLayout
             || m_dndSpacer->parentItem() == m_startLayout
@@ -1194,6 +1256,14 @@ void LayoutManager::removeAppletItem(QObject *applet)
     }
 
     PlasmaQuick::AppletQuickItem *aqi = qobject_cast<PlasmaQuick::AppletQuickItem *>(applet);
+
+    //! In Plasma 6, applet from onAppletRemoved is Plasma::Applet*, not AppletQuickItem*
+    if (!aqi) {
+        Plasma::Applet *plasmaApplet = qobject_cast<Plasma::Applet *>(applet);
+        if (plasmaApplet) {
+            aqi = PlasmaQuick::AppletQuickItem::itemForApplet(plasmaApplet);
+        }
+    }
 
     if (!aqi) {
         return;

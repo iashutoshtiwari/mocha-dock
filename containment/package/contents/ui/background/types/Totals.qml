@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 
 Item{
     id: totalsItem
@@ -44,6 +44,7 @@ Item{
     Binding {
         target: totalsItem
         property: "minThickness"
+        restoreMode: Binding.RestoreNone
         when: !(hideThickScreenGap || hideLengthScreenGaps)
         value: (paddings.headThickness + paddings.tailThickness)
     }

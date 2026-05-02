@@ -3,11 +3,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
+import QtQuick
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.ksvg as KSvg
+import org.kde.plasma.core as PlasmaCore
 
-PlasmaCore.FrameSvgItem {    id: frame
+KSvg.FrameSvgItem {
+    id: frame
     property string basePrefix: "normal"
 
     imagePath: "widgets/tabbar"

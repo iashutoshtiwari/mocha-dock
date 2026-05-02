@@ -20,13 +20,10 @@
 
 // Plasma
 #include <Plasma/Corona>
+#include <PlasmaQuick/SharedQmlEngine>
 
 // KDE
 #include <KAboutApplicationDialog>
-
-namespace KDeclarative {
-class QmlObjectSharedEngine;
-}
 
 namespace Plasma {
 class Corona;
@@ -42,11 +39,6 @@ namespace KActivities {
 class Consumer;
 }
 
-namespace KWayland {
-namespace Client {
-class PlasmaShell;
-}
-}
 
 namespace Latte {
 class CentralLayout;
@@ -118,8 +110,6 @@ public:
                                               bool desktopUse = false) const;
 
     int screenForContainment(const Plasma::Containment *containment) const override;
-
-    KWayland::Client::PlasmaShell *waylandCoronaInterface() const;
 
     KActivities::Consumer *activitiesConsumer() const;
     GlobalShortcuts *globalShortcuts() const;
@@ -193,6 +183,8 @@ private slots:
     void onScreenRemoved(QScreen *screen);
     void onScreenCountChanged();
     void onScreenGeometryChanged(const QRect &geometry);
+    void onAvailableScreenRegionChangedFrom(Latte::View *view);
+    void onAvailableScreenRectChangedFrom(Latte::View *view);
     void syncLatteViewsToScreens();
 
 private:
@@ -226,7 +218,7 @@ private:
     QString m_startupAddViewTemplateName;
     QString m_importFullConfigurationFile;
 
-    QList<KDeclarative::QmlObjectSharedEngine *> m_alternativesObjects;
+    QList<PlasmaQuick::SharedQmlEngine *> m_alternativesObjects;
 
     QTimer m_viewsScreenSyncTimer;
 
@@ -249,8 +241,6 @@ private:
     WindowSystem::AbstractWindowInterface *m_wm{nullptr};
 
     PanelShadows *m_dialogShadows{nullptr};
-
-    KWayland::Client::PlasmaShell *m_waylandCorona{nullptr};
 
     friend class GlobalShortcuts;
     friend class Layouts::Manager;

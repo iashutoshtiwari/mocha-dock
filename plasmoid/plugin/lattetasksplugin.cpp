@@ -7,6 +7,7 @@
 
 // local
 #include "types.h"
+#include "launcherhelper.h"
 
 // Qt
 #include <QtQml>
@@ -15,6 +16,10 @@
 void LatteTasksPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.latte.private.tasks"));
-    qmlRegisterUncreatableType<Latte::Tasks::Types>(uri, 0, 1, "Types", "Latte Tasks Types uncreatable");
+    qmlRegisterUncreatableMetaObject(Latte::Tasks::Types::staticMetaObject, uri, 0, 1, "Types", QStringLiteral("Latte Tasks Types uncreatable"));
+    qmlRegisterSingletonType<Latte::Tasks::LauncherHelper>(uri, 0, 1, "LauncherHelper",
+        [](QQmlEngine *, QJSEngine *) -> QObject * {
+            return new Latte::Tasks::LauncherHelper();
+        });
 }
 

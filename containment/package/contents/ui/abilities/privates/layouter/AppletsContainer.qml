@@ -3,7 +3,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
 Item {
     id: appletsContainer
@@ -36,6 +36,7 @@ Item {
     Binding{
         target: appletsContainer
         property:"sizeWithNoFillApplets"
+        restoreMode: Binding.RestoreNone
         when: appletsContainer && grid && !updateIsBlocked && inNormalFillCalculationsState
         value: {
             var space = 0;
@@ -57,6 +58,7 @@ Item {
     Binding{
         target: appletsContainer
         property:"lengthWithoutSplitters"
+        restoreMode: Binding.RestoreNone
         when: appletsContainer && grid && !updateIsBlocked && inNormalFillCalculationsState
               && !(dragOverlay && dragOverlay.currentApplet && dragOverlay.currentApplet.isInternalViewSplitter /*avoid binding loop when dragging splitters around*/)
         value: {
@@ -75,6 +77,7 @@ Item {
     Binding{
         target: appletsContainer
         property:"shownApplets"
+        restoreMode: Binding.RestoreNone
         when: appletsContainer && grid && !updateIsBlocked
         value: {
             var res = 0;
@@ -95,6 +98,7 @@ Item {
     Binding{
         target: appletsContainer
         property:"fillApplets"
+        restoreMode: Binding.RestoreNone
         when: appletsContainer && grid && !updateIsBlocked
         value: {
             var no = 0;
@@ -116,6 +120,7 @@ Item {
     Binding{
         target: appletsContainer
         property:"fillRealApplets"
+        restoreMode: Binding.RestoreNone
         when: appletsContainer && grid && !updateIsBlocked
         value: {
             var no = 0;
@@ -138,6 +143,7 @@ Item {
     Binding{
         target: appletsContainer
         property:"firstVisibleIndex"
+        restoreMode: Binding.RestoreNone
         when: appletsContainer && grid && !updateIsBlocked
         value: {
             var ind = maxIndex;
@@ -158,6 +164,7 @@ Item {
     Binding{
         target: appletsContainer
         property:"lastVisibleIndex"
+        restoreMode: Binding.RestoreNone
         when: appletsContainer && grid && !updateIsBlocked
         value: {
             var ind = -1;
@@ -178,6 +185,7 @@ Item {
     Binding{
         target: appletsContainer
         property:"onlyInternalSplitters"
+        restoreMode: Binding.RestoreNone
         when: appletsContainer && grid && !updateIsBlocked && inNormalFillCalculationsState
         value: {
             var intsSplits = 0;

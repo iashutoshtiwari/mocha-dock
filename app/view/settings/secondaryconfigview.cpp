@@ -6,7 +6,6 @@
 #include "secondaryconfigview.h"
 
 // local
-#include <config-latte.h>
 #include "primaryconfigview.h"
 #include "../panelshadows_p.h"
 #include "../view.h"
@@ -21,14 +20,9 @@
 
 // KDE
 #include <KLocalizedContext>
-#include <KDeclarative/KDeclarative>
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 #include <KWindowEffects>
 #include <KWindowSystem>
-
-// Plasma
-#include <Plasma/Package>
+#include <KPackage/Package>
 
 namespace Latte {
 namespace ViewPart {
@@ -64,9 +58,6 @@ void SecondaryConfigView::init()
     setSource(source);
     syncGeometry();
 
-    if (m_parent && KWindowSystem::isPlatformX11()) {
-        m_parent->requestActivate();
-    }
 }
 
 QRect SecondaryConfigView::geometryWhenVisible() const
@@ -151,28 +142,14 @@ void SecondaryConfigView::syncGeometry()
 
     setPosition(position);
 
-    if (m_shellSurface) {
-        m_shellSurface->setPosition(position);
-    }
-
     setMaximumSize(size);
     setMinimumSize(size);
     resize(size);
 
-    //! after placement request to activate the main config window in order to avoid
-    //! rare cases of closing settings window from secondaryConfigView->focusOutEvent
-    if (m_parent && KWindowSystem::isPlatformX11()) {
-        m_parent->requestActivate();
-    }
 }
 
 void SecondaryConfigView::showEvent(QShowEvent *ev)
 {
-    if (m_shellSurface) {
-        //! under wayland it needs to be set again after its hiding
-        m_shellSurface->setPosition(m_geometryWhenVisible.topLeft());
-    }
-
     SubConfigView::showEvent(ev);
 
     if (!m_latteView) {
@@ -214,30 +191,13 @@ void SecondaryConfigView::focusOutEvent(QFocusEvent *ev)
 
 void SecondaryConfigView::hideConfigWindow()
 {
-    if (m_shellSurface) {
-        //!NOTE: Avoid crash in wayland environment with qt5.9
-        close();
-    } else {
-        hide();
-    }
+    close();
 }
 
 void SecondaryConfigView::updateEffects()
 {
-    //! Don't apply any effect before the wayland surface is created under wayland
-    //! https://bugs.kde.org/show_bug.cgi?id=392890
-    if (KWindowSystem::isPlatformWayland() && !m_shellSurface) {
-        return;
-    }
-
-    //! Don't apply any effect before the wayland surface is created under wayland
-    //! https://bugs.kde.org/show_bug.cgi?id=392890
-    if (KWindowSystem::isPlatformWayland() && !m_shellSurface) {
-        return;
-    }
-
     if (!m_background) {
-        m_background = new Plasma::FrameSvg(this);
+        m_background = new KSvg::FrameSvg(this);
     }
 
     if (m_background->imagePath() != "dialogs/background") {
@@ -257,11 +217,7 @@ void SecondaryConfigView::updateEffects()
         setMask(QRegion());
     }
 
-    if (KWindowSystem::compositingActive()) {
-        KWindowEffects::enableBlurBehind(winId(), true, fixedMask);
-    } else {
-        KWindowEffects::enableBlurBehind(winId(), false);
-    }
+    KWindowEffects::enableBlurBehind(this, true, fixedMask);
 }
 
 //!BEGIN borders
@@ -271,23 +227,23 @@ void SecondaryConfigView::updateEnabledBorders()
         return;
     }
 
-    Plasma::FrameSvg::EnabledBorders borders = Plasma::FrameSvg::AllBorders;
+    KSvg::FrameSvg::EnabledBorders borders = KSvg::FrameSvg::AllBorders;
 
     switch (m_latteView->location()) {
     case Plasma::Types::TopEdge:
-        borders &= ~Plasma::FrameSvg::TopBorder;
+        borders &= ~KSvg::FrameSvg::TopBorder;
         break;
 
     case Plasma::Types::LeftEdge:
-        borders &= ~Plasma::FrameSvg::LeftBorder;
+        borders &= ~KSvg::FrameSvg::LeftBorder;
         break;
 
     case Plasma::Types::RightEdge:
-        borders &= ~Plasma::FrameSvg::RightBorder;
+        borders &= ~KSvg::FrameSvg::RightBorder;
         break;
 
     case Plasma::Types::BottomEdge:
-        borders &=  ~Plasma::FrameSvg::BottomBorder;
+        borders &=  ~KSvg::FrameSvg::BottomBorder;
         break;
 
     default:

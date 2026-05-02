@@ -13,7 +13,6 @@
 #include "templates/templatesmanager.h"
 
 // C++
-#include <memory>
 #include <csignal>
 
 // Qt
@@ -36,7 +35,9 @@
 #include <KLocalizedString>
 #include <KAboutData>
 #include <KDBusService>
-#include <KQuickAddons/QtQuickSettings>
+
+// LayerShell
+#include <LayerShellQt/Shell>
 
 //! COLORS
 #define CNORMAL  "\e[0m"
@@ -76,6 +77,13 @@ int main(int argc, char **argv)
     qputenv("QT_WAYLAND_DISABLE_FIXED_POSITIONS", {});
     const bool qpaVariable = qEnvironmentVariableIsSet("QT_QPA_PLATFORM");
     detectPlatform(argc, argv);
+
+    //! NOTE: Do NOT call LayerShellQt::Shell::useLayerShell() here.
+    //! It sets QT_WAYLAND_SHELL_INTEGRATION=layer-shell globally, causing ALL
+    //! windows (including QDialogs, config windows, launched apps) to render
+    //! without decorations. Instead, LayerShell is configured per-view in
+    //! waylandinterface.cpp via LayerShellQt::Window::get().
+
     QApplication app(argc, argv);
     qunsetenv("QT_WAYLAND_DISABLE_FIXED_POSITIONS");
 
@@ -83,8 +91,6 @@ int main(int argc, char **argv)
         // don't leak the env variable to processes we start
         qunsetenv("QT_QPA_PLATFORM");
     }
-
-    KQuickAddons::QtQuickSettings::init();
 
     KLocalizedString::setApplicationDomain("latte-dock");
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("latte-dock")));
@@ -251,11 +257,6 @@ int main(int argc, char **argv)
     }
 
     //! disable restore from session management
-    //! based on spectacle solution at:
-    //!   - https://bugs.kde.org/show_bug.cgi?id=430411
-    //!   - https://invent.kde.org/graphics/spectacle/-/commit/8db27170d63f8a4aaff09615e51e3cc0fb115c4d
-    QGuiApplication::setFallbackSessionManagementEnabled(false);
-
     auto disableSessionManagement = [](QSessionManager &sm) {
         sm.setRestartHint(QSessionManager::RestartNever);
     };
@@ -287,7 +288,8 @@ int main(int argc, char **argv)
     if (username.isEmpty())
         username = qgetenv("USERNAME");
 
-    QLockFile lockFile {QDir::tempPath() + "/latte-dock." + username + ".lock"};
+    QString lockFileName { QDir::tempPath() + "/latte-dock." + username + ".lock" };
+    QLockFile lockFile {lockFileName};
 
     int timeout {100};
 
@@ -301,36 +303,57 @@ int main(int argc, char **argv)
     }
 
     if (!lockFile.tryLock(timeout)) {
-        QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
-        bool addview{parser.isSet(QStringLiteral("add-dock"))};
-        bool importlayout{parser.isSet(QStringLiteral("import-layout"))};
-        bool enableautostart{parser.isSet(QStringLiteral("enable-autostart"))};
-        bool disableautostart{parser.isSet(QStringLiteral("disable-autostart"))};
+        auto lockErr = lockFile.error();
+        if(lockErr != QLockFile::LockFailedError) {
+            qInfo() << i18n("Failed to obtain the lock file:") << lockFileName;
+        } else {
+          QDBusInterface iface("org.kde.lattedock", "/Latte", "",
+                               QDBusConnection::sessionBus());
+          bool addview{parser.isSet(QStringLiteral("add-dock"))};
+          bool importlayout{parser.isSet(QStringLiteral("import-layout"))};
+          bool enableautostart{
+              parser.isSet(QStringLiteral("enable-autostart"))};
+          bool disableautostart{
+              parser.isSet(QStringLiteral("disable-autostart"))};
 
-        bool validaction{false};
+          bool validaction{false};
 
-        if (iface.isValid()) {
+          if (iface.isValid()) {
             if (addview) {
-                validaction = true;
-                iface.call("addView", (uint)0, parser.value(QStringLiteral("add-dock")));
-                qGuiApp->exit();
-                return 0;
+              validaction = true;
+              iface.call("addView", (uint)0,
+                         parser.value(QStringLiteral("add-dock")));
+              qGuiApp->exit();
+              return 0;
             } else if (importlayout) {
-                validaction = true;
-                QString suggestedname = parser.isSet(QStringLiteral("suggested-layout-name")) ? parser.value(QStringLiteral("suggested-layout-name")) : QString();
-                iface.call("importLayoutFile", parser.value(QStringLiteral("import-layout")), suggestedname);
-                qGuiApp->exit();
-                return 0;
-            } else if (enableautostart || disableautostart){
-                validaction = true;
+              validaction = true;
+              QString suggestedname =
+                  parser.isSet(QStringLiteral("suggested-layout-name"))
+                      ? parser.value(QStringLiteral("suggested-layout-name"))
+                      : QString();
+              iface.call("importLayoutFile",
+                         parser.value(QStringLiteral("import-layout")),
+                         suggestedname);
+              qGuiApp->exit();
+              return 0;
+            } else if (enableautostart || disableautostart) {
+              validaction = true;
             } else {
-                // LayoutPage = 0
-                iface.call("showSettingsWindow", 0);
+              // LayoutPage = 0
+              iface.call("showSettingsWindow", 0);
             }
-        }
+          } else {
+            QDBusError err = iface.lastError();
+            if (err.isValid()) {
+              qInfo() << "DBus error (" << err.name()
+                      << ") encountered: " << err.message();
+            }
+          }
 
-        if (!validaction) {
-            qInfo() << i18n("An instance is already running!, use --replace to restart Latte");
+          if (!validaction) {
+            qInfo() << i18n("An instance is already running!, use --replace to "
+                            "restart Latte");
+          }
         }
 
         qGuiApp->exit();
@@ -547,7 +570,5 @@ inline void detectPlatform(int argc, char **argv)
 
     if (qstrcmp(sessionType, "wayland") == 0) {
         qputenv("QT_QPA_PLATFORM", "wayland");
-    } else if (qstrcmp(sessionType, "x11") == 0) {
-        qputenv("QT_QPA_PLATFORM", "xcb");
     }
 }

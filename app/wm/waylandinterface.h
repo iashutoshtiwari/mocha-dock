@@ -13,25 +13,20 @@
 #include "windowinfowrap.h"
 
 // Qt
-#include <QMap>
+#include <QHash>
 #include <QObject>
 
 // KDE
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
-#include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/surface.h>
 #include <KWindowInfo>
 #include <KWindowEffects>
+#include <taskmanager/virtualdesktopinfo.h>
 
 
 namespace Latte {
 class Corona;
-namespace Private {
-//! this class is used to create the struts inside wayland
-class GhostWindow;
-}
 }
 
 namespace Latte {
@@ -45,12 +40,14 @@ public:
     explicit WaylandInterface(QObject *parent = nullptr);
     ~WaylandInterface() override;
 
-    void setViewExtraFlags(QObject *view, bool isPanelWindow = true, Latte::Types::Visibility mode = Latte::Types::WindowsGoBelow) override;
-    void setViewStruts(QWindow &view, const QRect &rect
+    void setViewExtraFlags(QWindow *view, bool isPanelWindow = true, Latte::Types::Visibility mode = Latte::Types::WindowsGoBelow) override;
+    void setViewStruts(QWindow *view, const QRect &rect
                        , Plasma::Types::Location location) override;
     void setWindowOnActivities(const WindowId &wid, const QStringList &nextactivities) override;
 
-    void removeViewStruts(QWindow &view) override;
+    void removeViewStruts(QWindow *view) override;
+
+    void setWindowPosition(QWindow *window, const Plasma::Types::Location &location, const QRect &geometry);
 
     WindowId activeWindow() override;
     WindowInfoWrap requestInfo(WindowId wid) override;
@@ -77,7 +74,7 @@ public:
     WindowId winIdFor(QString appId, QRect geometry) override;
     WindowId winIdFor(QString appId, QString title) override;
 
-    AppData appDataFor(WindowId wid) override;
+    TaskManager::AppData appDataFor(WindowId wid) override;
 
     void setActiveEdge(QWindow *view, bool active)  override;
 
@@ -92,8 +89,7 @@ public:
 
     void initWindowManagement(KWayland::Client::PlasmaWindowManagement *windowManagement);
 
-    //! VirtualDesktopsSupport
-    void initVirtualDesktopManagement(KWayland::Client::PlasmaVirtualDesktopManagement *virtualDesktopManagement);
+    //! VirtualDesktopsSupport — initialized internally via TaskManager::VirtualDesktopInfo
 
 
 private slots:
@@ -112,22 +108,15 @@ private:
     void untrackWindow(KWayland::Client::PlasmaWindow *w);
 
     KWayland::Client::PlasmaWindow *windowFor(WindowId wid);
-    KWayland::Client::PlasmaShell *waylandCoronaInterface() const;
 
     //! VirtualDesktopsSupport
     void setCurrentDesktop(QString desktop);
-    void addDesktop(const QString &id, quint32 position);
-
 
 private:
-    friend class Private::GhostWindow;
-    mutable QMap<WindowId, Private::GhostWindow *> m_ghostWindows;
-
     KWayland::Client::PlasmaWindowManagement *m_windowManagement{nullptr};
 
-    //! VirtualDesktopsSupport
-    KWayland::Client::PlasmaVirtualDesktopManagement *m_virtualDesktopManagement{nullptr};
-    QStringList m_desktops;
+    //! VirtualDesktopsSupport via TaskManager::VirtualDesktopInfo
+    TaskManager::VirtualDesktopInfo *m_virtualDesktopInfo{nullptr};
 
 
     Latte::Corona *m_corona{nullptr};
@@ -137,5 +126,3 @@ private:
 }
 
 #endif // WAYLANDINTERFACE_H
-
-

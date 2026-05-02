@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import org.kde.plasma.plasmoid 2.0
+import QtQuick
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.definition 0.1 as AbilityDefinition
+import org.kde.latte.abilities.definition as AbilityDefinition
 
 AbilityDefinition.Indexer {
     id: indxr
@@ -23,6 +23,7 @@ AbilityDefinition.Indexer {
     Binding{
         target: indxr
         property: "separators"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var seps = [];
@@ -58,6 +59,7 @@ AbilityDefinition.Indexer {
     Binding {
         target: indxr
         property: "hidden"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var hdn = [];
@@ -93,6 +95,7 @@ AbilityDefinition.Indexer {
     Binding{
         target: indxr
         property: "marginsAreaSeparators"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var seps = [];
@@ -124,6 +127,7 @@ AbilityDefinition.Indexer {
     Binding {
         target: indxr
         property: "clients"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var clns = [];
@@ -168,6 +172,7 @@ AbilityDefinition.Indexer {
     Binding {
         target: indxr
         property: "clientsBridges"
+        restoreMode: Binding.RestoreNone
         when: !updateIsBlocked
         value: {
             var bdgs = [];
@@ -218,6 +223,7 @@ AbilityDefinition.Indexer {
     Binding{
         target: indxr
         property: "clientsTrackingWindowsCount"
+        restoreMode: Binding.RestoreNone
         when: !(root.appletIsDragged || updateIsBlocked)
         value: {
             var cnts = 0;

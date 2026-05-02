@@ -42,7 +42,6 @@
 #include "wm/abstractwindowinterface.h"
 #include "wm/schemecolors.h"
 #include "wm/waylandinterface.h"
-#include "wm/xwindowinterface.h"
 #include "wm/tracker/lastactivewindow.h"
 #include "wm/tracker/schemes.h"
 #include "wm/tracker/windowstracker.h"
@@ -53,16 +52,17 @@
 #include <QScreen>
 #include <QDBusConnection>
 #include <QDebug>
-#include <QDesktopWidget>
+//#include <QDesktopWidget>
 #include <QFile>
 #include <QFontDatabase>
 #include <QQmlContext>
 #include <QProcess>
 
 // Plasma
-#include <Plasma>
+#include <Plasma/Plasma>
 #include <Plasma/Corona>
 #include <Plasma/Containment>
+#include <PlasmaActivities/Consumer>
 #include <PlasmaQuick/ConfigView>
 
 // KDE
@@ -73,12 +73,12 @@
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 #include <KAboutData>
-#include <KActivities/Consumer>
-#include <KDeclarative/QmlObjectSharedEngine>
+// #include <KDeclarative/QmlObjectSharedEngine>
+// QmlObjectSharedEngine seems to be replaced with...
+#include <PlasmaQuick/SharedQmlEngine>
 #include <KWindowSystem>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/registry.h>
-#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
 
 namespace Latte {
@@ -104,12 +104,8 @@ Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString
 {
     connect(qApp, &QApplication::aboutToQuit, this, &Corona::onAboutToQuit);
 
-    //! create the window manager
-    if (KWindowSystem::isPlatformWayland()) {
-        m_wm = new WindowSystem::WaylandInterface(this);
-    } else {
-        m_wm = new WindowSystem::XWindowInterface(this);
-    }
+    //! create the window manager (Wayland-only)
+    m_wm = new WindowSystem::WaylandInterface(this);
 
     setupWaylandIntegration();
 
@@ -226,8 +222,13 @@ void Corona::load()
         m_templatesManager->init();
         m_layoutsManager->init();
 
-        connect(this, &Corona::availableScreenRectChangedFrom, this, &Plasma::Corona::availableScreenRectChanged, Qt::UniqueConnection);
-        connect(this, &Corona::availableScreenRegionChangedFrom, this, &Plasma::Corona::availableScreenRegionChanged, Qt::UniqueConnection);
+        // We must extract Screen Id from the signalled view.
+        connect(this, &Corona::availableScreenRectChangedFrom,
+                this, &Corona::onAvailableScreenRectChangedFrom,
+                Qt::UniqueConnection);
+        connect(this, &Corona::availableScreenRegionChangedFrom,
+                this, &Corona::onAvailableScreenRegionChangedFrom,
+                Qt::UniqueConnection);
         connect(m_screenPool, &ScreenPool::primaryScreenChanged, this, &Corona::onScreenCountChanged, Qt::UniqueConnection);
 
         QString loadLayoutName = "";
@@ -317,11 +318,6 @@ void Corona::setupWaylandIntegration()
     Registry *registry{new Registry(this)};
     registry->create(connection);
 
-    connect(registry, &Registry::plasmaShellAnnounced, this
-            , [this, registry](quint32 name, quint32 version) {
-        m_waylandCorona = registry->createPlasmaShell(name, version, this);
-    });
-
     QObject::connect(registry, &KWayland::Client::Registry::plasmaWindowManagementAnnounced,
                      [this, registry](quint32 name, quint32 version) {
         KWayland::Client::PlasmaWindowManagement *pwm = registry->createPlasmaWindowManagement(name, version, this);
@@ -333,26 +329,11 @@ void Corona::setupWaylandIntegration()
         }
     });
 
-
-    QObject::connect(registry, &KWayland::Client::Registry::plasmaVirtualDesktopManagementAnnounced,
-                     [this, registry] (quint32 name, quint32 version) {
-        KWayland::Client::PlasmaVirtualDesktopManagement *vdm = registry->createPlasmaVirtualDesktopManagement(name, version, this);
-
-        WindowSystem::WaylandInterface *wI = qobject_cast<WindowSystem::WaylandInterface *>(m_wm);
-
-        if (wI) {
-            wI->initVirtualDesktopManagement(vdm);
-        }
-    });
-
+    //! VirtualDesktopManagement is now handled internally by WaylandInterface
+    //! via TaskManager::VirtualDesktopInfo — no KWayland registry binding needed.
 
     registry->setup();
     connection->roundtrip();
-}
-
-KWayland::Client::PlasmaShell *Corona::waylandCoronaInterface() const
-{
-    return m_waylandCorona;
 }
 
 void Corona::cleanConfig()
@@ -646,6 +627,7 @@ QRegion Corona::availableScreenRegionWithCriteria(int id,
                     }
                 }
                 break;
+            default: break;
             }
 
             // Usually availableScreenRect is used by the desktop,
@@ -859,12 +841,13 @@ void Corona::onScreenAdded(QScreen *screen)
 
     if (id == -1) {
         m_screenPool->insertScreenMapping(screen->name());
+        id = m_screenPool->id(screen->name());
     }
 
     connect(screen, &QScreen::geometryChanged, this, &Corona::onScreenGeometryChanged);
 
-    emit availableScreenRectChanged();
-    emit screenAdded(m_screenPool->id(screen->name()));
+    emit availableScreenRectChanged(id);
+    emit screenAdded(id);
 
     onScreenCountChanged();
 }
@@ -894,9 +877,23 @@ void Corona::onScreenGeometryChanged(const QRect &geometry)
 
     if (id >= 0) {
         emit screenGeometryChanged(id);
-        emit availableScreenRegionChanged();
-        emit availableScreenRectChanged();
+        emit availableScreenRegionChanged(id);
+        emit availableScreenRectChanged(id);
     }
+}
+
+void Corona::onAvailableScreenRegionChangedFrom(Latte::View *view)
+{
+    Plasma::Corona* corona = qobject_cast<Plasma::Corona*>(this);
+    int screenId = view->positioner()->currentScreenId();
+    corona->availableScreenRegionChanged(screenId);
+}
+
+void Corona::onAvailableScreenRectChangedFrom(Latte::View *view)
+{
+    Plasma::Corona* corona = qobject_cast<Plasma::Corona*>(this);
+    int screenId = view->positioner()->currentScreenId();
+    corona->availableScreenRectChanged(screenId);
 }
 
 //! the central functions that updates loading/unloading latteviews
@@ -990,13 +987,13 @@ void Corona::showAlternativesForApplet(Plasma::Applet *applet)
 
     Latte::View *latteView =  m_layoutsManager->synchronizer()->viewForContainment(applet->containment());
 
-    KDeclarative::QmlObjectSharedEngine *qmlObj{nullptr};
+    PlasmaQuick::SharedQmlEngine *qmlObj{nullptr};
 
     if (latteView) {
         latteView->setAlternativesIsShown(true);
-        qmlObj = new KDeclarative::QmlObjectSharedEngine(latteView);
+        qmlObj = new PlasmaQuick::SharedQmlEngine(latteView);
     } else {
-        qmlObj = new KDeclarative::QmlObjectSharedEngine(this);
+        qmlObj = new PlasmaQuick::SharedQmlEngine(this);
     }
 
     qmlObj->setInitializationDelayed(true);
@@ -1021,10 +1018,10 @@ void Corona::showAlternativesForApplet(Plasma::Applet *applet)
             return;
         }
 
-        QMutableListIterator<KDeclarative::QmlObjectSharedEngine *> it(m_alternativesObjects);
+        QMutableListIterator<PlasmaQuick::SharedQmlEngine*> it(m_alternativesObjects);
 
         while (it.hasNext()) {
-            KDeclarative::QmlObjectSharedEngine *obj = it.next();
+            PlasmaQuick::SharedQmlEngine *obj = it.next();
 
             if (obj == qmlObj) {
                 it.remove();
@@ -1042,10 +1039,10 @@ void Corona::alternativesVisibilityChanged(bool visible)
 
     QObject *root = sender();
 
-    QMutableListIterator<KDeclarative::QmlObjectSharedEngine *> it(m_alternativesObjects);
+    QMutableListIterator<PlasmaQuick::SharedQmlEngine*> it(m_alternativesObjects);
 
     while (it.hasNext()) {
-        KDeclarative::QmlObjectSharedEngine *obj = it.next();
+        PlasmaQuick::SharedQmlEngine *obj = it.next();
 
         if (obj->rootObject() == root) {
             it.remove();

@@ -7,21 +7,22 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.6
-import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
-import QtQml.Models 2.2
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
+import QtQml.Models
 
-import org.kde.draganddrop 2.0
+import org.kde.draganddrop
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons as KQuickControlsAddons
 
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.taskmanager as TaskManager
 
-PlasmaExtras.ScrollArea {
+PlasmaComponents.ScrollView {
     id: mainToolTip
     property Item parentTask: null
     property var rootIndex: []
@@ -57,16 +58,10 @@ PlasmaExtras.ScrollArea {
     LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
     LayoutMirroring.childrenInherit: true
 
-    property int textWidth: theme.mSize(theme.defaultFont).width * 20
+    property int textWidth: Kirigami.Units.gridUnit * 20
 
-    verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-
-    Component.onCompleted: {
-        flickableItem.interactive = Qt.binding(function() {
-            return isVerticalPanel ? contentItem.height > viewport.height : contentItem.width > viewport.width
-        });
-    }
+    QQC2.ScrollBar.vertical.policy: QQC2.ScrollBar.AlwaysOff
+    QQC2.ScrollBar.horizontal.policy: QQC2.ScrollBar.AlwaysOff
 
     Item{
         width: contentItem.width
@@ -102,7 +97,7 @@ PlasmaExtras.ScrollArea {
                 rows: !isVerticalPanel
                 columns: isVerticalPanel
                 flow: isVerticalPanel ? Grid.TopToBottom : Grid.LeftToRight
-                spacing: units.largeSpacing
+                spacing: Kirigami.Units.largeSpacing
 
                 readonly property bool hasVisibleDescription: {
                     for (var i=0; i<children.length; ++i) {

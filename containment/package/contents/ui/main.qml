@@ -4,22 +4,23 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.8
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.2
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
-import org.kde.plasma.plasmoid 2.0
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.latte.abilities.host as AbilityHost
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
-import org.kde.latte.private.app 0.1 as LatteApp
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.latte.core as LatteCore
+import org.kde.latte.components as LatteComponents
+import org.kde.latte.private.app as LatteApp
+import org.kde.latte.private.containment as LatteContainment
 
 import "abilities" as Ability
 import "applet" as Applet
@@ -29,7 +30,7 @@ import "layouts" as Layouts
 import "./background" as Background
 import "./debugger" as Debugger
 
-Item {
+ContainmentItem {
     id: root
     objectName: "containmentViewLayout"
 
@@ -196,9 +197,6 @@ Item {
     property bool userShowPanelBackground: LatteCore.WindowSystem.compositingActive ? plasmoid.configuration.useThemePanel : true
     property bool useThemePanel: noApplets === 0 || !LatteCore.WindowSystem.compositingActive ?
                                      true : (plasmoid.configuration.useThemePanel || plasmoid.configuration.solidBackgroundForMaximized)
-
-    property bool plasma515: LatteCore.Environment.plasmaDesktopVersion >= LatteCore.Environment.makeVersion(5,15,0)
-    property bool plasma518: LatteCore.Environment.plasmaDesktopVersion >= LatteCore.Environment.makeVersion(5,18,0)
 
     readonly property int minAppletLengthInConfigure: 16
     readonly property int maxJustifySplitterSize: 64
@@ -391,6 +389,7 @@ Item {
     Binding {
         target: root
         property: "hideThickScreenGap"
+        restoreMode: Binding.RestoreNone
         when: !(plasmoid.configuration.floatingGapHidingWaitsMouse && dockContainsMouse)
         value: screenEdgeMarginEnabled
                && plasmoid.configuration.hideFloatingGapForMaximized
@@ -403,6 +402,7 @@ Item {
     Binding{
         target: root
         property: "hideLengthScreenGaps"
+        restoreMode: Binding.RestoreNone
         when: latteView && latteView.positioner && latteView.visibility
               && ((root.behaveAsPlasmaPanel && latteView.positioner.slideOffset === 0)
                   || root.behaveAsDockWithMask)
@@ -533,8 +533,8 @@ Item {
         upgrader_v010_alignment();
 
         fastLayoutManager.restore();
-        plasmoid.action("configure").visible = !plasmoid.immutable;
-        plasmoid.action("configure").enabled = !plasmoid.immutable;
+        plasmoid.internalAction("configure").visible = !plasmoid.immutable;
+        plasmoid.internalAction("configure").enabled = !plasmoid.immutable;
     }
 
     Component.onDestruction: {
@@ -557,16 +557,26 @@ Item {
         }
     }
 
-    Containment.onAppletAdded: {
-        if (fastLayoutManager.isMasqueradedIndex(x, y)) {
-            var index = fastLayoutManager.masquearadedIndex(x, y);
-            fastLayoutManager.addAppletItem(applet, index);
-        } else {
-            fastLayoutManager.addAppletItem(applet, x, y);
+    //! In Plasma 6, appletAdded/appletRemoved signals are on Plasma::Containment (C++ object),
+    //! not on ContainmentItem. Use Connections targeting plasmoid (the C++ containment).
+    Connections {
+        target: plasmoid
+        function onAppletAdded(applet, geometryHint) {
+            console.log("=== onAppletAdded === applet:", applet, "geometryHint:", geometryHint,
+                        "type:", typeof applet);
+            var x = geometryHint.x;
+            var y = geometryHint.y;
+            if (fastLayoutManager.isMasqueradedIndex(x, y)) {
+                var index = fastLayoutManager.masquearadedIndex(x, y);
+                fastLayoutManager.addAppletItem(applet, index);
+            } else {
+                fastLayoutManager.addAppletItem(applet, x, y);
+            }
+        }
+        function onAppletRemoved(applet) {
+            fastLayoutManager.removeAppletItem(applet);
         }
     }
-
-    Containment.onAppletRemoved: fastLayoutManager.removeAppletItem(applet);
 
     Plasmoid.onUserConfiguringChanged: {
         if (plasmoid.userConfiguring) {
@@ -577,14 +587,16 @@ Item {
     }
 
     Plasmoid.onImmutableChanged: {
-        plasmoid.action("configure").visible = !plasmoid.immutable;
-        plasmoid.action("configure").enabled = !plasmoid.immutable;
+        plasmoid.internalAction("configure").visible = !plasmoid.immutable;
+        plasmoid.internalAction("configure").enabled = !plasmoid.immutable;
     }
     //////////////END OF CONNECTIONS
 
     //////////////START OF FUNCTIONS
     function createAppletItem(applet) {
+        console.log("=== createAppletItem === applet:", applet, "type:", typeof applet);
         var appletContainer = appletItemComponent.createObject(dndSpacer.parent);
+        console.log("=== createAppletItem === container:", appletContainer, "appletWrapper:", appletContainer ? appletContainer.appletWrapper : "null");
         initAppletContainer(appletContainer, applet);
 
         // don't show applet if it chooses to be hidden but still make it  accessible in the panelcontroller
@@ -744,9 +756,9 @@ Item {
 
     ///////////////END components
 
-    PlasmaCore.ColorScope{
-        id: colorScopePalette
-    }
+    //Kirigami.ColorSet{
+    //    id: colorScopePalette
+    //}
 
     LatteContainment.LayoutManager{
         id:fastLayoutManager
@@ -1041,7 +1053,9 @@ Item {
         plasmoidInterface: plasmoid
 
         Component.onCompleted: {
-            view.interfacesGraphicObj = _interfaces;
+            if (view) {
+                view.interfacesGraphicObj = _interfaces;
+            }
         }
 
         onViewChanged: {

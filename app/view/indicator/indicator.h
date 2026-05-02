@@ -20,10 +20,10 @@
 // KDE
 #include <KConfigLoader>
 #include <KPluginMetaData>
+#include <KConfigPropertyMap>
 
 namespace KDeclarative
 {
-class ConfigPropertyMap;
 class QmlObjectSharedEngine;
 }
 
@@ -157,7 +157,7 @@ private:
     QPointer<IndicatorPart::Info> m_info;
     QPointer<IndicatorPart::Resources> m_resources;
 
-    QPointer<KDeclarative::ConfigPropertyMap> m_configuration;
+    QPointer<KConfigPropertyMap> m_configuration;
 };
 
 }

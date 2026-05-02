@@ -18,10 +18,7 @@
 
 // KDE
 #include <KWindowSystem>
-#include <KWayland/Client/plasmashell.h>
-
-// Plasma
-#include <Plasma/Package>
+#include <KPackage/Package>
 
 namespace Latte {
 namespace ViewPart {
@@ -48,7 +45,7 @@ void CanvasConfigView::init()
     setSource(source);
     syncGeometry();
 
-    if (m_parent && KWindowSystem::isPlatformX11()) {
+    if (m_parent) {
         m_parent->requestActivate();
     }
 }
@@ -86,17 +83,13 @@ void CanvasConfigView::syncGeometry()
 
     setPosition(geometry.topLeft());
 
-    if (m_shellSurface) {
-        m_shellSurface->setPosition(geometry.topLeft());
-    }
-
     setMaximumSize(geometry.size());
     setMinimumSize(geometry.size());
     resize(geometry.size());
 
     //! after placement request to activate the main config window in order to avoid
     //! rare cases of closing settings window from secondaryConfigView->focusOutEvent
-    if (m_parent && KWindowSystem::isPlatformX11()) {
+    if (m_parent) {
         m_parent->requestActivate();
     }
 }
@@ -122,11 +115,6 @@ bool CanvasConfigView::event(QEvent *e)
 
 void CanvasConfigView::showEvent(QShowEvent *ev)
 {
-    if (m_shellSurface) {
-        //! under wayland it needs to be set again after its hiding
-        m_shellSurface->setPosition(m_geometryWhenVisible.topLeft());
-    }
-
     SubConfigView::showEvent(ev);
 
     if (!m_latteView) {
@@ -176,12 +164,7 @@ void CanvasConfigView::focusOutEvent(QFocusEvent *ev)
 
 void CanvasConfigView::hideConfigWindow()
 {
-    if (m_shellSurface) {
-        //!NOTE: Avoid crash in wayland environment with qt5.9
-        close();
-    } else {
-        hide();
-    }
+    close();
 }
 
 //!BEGIN borders
@@ -191,23 +174,23 @@ void CanvasConfigView::updateEnabledBorders()
         return;
     }
 
-    Plasma::FrameSvg::EnabledBorders borders = Plasma::FrameSvg::TopBorder;
+    KSvg::FrameSvg::EnabledBorders borders = KSvg::FrameSvg::TopBorder;
 
     switch (m_latteView->location()) {
     case Plasma::Types::TopEdge:
-        borders = Plasma::FrameSvg::BottomBorder;
+        borders = KSvg::FrameSvg::BottomBorder;
         break;
 
     case Plasma::Types::LeftEdge:
-        borders = Plasma::FrameSvg::RightBorder;
+        borders = KSvg::FrameSvg::RightBorder;
         break;
 
     case Plasma::Types::RightEdge:
-        borders = Plasma::FrameSvg::LeftBorder;
+        borders = KSvg::FrameSvg::LeftBorder;
         break;
 
     case Plasma::Types::BottomEdge:
-        borders = Plasma::FrameSvg::TopBorder;
+        borders = KSvg::FrameSvg::TopBorder;
         break;
 
     default:

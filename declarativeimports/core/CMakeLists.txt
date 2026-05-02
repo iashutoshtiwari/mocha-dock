@@ -1,30 +1,32 @@
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-latte-lib.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-latte-lib.h)
 
+include_directories(../../legacy)
+
 set(lattecoreplugin_SRCS
     lattecoreplugin.cpp
     dialog.cpp
     environment.cpp
+    ../../legacy/ManagedTextureNode.cpp
     iconitem.cpp
     quickwindowsystem.cpp
     tools.cpp
     types.h
 )
 
+#include_directories(${Plasma_INCLUDE_DIRS})
 add_library(lattecoreplugin SHARED ${lattecoreplugin_SRCS})
 
 target_link_libraries(lattecoreplugin
-    Qt5::Quick
-    Qt5::Qml
-    KF5::CoreAddons
-    KF5::Plasma
-    KF5::PlasmaQuick
-    KF5::QuickAddons
-    KF5::IconThemes
+    Qt::Quick
+    Qt::Qml
+    KF6::CoreAddons
+    KF6::IconThemes
+    KF6::Svg
+    KF6::WindowSystem
+    Plasma::Plasma
+    Plasma::PlasmaQuick
 )
 
-if(HAVE_X11)
-    target_link_libraries(lattecoreplugin KF5::WindowSystem)
-endif()
 
 install(TARGETS lattecoreplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/core)
 

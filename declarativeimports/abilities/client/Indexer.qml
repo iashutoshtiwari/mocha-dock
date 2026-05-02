@@ -3,9 +3,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
+import QtQuick
 
-import org.kde.latte.abilities.definition 0.1 as AbilityDefinition
+import org.kde.latte.abilities.definition as AbilityDefinition
 
 AbilityDefinition.Indexer {
     id: _indexer
@@ -58,6 +58,7 @@ AbilityDefinition.Indexer {
     Binding {
         target: _privates
         property: "firstTailItemIsSeparator"
+        restoreMode: Binding.RestoreNone
         when: isReady
         value: {
             if (_indexer.visibleItemsCount === _indexer.layout.children.length) {
@@ -77,6 +78,7 @@ AbilityDefinition.Indexer {
     Binding {
         target: _privates
         property: "lastHeadItemIsSeparator"
+        restoreMode: Binding.RestoreNone
         when: isReady
         value: {
             if (_indexer.visibleItemsCount === _indexer.layout.children.length) {
@@ -98,6 +100,7 @@ AbilityDefinition.Indexer {
     Binding {
         target: _privates
         property: "firstVisibleItemIndex"
+        restoreMode: Binding.RestoreNone
         when: isReady
         value: {
             var ind = maxIndex;
@@ -118,6 +121,7 @@ AbilityDefinition.Indexer {
     Binding {
         target: _privates
         property: "lastVisibleItemIndex"
+        restoreMode: Binding.RestoreNone
         when: isReady
         value: {
             var ind = -1;
@@ -175,6 +179,7 @@ AbilityDefinition.Indexer {
     Binding {
         target: _indexer
         property: "hidden"
+        restoreMode: Binding.RestoreNone
         when: isReady
         value: {
             var hdns = [];
@@ -193,6 +198,7 @@ AbilityDefinition.Indexer {
     Binding {
         target: _indexer
         property: "separators"
+        restoreMode: Binding.RestoreNone
         when: isReady
         value: {
             var seps = [];

@@ -6,6 +6,9 @@
 #ifndef COMMONTOOLS_H
 #define COMMONTOOLS_H
 
+// std
+#include <functional>
+
 // Qt
 #include <QColor>
 #include <QRect>
@@ -29,6 +32,39 @@ QRect stringToRect(const QString &str);
 QString standardPath(QString subPath, bool localFirst = true);
 
 QString configPath();
+
+// Predicates.
+// If this grows out of proportions, consider moving this out of here.
+template <typename... Inputs>
+class Predicate {
+public:
+    Predicate(const std::function<bool(Inputs...)>& p)  : m_pred(p) {}
+    Predicate(const std::function<bool(Inputs...)>&& p) : m_pred(std::move(p)) {}
+    Predicate(const Predicate<Inputs...>& other) : m_pred(other.m_pred) {}
+    Predicate(const Predicate<Inputs...>&& other) : m_pred(std::move(other.m_pred)) {}
+    Predicate<Inputs...>& operator=(const Predicate<Inputs...>&);
+
+    std::function<bool(Inputs...)> toFunction() { return m_pred; }
+
+    bool operator()(Inputs&...);
+    Predicate operator|(const Predicate&);
+    Predicate operator&(const Predicate&);
+    Predicate operator^(const Predicate&);
+    Predicate operator~();
+
+private:
+    const std::function<bool(Inputs...)> m_pred;
+};
+
+template <typename... Inputs>
+class PredicateList : public QList<Predicate<Inputs...>> {
+public:
+    using QList<Predicate<Inputs...>>::QList;
+
+    Predicate<Inputs...> all();
+    Predicate<Inputs...> any();
+    Predicate<Inputs...> none();
+};
 }
 
 #endif

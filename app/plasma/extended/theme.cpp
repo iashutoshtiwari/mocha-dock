@@ -23,7 +23,6 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-// X11
 #include <KWindowSystem>
 
 #define DEFAULTCOLORSCHEME "default.colors"
@@ -44,23 +43,8 @@ Theme::Theme(KSharedConfig::Ptr config, QObject *parent) :
 
     m_corona = qobject_cast<Latte::Corona *>(parent);
 
-    //! compositing tracking
-    if (KWindowSystem::isPlatformWayland()) {
-        //! TODO: Wayland compositing active
-        m_compositing = true;
-    } else {
-        connect(KWindowSystem::self(), &KWindowSystem::compositingChanged
-                , this, [&](bool enabled) {
-            if (m_compositing == enabled)
-                return;
-
-            m_compositing = enabled;
-            emit compositingChanged();
-        });
-
-        m_compositing = KWindowSystem::compositingActive();
-    }
-    //!
+    //! compositing is always active on Wayland
+    m_compositing = true;
 
     loadConfig();
 
@@ -326,12 +310,12 @@ void Theme::updateBackgrounds()
 
 void Theme::updateHasShadow()
 {
-    Plasma::Svg *svg = new Plasma::Svg(this);
+    KSvg::Svg *svg = new KSvg::Svg(this);
     svg->setImagePath(QStringLiteral("widgets/panel-background"));
     svg->resize();
 
     QString cornerId = "shadow-topleft";
-    QImage corner = svg->image(svg->elementSize(cornerId), cornerId);
+    QImage corner = svg->image(svg->elementSize(cornerId).toSize(), cornerId);
 
     int fullTransparentPixels = 0;
 
@@ -498,7 +482,7 @@ void Theme::updateMarginsAreaValues()
     m_marginsAreaBottom = 0;
     m_marginsAreaRight = 0;
 
-    Plasma::Svg *svg = new Plasma::Svg(this);
+    KSvg::Svg *svg = new KSvg::Svg(this);
     svg->setImagePath(QStringLiteral("widgets/panel-background"));
 
     bool hasThickSeparatorMargins = svg->hasElement("thick-center");
