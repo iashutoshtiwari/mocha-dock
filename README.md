@@ -15,13 +15,3 @@ This is a fork of Latte Dock, ported to KDE Plasma 6 and Wayland.
   - Website: [ashutoshtiwari.dev](https://ashutoshtiwari.dev)
   - Email: [contact@ashutoshtiwari.dev](mailto:contact@ashutoshtiwari.dev)
 
-## Installation
-
-See [INSTALLATION.md](INSTALLATION.md) for build instructions and dependencies.
-
-## Run Mocha Dock
-Mocha is ready to be used by executing:
-```bash
-mocha-dock
-```
-or activating **Mocha Dock** from the applications menu.
