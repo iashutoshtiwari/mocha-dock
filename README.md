@@ -1,8 +1,8 @@
 # <img src="logo.png" width="48"/> Mocha Dock
 
-Mocha is a dock based on plasma frameworks that provides an elegant and intuitive experience for your tasks and plasmoids. It animates its contents by using parabolic zoom effect and tries to be there only when it is needed.
+Mocha Dock is a dock based on plasma frameworks that provides an elegant and intuitive experience for your tasks and plasmoids. It animates its contents by using parabolic zoom effect and tries to be there only when it is needed.
 
-This is a fork of Mocha Dock, ported to KDE Plasma 6 and Wayland.
+This is a fork of Latte Dock, ported to KDE Plasma 6 and Wayland.
 
 ## Features
 - **Wayland-only:** Optimized for the modern Linux display server.
