@@ -110,9 +110,10 @@ void Menu::restore(const KConfigGroup &config)
 
 
     //! Quit Application
-    m_actions[Mocha::Data::ContextMenu::QUITLATTEACTION] = new QAction(QIcon::fromTheme("application-exit"), i18nc("quit application", "Quit &Mocha"));
-    connect(m_actions[Mocha::Data::ContextMenu::QUITLATTEACTION], &QAction::triggered, this, &Menu::quitApplication);
-    this->containment()->setInternalAction(Mocha::Data::ContextMenu::QUITLATTEACTION, m_actions[Mocha::Data::ContextMenu::QUITLATTEACTION]);
+    m_actions[Mocha::Data::ContextMenu::QUITMOCHAACTION] = new QAction(QIcon::fromTheme("application-exit"), i18nc("quit application", "Quit &Mocha"));
+    connect(m_actions[Mocha::Data::ContextMenu::QUITMOCHAACTION], &QAction::triggered, this, &Menu::quitApplication);
+    this->containment()->setInternalAction(Mocha::Data::ContextMenu::QUITMOCHAACTION, m_actions[Mocha::Data::ContextMenu::QUITMOCHAACTION]);
+
 
     //! Layouts submenu
     m_switchLayoutsMenu = new QMenu;
