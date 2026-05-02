@@ -1,11 +1,11 @@
-# Maintainer: Mocha Dock Team
+# Maintainer: Ashutosh Tiwari <contact@ashutoshtiwari.dev>
 pkgname=mocha-dock-git
 _pkgname=mocha-dock
 pkgver=0.1.0.r0.g$(git rev-parse --short HEAD)
 pkgrel=1
-pkgdesc="A Wayland-only dock based on Plasma frameworks (Port of Latte Dock to Plasma 6)"
+pkgdesc="A Wayland-only dock based on Plasma frameworks (Port of Mocha Dock to Plasma 6)"
 arch=('x86_64' 'aarch64')
-url="https://github.com/mocha-dock/mocha-dock"
+url="https://github.com/iashutoshtiwari/mocha-dock"
 license=('GPL2')
 depends=('qt6-base' 'qt6-declarative' 'qt6-wayland' 'qt6-5compat' 
          'kwindowsystem' 'ki18n' 'kconfig' 'kcoreaddons' 'kiconthemes' 
@@ -16,8 +16,8 @@ depends=('qt6-base' 'qt6-declarative' 'qt6-wayland' 'qt6-5compat'
          'wayland' 'plasma-wayland-protocols')
 makedepends=('git' 'cmake' 'extra-cmake-modules' 'ninja' 'gettext' 'python')
 provides=('mocha-dock')
-conflicts=('mocha-dock' 'latte-dock' 'latte-dock-git')
-source=("git+https://github.com/mocha-dock/mocha-dock.git")
+conflicts=('mocha-dock' 'mocha-dock' 'mocha-dock-git')
+source=("git+https://github.com/iashutoshtiwari/mocha-dock.git")
 md5sums=('SKIP')
 
 pkgver() {

@@ -2,8 +2,8 @@
     "KPlugin": {
         "Authors": [
             {
-                "Email": "mvourlakos@gmail.com, audoban@openmailbox.org",
-                "Name": "Michail Vourlakos, Smith Ar",
+                "Email": "contact@ashutoshtiwari.dev",
+                "Name": "Ashutosh Tiwari",
                 "Name[ar]": "مايكل فورلاكوس، سميث آر",
                 "Name[az]": "Michail Vourlakos, Smith Ar",
                 "Name[ca@valencia]": "Michail Vourlakos, Smith Ar",
@@ -108,7 +108,7 @@
         "ServiceTypes": [
             "Plasma/Shell"
         ],
-        "Website": "https://userbase.kde.org/MochaDock"
+        "Website": "https://ashutoshtiwari.dev"
     },
     "Keywords": "shell",
     "Keywords[ar]": "الصدَفة",

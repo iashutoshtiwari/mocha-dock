@@ -153,42 +153,7 @@
   <url type="homepage">@WEBSITE@</url>
   <url type="bugtracker">@BUG_ADDRESS@</url>
   <url type="faq">@FAQS@</url>
-  <developer_name>Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="ar">ميخائيل فورلاكوس، يوهان سميث أجوديلو رودريجيز</developer_name>
-  <developer_name xml:lang="az">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="ca">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="ca-valencia">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="cs">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="de">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="el">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="en-GB">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="eo">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="es">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="et">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="eu">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="fi">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="fr">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="gl">Michail Vourlakos e Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="he">מיכאיל וורלאקוס, יוהאן סמית׳, אגודלו רודריגז</developer_name>
-  <developer_name xml:lang="ia">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="id">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="it">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="ka">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="ko">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="lt">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="nl">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="nn">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="pl">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="pt">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="pt-BR">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="ru">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="sk">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="sl">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="sv">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="tr">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="uk">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="zh-CN">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <developer_name xml:lang="zh-TW">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
+  <developer_name>Ashutosh Tiwari</developer_name>
   <icon type="stock">mocha-dock</icon>
   <project_license>GPL-2.0+</project_license>
   <metadata_license>CC0-1.0</metadata_license>
@@ -216,26 +181,6 @@
   </provides>
   <launchable type="desktop-id">org.kde.mocha-dock.desktop</launchable>
   <releases>
-    <release version="0.9.1" date="2019-08-04"/>
-    <release version="0.9.0" date="2019-07-28"/>
-    <release version="0.8.9" date="2019-06-28"/>
-    <release version="0.8.8" date="2019-04-14"/>
-    <release version="0.8.7" date="2019-03-02"/>
-    <release version="0.8.6" date="2019-02-16"/>
-    <release version="0.8.5" date="2019-01-26"/>
-    <release version="0.8.4" date="2018-12-29"/>
-    <release version="0.8.3" date="2018-11-24"/>
-    <release version="0.8.2" date="2018-10-27"/>
-    <release version="0.8.1" date="2018-09-16"/>
-    <release version="0.8.0" date="2018-07-15"/>
-    <release version="0.7.5" date="2018-04-22"/>
-    <release version="0.7.4" date="2018-03-05"/>
-    <release version="0.7.3" date="2018-01-07"/>
-    <release version="0.7.2" date="2017-11-12"/>
-    <release version="0.7.1" date="2017-08-31"/>
-    <release version="0.7.0" date="2017-08-11"/>
-    <release version="0.6.2" date="2017-05-09"/>
-    <release version="0.6.1" date="2017-05-05"/>
-    <release version="0.6.0" date="2017-04-02"/>
+    <release version="0.1.0" date="2026-05-02"/>
   </releases>
 </component>

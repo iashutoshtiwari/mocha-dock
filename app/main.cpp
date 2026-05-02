@@ -532,7 +532,7 @@ inline void configureAboutData()
                             "by using parabolic zoom effect and tries to be there only when it is needed."
                             "\n\n\"Art in Coffee\"")
                      , KAboutLicense::GPL_V2
-                     , QStringLiteral("\251 2016-2017 Michail Vourlakos, Smith AR"));
+                     , QStringLiteral("\251 2026 Ashutosh Tiwari"));
 
     about.setHomepage(WEBSITE);
     about.setProgramLogo(QIcon::fromTheme(QStringLiteral("mocha-dock")));
@@ -540,8 +540,9 @@ inline void configureAboutData()
     about.setProductName(QByteArray("mochadock"));
 
     // Authors
-    about.addAuthor(QStringLiteral("Michail Vourlakos"), QString(), QStringLiteral("mvourlakos@gmail.com"));
-    about.addAuthor(QStringLiteral("Smith AR"), QString(), QStringLiteral("audoban@openmailbox.org"));
+    about.addAuthor(QStringLiteral("Ashutosh Tiwari"), i18n("Maintainer"), QStringLiteral("contact@ashutoshtiwari.dev"), QStringLiteral("https://ashutoshtiwari.dev"));
+    about.addAuthor(QStringLiteral("Michail Vourlakos"), i18n("Original Author"), QStringLiteral("mvourlakos@gmail.com"));
+    about.addAuthor(QStringLiteral("Smith AR"), i18n("Original Author"), QStringLiteral("audoban@openmailbox.org"));
 
     KAboutData::setApplicationData(about);
 }

@@ -2,8 +2,8 @@
     "KPlugin": {
         "Authors": [
             {
-                "Email": "mvourlakos@gmail.com, audoban@openmailbox.org",
-                "Name": "Michail Vourlakos, Smith Ar",
+                "Email": "contact@ashutoshtiwari.dev",
+                "Name": "Ashutosh Tiwari",
                 "Name[ar]": "مايكل فورلاكوس، سميث آر",
                 "Name[az]": "Michail Vourlakos, Smith Ar",
                 "Name[ca@valencia]": "Michail Vourlakos, Smith Ar",
@@ -46,7 +46,7 @@
             "Plasma/Applet",
             "Plasma/Containment"
         ],
-        "Website": "https://github.com/mocha-dock/mocha-dock"
+        "Website": "https://ashutoshtiwari.dev"
     },
     "NoDisplay": true,
     "X-Plasma-API-Minimum-Version": "6.0",

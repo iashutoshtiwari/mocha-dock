@@ -1,7 +1,7 @@
 #**CHANGELOG**#
 
 #### Version 0.10.X (current development build)
-* optionally maximise panel size in presence of maximised windows (https://invent.kde.org/plasma/latte-dock/-/merge_requests/46)
+* optionally maximise panel size in presence of maximised windows (https://invent.kde.org/plasma/mocha-dock/-/merge_requests/46)
 
 #### Version 0.10.8
 * multi-screen: fix docks/panels screen repositioning when the user specifies different screen for dock or panel
@@ -63,18 +63,18 @@
 
 #### Version 0.10.3
 * support GlobalScale in combination with PLASMA_USE_QT_SCALING properly under X11 environment
-* add CornerMargin option for latte and plasma indicators and expose it through the indicators api
+* add CornerMargin option for mocha and plasma indicators and expose it through the indicators api
 * unblock visibility mode properly when Meta is used to show an application launcher such as Win11, Simple menu etc.
 * fix focus behavior when applets are requesting input such as knotes applet
 * expose indicators iconOffsetX/Y value to applets
 * enable/disable "CanBeAboveFullscreenWindows" option properly
 * disable GtkFrameExtents for docks and panels that ByPassWindowManager ("CanBeAboveFullscreenWindows" option) under X11
-* draw always a contrasted border for latte indicator
-* simplify latte indicator implementation
+* draw always a contrasted border for mocha indicator
+* simplify mocha indicator implementation
 * enforce RoundToIconSize for all applets always and as such the Items Size is always respected. If the user has blur issues with its icons, he should specify an items size that is provided by its icons theme. For example, 16px., 24px., 36px., 48px.
 * identify kickofflegacy applet properly
 * fix popup positioning for plasma-style popups when the dock background is using very big corner roundness
-* prevent session manager from restoring latte just like Spectacle is already doing
+* prevent session manager from restoring mocha just like Spectacle is already doing
 * respect virtual desktops navigation wrapping around option
 * expose translations for default dock and panel templates
 
@@ -102,9 +102,9 @@
   -- inform Plasma Desktop about panels and docks geometries (since plasma 5.18)
   -- inform window managers about docks visible area (GTK_FRAME_EXTENTS support)
   -- provide internal Widgets Explorer dialog and thus being able to be used completely in other desktop environments such as GNOME and XFCE
-  -- support multiple Latte Tasks in the same dock or panel
-  -- improve applets positioning for Justify alignment in latte panels
-  -- support latte centric applets that can use parabolic effect easily
+  -- support multiple Mocha Tasks in the same dock or panel
+  -- improve applets positioning for Justify alignment in mocha panels
+  -- support mocha centric applets that can use parabolic effect easily
   -- support Plasma Margins Area Separators
   -- user can specify custom color scheme per layout
   -- redesign and improve all layouts dialogs
@@ -121,7 +121,7 @@
 
 * Dodge All Windows: work properly after the dock becomes hidden and not show inappropriately when any window touches the dock
 * fix mask calculations for NO COMPOSITING environment
-* fix blur for Latte panels when exiting edit mode
+* fix blur for Mocha panels when exiting edit mode
 * protect LastActiveWindow application data updating in multi-screen environments and dont assign faulty application name and icons to irrelevant last active windows
 * fix right click context menu for Group plasmoid. Take note that Group plasmoid can only be used in Single Layout mode and NOT in Multiple Layouts mode. It is scheduled to be fixed in next major stable version
 * fix Indicators positioning when a Tasks is bouncing or requires attention
@@ -148,14 +148,14 @@
 
 * provide new way to set which application launcher in all docks/panels has the highest priority to trigger with Meta. The one having a global shortcut applied is the one that has the highest priority
 * consider plasma panels under x11 environment in order for dock settings window to not overlap with them
-* fix which Plasma theme colors are used for all Latte painting mechanisms and make them consistent with Plasma
+* fix which Plasma theme colors are used for all Mocha painting mechanisms and make them consistent with Plasma
 * Use KDE frameworks official Help Menu
 * Provide KDE frameworks official way to set application's language
 * add hidden debug option for "--kwinedges"
 * paint properly the dock settings window external shadows
 * fix margins/padding for applets that must follow Fitt's Law at the thick screen edge and at the same time be consistent with all surrounding applets
 * add new LastActiveWindow APIs for window properties Closable/Minimizable/Maximizable etc. and provide them to applets. Applet Window Buttons applet is already using it in order to identify buttons that should not be drawn for specific windows
-* add availableScreenRegion calculations for Left and Right screen edge docks/panels in order to be ready for new Plasma 5.18 API that will let us expose to plasma what are the free areas that are not occupied by Latte panels/docks
+* add availableScreenRegion calculations for Left and Right screen edge docks/panels in order to be ready for new Plasma 5.18 API that will let us expose to plasma what are the free areas that are not occupied by Mocha panels/docks
 * fix wayland crash when showing dock settings window
 * improve kwin workarounds in order to reapply properly docks/panels activities to them when kwin faulty is losting them
 
@@ -187,17 +187,17 @@
 * fix endless growing/shrinking for items size by introducing an AutomaticItemSizer class that is tracking the algorithm predictions and results in order to identify the issue/case
 * improve paddings and margins for applets that are touching the screen edge and at the same time follow Fitt's Law
 * remove workarounds for margins and paddings for plasma systray
-* dont crash when changing layouts by unloading Latte::View(s) first and their Plasma::Containment(s) afterwards
+* dont crash when changing layouts by unloading Mocha::View(s) first and their Plasma::Containment(s) afterwards
 * dont drag/maximize windows from different virtual desktops than the current one
 * fixes for dynamic background: force transparency codepath
-* ignore plasma panels for Latte heuristics. Any plasma window touching the screen edge and having thickness <=96px is considered a plasma panel.
+* ignore plasma panels for Mocha heuristics. Any plasma window touching the screen edge and having thickness <=96px is considered a plasma panel.
 * update application data after 1500ms after their first fetching to catch up with some applications that are changing them with delay such as libreoffice
 * remove some deprecated code for qt>=5.14
 * drop ksysguard dependency with kde frameworks >=5.62
 
 #### Version 0.9.4
 
-* import and a load layout when Latte is running through its dbus interface
+* import and a load layout when Mocha is running through its dbus interface
 * expose the last active window colorscheme in order to be used from applets. In upcoming Window AppMenu version the user will be able to define the color scheme to be used for its app menus
 * fix advanced switch button when changing between different states
 * fix autostart option for some distros that did not work such as Manjaro
@@ -206,9 +206,9 @@
 
 * important: plenty of fixes for margins and Fitt's Law
 * support android click animation even for panel empty areas
-* latte indicators can now support animations for panel empty areas
+* mocha indicators can now support animations for panel empty areas
 * track kwinrc changes only when needed
-* latte plasmoid is now using the last used activity from its layouts instead of the plasma current one. In that way tasks animations are improved under multiple layouts environments
+* mocha plasmoid is now using the last used activity from its layouts instead of the plasma current one. In that way tasks animations are improved under multiple layouts environments
 * fix for all screens last active window tracking
 * fix automatic icon size calculations in order to avoid constant cpu usage
 * update some qt deprecated code
@@ -220,10 +220,10 @@
 * after dragging active windows send a leave event and restore this way applets in normal state
 * close multiple windows from previews when using middle-click
 * activate single windows directly with left click in non compositing mode, and do not show the preview window in that case
-* send tasks progress information to latte indicators
-* latte indicators can offset their icons if they want
-* latte indicators can provide different length padding values for applets compared to tasks
-* autostart Latte earlier in order to catch up with windows global menu activation. You need to reactivate it in order to work.
+* send tasks progress information to mocha indicators
+* mocha indicators can offset their icons if they want
+* mocha indicators can provide different length padding values for applets compared to tasks
+* autostart Mocha earlier in order to catch up with windows global menu activation. You need to reactivate it in order to work.
 * forced solidness for panels has higher priority compared to panel backgrounds in isBusy state
 * disable panel shadow if the user has enabled the corresponding option
 * do not draw the panel background outline if the plasma default behavior was chosen for popups
@@ -234,7 +234,7 @@
 #### Version 0.9.1
 
 * improve: when preview windows left click action is used then for single windows is just activating them without triggering the preview window
-* improve: consider the case when a horizontal and a vertical Latte dock/panel are touching each other and the vertical one is isBusy desktop background case, in such case the horizontal view is also changing to isBusy state
+* improve: consider the case when a horizontal and a vertical Mocha dock/panel are touching each other and the vertical one is isBusy desktop background case, in such case the horizontal view is also changing to isBusy state
 * fix: blurred icons for items size that should not be blurred e.g. 48px and >=64px
 * fix: geometries calculation under !compositing environment
 * fix: forward pressed/released event to applets even when parabolic effect is enabled. The issue was pretty obvious with lock/logout plasma applet
@@ -256,14 +256,14 @@
 * Improve badges experience and layout
 * Enhanced Active Window experience, drag/maximize/restore active window from empty areas
 * Track "LastActiveWindow" at per screen/activity and inform applets
-* Support scrolling for Latte Tasks plasmoid
+* Support scrolling for Mocha Tasks plasmoid
 * Independent multi-screen dynamic background and identify "busy" backgrounds
 * Outline option for background
 * plenty more fixes and improvements all over the place
 
 #### Version 0.8.9
 
-* fix: show notifications applet when in Latte (for plasma >= 5.16)
+* fix: show notifications applet when in Mocha (for plasma >= 5.16)
 
 #### Version 0.8.8
 
@@ -272,10 +272,10 @@ is not available any more
 
 #### Version 0.8.7
 
-* fix: Show dock properly on first startup. New users where trying Latte but
+* fix: Show dock properly on first startup. New users where trying Mocha but
 it was reported that something broke during updates and on first startup
-Latte was not appearing at all. Problem was tracked down and identified
-when ~/.config/latte directory was not created properly. This is fixed now.
+Mocha was not appearing at all. Problem was tracked down and identified
+when ~/.config/mocha directory was not created properly. This is fixed now.
 
 #### Version 0.8.6
 
@@ -284,13 +284,13 @@ when ~/.config/latte directory was not created properly. This is fixed now.
 
 #### Version 0.8.5
 
-* FIX: important improvements for fillWidth(s)/Height(s) applets. Latte now
+* FIX: important improvements for fillWidth(s)/Height(s) applets. Mocha now
 tries to use plasma panels as an example in order to provide very similar experience
-with its Latte panels
-* FIX: adjust Latte taskmanager in order to support new Plasma 5.15 Virtual Desktops interface
+with its Mocha panels
+* FIX: adjust Mocha taskmanager in order to support new Plasma 5.15 Virtual Desktops interface
 * improve: splitters positioning during startup for Justify alignment
-* improve: --replace option in order to restart Latte properly for all systems
-* fix: maximum length ruler behavior for Latte panels
+* improve: --replace option in order to restart Mocha properly for all systems
+* fix: maximum length ruler behavior for Mocha panels
 * fix: create autostart folder when missing from user folder
 
 #### Version 0.8.4
@@ -306,7 +306,7 @@ the applets in the layout are not found in the system
 #### Version 0.8.3
 
 * FIX: support multi-screen plasmoids that use plasmoid.screenGeometry such
-as plasma pager, plasma taskmanagers etc. Latte did not update the
+as plasma pager, plasma taskmanagers etc. Mocha did not update the
 plasmoid.screenGeometry value properly in previous versions
 * FIX: do not crash when moving launchers that are being synced between
 multiple docks/panels
@@ -345,7 +345,7 @@ returning false results in some cases
 * fix: place correctly a new copied dock in a multi-screen environment
 * fix: enable blur for solid theme panels
 * fix: missing global shortcuts '9' badge
-* fix: support unified or not global shortcuts in case the user does not want to use the Latte unified system for its applets
+* fix: support unified or not global shortcuts in case the user does not want to use the Mocha unified system for its applets
 
 #### Version 0.8.0
 
@@ -354,7 +354,7 @@ returning false results in some cases
 * Monochrome contents based on the underlying background
 Activation Global Shortcuts are taken into account the surrounding applets and increased from nine to nineteen (Meta+1..9,0,z..>)
 * New improved Edit Mode image patterns or User Set ones
-* Download community-provided Latte layouts from Latte Settings window
+* Download community-provided Mocha layouts from Mocha Settings window
 * Beautiful Animations (e.g. changing alignment)
 * New Maximum Length indicator at Edit Mode that you can change its value with the mouse wheel
 * Multiple Separators between Tasks and Applets
@@ -364,16 +364,16 @@ Activation Global Shortcuts are taken into account the surrounding applets and i
 * One-Click Option to change between Panel/Dock modes
 * New Appearance Settings for Active Indicator and Glow
 * Support big number of messages badge (<=9999), like the plasma taskmanager
-* Expose Latte options in the context menu when plasma taskmanagers are used
-* More command line options to handle Latte
+* Expose Mocha options in the context menu when plasma taskmanagers are used
+* More command line options to handle Mocha
 * Various Wayland improvements. I use it daily in my system with Plasma 5.12 and it provides a fantastic experience with fantastic painting.
 * Smoother parabolic animation
 * Support Kwin edges behavior when hiding the dock or panel
 * New improved splitters icons in Justify (Edit Mode)
-* Improve the entire experience with Layouts/Latte Settings window
+* Improve the entire experience with Layouts/Mocha Settings window
 * Filter Windows by Launchers, show only windows that there is already a launcher present for the current running activity
 * Vastly improve the experience in !compositing environments. No more showing an 1px line at the screen edge when the dock is hidden.
-* New Global Shortcuts to open/hide dock settings and Latte settings (Meta+A, Meta+W, Meta+E)
+* New Global Shortcuts to open/hide dock settings and Mocha settings (Meta+A, Meta+W, Meta+E)
 * New Kwin script to trigger the application menu from a corner-edge
 * Hide the audio badge when there no audio is coming from a pulseaudio stream
 * various fixes for RTL languages
@@ -385,14 +385,14 @@ Activation Global Shortcuts are taken into account the surrounding applets and i
 
 * fix for dodge maximized in multi-screen environment
 * when copying default layouts make sure they are writable in the destination
-* new protocol to communicate between applets and Latte in order to
-inform them when they are in a Latte panel/dock and when they dont want any change in their main icon behavior.
+* new protocol to communicate between applets and Mocha in order to
+inform them when they are in a Mocha panel/dock and when they dont want any change in their main icon behavior.
 
 #### Version 0.7.4
 
 * new improved image patterns for edit mode
 * support v0.8 layout files in order to not break compatibility
-* use an svg file for Latte trademark in settings window instead of a font
+* use an svg file for Mocha trademark in settings window instead of a font
 * fix for multi-screen environments
 * fix parabolic effect in some corner cases
 * import v0.6 launchers to v0.7 only once
@@ -403,11 +403,11 @@ inform them when they are in a Latte panel/dock and when they dont want any chan
 * support RTL languages
 * fix crash occurring from badges
 * improve shadow behavior and calculations for corner cases
-* support "nomad systray" and "kdeconnect sms" in Latte heuristics
+* support "nomad systray" and "kdeconnect sms" in Mocha heuristics
 * expand applets when clicked at neutral areas
 * shrink a bit the task number
 * support Fitt's Law in more corner cases
-* execute Latte at the same time between different users
+* execute Mocha at the same time between different users
 * ignore X11 signals that are sent with no reason
     (e.g. Firefox 57 upstream bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1389953)
 * take into account the applets shadow size for mask calculations
@@ -431,9 +431,9 @@ inform them when they are in a Latte panel/dock and when they dont want any chan
 * improve scroll wheel behavior, it is only used to show and activate windows and not minimizing them
 * fix issue with Firefox 55 that was blocking the dock from showing
 * improve combination or previews and highlight effect. (the user can now highlight windows from their previews)
-* provide a previewsDelay which can be used from advanced users to lower the delay between showing previews or highlighting windows. Be careful, very low values dont provide correct previews. 150ms is by default the lowest value that is taken into account. The value must be added in the Latte plasmoid general settings in any layout file
+* provide a previewsDelay which can be used from advanced users to lower the delay between showing previews or highlighting windows. Be careful, very low values dont provide correct previews. 150ms is by default the lowest value that is taken into account. The value must be added in the Mocha plasmoid general settings in any layout file
 * show correct icon when a single window is removed
-* allow for 1px substitutions for applet sizes when in advanced mode and the user has disabled to automatic shrinking… This way for example you can have a Latte panel with size of 29px.
+* allow for 1px substitutions for applet sizes when in advanced mode and the user has disabled to automatic shrinking… This way for example you can have a Mocha panel with size of 29px.
 * Behavior for show background only for maximized windows now respects the applets shadows settings… concerning visibility, color, size etc…
 * fix a crash when changing layouts from settings combobox
 
@@ -453,20 +453,20 @@ inform them when they are in a Latte panel/dock and when they dont want any chan
 * audio streams indicator, increase/decrease/mute volume
 * different launchers groups, unique/global/layout to sync launchers between docks
 * support applets that can fill all the free space of the dock
-* support plasma taskmanagers in order to replace Latte plasmoid
+* support plasma taskmanagers in order to replace Mocha plasmoid
 * libunity support for progress indicators and counters
 * global shortcuts for activating tasks,showing app launcher, show the hidden dock
 * an all new dbus interface to show tasks counters
-* a community thunderbird plugin using the new latte dbus interface
+* a community thunderbird plugin using the new mocha dbus interface
 * switch completely to plasma libtaskmanager for launchers and tasks
 * improve color handling for window different states
 * add Widgets through the context menu
 * places support from Plasma 5.10
-* a special Latte spacer that its size can be set in pixels or in percentage according to the current Latte icon size
+* a special Mocha spacer that its size can be set in pixels or in percentage according to the current Mocha icon size
 * active window indicator for window previews
 * copy dock support, fantastic feature for multi-screen environments
 * remember last active window in a tasks group and use the mouse wheel to cycle through a tasks group
-* restart Latte in case of a crash
+* restart Mocha in case of a crash
 * overlay over plasma applets such as forlderview in order to provide correct parabolic effect (bug: showing problematic animations for icon sizes smaller of 64px)
 * provide our own built-in active applet indicator in case the user wants to have uniformity across its docks
 * move the lock button from the drag area into the tooltip
@@ -523,7 +523,7 @@ inform them when they are in a Latte panel/dock and when they dont want any chan
 * fix #235, set icon for docks differently
 * fix #248, option to shring thick margins to minimum
 * fix #102, show apps menu with Super key
-* fix #204, improve Latte clicking signaling
+* fix #204, improve Mocha clicking signaling
 * fix #217, adaptive applet size based on screen
 * fix #238, disable/enable raise dock temporary
 * fix #233, support autostart through tweaks page
@@ -552,7 +552,7 @@ inform them when they are in a Latte panel/dock and when they dont want any chan
 * fix #195, new direct rendering mechanism
 * fix #187, counter for actions blockHiding
 * fix #183, parentIndex wrong initialization in ToolTipDelegate2
-* fix #186, drop shadowedImage and use Latte IconItem
+* fix #186, drop shadowedImage and use Mocha IconItem
 * fix #185, changes for previews broke hover behavior
 * fix #178, fix grid layout for group tasks
 * fix #177, protect containment clearZoom in previews
@@ -560,20 +560,20 @@ inform them when they are in a Latte panel/dock and when they dont want any chan
 * fix #174, account screen size for the debug window
 * fix #172, disable hidpi scaling
 * fix #171, use lock file instead of QSharedMemory
-* fix #171, allow only one instance for Latte app
+* fix #171, allow only one instance for Mocha app
 * fix #48, Support Alternatives from the Context Menu
 * fix #164, Dodge Active is broken for windows on all desktops
 * fix #116, remove QueuedConnection
 * fix #116, endless showing loop at startup
-* fix #139, Un-hide Latte at desktop and activity changes
+* fix #139, Un-hide Mocha at desktop and activity changes
 * fix #116, add protections in multi-screen
 * fix #159, show correct previews for windows
 * fix #133, dodge active window when switching desktop
 * fix #141, dodge decoration
 * fix #136, load visibility with a timer in startup
 * fix #136, clean autoHidden
-* fix #155, fix availableScreenRect of latte corona
-* fix #42, latte icon shown correctly in ksysguard
+* fix #155, fix availableScreenRect of mocha corona
+* fix #42, mocha icon shown correctly in ksysguard
 * fix #154, crash on screenGeometry change
 * fix #153, improve tasks progress visuals
 * fix #148, improve tooltips focus
@@ -595,15 +595,15 @@ inform them when they are in a Latte panel/dock and when they dont want any chan
 * fix #88, protect launchers from adding icon info
 * fix #80, Dock do not dodge Spotify
 * fix #74, hide settings button from plasmoid tooltip
-* fix #85, removing Dock crashes Latte
-* fix #84, closing Latte cleans config file
+* fix #85, removing Dock crashes Mocha
+* fix #84, closing Mocha cleans config file
 * fix two serious crashes from config window
 
 * improved readability of CMakeLists
 * removing intltool dependence and locale scripts improved
 * #98, added about dialog
 * support maxLength through config win and container
-* rename Latte's configuration files #81
+* rename Mocha's configuration files #81
 * #199, AbstractWindowInterface is now a shared resource
 * #199, QQuickWindowSystem replacement of WindowSystem
 
@@ -623,7 +623,7 @@ inform them when they are in a Latte panel/dock and when they dont want any chan
 * fix #65, stop bouncing animation in hidden state
 * fix #66, many automatic size issues
 * fix #51, protect add task animation more
-* fix #76, Latte should not allow removing all dock
+* fix #76, Mocha should not allow removing all dock
 * The task tooltip now shows all the borders
 * INSTALLATION file added with instructions for Kubuntu and Arch Linux
 * Update README.md

@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: Latte Dock
-Upstream-Contact: KDE <community@kde.org>
-Source: https://invent.kde.org/plasma/latte-dock
+Upstream-Name: Mocha Dock
+Upstream-Contact: Ashutosh Tiwari <contact@ashutoshtiwari.dev>
+Source: https://github.com/iashutoshtiwari/mocha-dock
 
 Files: shell/package/contents/images/*.svgz
 Copyright: 2017 Michail Vourlakos
