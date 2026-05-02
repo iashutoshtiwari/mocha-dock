@@ -9,6 +9,7 @@
 # build directory
 build*/
 /cmake-build*
+/local_install/
 
 # backup files
 *.autosave
@@ -38,7 +39,8 @@ build*/
 *.kdev4
 .kdev4/
 
-!*.layout.latte
+!*.layout.mocha
+!*.view.mocha
 
 CMakeLists.txt.user*
 /compile_commands.json

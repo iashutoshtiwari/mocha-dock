@@ -294,7 +294,7 @@ void TabLayouts::initLayoutTemplatesSubMenu()
         openTemplatesDirectory->setIcon(QIcon::fromTheme("edit"));
 
         connect(openTemplatesDirectory, &QAction::triggered, this, [&]() {
-            KIO::highlightInFileManager({QString(Mocha::configPath() + "/latte/templates/Dock.layout.latte")});
+            KIO::highlightInFileManager({QString(Mocha::configPath() + "/mocha/templates/Dock.layout.mocha")});
         });
     }
 }
@@ -551,8 +551,8 @@ void TabLayouts::importLayout()
     importFileDialog->setDefaultSuffix("layout.latte");
 
     QStringList filters;
-    filters << QString(i18nc("import latte layout", "Mocha Dock Layout file v0.2") + "(*.layout.latte)")
-            << QString(i18nc("import older latte layout", "Mocha Dock Layout file v0.1") + "(*.latterc)");
+    filters << QString(i18nc("import latte layout", "Mocha Dock Layout file v0.2") + "(*.layout.mocha)")
+            << QString(i18nc("import older latte layout", "Mocha Dock Layout file v0.1") + "(*.mocharc)");
     importFileDialog->setNameFilters(filters);
 
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
@@ -631,7 +631,7 @@ void TabLayouts::exportLayoutForBackup()
     exportFileDialog->setDefaultSuffix("layout.latte");
 
     QStringList filters;
-    QString filter1(i18nc("export layout", "Mocha Dock Layout file v0.2") + "(*.layout.latte)");
+    QString filter1(i18nc("export layout", "Mocha Dock Layout file v0.2") + "(*.layout.mocha)");
 
     filters << filter1;
 
@@ -651,7 +651,7 @@ void TabLayouts::exportLayoutForBackup()
             return;
         }
 
-        if (file.endsWith(".layout.latte")) {
+        if (file.endsWith(".layout.mocha")) {
             if (!QFile(selectedLayout.id).copy(file)) {
                 showExportLayoutError(selectedLayout);
                 return;
@@ -687,7 +687,7 @@ void TabLayouts::exportLayoutForBackup()
                               KMessageWidget::Positive,
                               false,
                               actions);
-        } else if (file.endsWith(".latterc")) {
+        } else if (file.endsWith(".mocharc")) {
             auto showExportConfigurationError = [this]() {
                 showInlineMessage(i18n("Full configuration export <b>failed</b>..."),
                                   KMessageWidget::Error,
@@ -720,7 +720,7 @@ void TabLayouts::exportLayoutForBackup()
     });
 
     exportFileDialog->open();
-    exportFileDialog->selectFile(selectedLayout.name + ".layout.latte");
+    exportFileDialog->selectFile(selectedLayout.name + ".layout.mocha");
 }
 
 void TabLayouts::showDetailsDialog()
@@ -766,7 +766,7 @@ void TabLayouts::onLayoutFilesDropped(const QStringList &paths)
     QStringList layoutNames;
 
     for (int i=0; i<paths.count(); ++i) {
-        if (paths[i].endsWith(".layout.latte")) {
+        if (paths[i].endsWith(".layout.mocha")) {
             Mocha::Data::Layout importedlayout = m_layoutsController->addLayoutForFile(paths[i]);
             layoutNames << importedlayout.name;
         }
@@ -862,7 +862,7 @@ void TabLayouts::onDropEvent(QDropEvent *event)
         for (int i = 0; i < qMin(urlList.size(), 20); ++i) {
             QString layoutPath = urlList[i].path();
 
-            if (layoutPath.endsWith(".layout.latte")) {
+            if (layoutPath.endsWith(".layout.mocha")) {
                 paths << layoutPath;
             }
         }

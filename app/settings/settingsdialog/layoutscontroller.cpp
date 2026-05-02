@@ -754,7 +754,7 @@ const Mocha::Data::Layout Layouts::addLayoutForFile(QString file, QString layout
     Mocha::Data::Layout copied;
 
     if (newTempDirectory) {
-        copied.id = uniqueTempDirectory() + "/" + layoutName + ".layout.latte";
+        copied.id = uniqueTempDirectory() + "/" + layoutName + ".layout.mocha";
         QFile(file).copy(copied.id);
     } else {
         copied.id = file;
@@ -824,7 +824,7 @@ void Layouts::duplicateSelectedLayout()
     Mocha::Data::Layout copied = selectedLayoutCurrent;
 
     copied.name = uniqueLayoutName(selectedLayoutCurrent.name);
-    copied.id = uniqueTempDirectory() + "/" + copied.name + ".layout.latte";;
+    copied.id = uniqueTempDirectory() + "/" + copied.name + ".layout.mocha";;
     copied.isActive = false;
     copied.isConsideredActive = false;
     copied.isLocked = false;
@@ -870,14 +870,14 @@ bool Layouts::importLayoutsFromV1ConfigFile(QString file)
             QStringList importedlayouts;
 
             if (m_handler->corona()->layoutsManager()->importer()->importOldLayout(applets, name, false, tempDir.absolutePath())) {
-                Mocha::Data::Layout imported = addLayoutForFile(tempDir.absolutePath() + "/" + name + ".layout.latte", name);
+                Mocha::Data::Layout imported = addLayoutForFile(tempDir.absolutePath() + "/" + name + ".layout.mocha", name);
                 importedlayouts << imported.name;
             }
 
             QString alternativeName = name + "-" + i18nc("layout", "Alternative");
 
             if (m_handler->corona()->layoutsManager()->importer()->importOldLayout(applets, alternativeName, false, tempDir.absolutePath())) {
-                Mocha::Data::Layout imported = addLayoutForFile(tempDir.absolutePath() + "/" + alternativeName + ".layout.latte", alternativeName, false);
+                Mocha::Data::Layout imported = addLayoutForFile(tempDir.absolutePath() + "/" + alternativeName + ".layout.mocha", alternativeName, false);
                 importedlayouts << imported.name;
             }
 
@@ -976,7 +976,7 @@ void Layouts::save()
                 activeLayoutsToRename[iLayoutCurrentData.name] = central;
             }
 
-            QString tempFile = layoutTempDir.path() + "/" + QString(central->name() + ".layout.latte");
+            QString tempFile = layoutTempDir.path() + "/" + QString(central->name() + ".layout.mocha");
             qDebug() << "new temp file ::: " << tempFile;
 
             QFile(iLayoutCurrentData.id).rename(tempFile);

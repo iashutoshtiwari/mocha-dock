@@ -266,7 +266,7 @@ void SettingsDialog::importFullConfiguration()
     importFileDialog->setDefaultSuffix("latterc");
 
     QStringList filters;
-    filters << QString(i18nc("import full configuration", "Mocha Dock Full Configuration file") + "(*.latterc)");
+    filters << QString(i18nc("import full configuration", "Mocha Dock Full Configuration file") + "(*.mocharc)");
     importFileDialog->setNameFilters(filters);
 
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
@@ -331,7 +331,7 @@ void SettingsDialog::exportFullConfiguration()
     exportFileDialog->setDefaultSuffix("latterc");
 
     QStringList filters;
-    QString filter2(i18nc("export full configuration", "Mocha Dock Full Configuration file v0.2") + "(*.latterc)");
+    QString filter2(i18nc("export full configuration", "Mocha Dock Full Configuration file v0.2") + "(*.mocharc)");
 
     filters << filter2;
 

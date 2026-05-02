@@ -358,7 +358,7 @@ QString AbstractLayout::layoutName(const QString &fileName)
     QString tempLayoutFile = fileName;
     QString layoutName = tempLayoutFile.remove(0, lastSlash + 1);
 
-    int ext = layoutName.lastIndexOf(".layout.latte");
+    int ext = layoutName.lastIndexOf(".layout.mocha");
     layoutName = layoutName.remove(ext, 13);
 
     return layoutName;

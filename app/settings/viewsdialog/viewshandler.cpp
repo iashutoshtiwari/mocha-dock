@@ -171,7 +171,7 @@ void ViewsHandler::initViewTemplatesSubMenu()
         openTemplatesDirectory->setIcon(QIcon::fromTheme("edit"));
 
         connect(openTemplatesDirectory, &QAction::triggered, this, [&]() {
-            KIO::highlightInFileManager({QString(Mocha::configPath() + "/latte/templates/Dock.view.latte")});
+            KIO::highlightInFileManager({QString(Mocha::configPath() + "/mocha/templates/Dock.view.mocha")});
         });
     }
 }
@@ -347,7 +347,7 @@ void ViewsHandler::exportViewForBackup()
     exportFileDialog->setDefaultSuffix("view.latte");
 
     QStringList filters;
-    QString filter1(i18nc("export view", "Mocha Dock/Panel file v0.2") + "(*.view.latte)");
+    QString filter1(i18nc("export view", "Mocha Dock/Panel file v0.2") + "(*.view.mocha)");
 
     filters << filter1;
 
@@ -367,7 +367,7 @@ void ViewsHandler::exportViewForBackup()
             return;
         }
 
-        if (file.endsWith(".view.latte")) {
+        if (file.endsWith(".view.mocha")) {
             if (!QFile(temporiginfile).copy(file)) {
                 showExportViewError(file);
                 return;
@@ -437,7 +437,7 @@ void ViewsHandler::importView()
     importFileDialog->setDefaultSuffix("view.latte");
 
     QStringList filters;
-    filters << QString(i18nc("import dock panel", "Mocha Dock or Panel file v0.2") + "(*.view.latte)");
+    filters << QString(i18nc("import dock panel", "Mocha Dock or Panel file v0.2") + "(*.view.mocha)");
     importFileDialog->setNameFilters(filters);
 
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
@@ -446,7 +446,7 @@ void ViewsHandler::importView()
         Data::Generic templatedata;
         templatedata.id = file;
         templatedata.name = QFileInfo(file).fileName();
-        templatedata.name = templatedata.name.remove(".view.latte");
+        templatedata.name = templatedata.name.remove(".view.mocha");
         newView(templatedata);
     });
 

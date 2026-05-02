@@ -92,7 +92,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string notr="true">~/.config/latte/layouts/.....</string>
+            <string notr="true">~/.config/mocha/layouts/.....</string>
            </property>
           </widget>
          </item>

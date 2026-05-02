@@ -44,7 +44,7 @@ Factory::Factory(QObject *parent)
     m_mainPaths = Mocha::Layouts::Importer::standardPaths();
 
     for(int i=0; i<m_mainPaths.count(); ++i) {
-        m_mainPaths[i] = m_mainPaths[i] + "/latte/indicators";
+        m_mainPaths[i] = m_mainPaths[i] + "/mocha/indicators";
         discoverNewIndicators(m_mainPaths[i]);
     }
 
@@ -343,7 +343,7 @@ Mocha::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
 
     if (metadataAreValid(metadata)) {
         QStringList standardPaths = Mocha::Layouts::Importer::standardPaths();
-        QString installPath = standardPaths[0] + "/latte/indicators/" + metadata.pluginId();
+        QString installPath = standardPaths[0] + "/mocha/indicators/" + metadata.pluginId();
 
         bool updated{QDir(installPath).exists()};
 

@@ -1,5 +1,5 @@
 [ActionPlugins][1]
-RightButton;NoModifier=org.kde.latte.contextmenu
+RightButton;NoModifier=org.kde.mocha.contextmenu
 
 [Containments][1]
 activityId=
@@ -14,7 +14,7 @@ layoutId=
 location=4
 name=Default Dock
 onPrimary=true
-plugin=org.kde.latte.containment
+plugin=org.kde.mocha.containment
 raiseOnActivityChange=false
 raiseOnDesktopChange=false
 timerHide=700
@@ -25,7 +25,7 @@ wallpaperplugin=org.kde.image
 
 [Containments][1][Applets][2]
 immutability=1
-plugin=org.kde.latte.plasmoid
+plugin=org.kde.mocha.plasmoid
 
 [Containments][1][Applets][2][Configuration]
 PreloadWeight=0
@@ -66,7 +66,7 @@ zoomLevel=17
 [Containments][1][Indicator]
 customType=
 enabled=true
-type=org.kde.latte.default
+type=org.kde.mocha.default
 
 [LayoutSettings]
 activities=

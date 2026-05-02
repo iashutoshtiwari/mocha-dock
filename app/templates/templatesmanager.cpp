@@ -29,7 +29,7 @@ Manager::Manager(Mocha::Corona *corona)
     : QObject(corona),
       m_corona(corona)
 {
-    KDirWatch::self()->addDir(Mocha::configPath() + "/latte/templates", KDirWatch::WatchFiles);
+    KDirWatch::self()->addDir(Mocha::configPath() + "/mocha/templates", KDirWatch::WatchFiles);
     connect(KDirWatch::self(), &KDirWatch::created, this, &Manager::onCustomTemplatesCountChanged);
     connect(KDirWatch::self(), &KDirWatch::deleted, this, &Manager::onCustomTemplatesCountChanged);
     connect(KDirWatch::self(), &KDirWatch::dirty, this, &Manager::onCustomTemplatesCountChanged);
@@ -51,7 +51,7 @@ void Manager::initLayoutTemplates()
 {
     m_layoutTemplates.clear();
     initLayoutTemplates(m_corona->kPackage().filePath("templates"));
-    initLayoutTemplates(Mocha::configPath() + "/latte/templates");
+    initLayoutTemplates(Mocha::configPath() + "/mocha/templates");
     emit layoutTemplatesChanged();
 }
 
@@ -59,7 +59,7 @@ void Manager::initViewTemplates()
 {
     m_viewTemplates.clear();
     initViewTemplates(m_corona->kPackage().filePath("templates"));
-    initViewTemplates(Mocha::configPath() + "/latte/templates");
+    initViewTemplates(Mocha::configPath() + "/mocha/templates");
     emit viewTemplatesChanged();
 }
 
@@ -67,7 +67,7 @@ void Manager::initLayoutTemplates(const QString &path)
 {
     QDir templatesDir(path);
     QStringList filter;
-    filter.append(QString("*.layout.latte"));
+    filter.append(QString("*.layout.mocha"));
     QStringList templates = templatesDir.entryList(filter, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
     for (int i=0; i<templates.count(); ++i) {
@@ -94,7 +94,7 @@ void Manager::initViewTemplates(const QString &path)
 
     QDir templatesDir(path);
     QStringList filter;
-    filter.append(QString("*.view.latte"));
+    filter.append(QString("*.view.mocha"));
     QStringList templates = templatesDir.entryList(filter, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
     for (int i=0; i<templates.count(); ++i) {
@@ -187,10 +187,10 @@ bool Manager::exportTemplate(const Mocha::View *view, const QString &destination
 
 void Manager::onCustomTemplatesCountChanged(const QString &file)
 {
-    if (file.startsWith(Mocha::configPath() + "/latte/templates")) {
-        if (file.endsWith(".layout.latte")) {
+    if (file.startsWith(Mocha::configPath() + "/mocha/templates")) {
+        if (file.endsWith(".layout.mocha")) {
             initLayoutTemplates();
-        } else if (file.endsWith(".view.latte")) {
+        } else if (file.endsWith(".view.mocha")) {
             initViewTemplates();
         }
     }
@@ -214,15 +214,15 @@ QString Manager::proposedTemplateAbsolutePath(QString templateFilename)
 {
     QString tempfilename = templateFilename;
 
-    if (tempfilename.endsWith(".layout.latte")) {
-        QString clearedname = tempfilename.chopped(QString(".layout.latte").size());
-        tempfilename = uniqueLayoutTemplateName(clearedname) + ".layout.latte";
-    } else if (tempfilename.endsWith(".view.latte")) {
-        QString clearedname = tempfilename.chopped(QString(".view.latte").size());
-        tempfilename = uniqueViewTemplateName(clearedname) + ".view.latte";
+    if (tempfilename.endsWith(".layout.mocha")) {
+        QString clearedname = tempfilename.chopped(QString(".layout.mocha").size());
+        tempfilename = uniqueLayoutTemplateName(clearedname) + ".layout.mocha";
+    } else if (tempfilename.endsWith(".view.mocha")) {
+        QString clearedname = tempfilename.chopped(QString(".view.mocha").size());
+        tempfilename = uniqueViewTemplateName(clearedname) + ".view.mocha";
     }
 
-    return QString(Mocha::configPath() + "/latte/templates/" + tempfilename);
+    return QString(Mocha::configPath() + "/mocha/templates/" + tempfilename);
 }
 
 bool Manager::hasCustomLayoutTemplate(const QString &templateName) const
@@ -257,13 +257,13 @@ QString Manager::viewTemplateFilePath(const QString templateName) const
 
 void Manager::installCustomLayoutTemplate(const QString &templateFilePath)
 {
-    if (!templateFilePath.endsWith(".layout.latte")) {
+    if (!templateFilePath.endsWith(".layout.mocha")) {
         return;
     }
 
     QString layoutName = QFileInfo(templateFilePath).baseName();
 
-    QString destinationFilePath = Mocha::configPath() + "/latte/templates/" + layoutName + ".layout.latte";
+    QString destinationFilePath = Mocha::configPath() + "/mocha/templates/" + layoutName + ".layout.mocha";
 
     if (hasCustomLayoutTemplate(layoutName)) {
         QFile(destinationFilePath).remove();
@@ -318,12 +318,12 @@ QString Manager::templateName(const QString &filePath)
     QString tempFilePath = filePath;
     QString templatename = tempFilePath.remove(0, lastSlash + 1);
 
-    QString extension(".layout.latte");
+    QString extension(".layout.mocha");
     int ext = templatename.lastIndexOf(extension);
     if (ext>0) {
         templatename = templatename.remove(ext, extension.size());
     } else {
-        extension = ".view.latte";
+        extension = ".view.mocha";
         ext = templatename.lastIndexOf(extension);
         templatename = templatename.remove(ext,extension.size());
     }

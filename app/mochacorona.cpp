@@ -25,7 +25,7 @@
 #include "layouts/manager.h"
 #include "layouts/synchronizer.h"
 #include "shortcuts/globalshortcuts.h"
-#include "package/lattepackage.h"
+#include "package/mochapackage.h"
 #include "plasma/extended/backgroundcache.h"
 #include "plasma/extended/backgroundtracker.h"
 #include "plasma/extended/screengeometries.h"
@@ -1112,7 +1112,7 @@ void Corona::setAutostart(const bool &enabled)
 
 void Corona::switchToLayout(QString layout)
 {
-    if ((layout.startsWith("file:/") || layout.startsWith("/")) && layout.endsWith(".layout.latte")) {
+    if ((layout.startsWith("file:/") || layout.startsWith("/")) && layout.endsWith(".layout.mocha")) {
         importLayoutFile(layout);
     } else {
         m_layoutsManager->switchToLayout(layout);
@@ -1121,7 +1121,7 @@ void Corona::switchToLayout(QString layout)
 
 void Corona::importLayoutFile(const QString &filepath, const QString &suggestedLayoutName)
 {
-    bool isFilepathValid = (filepath.startsWith("file:/") || filepath.startsWith("/")) && filepath.endsWith(".layout.latte");
+    bool isFilepathValid = (filepath.startsWith("file:/") || filepath.startsWith("/")) && filepath.endsWith(".layout.mocha");
 
     if (!isFilepathValid) {
         qDebug() << i18n("The layout cannot be imported from file :: ") << filepath;

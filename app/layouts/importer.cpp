@@ -264,7 +264,7 @@ QString Importer::layoutCanBeImported(QString oldAppletsPath, QString newName, Q
 
     //! set up the new layout name
     if (newName.isEmpty()) {
-        int extension = oldAppletsrc.fileName().lastIndexOf(".latterc");
+        int extension = oldAppletsrc.fileName().lastIndexOf(".mocharc");
 
         if (extension > 0) {
             //! remove the last 8 characters that contain the extension
@@ -274,18 +274,18 @@ QString Importer::layoutCanBeImported(QString oldAppletsPath, QString newName, Q
         }
     }
 
-    QString newLayoutPath = layoutDir.absolutePath() + "/" + newName + ".layout.latte";
+    QString newLayoutPath = layoutDir.absolutePath() + "/" + newName + ".layout.mocha";
     QFile newLayoutFile(newLayoutPath);
 
     QStringList filter;
-    filter.append(QString(newName + "*.layout.latte"));
+    filter.append(QString(newName + "*.layout.mocha"));
     QStringList files = layoutDir.entryList(filter, QDir::Files | QDir::NoSymLinks);
 
     //! if the newLayout already exists provide a newName that doesn't
     if (files.count() >= 1) {
         int newCounter = files.count() + 1;
 
-        newLayoutPath = layoutDir.absolutePath() + "/" + newName + "-" + QString::number(newCounter) + ".layout.latte";
+        newLayoutPath = layoutDir.absolutePath() + "/" + newName + "-" + QString::number(newCounter) + ".layout.mocha";
     }
 
     return newLayoutPath;
@@ -351,7 +351,7 @@ bool Importer::importOldConfiguration(QString oldConfigPath, QString newName)
         int lastSlash = oldConfigPath.lastIndexOf("/");
         newName = oldConfigPath.remove(0, lastSlash + 1);
 
-        int ext = newName.lastIndexOf(".latterc");
+        int ext = newName.lastIndexOf(".mocharc");
         newName = newName.remove(ext, 8);
     }
 
@@ -393,13 +393,13 @@ bool Importer::exportFullConfiguration(QString file)
     archive.addLocalFile(QString(Mocha::configPath() + "/mochadockrc"), QStringLiteral("mochadockrc"));
 
     for(const auto &layoutName : availableLayouts()) {
-        archive.addLocalFile(layoutUserFilePath(layoutName), QString("latte/" + layoutName + ".layout.latte"));
+        archive.addLocalFile(layoutUserFilePath(layoutName), QString("latte/" + layoutName + ".layout.mocha"));
     }
 
     //! custom templates
-    QDir templatesDir(Mocha::configPath() + "/latte/templates");
+    QDir templatesDir(Mocha::configPath() + "/mocha/templates");
     QStringList filters;
-    filters.append(QString("*.layout.latte"));
+    filters.append(QString("*.layout.mocha"));
     QStringList templates = templatesDir.entryList(filters, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
     for (int i=0; i<templates.count(); ++i) {
@@ -408,7 +408,7 @@ bool Importer::exportFullConfiguration(QString file)
     }
 
     filters.clear();
-    filters.append(QString("*.view.latte"));
+    filters.append(QString("*.view.mocha"));
     templates = templatesDir.entryList(filters, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
     for (int i=0; i<templates.count(); ++i) {
@@ -426,7 +426,7 @@ Importer::LatteFileVersion Importer::fileVersion(QString file)
     if (!QFile::exists(file))
         return UnknownFileType;
 
-    if (file.endsWith(".layout.latte")) {
+    if (file.endsWith(".layout.mocha")) {
         KSharedConfigPtr lConfig = KSharedConfig::openConfig(QFileInfo(file).absoluteFilePath());
         KConfigGroup layoutGroup = KConfigGroup(lConfig, "LayoutSettings");
         int version = layoutGroup.readEntry("version", 1);
@@ -437,7 +437,7 @@ Importer::LatteFileVersion Importer::fileVersion(QString file)
             return Importer::UnknownFileType;
     }
 
-    if (!file.endsWith(".latterc")) {
+    if (!file.endsWith(".mocharc")) {
         return Importer::UnknownFileType;
     }
 
@@ -635,7 +635,7 @@ QStringList Importer::availableLayouts()
 {
     QDir layoutDir(layoutUserDir());
     QStringList filter;
-    filter.append(QString("*.layout.latte"));
+    filter.append(QString("*.layout.mocha"));
     QStringList files = layoutDir.entryList(filter, QDir::Files | QDir::NoSymLinks);
 
     QStringList layoutNames;
@@ -653,7 +653,7 @@ QStringList Importer::availableViewTemplates()
 
     QDir localDir(layoutUserDir() + "/templates");
     QStringList filter;
-    filter.append(QString("*.view.latte"));
+    filter.append(QString("*.view.mocha"));
     QStringList files = localDir.entryList(filter, QDir::Files | QDir::NoSymLinks);
 
     for(const auto &file : files) {
@@ -679,7 +679,7 @@ QStringList Importer::availableLayoutTemplates()
 
     QDir localDir(layoutUserDir() + "/templates");
     QStringList filter;
-    filter.append(QString("*.layout.latte"));
+    filter.append(QString("*.layout.mocha"));
     QStringList files = localDir.entryList(filter, QDir::Files | QDir::NoSymLinks);
 
     for(const auto &file : files) {
@@ -705,7 +705,7 @@ QString Importer::nameOfConfigFile(const QString &fileName)
     QString tempLayoutFile = fileName;
     QString layoutName = tempLayoutFile.remove(0, lastSlash + 1);
 
-    int ext = layoutName.lastIndexOf(".latterc");
+    int ext = layoutName.lastIndexOf(".mocharc");
     layoutName = layoutName.remove(ext, 8);
 
     return layoutName;
@@ -724,7 +724,7 @@ QString Importer::layoutUserDir()
 
 QString Importer::layoutUserFilePath(QString layoutName)
 {
-    return QString(layoutUserDir() + "/" + layoutName + ".layout.latte");
+    return QString(layoutUserDir() + "/" + layoutName + ".layout.mocha");
 }
 
 QString Importer::systemShellDataPath()
@@ -736,7 +736,7 @@ QString Importer::systemShellDataPath()
 
 QString Importer::layoutTemplateSystemFilePath(const QString &name)
 {
-    return systemShellDataPath() + "/contents/templates/" + name + ".layout.latte";
+    return systemShellDataPath() + "/contents/templates/" + name + ".layout.mocha";
 }
 
 QString Importer::uniqueLayoutName(QString name)

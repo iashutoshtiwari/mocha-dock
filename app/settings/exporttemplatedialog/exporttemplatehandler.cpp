@@ -53,7 +53,7 @@ ExportTemplateHandler::ExportTemplateHandler(Dialog::ExportTemplateDialog *dialo
 {
     loadApplets(layout.id);
     m_dialog->setWindowTitle(i18n("Export Layout Template"));
-    o_filepath = dialog->corona()->templatesManager()->proposedTemplateAbsolutePath(layout.name + ".layout.latte");
+    o_filepath = dialog->corona()->templatesManager()->proposedTemplateAbsolutePath(layout.name + ".layout.mocha");
     setFilepath(o_filepath);
 }
 
@@ -64,7 +64,7 @@ ExportTemplateHandler::ExportTemplateHandler(Dialog::ExportTemplateDialog *dialo
     m_dialog->setWindowTitle(i18n("Export Dock/Panel Template"));
 
     QString viewname = view.name.isEmpty() ? view.originLayout() + " " + i18n("Dock") : view.name;
-    o_filepath = dialog->corona()->templatesManager()->proposedTemplateAbsolutePath(viewname + ".view.latte");
+    o_filepath = dialog->corona()->templatesManager()->proposedTemplateAbsolutePath(viewname + ".view.mocha");
     setFilepath(o_filepath);
 }
 
@@ -80,7 +80,7 @@ ExportTemplateHandler::ExportTemplateHandler(Dialog::ExportTemplateDialog *dialo
 
     QString viewname = view->name().isEmpty() ? view->layout()->name() + " " + type : view->name();
 
-    o_filepath = dialog->corona()->templatesManager()->proposedTemplateAbsolutePath(viewname + ".view.latte");
+    o_filepath = dialog->corona()->templatesManager()->proposedTemplateAbsolutePath(viewname + ".view.mocha");
     setFilepath(o_filepath);
 }
 
@@ -147,7 +147,7 @@ void ExportTemplateHandler::chooseFileDialog()
     QFileDialog *chooseFileDlg = new QFileDialog(m_dialog,
                                                  inLayoutState ? i18n("Choose Layout Template file") : i18n("Choose View Template file"),
                                                  currentFile.absoluteFilePath(),
-                                                 inLayoutState ? QStringLiteral(".layout.latte") : QStringLiteral(".view.latte"));
+                                                 inLayoutState ? QStringLiteral(".layout.mocha") : QStringLiteral(".view.mocha"));
 
     chooseFileDlg->setLabelText(QFileDialog::Accept, i18nc("choose file","Choose"));
     chooseFileDlg->setFileMode(QFileDialog::AnyFile);
@@ -161,9 +161,9 @@ void ExportTemplateHandler::chooseFileDialog()
     QStringList filters;
 
     if (inLayoutState) {
-        filters << QString(i18nc("layout template", "Mocha Dock Layout Template file v0.2") + "(*.layout.latte)");
+        filters << QString(i18nc("layout template", "Mocha Dock Layout Template file v0.2") + "(*.layout.mocha)");
     } else {
-        filters << QString(i18nc("view template", "Mocha Dock View Template file v0.2") + "(*.view.latte)");
+        filters << QString(i18nc("view template", "Mocha Dock View Template file v0.2") + "(*.view.mocha)");
     }
 
     chooseFileDlg->setNameFilters(filters);
@@ -171,20 +171,20 @@ void ExportTemplateHandler::chooseFileDialog()
     connect(chooseFileDlg, &QFileDialog::finished, chooseFileDlg, &QFileDialog::deleteLater);
     connect(chooseFileDlg, &QFileDialog::fileSelected, this, [&, inLayoutState](const QString &file) {
         if (inLayoutState) {
-            if (!file.endsWith(".layout.latte")) {
+            if (!file.endsWith(".layout.mocha")) {
                 QString selected = file;
                 selected = selected.replace(QDir::homePath(), "~");
-                showInlineMessage(i18n("<i>%1</i> does not end with <i>.layout.latte</i> extension. Selected file <b>rejected</b>.", selected),
+                showInlineMessage(i18n("<i>%1</i> does not end with <i>.layout.mocha</i> extension. Selected file <b>rejected</b>.", selected),
                                   KMessageWidget::Error,
                                   true);
             } else {
                 setFilepath(file);
             }
         } else {
-            if (!file.endsWith(".view.latte")) {
+            if (!file.endsWith(".view.mocha")) {
                 QString selected = file;
                 selected = selected.replace(QDir::homePath(), "~");
-                showInlineMessage(i18n("<i>%1</i> does not end with <i>.view.latte</i> extension. Selected file <b>rejected</b>.", selected),
+                showInlineMessage(i18n("<i>%1</i> does not end with <i>.view.mocha</i> extension. Selected file <b>rejected</b>.", selected),
                                   KMessageWidget::Error,
                                   true);
             } else {

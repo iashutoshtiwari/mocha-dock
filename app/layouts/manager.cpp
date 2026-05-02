@@ -100,7 +100,7 @@ void Manager::init()
     }
 
     //! Custom Templates path creation
-    QDir localTemplatesDir(Mocha::configPath() + "/latte/templates");
+    QDir localTemplatesDir(Mocha::configPath() + "/mocha/templates");
 
     if (!localTemplatesDir.exists()) {
         QDir(Mocha::configPath() + "/latte").mkdir("templates");

@@ -573,7 +573,7 @@ void Synchronizer::initLayouts()
 
     QDir layoutDir(Layouts::Importer::layoutUserDir());
     QStringList filter;
-    filter.append(QString("*.layout.latte"));
+    filter.append(QString("*.layout.mocha"));
     QStringList files = layoutDir.entryList(filter, QDir::Files | QDir::NoSymLinks);
 
     for (const auto &layout : files) {
