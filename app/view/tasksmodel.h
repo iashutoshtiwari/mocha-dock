@@ -12,7 +12,7 @@ namespace PlasmaQuick {
 class AppletQuickItem;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 class TasksModel : public QAbstractListModel

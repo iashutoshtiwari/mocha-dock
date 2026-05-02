@@ -1,47 +1,58 @@
 Installation
 ============
 
-## Using installation script
+## Dependencies
 
-**Before running the installation script you have to install the dependencies needed for compiling.**
-
-
-### Kubuntu only
-
-```
-sudo add-apt-repository ppa:kubuntu-ppa/backports
-sudo apt update
-sudo apt dist-upgrade
-```
-
-### Kubuntu and KDE Neon
-
-```
-sudo apt install cmake extra-cmake-modules qtdeclarative5-dev libqt5x11extras5-dev libkf5iconthemes-dev libkf5plasma-dev libkf5windowsystem-dev libkf5declarative-dev libkf5xmlgui-dev libkf5activities-dev build-essential libxcb-util-dev libkf5wayland-dev git gettext libkf5archive-dev libkf5notifications-dev libxcb-util0-dev libsm-dev libkf5crash-dev libkf5newstuff-dev libxcb-shape0-dev libxcb-randr0-dev libx11-dev libx11-xcb-dev kirigami2-dev libwayland-dev libwayland-client0 plasma-wayland-protocols libqt5waylandclient5-dev qtwayland5-dev-tools
-```
+Before compiling, you must install the dependencies for Qt6, KF6, and Plasma 6.
 
 ### Arch Linux
 
-```
+```bash
 sudo pacman -Syu
-sudo pacman -S cmake extra-cmake-modules python plasma-framework plasma-desktop plasma-wayland-protocols
+sudo pacman -S cmake extra-cmake-modules python \
+    qt6-base qt6-declarative qt6-wayland qt6-5compat \
+    plasma-wayland-protocols libplasma plasma-desktop \
+    kf6-kwindowsystem kf6-ki18n kf6-kconfig kf6-kcoreaddons \
+    kf6-kiconthemes kf6-ksvg kf6-kio kf6-kdbusaddons \
+    kf6-knotifications kf6-knewstuff kf6-kpackage kf6-kcmutils \
+    wayland-protocols
 ```
 
-### Fedora/RHEL
-```
-sudo dnf install cmake extra-cmake-modules qt5-qtdeclarative-devel qt5-qtx11extras-devel kf5-kiconthemes-devel kf5-plasma-devel kf5-kwindowsystem-devel kf5-kdeclarative-devel kf5-kxmlgui-devel kf5-kactivities-devel gcc-c++ gcc xcb-util-devel kf5-kwayland-devel git gettext kf5-karchive-devel kf5-knotifications-devel libSM-devel kf5-kcrash-devel kf5-knewstuff-devel kf5-kdbusaddons-devel kf5-kxmlgui-devel kf5-kglobalaccel-devel kf5-kio-devel kf5-kguiaddons-devel kf5-kirigami2-devel kf5-kirigami-devel kf5-ki18n-devel qt5-qtwayland-devel plasma-wayland-protocols-devel wayland-devel
-``` 
+### Fedora
 
-### openSUSE
-```
-sudo zypper install cmake extra-cmake-modules gcc-c++ gcc xcb-util-devel git gettext libSM-devel wayland-devel libQt5DBus-devel libQt5Gui-devel qtdeclarative-imports-provides-qt5 libqt5-qtdeclarative-devel knotifications-devel kactivities5-devel karchive-devel kcoreaddons-devel kcoreaddons-devel kguiaddons-devel kcrash-devel kdbusaddons-devel kdeclarative-devel kglobalaccel-devel kirigami2-devel ki18n-devel kiconthemes-devel kio-devel knewstuff-devel plasma-framework-devel kwayland-devel plasma5-workspace-devel kitemmodels-devel libqt5-qtx11extras-devel plasma-wayland-protocols libqt5-qtwayland
-```
-
-### Building and Installing
-
-**Now you can run the installation script.**
-
-```
-sh install.sh
+```bash
+sudo dnf install cmake extra-cmake-modules \
+    qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtwayland-devel qt6-qt5compat-devel \
+    kf6-kwindowsystem-devel kf6-ki18n-devel kf6-kconfig-devel kf6-kcoreaddons-devel \
+    kf6-kiconthemes-devel kf6-ksvg-devel kf6-kio-devel kf6-kdbusaddons-devel \
+    kf6-knotifications-devel kf6-knewstuff-devel kf6-kpackage-devel \
+    libplasma-devel plasma-wayland-protocols
 ```
 
+### Ubuntu (24.04+)
+
+```bash
+sudo apt install cmake extra-cmake-modules \
+    qt6-base-dev qt6-declarative-dev qt6-wayland-dev qt6-5compat-dev \
+    libkf6windowsystem-dev libkf6i18n-dev libkf6config-dev libkf6coreaddons-dev \
+    libkf6iconthemes-dev libkf6svg-dev libkf6io-dev libkf6dbusaddons-dev \
+    libkf6notifications-dev libkf6newstuff-dev libkf6package-dev \
+    libplasma-dev plasma-wayland-protocols
+```
+
+## Building and Installing
+
+```bash
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build build
+sudo cmake --install build
+```
+
+## Local Testing (without install)
+
+You can run Mocha Dock locally within a Wayland session:
+
+```bash
+export QML2_IMPORT_PATH=$PWD/build/bin:$QML2_IMPORT_PATH
+QT_QPA_PLATFORM=wayland ./build/bin/mocha-dock --debug
+```

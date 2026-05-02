@@ -31,12 +31,12 @@ class FrameSvg;
 class Types;
 }
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 class CanvasConfigView;
 class SecondaryConfigView;
@@ -47,7 +47,7 @@ class IndicatorUiManager;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 class PrimaryConfigView : public SubConfigView
@@ -62,7 +62,7 @@ class PrimaryConfigView : public SubConfigView
 
     Q_PROPERTY(QRect availableScreenGeometry READ availableScreenGeometry NOTIFY availableScreenGeometryChanged)
 
-    Q_PROPERTY(Latte::ViewPart::Config::IndicatorUiManager *indicatorUiManager READ indicatorUiManager NOTIFY indicatorUiManagerChanged)
+    Q_PROPERTY(Mocha::ViewPart::Config::IndicatorUiManager *indicatorUiManager READ indicatorUiManager NOTIFY indicatorUiManagerChanged)
 
 public:
     enum ConfigViewType
@@ -71,7 +71,7 @@ public:
         SecondaryConfig
     };
 
-    PrimaryConfigView(Latte::View *view);
+    PrimaryConfigView(Mocha::View *view);
     ~PrimaryConfigView() override;
 
     bool hasFocus() const;
@@ -86,7 +86,7 @@ public:
 
     Config::IndicatorUiManager *indicatorUiManager();
 
-    void setParentView(Latte::View *view, const bool &immediate = false) override;
+    void setParentView(Mocha::View *view, const bool &immediate = false) override;
     void setOnActivities(QStringList activities);
 
     void showConfigWindow();
@@ -115,7 +115,7 @@ protected:
     void focusOutEvent(QFocusEvent *ev) override;
 
     void init() override;
-    void initParentView(Latte::View *view) override;
+    void initParentView(Mocha::View *view) override;
     void updateEnabledBorders() override;
 
 private slots:
@@ -146,7 +146,7 @@ private:
     bool m_isReady{false};
     bool m_showInlineProperties{false};
 
-    Latte::Types::Visibility m_originalMode{Latte::Types::DodgeActive};
+    Mocha::Types::Visibility m_originalMode{Mocha::Types::DodgeActive};
 
     QTimer m_availableScreemGeometryTimer;
 

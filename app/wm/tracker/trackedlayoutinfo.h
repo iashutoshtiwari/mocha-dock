@@ -14,7 +14,7 @@
 #include <QObject>
 #include <QRect>
 
-namespace Latte {
+namespace Mocha {
 namespace Layout {
 class GenericLayout;
 }
@@ -26,7 +26,7 @@ class Windows;
 }
 
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -34,13 +34,13 @@ class TrackedLayoutInfo : public TrackedGeneralInfo {
     Q_OBJECT
 
 public:
-    TrackedLayoutInfo(Tracker::Windows *tracker, Latte::Layout::GenericLayout *layout);
+    TrackedLayoutInfo(Tracker::Windows *tracker, Mocha::Layout::GenericLayout *layout);
     ~TrackedLayoutInfo() override;
 
-    Latte::Layout::GenericLayout *layout() const;
+    Mocha::Layout::GenericLayout *layout() const;
 
 private:
-    Latte::Layout::GenericLayout *m_layout{nullptr};
+    Mocha::Layout::GenericLayout *m_layout{nullptr};
 };
 
 }

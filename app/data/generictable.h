@@ -12,7 +12,7 @@
 // Qt
 #include <QList>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 template <class T>

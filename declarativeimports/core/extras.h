@@ -7,7 +7,7 @@
 #define EXTRAS_H
 
 // local
-#include <config-latte-lib.h>
+#include <config-mocha-lib.h>
 
 // C++
 #include <type_traits>

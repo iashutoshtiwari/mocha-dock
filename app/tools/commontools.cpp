@@ -13,7 +13,7 @@
 #include <QStringList>
 #include <QtMath>
 
-namespace Latte {
+namespace Mocha {
 
 float colorBrightness(QColor color)
 {

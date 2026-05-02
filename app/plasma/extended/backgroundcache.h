@@ -27,7 +27,7 @@ struct imageHints {
 
 typedef QHash<Plasma::Types::Location, imageHints> EdgesHash;
 
-namespace Latte {
+namespace Mocha {
 namespace PlasmaExtended {
 
 class BackgroundCache: public QObject

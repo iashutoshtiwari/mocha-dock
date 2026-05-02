@@ -7,7 +7,7 @@
 #include "schemecolors.h"
 
 // local
-#include <config-latte.h>
+#include <config-mocha.h>
 #include "../layouts/importer.h"
 #include "../tools/commontools.h"
 
@@ -22,7 +22,7 @@
 #include <KDirWatch>
 #include <KSharedConfig>
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 
 SchemeColors::SchemeColors(QObject *parent, QString scheme, bool plasmaTheme) :
@@ -158,7 +158,7 @@ QString SchemeColors::possibleSchemeFile(QString scheme)
 
     if (scheme == QLatin1String("kdeglobals")
             || (scheme.endsWith("kdeglobals") && QFileInfo(scheme).exists()) ) {
-        QString settingsFile = Latte::configPath() + "/kdeglobals";
+        QString settingsFile = Mocha::configPath() + "/kdeglobals";
 
         bool supportsAutoAccentColor{false}; // introduced on plasma 5.25
 
@@ -175,7 +175,7 @@ QString SchemeColors::possibleSchemeFile(QString scheme)
         }
 
         if (supportsAutoAccentColor) {
-            schemePath = Latte::configPath() + "/kdeglobals";
+            schemePath = Mocha::configPath() + "/kdeglobals";
         } else {
             schemePath = Layouts::Importer::standardPath("color-schemes/" + tempScheme + ".colors");
         }

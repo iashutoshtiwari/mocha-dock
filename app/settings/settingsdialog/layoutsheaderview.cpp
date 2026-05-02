@@ -13,7 +13,7 @@
 #include <QPainter>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Layouts {
 

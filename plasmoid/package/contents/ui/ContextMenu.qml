@@ -15,8 +15,8 @@ import org.kde.plasma.extras as PlasmaExtras
 import org.kde.activities as Activities
 import org.kde.taskmanager as TaskManager
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.tasks as LatteTasks
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.tasks as MochaTasks
 
 import "../code/activitiesTools.js" as ActivitiesTools
 
@@ -68,7 +68,7 @@ PlasmaComponents.Menu {
         // backend.ungrabMouse(visualParent);
         openRelative();
 
-        if (LatteCore.WindowSystem.isPlatformWayland){
+        if (MochaCore.WindowSystem.isPlatformWayland){
             //!Hiding previews under wayland it needs a delay otherwise it creates crashes
             windowsPreviewCheckerToNotShowTimer.start();
         } else {
@@ -302,7 +302,7 @@ PlasmaComponents.Menu {
 
         //From Plasma 5.10 and frameworks 5.34 jumpLists and
         //places are supported
-        if (LatteCore.Environment.frameworksVersion >= 336384 && backend && backend.showAllPlaces) {
+        if (MochaCore.Environment.frameworksVersion >= 336384 && backend && backend.showAllPlaces) {
             backend.showAllPlaces.connect(function() {
                 visualParent.showContextMenu({showAllPlaces: true});
             });

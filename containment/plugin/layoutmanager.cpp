@@ -6,7 +6,7 @@
 #include "layoutmanager.h"
 
 // local
-#include <plugin/lattetypes.h>
+#include <plugin/mochatypes.h>
 
 // Qt
 #include <QtMath>
@@ -20,7 +20,7 @@
 #define ISAPPLETLOCKEDOPTION "lockZoom"
 #define ISCOLORINGBLOCKEDOPTION "userBlocksColorizing"
 
-namespace Latte{
+namespace Mocha{
 namespace Containment{
 
 const int LayoutManager::JUSTIFYSPLITTERID;
@@ -265,11 +265,11 @@ void LayoutManager::setMetrics(QQuickItem *metrics)
 
 void LayoutManager::updateOrder()
 {
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    Mocha::Types::Alignment alignment = static_cast<Mocha::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
     auto nextorder = m_appletOrder;
 
-    if (alignment==Latte::Types::Justify) {
+    if (alignment==Mocha::Types::Justify) {
         nextorder.insert(m_splitterPosition-1, JUSTIFYSPLITTERID);
         nextorder.insert(m_splitterPosition2-1, JUSTIFYSPLITTERID);
     }
@@ -331,11 +331,11 @@ void LayoutManager::restore()
         }
     }
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    Mocha::Types::Alignment alignment = static_cast<Mocha::Types::Alignment>((*m_configuration)["alignment"].toInt());
     int splitterPosition = (*m_configuration)["splitterPosition"].toInt();
     int splitterPosition2 = (*m_configuration)["splitterPosition2"].toInt();
 
-    if (alignment==Latte::Types::Justify) {
+    if (alignment==Mocha::Types::Justify) {
         if (splitterPosition!=-1 && splitterPosition2!=-1) {
             appletIdsOrder.insert(splitterPosition-1, -1);
             appletIdsOrder.insert(splitterPosition2-1, -1);
@@ -410,7 +410,7 @@ void LayoutManager::restore()
     qDebug() << "org.kde.latte ::: applets recorded order :: " << appletIdsOrder;
     qDebug() << "org.kde.latte ::: applets produced order ?? " << validateAppletsOrder;
 
-    if (alignment != Latte::Types::Justify) {
+    if (alignment != Mocha::Types::Justify) {
         for (int i=0; i<orderedApplets.count(); ++i) {
             if (orderedApplets[i] == nullptr) {
                 continue;
@@ -584,9 +584,9 @@ void LayoutManager::save()
     int mainChilds  = collectLayoutAppletIds(m_mainLayout,  appletIds);
     int endChilds   = collectLayoutAppletIds(m_endLayout,   appletIds);
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    Mocha::Types::Alignment alignment = static_cast<Mocha::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == Mocha::Types::Justify) {
         setSplitterPosition(startChilds + 1);
         setSplitterPosition2(startChilds + 1 + mainChilds + 1);
     } else {
@@ -926,10 +926,10 @@ int LayoutManager::dndSpacerIndex()
         return -1;
     }
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    Mocha::Types::Alignment alignment = static_cast<Mocha::Types::Alignment>((*m_configuration)["alignment"].toInt());
     int index = -1;
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == Mocha::Types::Justify) {
         for(int i=0; i<m_startLayout->childItems().count(); ++i) {
             QQuickItem *item = m_startLayout->childItems()[i];
             bool isparabolicspacer = item->property("isParabolicEdgeSpacer").toBool();
@@ -959,7 +959,7 @@ int LayoutManager::dndSpacerIndex()
         }
     }
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == Mocha::Types::Justify) {
         for(int i=0; i<m_endLayout->childItems().count(); ++i) {
             QQuickItem *item = m_endLayout->childItems()[i];
             bool isparabolicspacer = item->property("isParabolicEdgeSpacer").toBool();
@@ -981,8 +981,8 @@ int LayoutManager::dndSpacerIndex()
 
 void LayoutManager::requestAppletsOrder(const QList<int> &order)
 {
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
-    QQuickItem *nextlayout = alignment != Latte::Types::Justify ? m_mainLayout : m_startLayout;
+    Mocha::Types::Alignment alignment = static_cast<Mocha::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    QQuickItem *nextlayout = alignment != Mocha::Types::Justify ? m_mainLayout : m_startLayout;
     QQuickItem *previousitem = nullptr;
 
     int addedsplitters{0};
@@ -990,9 +990,9 @@ void LayoutManager::requestAppletsOrder(const QList<int> &order)
     for (int i=0; i<order.count(); ++i) {
         QQuickItem *currentitem;
 
-        if (alignment != Latte::Types::Justify || order[i] != JUSTIFYSPLITTERID) {
+        if (alignment != Mocha::Types::Justify || order[i] != JUSTIFYSPLITTERID) {
             currentitem = appletItem(order[i]);
-        } else if (alignment == Latte::Types::Justify && order[i] == JUSTIFYSPLITTERID) {
+        } else if (alignment == Mocha::Types::Justify && order[i] == JUSTIFYSPLITTERID) {
             currentitem = addedsplitters == 0 ? firstSplitter() : lastSplitter();
             addedsplitters++;
         }
@@ -1006,12 +1006,12 @@ void LayoutManager::requestAppletsOrder(const QList<int> &order)
 
         previousitem = currentitem;
 
-        if (alignment == Latte::Types::Justify && order[i] == JUSTIFYSPLITTERID) {
+        if (alignment == Mocha::Types::Justify && order[i] == JUSTIFYSPLITTERID) {
             nextlayout = addedsplitters == 1 ? m_mainLayout : m_endLayout;
         }
     }
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == Mocha::Types::Justify) {
         moveAppletsBasedOnJustifyAlignment();
         save();
     }
@@ -1045,11 +1045,11 @@ void LayoutManager::insertAtCoordinates(QQuickItem *item, const int &x, const in
         return;
     }
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    Mocha::Types::Alignment alignment = static_cast<Mocha::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
     bool result{false};
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == Mocha::Types::Justify) {
         QPointF startPos = m_startLayout->mapFromItem(m_rootItem, QPointF(x, y));
         result = insertAtLayoutCoordinates(m_startLayout, item, startPos.x(), startPos.y());
 
@@ -1087,7 +1087,7 @@ void LayoutManager::insertAtCoordinates(QQuickItem *item, const int &x, const in
     int maindistance = qMin(maintaildistance, mainheaddistance);
     int enddistance = qMin(endtaildistance, endheaddistance);
 
-    if (alignment != Latte::Types::Justify || (maindistance < startdistance && maindistance < enddistance)) {
+    if (alignment != Mocha::Types::Justify || (maindistance < startdistance && maindistance < enddistance)) {
         if (maintaildistance <= mainheaddistance) {
             insertAtLayoutTail(m_mainLayout, item);
         } else {
@@ -1145,7 +1145,7 @@ void LayoutManager::addAppletItem(QObject *applet, int index)
         }
     }
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    Mocha::Types::Alignment alignment = static_cast<Mocha::Types::Alignment>((*m_configuration)["alignment"].toInt());
     QVariant appletItemVariant;
     QVariant appletVariant; appletVariant.setValue(appletForQml);
     m_createAppletItemMethod.invoke(m_rootItem, Q_RETURN_ARG(QVariant, appletItemVariant), Q_ARG(QVariant, appletVariant));
@@ -1160,7 +1160,7 @@ void LayoutManager::addAppletItem(QObject *applet, int index)
     if (index >= m_order.count()) {
         // do nothing it should be added at the end
     } else {
-        if (alignment == Latte::Types::Justify && m_order[index] == JUSTIFYSPLITTERID) {
+        if (alignment == Mocha::Types::Justify && m_order[index] == JUSTIFYSPLITTERID) {
             if (index<m_splitterPosition2-1) {
                 previousItem = firstSplitter();
             } else {
@@ -1174,14 +1174,14 @@ void LayoutManager::addAppletItem(QObject *applet, int index)
     if (previousItem) {
         insertBefore(previousItem, aitem);
     } else {
-        if (alignment == Latte::Types::Justify) {
+        if (alignment == Mocha::Types::Justify) {
             insertAtLayoutHead(m_endLayout, aitem);
         } else {
             insertAtLayoutHead(m_mainLayout, aitem);
         }
     }
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == Mocha::Types::Justify) {
         moveAppletsBasedOnJustifyAlignment();
     }
 
@@ -1346,9 +1346,9 @@ void LayoutManager::destroyAppletContainer(QObject *applet)
 
 void LayoutManager::reorderSplitterInStartLayout()
 {
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    Mocha::Types::Alignment alignment = static_cast<Mocha::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
-    if (alignment != Latte::Types::Justify) {
+    if (alignment != Mocha::Types::Justify) {
         return;
     }
 
@@ -1375,9 +1375,9 @@ void LayoutManager::reorderSplitterInStartLayout()
 
 void LayoutManager::reorderSplitterInEndLayout()
 {
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    Mocha::Types::Alignment alignment = static_cast<Mocha::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
-    if (alignment != Latte::Types::Justify) {
+    if (alignment != Mocha::Types::Justify) {
         return;
     }
 

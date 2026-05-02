@@ -14,7 +14,7 @@
 #include "helpers/screenedgeghostwindow.h"
 #include "windowstracker/currentscreentracker.h"
 #include "../apptypes.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../screenpool.h"
 #include "../layouts/manager.h"
 #include "../wm/abstractwindowinterface.h"
@@ -38,7 +38,7 @@ const int HIDEMINIMUMINTERVAL = 0;
 const int SIDEBARAUTOHIDEMINIMUMSHOW = 1000;
 
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 //! BEGIN: VisiblityManager implementation
@@ -49,8 +49,8 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view)
 {
     qDebug() << "VisibilityManager creating...";
 
-    m_latteView = qobject_cast<Latte::View *>(view);
-    m_corona = qobject_cast<Latte::Corona *>(view->corona());
+    m_latteView = qobject_cast<Mocha::View *>(view);
+    m_corona = qobject_cast<Mocha::Corona *>(view->corona());
     m_wm = m_corona->wm();
 
     connect(this, &VisibilityManager::hidingIsBlockedChanged, this, &VisibilityManager::onHidingIsBlockedChanged);
@@ -71,15 +71,15 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view)
     });
 
     if (m_latteView) {
-        connect(m_latteView, &Latte::View::eventTriggered, this, &VisibilityManager::viewEventManager);
-        connect(m_latteView, &Latte::View::behaveAsPlasmaPanelChanged , this, &VisibilityManager::updateKWinEdgesSupport);
-        connect(m_latteView, &Latte::View::byPassWMChanged, this, &VisibilityManager::updateKWinEdgesSupport);
+        connect(m_latteView, &Mocha::View::eventTriggered, this, &VisibilityManager::viewEventManager);
+        connect(m_latteView, &Mocha::View::behaveAsPlasmaPanelChanged , this, &VisibilityManager::updateKWinEdgesSupport);
+        connect(m_latteView, &Mocha::View::byPassWMChanged, this, &VisibilityManager::updateKWinEdgesSupport);
 
-        connect(m_latteView, &Latte::View::inEditModeChanged, this, &VisibilityManager::initViewFlags);
+        connect(m_latteView, &Mocha::View::inEditModeChanged, this, &VisibilityManager::initViewFlags);
 
         //! Frame Extents
-        connect(m_latteView, &Latte::View::headThicknessGapChanged, this, &VisibilityManager::onHeadThicknessChanged);
-        connect(m_latteView, &Latte::View::locationChanged, this, [&]() {
+        connect(m_latteView, &Mocha::View::headThicknessGapChanged, this, &VisibilityManager::onHeadThicknessChanged);
+        connect(m_latteView, &Mocha::View::locationChanged, this, [&]() {
             if (!m_latteView->behaveAsPlasmaPanel()) {
                 //! Resend frame extents because their geometry has changed
                 const bool forceUpdate{true};
@@ -87,7 +87,7 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view)
             }
         });
 
-        connect(m_latteView, &Latte::View::typeChanged, this, [&]() {
+        connect(m_latteView, &Mocha::View::typeChanged, this, [&]() {
             if (m_latteView->inEditMode()) {
                 //! Resend frame extents because type has changed
                 const bool forceUpdate{true};
@@ -95,7 +95,7 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view)
             }
         });
 
-        connect(m_latteView, &Latte::View::forcedShown, this, [&]() {
+        connect(m_latteView, &Mocha::View::forcedShown, this, [&]() {
             //! Resend frame extents to compositor otherwise because compositor cleared
             //! them with no reason when the user is closing an activity
             const bool forceUpdate{true};
@@ -208,7 +208,7 @@ void VisibilityManager::setViewOnFrontLayer()
     setIsBelowLayer(false);
 }
 
-void VisibilityManager::setMode(Latte::Types::Visibility mode)
+void VisibilityManager::setMode(Mocha::Types::Visibility mode)
 {
     if (m_mode == mode) {
         return;
@@ -266,7 +266,7 @@ void VisibilityManager::setMode(Latte::Types::Visibility mode)
         // disabling this call because it was creating too many struts calls and   ???
         // could create reduced responsiveness for DynamicStruts Scenario(for example ??
         // when dragging active window from a floating dock/panel) ???
-        m_connections[base+1] = connect(m_latteView, &Latte::View::absoluteGeometryChanged, this, &VisibilityManager::updateStrutsAfterTimer);
+        m_connections[base+1] = connect(m_latteView, &Mocha::View::absoluteGeometryChanged, this, &VisibilityManager::updateStrutsAfterTimer);
 
         m_connections[base+2] = connect(m_corona->activitiesConsumer(), &KActivities::Consumer::currentActivityChanged, this, [&]() {
             if (m_corona && m_corona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts) {
@@ -275,9 +275,9 @@ void VisibilityManager::setMode(Latte::Types::Visibility mode)
         });
 
         //! respect canSetStrut that must be disabled under x11 when an alwaysvisible screen edge is common between two or more screens
-        m_connections[base+3] = connect(m_corona->screenPool(), &Latte::ScreenPool::screenGeometryChanged, this, &VisibilityManager::updateStrutsAfterTimer);
+        m_connections[base+3] = connect(m_corona->screenPool(), &Mocha::ScreenPool::screenGeometryChanged, this, &VisibilityManager::updateStrutsAfterTimer);
 
-        m_connections[base+4] = connect(m_latteView, &Latte::View::activitiesChanged, this, [&]() {
+        m_connections[base+4] = connect(m_latteView, &Mocha::View::activitiesChanged, this, [&]() {
             updateStrutsBasedOnLayoutsAndActivities(true);
         });
 
@@ -340,7 +340,7 @@ void VisibilityManager::setMode(Latte::Types::Visibility mode)
         break;
 
     case Types::SidebarOnDemand:
-        m_connections[base] = connect(m_latteView, &Latte::View::inEditModeChanged, this, [&]() {
+        m_connections[base] = connect(m_latteView, &Mocha::View::inEditModeChanged, this, [&]() {
             if (!m_latteView->inEditMode()) {
                 m_isRequestedShownSidebarOnDemand = false;
                 updateHiddenState();
@@ -358,7 +358,7 @@ void VisibilityManager::setMode(Latte::Types::Visibility mode)
             }
         });
         
-        m_connections[base+1] = connect(m_latteView, &Latte::View::inEditModeChanged, this, [&]() {
+        m_connections[base+1] = connect(m_latteView, &Mocha::View::inEditModeChanged, this, [&]() {
             if (m_latteView->inEditMode() && !m_isHidden) {
                 updateHiddenState();
             }
@@ -688,7 +688,7 @@ void VisibilityManager::setTimerHide(int msec)
 
 bool VisibilityManager::isSidebar() const
 {
-    return m_mode == Latte::Types::SidebarOnDemand || m_mode == Latte::Types::SidebarAutoHide;
+    return m_mode == Mocha::Types::SidebarOnDemand || m_mode == Mocha::Types::SidebarAutoHide;
 }
 
 bool VisibilityManager::supportsKWinEdges() const
@@ -705,7 +705,7 @@ void VisibilityManager::updateGhostWindowState()
                                  && m_latteView->layout()->isCurrent()));
 
         if (inCurrentLayout) {
-            if (m_mode == Latte::Types::WindowsCanCover) {
+            if (m_mode == Mocha::Types::WindowsCanCover) {
                 m_wm->setActiveEdge(m_edgeGhostWindow, m_isBelowLayer && !m_containsMouse);
             } else {
                 bool activated = (m_isHidden && !windowContainsMouse());
@@ -734,10 +734,10 @@ void VisibilityManager::toggleHiddenState()
             //    removeBlockHidingEvent(Q_FUNC_INFO);
             // }
 
-            if (m_mode == Latte::Types::SidebarOnDemand) {
+            if (m_mode == Mocha::Types::SidebarOnDemand) {
                 m_isRequestedShownSidebarOnDemand = !m_isRequestedShownSidebarOnDemand;
                 updateHiddenState();
-            } else if (m_mode == Latte::Types::SidebarAutoHide) {
+            } else if (m_mode == Mocha::Types::SidebarAutoHide) {
                 if (m_isHidden) {
                     emit mustBeShown();
                     startTimerHide(SIDEBARAUTOHIDEMINIMUMSHOW + m_timerHideInterval);
@@ -793,7 +793,7 @@ void VisibilityManager::updateHiddenState()
 
 void VisibilityManager::raiseView(bool raise)
 {
-    if (m_mode == Latte::Types::SidebarOnDemand) {
+    if (m_mode == Mocha::Types::SidebarOnDemand) {
         if (raise && m_isHidden) {
             emit mustBeShown();
         } else if (!raise && !m_isHidden && !m_dragEnter && !hidingIsBlocked()) {

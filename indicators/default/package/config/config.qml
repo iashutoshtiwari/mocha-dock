@@ -13,13 +13,13 @@ import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.components as MochaComponents
 
 ColumnLayout {
     id: root
     Layout.fillWidth: true
 
-    LatteComponents.SubHeader {
+    MochaComponents.SubHeader {
         text: i18nc("indicator style","Style")
     }
 
@@ -82,7 +82,7 @@ ColumnLayout {
             horizontalAlignment: Text.AlignLeft
         }
 
-        LatteComponents.Slider {
+        MochaComponents.Slider {
             id: sizeSlider
             Layout.fillWidth: true
 
@@ -118,7 +118,7 @@ ColumnLayout {
             horizontalAlignment: Text.AlignLeft
         }
 
-        LatteComponents.Slider {
+        MochaComponents.Slider {
             id: thickMarginSlider
             Layout.fillWidth: true
 
@@ -154,7 +154,7 @@ ColumnLayout {
             horizontalAlignment: Text.AlignLeft
         }
 
-        LatteComponents.Slider {
+        MochaComponents.Slider {
             id: lengthIntMarginSlider
             Layout.fillWidth: true
 
@@ -192,7 +192,7 @@ ColumnLayout {
             horizontalAlignment: Text.AlignLeft
         }
 
-        LatteComponents.Slider {
+        MochaComponents.Slider {
             id: backgroundCornerMarginSlider
             Layout.fillWidth: true
 
@@ -219,7 +219,7 @@ ColumnLayout {
         }
     }
 
-    LatteComponents.HeaderSwitch {
+    MochaComponents.HeaderSwitch {
         id: glowEnabled
         Layout.fillWidth: true
         Layout.minimumHeight: implicitHeight
@@ -299,7 +299,7 @@ ColumnLayout {
             text: i18n("Opacity")
         }
 
-        LatteComponents.Slider {
+        MochaComponents.Slider {
             id: glowOpacitySlider
             Layout.fillWidth: true
 
@@ -338,15 +338,15 @@ ColumnLayout {
 
     ColumnLayout {
         spacing: 0
-        visible: indicator.latteTasksArePresent
+        visible: indicator.mochaTasksArePresent
 
-        LatteComponents.SubHeader {
+        MochaComponents.SubHeader {
             enabled: indicator.configuration.glowApplyTo!==0/*None*/
             text: i18n("Tasks")
         }
 
-        LatteComponents.CheckBoxesColumn {
-            LatteComponents.CheckBox {
+        MochaComponents.CheckBoxesColumn {
+            MochaComponents.CheckBox {
                 Layout.maximumWidth: dialog.optionsWidth
                 text: i18n("Different color for minimized windows")
                 value: indicator.configuration.minimizedTaskColoredDifferently
@@ -356,7 +356,7 @@ ColumnLayout {
                 }
             }
 
-            LatteComponents.CheckBox {
+            MochaComponents.CheckBox {
                 Layout.maximumWidth: dialog.optionsWidth
                 text: i18n("Show an extra dot for grouped windows when active")
                 tooltip: i18n("Grouped windows show both a line and a dot when one of them is active and the Line Active Indicator is enabled")
@@ -370,12 +370,12 @@ ColumnLayout {
         }
     }
 
-    LatteComponents.SubHeader {
+    MochaComponents.SubHeader {
         enabled: indicator.configuration.glowApplyTo!==0/*None*/
         text: i18n("Options")
     }
 
-    LatteComponents.CheckBox {
+    MochaComponents.CheckBox {
         Layout.maximumWidth: dialog.optionsWidth
         text: i18n("Show indicators for applets")
         tooltip: i18n("Indicators are shown for applets")
@@ -386,7 +386,7 @@ ColumnLayout {
         }
     }
 
-    LatteComponents.CheckBox {
+    MochaComponents.CheckBox {
         Layout.maximumWidth: dialog.optionsWidth
         text: i18n("Reverse indicator style")
         value: indicator.configuration.reversed

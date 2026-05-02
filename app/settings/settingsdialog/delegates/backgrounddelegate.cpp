@@ -16,7 +16,7 @@
 #include <QString>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Layout {
 namespace Delegate {
@@ -31,11 +31,11 @@ BackgroundDelegate::BackgroundDelegate(QObject *parent)
 void BackgroundDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyleOptionViewItem myOptions = option;
-    Latte::Data::LayoutIcon icon = index.data(Qt::UserRole).value<Latte::Data::LayoutIcon>();
+    Mocha::Data::LayoutIcon icon = index.data(Qt::UserRole).value<Mocha::Data::LayoutIcon>();
 
     //! background
-    Latte::drawBackground(painter, option);
-    Latte::drawLayoutIcon(painter, option, icon.isBackgroundFile, icon.name, Qt::AlignHCenter, -1, 3);
+    Mocha::drawBackground(painter, option);
+    Mocha::drawLayoutIcon(painter, option, icon.isBackgroundFile, icon.name, Qt::AlignHCenter, -1, 3);
 }
 
 }

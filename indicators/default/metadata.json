@@ -36,7 +36,7 @@
                 "Name[zh_TW]": "Michail Vourlakos"
             }
         ],
-        "Category": "Latte Indicator",
+        "Category": "Mocha Indicator",
         "Description": "Latte default indicator",
         "Description[ar]": "مؤشر لاتيه المبدئي",
         "Description[az]": "Latte standart göstəricisi",
@@ -68,8 +68,8 @@
         "Description[zh_CN]": "Latte 默认指示器",
         "Description[zh_TW]": "Latte 預設指示器",
         "EnabledByDefault": true,
-        "Icon": "latte-dock",
-        "Id": "org.kde.latte.default",
+        "Icon": "mocha-dock",
+        "Id": "org.kde.mocha.default",
         "License": "GPL v2+",
         "Name": "Latte",
         "Name[ar]": "لاتيه",

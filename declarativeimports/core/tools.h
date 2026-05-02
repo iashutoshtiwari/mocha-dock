@@ -13,7 +13,7 @@
 #include <QJSEngine>
 
 
-namespace Latte{
+namespace Mocha{
 
 class Tools final: public QObject
 {

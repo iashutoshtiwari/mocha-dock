@@ -11,7 +11,7 @@ import QtQuick.Layouts
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.private.tasks as LatteTasks
+import org.kde.mocha.private.tasks as MochaTasks
 
 Item {
     width: childrenRect.width
@@ -88,13 +88,13 @@ Item {
 
                         currentIndex: {
                             switch(plasmoid.configuration.hoverAction) {
-                            case LatteTasks.Types.NoneAction:
+                            case MochaTasks.Types.NoneAction:
                                 return 0;
-                            case LatteTasks.Types.PreviewWindows:
+                            case MochaTasks.Types.PreviewWindows:
                                 return 1;
-                            case LatteTasks.Types.HighlightWindows:
+                            case MochaTasks.Types.HighlightWindows:
                                 return 2;
-                            case LatteTasks.Types.PreviewAndHighlightWindows:
+                            case MochaTasks.Types.PreviewAndHighlightWindows:
                                 return 3;
                             }
 
@@ -104,16 +104,16 @@ Item {
                         onCurrentIndexChanged: {
                             switch(currentIndex) {
                             case 0:
-                                plasmoid.configuration.hoverAction = LatteTasks.Types.NoneAction;
+                                plasmoid.configuration.hoverAction = MochaTasks.Types.NoneAction;
                                 break;
                             case 1:
-                                plasmoid.configuration.hoverAction = LatteTasks.Types.PreviewWindows;
+                                plasmoid.configuration.hoverAction = MochaTasks.Types.PreviewWindows;
                                 break;
                             case 2:
-                                plasmoid.configuration.hoverAction = LatteTasks.Types.HighlightWindows;
+                                plasmoid.configuration.hoverAction = MochaTasks.Types.HighlightWindows;
                                 break;
                             case 3:
-                                plasmoid.configuration.hoverAction = LatteTasks.Types.PreviewAndHighlightWindows;
+                                plasmoid.configuration.hoverAction = MochaTasks.Types.PreviewAndHighlightWindows;
                                 break;
                             }
                         }

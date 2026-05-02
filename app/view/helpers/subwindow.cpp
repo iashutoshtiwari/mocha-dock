@@ -16,13 +16,13 @@
 #include <QTimer>
 
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-SubWindow::SubWindow(Latte::View *view, QString debugType) :
+SubWindow::SubWindow(Mocha::View *view, QString debugType) :
     m_latteView(view)
 {
-    m_corona = qobject_cast<Latte::Corona *>(view->corona());
+    m_corona = qobject_cast<Mocha::Corona *>(view->corona());
 
     m_debugMode = (qApp->arguments().contains("-d") && qApp->arguments().contains("--kwinedges"));
     m_debugType = debugType;
@@ -50,9 +50,9 @@ SubWindow::SubWindow(Latte::View *view, QString debugType) :
 
     connect(this, &SubWindow::calculatedGeometryChanged, this, &SubWindow::fixGeometry);
 
-    connect(m_latteView, &Latte::View::absoluteGeometryChanged, this, &SubWindow::updateGeometry);
-    connect(m_latteView, &Latte::View::screenGeometryChanged, this, &SubWindow::updateGeometry);
-    connect(m_latteView, &Latte::View::locationChanged, this, &SubWindow::updateGeometry);
+    connect(m_latteView, &Mocha::View::absoluteGeometryChanged, this, &SubWindow::updateGeometry);
+    connect(m_latteView, &Mocha::View::screenGeometryChanged, this, &SubWindow::updateGeometry);
+    connect(m_latteView, &Mocha::View::locationChanged, this, &SubWindow::updateGeometry);
     connect(m_latteView, &QQuickView::screenChanged, this, [this]() {
         setScreen(m_latteView->screen());
         updateGeometry();
@@ -106,12 +106,12 @@ QString SubWindow::validTitle() const
     return QString(validTitlePrefix() + QString::number(m_latteView->containment()->id()));
 }
 
-Latte::View *SubWindow::parentView()
+Mocha::View *SubWindow::parentView()
 {
     return m_latteView;
 }
 
-Latte::WindowSystem::WindowId SubWindow::trackedWindowId()
+Mocha::WindowSystem::WindowId SubWindow::trackedWindowId()
 {
     if (m_trackedWindowId.toInt() <= 0) {
         updateWaylandId();
@@ -134,7 +134,7 @@ void SubWindow::fixGeometry()
 
 void SubWindow::updateWaylandId()
 {
-    Latte::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("latte-dock", validTitle());
+    Mocha::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("mocha-dock", validTitle());
 
     if (m_trackedWindowId != newId) {
         if (!m_trackedWindowId.isNull()) {

@@ -13,7 +13,7 @@
 // KDE
 #include <KPackage/PackageStructure>
 
-namespace Latte {
+namespace Mocha {
 class IndicatorPackage : public KPackage::PackageStructure
 {
     Q_OBJECT

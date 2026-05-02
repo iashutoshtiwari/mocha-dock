@@ -6,12 +6,12 @@
 import QtQuick
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 import "./privates" as Ability
 
 Ability.MyViewPrivate {
-    view: latteView
+    view: mochaView
     isReady: view && view.visibility && view.layout && view.effects && view.positioner
     groupId: view ? view.groupId : -1
 
@@ -34,7 +34,7 @@ Ability.MyViewPrivate {
     badgesIn3DStyle: universalSettings ? universalSettings.badges3DStyle : true
 
     alignment: plasmoid.configuration.alignment
-    visibilityMode: isReady ? view.visibility.mode : LatteCore.Types.None
+    visibilityMode: isReady ? view.visibility.mode : MochaCore.Types.None
 
     backgroundOpacity: background.currentOpacity
 

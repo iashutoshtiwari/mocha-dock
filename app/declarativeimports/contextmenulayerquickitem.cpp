@@ -6,7 +6,7 @@
 #include "contextmenulayerquickitem.h"
 
 // local
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../layouts/storage.h"
 #include "../view/view.h"
 
@@ -28,7 +28,7 @@
 #include <Plasma/Corona>
 #include <PlasmaQuick/AppletQuickItem>
 
-namespace Latte {
+namespace Mocha {
 
 ContextMenuLayerQuickItem::ContextMenuLayerQuickItem(QQuickItem *parent) :
     QQuickItem(parent)
@@ -56,7 +56,7 @@ void ContextMenuLayerQuickItem::setView(QObject *view)
         return;
     }
 
-    m_latteView = qobject_cast<Latte::View *>(view);
+    m_latteView = qobject_cast<Mocha::View *>(view);
     emit viewChanged();
 }
 

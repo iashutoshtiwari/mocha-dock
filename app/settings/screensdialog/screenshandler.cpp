@@ -11,14 +11,14 @@
 #include "screensdialog.h"
 #include "screensmodel.h"
 #include "delegates/checkboxdelegate.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../screenpool.h"
 
 // KDE
 #include <KMessageBox>
 #include <kmessagebox.h>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Handler {
 

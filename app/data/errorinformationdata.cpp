@@ -5,7 +5,7 @@
 
 #include "errorinformationdata.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 ErrorInformation::ErrorInformation()

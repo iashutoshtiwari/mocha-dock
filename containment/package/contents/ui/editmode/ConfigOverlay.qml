@@ -14,7 +14,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 MouseArea {
     id: configurationArea
@@ -28,7 +28,7 @@ MouseArea {
 
     focus: true
     cursorShape: {
-        if (currentApplet && tooltip.visible && currentApplet.latteStyleApplet) {
+        if (currentApplet && tooltip.visible && currentApplet.mochaStyleApplet) {
             return root.isHorizontal ? Qt.SizeHorCursor : Qt.SizeVerCursor;
         }
 
@@ -214,7 +214,7 @@ MouseArea {
         placeHolder.parent = configurationArea;
         currentApplet.z = 1;
 
-        if (root.myView.alignment === LatteCore.Types.Justify) {
+        if (root.myView.alignment === MochaCore.Types.Justify) {
             fastLayoutManager.moveAppletsBasedOnJustifyAlignment();
         }
 
@@ -223,16 +223,16 @@ MouseArea {
     }
 
     onWheel: {
-        if (!currentApplet || !currentApplet.latteStyleApplet) {
+        if (!currentApplet || !currentApplet.mochaStyleApplet) {
             return;
         }
 
         var angle = wheel.angleDelta.y / 8;
 
         if (angle > 12)
-            currentApplet.latteStyleApplet.increaseLength();
+            currentApplet.mochaStyleApplet.increaseLength();
         else if (angle < 12)
-            currentApplet.latteStyleApplet.decreaseLength();
+            currentApplet.mochaStyleApplet.decreaseLength();
     }
 
     Connections {
@@ -407,7 +407,7 @@ MouseArea {
                     && (currentApplet.applet || currentApplet.isSeparator || currentApplet.isInternalViewSplitter)) {
 
                 configureButton.visible = !currentApplet.isInternalViewSplitter
-                        && (currentApplet.applet.pluginName !== "org.kde.latte.plasmoid")
+                        && (currentApplet.applet.pluginName !== "org.kde.mocha.plasmoid")
                         && currentApplet.applet.action("configure")
                         && currentApplet.applet.action("configure").enabled;
                 closeButton.visible = !currentApplet.isInternalViewSplitter && currentApplet.applet.action("remove") && currentApplet.applet.action("remove").enabled;

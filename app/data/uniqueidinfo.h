@@ -10,7 +10,7 @@
 #include <QMetaType>
 #include <QString>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 class UniqueIdInfo
@@ -36,6 +36,6 @@ public:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::UniqueIdInfo)
+Q_DECLARE_METATYPE(Mocha::Data::UniqueIdInfo)
 
 #endif

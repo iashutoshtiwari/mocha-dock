@@ -11,7 +11,7 @@
 #include "originalview.h"
 #include "view.h"
 #include "visibilitymanager.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../screenpool.h"
 #include "../data/screendata.h"
 #include "../layout/centrallayout.h"
@@ -27,10 +27,10 @@
 
 #define RELOCATIONSHOWINGEVENT "viewInRelocationShowing"
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-Positioner::Positioner(Latte::View *parent)
+Positioner::Positioner(Mocha::View *parent)
     : QObject(parent),
       m_view(parent)
 {
@@ -51,7 +51,7 @@ Positioner::Positioner(Latte::View *parent)
     m_syncGeometryTimer.setInterval(150);
     connect(&m_syncGeometryTimer, &QTimer::timeout, this, &Positioner::immediateSyncGeometry);
 
-    m_corona = qobject_cast<Latte::Corona *>(m_view->corona());
+    m_corona = qobject_cast<Mocha::Corona *>(m_view->corona());
 
     if (m_corona) {
         connect(m_view, &QWindow::windowTitleChanged, this, &Positioner::updateWaylandId);
@@ -65,7 +65,7 @@ Positioner::Positioner(Latte::View *parent)
             m_screenSyncTimer.setInterval(qMax(m_corona->universalSettings()->screenTrackerInterval() - 500, 1000));
         });
 
-        connect(m_corona, &Latte::Corona::viewLocationChanged, this, [&]() {
+        connect(m_corona, &Mocha::Corona::viewLocationChanged, this, [&]() {
             //! check if an edge has been freed for a primary dock
             //! from another screen
             if (m_view->onPrimary()) {
@@ -97,7 +97,7 @@ void Positioner::init()
     connect(this, &Positioner::showingAfterRelocationFinished, this, &Positioner::syncLatteViews);
     connect(this, &Positioner::startupFinished, this, &Positioner::onStartupFinished);
 
-    connect(m_view, &Latte::View::onPrimaryChanged, this, &Positioner::syncLatteViews);
+    connect(m_view, &Mocha::View::onPrimaryChanged, this, &Positioner::syncLatteViews);
 
     connect(this, &Positioner::inSlideAnimationChanged, this, [&]() {
         if (!inSlideAnimation()) {
@@ -134,46 +134,46 @@ void Positioner::init()
     connect(m_view, &QQuickWindow::screenChanged, this, &Positioner::currentScreenChanged);
     connect(m_view, &QQuickWindow::screenChanged, this, &Positioner::onScreenChanged);
 
-    connect(m_view, &Latte::View::behaveAsPlasmaPanelChanged, this, &Positioner::syncGeometry);
-    connect(m_view, &Latte::View::maxThicknessChanged, this, &Positioner::syncGeometry);
+    connect(m_view, &Mocha::View::behaveAsPlasmaPanelChanged, this, &Positioner::syncGeometry);
+    connect(m_view, &Mocha::View::maxThicknessChanged, this, &Positioner::syncGeometry);
 
-    connect(m_view, &Latte::View::behaveAsPlasmaPanelChanged,  this, [&]() {
+    connect(m_view, &Mocha::View::behaveAsPlasmaPanelChanged,  this, [&]() {
         if (!m_view->behaveAsPlasmaPanel() && m_slideOffset != 0) {
             m_slideOffset = 0;
             syncGeometry();
         }
     });
 
-    connect(m_view, &Latte::View::offsetChanged, this, [&]() {
+    connect(m_view, &Mocha::View::offsetChanged, this, [&]() {
         updatePosition(m_lastAvailableScreenRect);
     });
 
-    connect(m_view, &Latte::View::locationChanged, this, [&]() {
+    connect(m_view, &Mocha::View::locationChanged, this, [&]() {
         updateFormFactor();
         syncGeometry();
     });
 
-    connect(m_view, &Latte::View::editThicknessChanged, this, [&]() {
+    connect(m_view, &Mocha::View::editThicknessChanged, this, [&]() {
         updateCanvasGeometry(m_lastAvailableScreenRect);
     });
 
-    connect(m_view, &Latte::View::maxLengthChanged, this, [&]() {
+    connect(m_view, &Mocha::View::maxLengthChanged, this, [&]() {
         if (m_view->behaveAsPlasmaPanel()) {
             syncGeometry();
         }
     });
 
-    connect(m_view, &Latte::View::normalThicknessChanged, this, [&]() {
+    connect(m_view, &Mocha::View::normalThicknessChanged, this, [&]() {
         if (m_view->behaveAsPlasmaPanel()) {
             syncGeometry();
         }
     });
 
-    connect(m_view, &Latte::View::screenEdgeMarginEnabledChanged, this, [&]() {
+    connect(m_view, &Mocha::View::screenEdgeMarginEnabledChanged, this, [&]() {
         syncGeometry();
     });
 
-    connect(m_view, &Latte::View::screenEdgeMarginChanged, this, [&]() {
+    connect(m_view, &Mocha::View::screenEdgeMarginChanged, this, [&]() {
         syncGeometry();
     });
 
@@ -183,13 +183,13 @@ void Positioner::init()
         }
     });
 
-    connect(m_view->effects(), &Latte::ViewPart::Effects::drawShadowsChanged, this, [&]() {
+    connect(m_view->effects(), &Mocha::ViewPart::Effects::drawShadowsChanged, this, [&]() {
         if (!m_view->behaveAsPlasmaPanel()) {
             syncGeometry();
         }
     });
 
-    connect(m_view->effects(), &Latte::ViewPart::Effects::innerShadowChanged, this, [&]() {
+    connect(m_view->effects(), &Mocha::ViewPart::Effects::innerShadowChanged, this, [&]() {
         if (m_view->behaveAsPlasmaPanel()) {
             syncGeometry();
         }
@@ -198,7 +198,7 @@ void Positioner::init()
     connect(qGuiApp, &QGuiApplication::screenAdded, this, &Positioner::onScreenChanged);
     connect(m_corona->screenPool(), &ScreenPool::primaryScreenChanged, this, &Positioner::onScreenChanged);
 
-    connect(m_view, &Latte::View::visibilityChanged, this, &Positioner::initDelayedSignals);
+    connect(m_view, &Mocha::View::visibilityChanged, this, &Positioner::initDelayedSignals);
 
     initSignalingForLocationChangeSliding();
 }
@@ -220,7 +220,7 @@ void Positioner::updateWaylandId()
         return;
     }
 
-    Latte::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("latte-dock", validTitle);
+    Mocha::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("mocha-dock", validTitle);
 
     if (m_trackedWindowId != newId) {
         if (!m_trackedWindowId.isNull()) {
@@ -261,7 +261,7 @@ bool Positioner::isOffScreen() const
 
 int Positioner::currentScreenId() const
 {
-    auto *latteCorona = qobject_cast<Latte::Corona *>(m_view->corona());
+    auto *latteCorona = qobject_cast<Mocha::Corona *>(m_view->corona());
 
     if (latteCorona) {
         return latteCorona->screenPool()->id(m_screenNameToFollow);
@@ -270,7 +270,7 @@ int Positioner::currentScreenId() const
     return -1;
 }
 
-Latte::WindowSystem::WindowId Positioner::trackedWindowId()
+Mocha::WindowSystem::WindowId Positioner::trackedWindowId()
 {
     if (m_trackedWindowId.toInt() <= 0) {
         updateWaylandId();
@@ -349,7 +349,7 @@ void Positioner::onCurrentLayoutIsSwitching(const QString &layoutName)
     slideOutDuringExit();
 }
 
-void Positioner::setWindowOnActivities(const Latte::WindowSystem::WindowId &wid, const QStringList &activities)
+void Positioner::setWindowOnActivities(const Mocha::WindowSystem::WindowId &wid, const QStringList &activities)
 {
     m_corona->wm()->setWindowOnActivities(wid, activities);
 }
@@ -465,7 +465,7 @@ void Positioner::onScreenChanged(QScreen *scr)
     //! this is needed in order to update the struts on screen change
     //! and even though the geometry has been set correctly the offsets
     //! of the screen must be updated to the new ones
-    if (m_view->visibility() && m_view->visibility()->mode() == Latte::Types::AlwaysVisible) {
+    if (m_view->visibility() && m_view->visibility()->mode() == Mocha::Types::AlwaysVisible) {
         m_view->updateAbsoluteGeometry(true);
     }
 }
@@ -522,12 +522,12 @@ void Positioner::immediateSyncGeometry()
 
         if (m_view->formFactor() == Plasma::Types::Vertical) {
             QString layoutName = m_view->layout() ? m_view->layout()->name() : QString();
-            auto latteCorona = qobject_cast<Latte::Corona *>(m_view->corona());
+            auto latteCorona = qobject_cast<Mocha::Corona *>(m_view->corona());
             int fixedScreen = m_view->onPrimary() ? latteCorona->screenPool()->primaryScreenId() : m_view->containment()->screen();
 
-            QList<Types::Visibility> ignoreModes({Latte::Types::AutoHide,
-                                                  Latte::Types::SidebarOnDemand,
-                                                  Latte::Types::SidebarAutoHide});
+            QList<Types::Visibility> ignoreModes({Mocha::Types::AutoHide,
+                                                  Mocha::Types::SidebarOnDemand,
+                                                  Mocha::Types::SidebarAutoHide});
 
             QList<Plasma::Types::Location> ignoreEdges({Plasma::Types::LeftEdge,
                                                         Plasma::Types::RightEdge});
@@ -767,9 +767,9 @@ void Positioner::updatePosition(QRect availableScreenRect)
         if (m_view->behaveAsPlasmaPanel()) {
             int y = screenGeometry.y() + screenEdgeMargin;
 
-            if (m_view->alignment() == Latte::Types::Left) {
+            if (m_view->alignment() == Mocha::Types::Left) {
                 position = {screenGeometry.x() + gap(screenGeometry.width()), y};
-            } else if (m_view->alignment() == Latte::Types::Right) {
+            } else if (m_view->alignment() == Mocha::Types::Right) {
                 position = {screenGeometry.x() + gapReversed(screenGeometry.width()) + 1, y};
             } else {
                 position = {screenGeometry.x() + gapCentered(screenGeometry.width()), y};
@@ -784,9 +784,9 @@ void Positioner::updatePosition(QRect availableScreenRect)
         if (m_view->behaveAsPlasmaPanel()) {
             int y = screenGeometry.y() + screenGeometry.height() - cleanThickness - screenEdgeMargin;
 
-            if (m_view->alignment() == Latte::Types::Left) {
+            if (m_view->alignment() == Mocha::Types::Left) {
                 position = {screenGeometry.x() + gap(screenGeometry.width()), y};
-            } else if (m_view->alignment() == Latte::Types::Right) {
+            } else if (m_view->alignment() == Mocha::Types::Right) {
                 position = {screenGeometry.x() + gapReversed(screenGeometry.width()) + 1, y};
             } else {
                 position = {screenGeometry.x() + gapCentered(screenGeometry.width()), y};
@@ -801,9 +801,9 @@ void Positioner::updatePosition(QRect availableScreenRect)
         if (m_view->behaveAsPlasmaPanel()) {
             int x = availableScreenRect.right() - cleanThickness + 1 - screenEdgeMargin;
 
-            if (m_view->alignment() == Latte::Types::Top) {
+            if (m_view->alignment() == Mocha::Types::Top) {
                 position = {x, availableScreenRect.y() + gap(availableScreenRect.height())};
-            } else if (m_view->alignment() == Latte::Types::Bottom) {
+            } else if (m_view->alignment() == Mocha::Types::Bottom) {
                 position = {x, availableScreenRect.y() + gapReversed(availableScreenRect.height()) + 1};
             } else {
                 position = {x, availableScreenRect.y() + gapCentered(availableScreenRect.height())};
@@ -818,9 +818,9 @@ void Positioner::updatePosition(QRect availableScreenRect)
         if (m_view->behaveAsPlasmaPanel()) {
             int x = availableScreenRect.x() + screenEdgeMargin;
 
-            if (m_view->alignment() == Latte::Types::Top) {
+            if (m_view->alignment() == Mocha::Types::Top) {
                 position = {x, availableScreenRect.y() + gap(availableScreenRect.height())};
-            } else if (m_view->alignment() == Latte::Types::Bottom) {
+            } else if (m_view->alignment() == Mocha::Types::Bottom) {
                 position = {x, availableScreenRect.y() + gapReversed(availableScreenRect.height()) + 1};
             } else {
                 position = {x, availableScreenRect.y() + gapCentered(availableScreenRect.height())};
@@ -1026,7 +1026,7 @@ void Positioner::initSignalingForLocationChangeSliding()
 
         //! SCREEN
         if (!m_nextScreenName.isEmpty()) {
-            bool nextonprimary = (m_nextScreenName == Latte::Data::Screen::ONPRIMARYNAME);
+            bool nextonprimary = (m_nextScreenName == Mocha::Data::Screen::ONPRIMARYNAME);
             m_nextScreen = m_corona->screenPool()->primaryScreen();
 
             if (!nextonprimary) {
@@ -1048,14 +1048,14 @@ void Positioner::initSignalingForLocationChangeSliding()
         }
 
         //! ALIGNMENT
-        if (m_nextAlignment != Latte::Types::NoneAlignment && m_nextAlignment != m_view->alignment()) {
+        if (m_nextAlignment != Mocha::Types::NoneAlignment && m_nextAlignment != m_view->alignment()) {
             m_view->setAlignment(m_nextAlignment);
-            m_nextAlignment = Latte::Types::NoneAlignment;
+            m_nextAlignment = Mocha::Types::NoneAlignment;
         }
 
         //! SCREENSGROUP
         if (m_view->isOriginal()) {
-            auto originalview = qobject_cast<Latte::OriginalView *>(m_view);
+            auto originalview = qobject_cast<Mocha::OriginalView *>(m_view);
             originalview->setScreensGroup(m_nextScreensGroup);
         }
     });
@@ -1179,31 +1179,31 @@ void Positioner::setNextLocation(const QString layoutName, const int screensGrou
 
     //! SCREENSGROUP
     if (m_view->isOriginal()) {
-        auto originalview = qobject_cast<Latte::OriginalView *>(m_view);
+        auto originalview = qobject_cast<Mocha::OriginalView *>(m_view);
         //!initialize screens group
         m_nextScreensGroup = originalview->screensGroup();
 
         if (m_nextScreensGroup != screensGroup) {
             haschanges = true;
-            m_nextScreensGroup = static_cast<Latte::Types::ScreensGroup>(screensGroup);
+            m_nextScreensGroup = static_cast<Mocha::Types::ScreensGroup>(screensGroup);
 
-            if (m_nextScreensGroup == Latte::Types::AllScreensGroup) {
-                screenName = Latte::Data::Screen::ONPRIMARYNAME;
-            } else if (m_nextScreensGroup == Latte::Types::AllSecondaryScreensGroup) {
+            if (m_nextScreensGroup == Mocha::Types::AllScreensGroup) {
+                screenName = Mocha::Data::Screen::ONPRIMARYNAME;
+            } else if (m_nextScreensGroup == Mocha::Types::AllSecondaryScreensGroup) {
                 int scrid = originalview->expectedScreenIdFromScreenGroup(m_nextScreensGroup);
 
-                if (scrid != Latte::ScreenPool::NOSCREENID) {
+                if (scrid != Mocha::ScreenPool::NOSCREENID) {
                     screenName = m_corona->screenPool()->connector(scrid);
                 }
             }
         }
     } else {
-        m_nextScreensGroup = Latte::Types::SingleScreenGroup;
+        m_nextScreensGroup = Mocha::Types::SingleScreenGroup;
     }
 
     //! SCREEN
     if (!screenName.isEmpty()) {
-        bool nextonprimary = (screenName == Latte::Data::Screen::ONPRIMARYNAME);
+        bool nextonprimary = (screenName == Mocha::Data::Screen::ONPRIMARYNAME);
 
         if ( (m_view->onPrimary() && !nextonprimary) /*primary -> explicit*/
              || (!m_view->onPrimary() && nextonprimary) /*explicit -> primary*/
@@ -1232,13 +1232,13 @@ void Positioner::setNextLocation(const QString layoutName, const int screensGrou
     }
 
     //! ALIGNMENT
-    if (alignment != Latte::Types::NoneAlignment && m_view->alignment() != alignment) {
-        m_nextAlignment = static_cast<Latte::Types::Alignment>(alignment);
+    if (alignment != Mocha::Types::NoneAlignment && m_view->alignment() != alignment) {
+        m_nextAlignment = static_cast<Mocha::Types::Alignment>(alignment);
         haschanges = true;
     }
 
     if (haschanges && m_view->isOriginal()) {
-        auto originalview = qobject_cast<Latte::OriginalView *>(m_view);
+        auto originalview = qobject_cast<Mocha::OriginalView *>(m_view);
         originalview->setNextLocationForClones(layoutName, edge, alignment);
     }
 

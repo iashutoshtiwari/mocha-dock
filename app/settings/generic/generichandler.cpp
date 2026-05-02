@@ -8,7 +8,7 @@
 // local
 #include "genericdialog.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Handler {
 

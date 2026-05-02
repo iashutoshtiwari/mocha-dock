@@ -8,7 +8,7 @@
 // Qt
 #include <QtMath>
 
-namespace Latte{
+namespace Mocha{
 
 Tools::Tools(QObject *parent)
     : QObject(parent)

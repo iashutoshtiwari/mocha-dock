@@ -8,10 +8,10 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
 
-LatteComponents.ComboBoxButton{
+MochaComponents.ComboBoxButton{
     id: custom
     checkable: true
 
@@ -21,11 +21,11 @@ LatteComponents.ComboBoxButton{
     comboBoxTextRole: "name"
     comboBoxMinimumPopUpWidth: width
     comboBoxBlankSpaceForEmptyIcons: false
-    comboBoxForcePressed: checked // latteView.visibility.mode === mode
+    comboBoxForcePressed: checked // mochaView.visibility.mode === mode
     comboBoxPopUpAlignRight: Qt.application.layoutDirection !== Qt.RightToLeft
     comboBoxPopupTextHorizontalAlignment: Text.AlignHCenter
 
-    property int mode: LatteCore.Types.WindowsGoBelow
+    property int mode: MochaCore.Types.WindowsGoBelow
     readonly property int currentModeIndex: {
         for (var i=0; i<modes.length; ++i) {
             if (modes[i].pluginId === mode) {
@@ -54,7 +54,7 @@ LatteComponents.ComboBoxButton{
     Connections{
         target: custom.button
         onClicked: {
-            latteView.visibility.mode = custom.mode;
+            mochaView.visibility.mode = custom.mode;
         }
     }
 
@@ -68,10 +68,10 @@ LatteComponents.ComboBoxButton{
     }
 
     Connections {
-        target: latteView.visibility
+        target: mochaView.visibility
         onModeChanged: {
             for (var i=0; i<custom.modes.length; ++i) {
-                if (custom.modes[i].pluginId === latteView.visibility.mode) {
+                if (custom.modes[i].pluginId === mochaView.visibility.mode) {
                     custom.viewRelevantVisibilityModeChanged();
                     return;
                 }
@@ -85,7 +85,7 @@ LatteComponents.ComboBoxButton{
         onActivated: {
             if (index>=0) {
                 var item = actionsModel.get(index);
-                latteView.visibility.mode = item.pluginId;
+                mochaView.visibility.mode = item.pluginId;
             }
         }
     }

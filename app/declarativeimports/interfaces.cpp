@@ -7,7 +7,7 @@
 
 #include <PlasmaQuick/AppletQuickItem>
 
-namespace Latte{
+namespace Mocha{
 
 Interfaces::Interfaces(QObject *parent)
     : QObject(parent)

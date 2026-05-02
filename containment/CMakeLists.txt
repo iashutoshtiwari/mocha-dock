@@ -1,17 +1,18 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.latte.containment\")
+add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.mocha.containment\")
 
-plasma_install_package(package org.kde.latte.containment)
+plasma_install_package(package org.kde.mocha.containment)
 
 set(containment_SRCS
-    plugin/lattetypes.h
+    plugin/types.h
+    plugin/mochatypes.h
     plugin/types.cpp
     plugin/layoutmanager.cpp
-    plugin/lattecontainmentplugin.cpp
+    plugin/mochacontainmentplugin.cpp
 )
 
-add_library(lattecontainmentplugin SHARED ${containment_SRCS})
+add_library(mochacontainmentplugin SHARED ${containment_SRCS})
 
-target_link_libraries(lattecontainmentplugin
+target_link_libraries(mochacontainmentplugin
                       Qt::Core
                       Qt::Qml
                       Qt::Quick
@@ -19,5 +20,5 @@ target_link_libraries(lattecontainmentplugin
                       Plasma::Plasma
                       Plasma::PlasmaQuick)
 
-install(TARGETS lattecontainmentplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/private/containment)
-install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/private/containment)
+install(TARGETS mochacontainmentplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/mocha/private/containment)
+install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/mocha/private/containment)

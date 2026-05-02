@@ -20,7 +20,7 @@
 #include <QPainter>
 #include <QStandardItemModel>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Layout {
 namespace Delegate {
@@ -86,37 +86,37 @@ void LayoutName::paint(QPainter *painter, const QStyleOptionViewItem &option, co
     myOptions.displayAlignment = static_cast<Qt::Alignment>(index.model()->data(index, Qt::TextAlignmentRole).toInt());;
 
     //! background
-    Latte::drawBackground(painter, option);
+    Mocha::drawBackground(painter, option);
 
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     //! Changes Indicator
-    QRect remainedrect = Latte::remainedFromChangesIndicator(myOptions);
+    QRect remainedrect = Mocha::remainedFromChangesIndicator(myOptions);
     if (isChanged) {
-        Latte::drawChangesIndicator(painter, option);
+        Mocha::drawChangesIndicator(painter, option);
     }
 
     myOptions.rect = remainedrect;
 
     if (hasErrors || hasWarnings) {
-        remainedrect = Latte::remainedFromIcon(myOptions, Qt::AlignRight, -1, 2);
+        remainedrect = Mocha::remainedFromIcon(myOptions, Qt::AlignRight, -1, 2);
         if (hasErrors) {
-            Latte::drawIcon(painter, myOptions, "data-error", Qt::AlignRight, -1, 2);
+            Mocha::drawIcon(painter, myOptions, "data-error", Qt::AlignRight, -1, 2);
         } else if (hasWarnings) {
-            Latte::drawIcon(painter, myOptions, "data-warning", Qt::AlignRight, -1, 2);
+            Mocha::drawIcon(painter, myOptions, "data-warning", Qt::AlignRight, -1, 2);
         }
         myOptions.rect = remainedrect;
     }
 
     if (isConsideredActive) {
-        remainedrect = Latte::remainedFromIcon(myOptions, Qt::AlignRight, -1, 1);
-        Latte::drawIcon(painter, myOptions, "favorite", Qt::AlignRight, -1, 1);
+        remainedrect = Mocha::remainedFromIcon(myOptions, Qt::AlignRight, -1, 1);
+        Mocha::drawIcon(painter, myOptions, "favorite", Qt::AlignRight, -1, 1);
         myOptions.rect = remainedrect;
     }
 
     if (isLocked) {
-        remainedrect = Latte::remainedFromIcon(myOptions, Qt::AlignRight, -1, 1);
-        Latte::drawIcon(painter, myOptions, "object-locked", Qt::AlignRight, -1, 1);
+        remainedrect = Mocha::remainedFromIcon(myOptions, Qt::AlignRight, -1, 1);
+        Mocha::drawIcon(painter, myOptions, "object-locked", Qt::AlignRight, -1, 1);
         myOptions.rect = remainedrect;
     }
 
@@ -128,7 +128,7 @@ void LayoutName::paint(QPainter *painter, const QStyleOptionViewItem &option, co
         myOptions.text = "<i>" + myOptions.text + "</i>";
     }
 
-    Latte::drawFormattedText(painter, myOptions);
+    Mocha::drawFormattedText(painter, myOptions);
 }
 
 }

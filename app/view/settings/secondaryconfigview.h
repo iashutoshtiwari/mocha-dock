@@ -28,18 +28,18 @@ class Containment;
 class Types;
 }
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 class PrimaryConfigView;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 class SecondaryConfigView : public SubConfigView
@@ -47,7 +47,7 @@ class SecondaryConfigView : public SubConfigView
     Q_OBJECT
 
 public:
-    SecondaryConfigView(Latte::View *view, PrimaryConfigView *parent);
+    SecondaryConfigView(Mocha::View *view, PrimaryConfigView *parent);
 
     QRect geometryWhenVisible() const;
 
@@ -65,7 +65,7 @@ protected:
     void focusOutEvent(QFocusEvent *ev) override;
 
     void init() override;
-    void initParentView(Latte::View *view) override;
+    void initParentView(Mocha::View *view) override;
     void updateEnabledBorders() override;
 
 private:

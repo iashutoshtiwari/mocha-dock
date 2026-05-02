@@ -12,7 +12,7 @@
 #include <QJSEngine>
 
 
-namespace Latte{
+namespace Mocha{
 
 class Environment final: public QObject
 {

@@ -12,7 +12,7 @@
 #include <Plasma/Applet>
 #include <PlasmaQuick/AppletQuickItem>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 TasksModel::TasksModel(QObject *parent)

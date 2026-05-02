@@ -8,7 +8,7 @@ import Qt5Compat.GraphicalEffects
 
 import org.kde.plasma.plasmoid
 import org.kde.kirigami as Kirigami
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.components as MochaComponents
 
 Loader{
     id: shorcutBadge
@@ -65,7 +65,7 @@ Loader{
             }
         }
 
-        LatteComponents.BadgeText {
+        MochaComponents.BadgeText {
             id: taskNumber
             // when iconSize < 48, height is always = 24, height / iconSize > 50%
             // we prefer center aligned badges to top-left aligned ones

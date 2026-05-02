@@ -12,7 +12,7 @@
 #include "../../wm/tracker/lastactivewindow.h"
 #include "../../wm/tracker/windowstracker.h"
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 namespace TrackerPart {
 
@@ -34,37 +34,37 @@ void  AllScreensTracker::init()
         initSignalsForInformation();
     }
 
-    connect(m_latteView, &Latte::View::layoutChanged, this, [&]() {
+    connect(m_latteView, &Mocha::View::layoutChanged, this, [&]() {
         if (m_latteView->layout()) {
             initSignalsForInformation();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::informationAnnouncedForLayout, this, [&](const Latte::Layout::GenericLayout *layout) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::informationAnnouncedForLayout, this, [&](const Mocha::Layout::GenericLayout *layout) {
         if (m_latteView->layout() == layout) {
             initSignalsForInformation();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowMaximizedChangedForLayout, this, [&](const Latte::Layout::GenericLayout *layout) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowMaximizedChangedForLayout, this, [&](const Mocha::Layout::GenericLayout *layout) {
         if (m_latteView->layout() == layout) {
             emit activeWindowMaximizedChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowActiveChangedForLayout, this, [&](const Latte::Layout::GenericLayout *layout) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowActiveChangedForLayout, this, [&](const Mocha::Layout::GenericLayout *layout) {
         if (m_latteView->layout() == layout) {
             emit existsWindowActiveChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowMaximizedChangedForLayout, this, [&](const Latte::Layout::GenericLayout *layout) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowMaximizedChangedForLayout, this, [&](const Mocha::Layout::GenericLayout *layout) {
         if (m_latteView->layout() == layout) {
             emit existsWindowMaximizedChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowSchemeChangedForLayout, this, [&](const Latte::Layout::GenericLayout *layout) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowSchemeChangedForLayout, this, [&](const Mocha::Layout::GenericLayout *layout) {
         if (m_latteView->layout() == layout) {
             emit activeWindowSchemeChanged();
         }

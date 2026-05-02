@@ -11,7 +11,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Item{
     id: rulerItem
@@ -71,13 +71,13 @@ Item{
         property: "xL"
         value: {
             if (root.isHorizontal) {
-                if (plasmoid.configuration.alignment === LatteCore.Types.Justify) {
+                if (plasmoid.configuration.alignment === MochaCore.Types.Justify) {
                     return root.width/2 - rulerItem.length/2 + root.offset;
-                } else if (root.panelAlignment === LatteCore.Types.Left) {
+                } else if (root.panelAlignment === MochaCore.Types.Left) {
                     return root.offset;
-                } else if (root.panelAlignment === LatteCore.Types.Center) {
+                } else if (root.panelAlignment === MochaCore.Types.Center) {
                     return root.width/2 - rulerItem.length/2 + root.offset;
-                } else if (root.panelAlignment === LatteCore.Types.Right) {
+                } else if (root.panelAlignment === MochaCore.Types.Right) {
                     return root.width - rulerItem.length - root.offset;
                 }
             } else {
@@ -91,13 +91,13 @@ Item{
         property: "yL"
         value: {
             if (root.isVertical) {
-                if (plasmoid.configuration.alignment === LatteCore.Types.Justify) {
+                if (plasmoid.configuration.alignment === MochaCore.Types.Justify) {
                     return root.height/2 - rulerItem.length/2 + root.offset;
-                } else if (root.panelAlignment === LatteCore.Types.Top) {
+                } else if (root.panelAlignment === MochaCore.Types.Top) {
                     return root.offset;
-                } else if (root.panelAlignment === LatteCore.Types.Center) {
+                } else if (root.panelAlignment === MochaCore.Types.Center) {
                     return root.height/2 - rulerItem.length/2 + root.offset;
-                } else if (root.panelAlignment === LatteCore.Types.Bottom) {
+                } else if (root.panelAlignment === MochaCore.Types.Bottom) {
                     return root.height - rulerItem.length - root.offset;
                 }
             } else {

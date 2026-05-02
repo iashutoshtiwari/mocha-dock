@@ -10,7 +10,7 @@
 // local
 #include <coretypes.h>
 #include "../apptypes.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../screenpool.h"
 #include "../layouts/importer.h"
 #include "../layouts/manager.h"
@@ -24,7 +24,7 @@
 //#include <KActivities/Consumer>
 
 
-namespace Latte {
+namespace Mocha {
 
 CentralLayout::CentralLayout(QObject *parent, QString layoutFile, QString assignedName)
     : Layout::GenericLayout(parent, layoutFile, assignedName)
@@ -132,12 +132,12 @@ void CentralLayout::setActivities(QStringList activities)
     emit activitiesChanged();
 }
 
-Latte::WindowSystem::SchemeColors *CentralLayout::scheme() const
+Mocha::WindowSystem::SchemeColors *CentralLayout::scheme() const
 {
     return m_scheme;
 }
 
-void CentralLayout::setScheme(Latte::WindowSystem::SchemeColors *_scheme)
+void CentralLayout::setScheme(Mocha::WindowSystem::SchemeColors *_scheme)
 {
     if (m_scheme == _scheme) {
         return;

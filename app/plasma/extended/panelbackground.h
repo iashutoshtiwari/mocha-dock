@@ -16,13 +16,13 @@
 // Plasma
 #include <Plasma/Plasma>
 
-namespace Latte {
+namespace Mocha {
 namespace PlasmaExtended {
 class Theme;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace PlasmaExtended {
 
 class PanelBackground: public QObject

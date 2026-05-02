@@ -15,7 +15,7 @@
 // KDE
 #include <KLocalizedString>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace View {
 namespace Delegate {
@@ -27,7 +27,7 @@ NameDelegate::NameDelegate(QObject *parent)
 
 void NameDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    editor->setGeometry(Latte::remainedFromScreenDrawing(option, false));
+    editor->setGeometry(Mocha::remainedFromScreenDrawing(option, false));
 }
 
 void NameDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -46,8 +46,8 @@ void NameDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     bool hasErrors = index.data(Model::Views::ERRORSROLE).toBool();
     bool hasWarnings = index.data(Model::Views::WARNINGSROLE).toBool();
 
-    Latte::Data::Screen screen = index.data(Model::Views::SCREENROLE).value<Latte::Data::Screen>();
-    Latte::Data::View view = index.data(Model::Views::VIEWROLE).value<Latte::Data::View>();
+    Mocha::Data::Screen screen = index.data(Model::Views::SCREENROLE).value<Mocha::Data::Screen>();
+    Mocha::Data::View view = index.data(Model::Views::VIEWROLE).value<Mocha::Data::View>();
 
     float textopacity = 1.0;
 
@@ -68,34 +68,34 @@ void NameDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         textopacity = 0.25;
     }
 
-    Latte::drawBackground(painter, option);
+    Mocha::drawBackground(painter, option);
 
     // draw changes indicator
-    QRect remainedrect = Latte::remainedFromChangesIndicator(option);
+    QRect remainedrect = Mocha::remainedFromChangesIndicator(option);
     if (isChanged) {
-        Latte::drawChangesIndicator(painter, option);
+        Mocha::drawChangesIndicator(painter, option);
     }
     myOptions.rect = remainedrect;
 
     // draw errors/warnings
     if (hasErrors || hasWarnings) {
-        remainedrect = Latte::remainedFromIcon(myOptions, Qt::AlignRight, -1, 2);
+        remainedrect = Mocha::remainedFromIcon(myOptions, Qt::AlignRight, -1, 2);
         if (hasErrors) {
-            Latte::drawIcon(painter, myOptions, "data-error", Qt::AlignRight, -1, 2);
+            Mocha::drawIcon(painter, myOptions, "data-error", Qt::AlignRight, -1, 2);
         } else if (hasWarnings) {
-            Latte::drawIcon(painter, myOptions, "data-warning", Qt::AlignRight, -1, 2);
+            Mocha::drawIcon(painter, myOptions, "data-warning", Qt::AlignRight, -1, 2);
         }
         myOptions.rect = remainedrect;
     }
 
     // draw screen icon
     int maxiconsize = -1; //disabled
-    remainedrect = Latte::remainedFromScreenDrawing(myOptions, screen.isScreensGroup(), maxiconsize);
-    QRect availableScreenRect = Latte::drawScreen(painter, myOptions, screen.isScreensGroup(), screen.geometry, maxiconsize, textopacity);
-    Latte::drawView(painter, myOptions, view, availableScreenRect, textopacity);
+    remainedrect = Mocha::remainedFromScreenDrawing(myOptions, screen.isScreensGroup(), maxiconsize);
+    QRect availableScreenRect = Mocha::drawScreen(painter, myOptions, screen.isScreensGroup(), screen.geometry, maxiconsize, textopacity);
+    Mocha::drawView(painter, myOptions, view, availableScreenRect, textopacity);
 
     myOptions.rect = remainedrect;
-    Latte::drawFormattedText(painter, myOptions, textopacity);
+    Mocha::drawFormattedText(painter, myOptions, textopacity);
 }
 
 }

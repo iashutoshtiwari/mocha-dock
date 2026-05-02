@@ -25,11 +25,11 @@ class Containment;
 class Types;
 }
 
-namespace Latte {
+namespace Mocha {
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 
 class ContextMenuLayerQuickItem : public QQuickItem
 {
@@ -77,9 +77,9 @@ private:
     QMetaMethod m_appletContainsMethod;
     QQuickItem *m_appletContainsMethodItem{nullptr};
 
-    Latte::View *m_latteView{nullptr};
+    Mocha::View *m_latteView{nullptr};
 
-    friend class Latte::View;
+    friend class Mocha::View;
 };
 
 }

@@ -7,21 +7,21 @@ import QtQuick
 
 import org.kde.taskmanager as TaskManager
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.containment as MochaContainment
 
 Loader {
     id: tasksLoader
-    active: root.scrollAction === LatteContainment.Types.ScrollTasks || root.scrollAction === LatteContainment.Types.ScrollToggleMinimized
+    active: root.scrollAction === MochaContainment.Types.ScrollTasks || root.scrollAction === MochaContainment.Types.ScrollToggleMinimized
     sourceComponent: Item {
         TaskManager.TasksModel {
             id: tasksModel
             virtualDesktop: virtualDesktopInfo.currentDesktop
-            screenGeometry: latteView ? latteView.screenGeometry : Qt.rect(-1, -1, 0, 0)
+            screenGeometry: mochaView ? mochaView.screenGeometry : Qt.rect(-1, -1, 0, 0)
             activity: activityInfo.currentActivity
 
             filterByVirtualDesktop: true
-            filterByScreen:latteView ?  true : false
+            filterByScreen:mochaView ?  true : false
             filterByActivity: true
 
             launchInPlace: true

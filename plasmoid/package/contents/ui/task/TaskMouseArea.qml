@@ -8,8 +8,8 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.tasks as LatteTasks
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.tasks as MochaTasks
 
 MouseArea {
     id: taskMouseArea
@@ -106,8 +106,8 @@ MouseArea {
     }
 
     onPressed: (mouse) => {
-        if (LatteCore.WindowSystem.compositingActive && !LatteCore.WindowSystem.isPlatformWayland) {
-            if(root.leftClickAction !== LatteTasks.Types.PreviewWindows) {
+        if (MochaCore.WindowSystem.compositingActive && !MochaCore.WindowSystem.isPlatformWayland) {
+            if(root.leftClickAction !== MochaTasks.Types.PreviewWindows) {
                 isAbleToShowPreview = false;
                 windowsPreviewDlg.hide(2);
             }
@@ -145,18 +145,18 @@ MouseArea {
 
             if (modifierAccepted(mouse) && !root.disableAllWindowsFunctionality){
                 if( !taskItem.isLauncher ){
-                    if (root.modifierClickAction == LatteTasks.Types.NewInstance) {
+                    if (root.modifierClickAction == MochaTasks.Types.NewInstance) {
                         tasksModel.requestNewInstance(modelIndex());
-                    } else if (root.modifierClickAction == LatteTasks.Types.Close) {
+                    } else if (root.modifierClickAction == MochaTasks.Types.Close) {
                         tasksModel.requestClose(modelIndex());
-                    } else if (root.modifierClickAction == LatteTasks.Types.ToggleMinimized) {
+                    } else if (root.modifierClickAction == MochaTasks.Types.ToggleMinimized) {
                         tasksModel.requestToggleMinimized(modelIndex());
-                    } else if ( root.modifierClickAction == LatteTasks.Types.CycleThroughTasks) {
+                    } else if ( root.modifierClickAction == MochaTasks.Types.CycleThroughTasks) {
                         if (isGroupParent)
                             subWindows.activateNextTask();
                         else
                             activateTask();
-                    } else if (root.modifierClickAction == LatteTasks.Types.ToggleGrouping) {
+                    } else if (root.modifierClickAction == MochaTasks.Types.ToggleGrouping) {
                         tasksModel.requestToggleGrouping(modelIndex());
                     }
                 } else {
@@ -164,18 +164,18 @@ MouseArea {
                 }
             } else if (mouse.button == Qt.MidButton && !root.disableAllWindowsFunctionality){
                 if( !taskItem.isLauncher ){
-                    if (root.middleClickAction == LatteTasks.Types.NewInstance) {
+                    if (root.middleClickAction == MochaTasks.Types.NewInstance) {
                         tasksModel.requestNewInstance(modelIndex());
-                    } else if (root.middleClickAction == LatteTasks.Types.Close) {
+                    } else if (root.middleClickAction == MochaTasks.Types.Close) {
                         tasksModel.requestClose(modelIndex());
-                    } else if (root.middleClickAction == LatteTasks.Types.ToggleMinimized) {
+                    } else if (root.middleClickAction == MochaTasks.Types.ToggleMinimized) {
                         tasksModel.requestToggleMinimized(modelIndex());
-                    } else if ( root.middleClickAction == LatteTasks.Types.CycleThroughTasks) {
+                    } else if ( root.middleClickAction == MochaTasks.Types.CycleThroughTasks) {
                         if (isGroupParent)
                             subWindows.activateNextTask();
                         else
                             activateTask();
-                    } else if (root.middleClickAction == LatteTasks.Types.ToggleGrouping) {
+                    } else if (root.middleClickAction == MochaTasks.Types.ToggleGrouping) {
                         tasksModel.requestToggleGrouping(modelIndex());
                     }
                 } else {
@@ -186,19 +186,19 @@ MouseArea {
 
                 if (root.plasmaAtLeast525) {
                     //! At least Plasma 5.25 case
-                    canPresentWindowsIsSupported = LatteCore.WindowSystem.compositingActive && backend.windowViewAvailable;
+                    canPresentWindowsIsSupported = MochaCore.WindowSystem.compositingActive && backend.windowViewAvailable;
                 } else if (root.plasmaGreaterThan522) {
                     //! At least Plasma 5.23 case
-                    canPresentWindowsIsSupported = LatteCore.WindowSystem.compositingActive && backend.canPresentWindows;
+                    canPresentWindowsIsSupported = MochaCore.WindowSystem.compositingActive && backend.canPresentWindows;
                 } else {
                     //! past Plasma versions
-                    canPresentWindowsIsSupported = LatteCore.WindowSystem.compositingActive && backend.canPresentWindows();
+                    canPresentWindowsIsSupported = MochaCore.WindowSystem.compositingActive && backend.canPresentWindows();
                 }
 
                 if( !taskItem.isLauncher && !root.disableAllWindowsFunctionality ){
                     //! Plasma 6: Preview/PresentWindows for grouped tasks needs PipeWire
                     //! thumbnails which may not be available. Simplified to always activate.
-                    if (root.leftClickAction === LatteTasks.Types.CycleThroughTasks && isGroupParent) {
+                    if (root.leftClickAction === MochaTasks.Types.CycleThroughTasks && isGroupParent) {
                         subWindows.activateNextTask();
                     } else {
                         activateTask();
@@ -215,7 +215,7 @@ MouseArea {
     }
 
     onWheel: (wheel) => {
-        var wheelActionsEnabled = (root.taskScrollAction !== LatteTasks.Types.ScrollNone || root.manualScrollTasksEnabled);
+        var wheelActionsEnabled = (root.taskScrollAction !== MochaTasks.Types.ScrollNone || root.manualScrollTasksEnabled);
 
         if (isSeparator
                 || wheelIsBlocked
@@ -246,8 +246,8 @@ MouseArea {
 
             var overflowScrollingAccepted = (root.manualScrollTasksEnabled
                                              && scrollableList.contentsExceed
-                                             && (root.manualScrollTasksType === LatteTasks.Types.ManualScrollVerticalHorizontal
-                                                 || (root.manualScrollTasksType === LatteTasks.Types.ManualScrollOnlyParallel && parallelScrolling)) );
+                                             && (root.manualScrollTasksType === MochaTasks.Types.ManualScrollVerticalHorizontal
+                                                 || (root.manualScrollTasksType === MochaTasks.Types.ManualScrollOnlyParallel && parallelScrolling)) );
 
 
             if (overflowScrollingAccepted) {
@@ -274,8 +274,8 @@ MouseArea {
 
             var overflowScrollingAccepted = (root.manualScrollTasksEnabled
                                              && scrollableList.contentsExceed
-                                             && (root.manualScrollTasksType === LatteTasks.Types.ManualScrollVerticalHorizontal
-                                                 || (root.manualScrollTasksType === LatteTasks.Types.ManualScrollOnlyParallel && parallelScrolling)) );
+                                             && (root.manualScrollTasksType === MochaTasks.Types.ManualScrollVerticalHorizontal
+                                                 || (root.manualScrollTasksType === MochaTasks.Types.ManualScrollOnlyParallel && parallelScrolling)) );
 
 
             if (overflowScrollingAccepted) {
@@ -284,7 +284,7 @@ MouseArea {
                 if (isLauncher || root.disableAllWindowsFunctionality) {
                     // do nothing
                 } else if (isGroupParent) {
-                    if (root.taskScrollAction === LatteTasks.Types.ScrollToggleMinimized) {
+                    if (root.taskScrollAction === MochaTasks.Types.ScrollToggleMinimized) {
                         subWindows.minimizeTask();
                     } else {
                         subWindows.activatePreviousTask();
@@ -292,7 +292,7 @@ MouseArea {
                 } else {
                     var taskIndex = modelIndex();
 
-                    var hidingTask = (!isMinimized && root.taskScrollAction === LatteTasks.Types.ScrollToggleMinimized);
+                    var hidingTask = (!isMinimized && root.taskScrollAction === MochaTasks.Types.ScrollToggleMinimized);
 
                     if (isMinimized || hidingTask) {
                         tasksModel.requestToggleMinimized(taskIndex);

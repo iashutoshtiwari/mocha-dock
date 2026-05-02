@@ -27,18 +27,18 @@ class FrameSvg;
 class Types;
 }
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 class PrimaryConfigView;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 class CanvasConfigView : public SubConfigView
@@ -46,7 +46,7 @@ class CanvasConfigView : public SubConfigView
     Q_OBJECT
 
 public:
-    CanvasConfigView(Latte::View *view, PrimaryConfigView *parent);
+    CanvasConfigView(Mocha::View *view, PrimaryConfigView *parent);
 
     QRect geometryWhenVisible() const;
 
@@ -64,7 +64,7 @@ protected:
     bool event(QEvent *ev) override;
 
     void init() override;
-    void initParentView(Latte::View *view) override;
+    void initParentView(Mocha::View *view) override;
     void updateEnabledBorders() override;
 
 private:

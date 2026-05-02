@@ -10,25 +10,25 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.private.app as LatteApp
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.private.app as MochaApp
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.containment as MochaContainment
 
 import "canvas" as CanvasComponent
 
 Loader {
-    active: plasmoid && plasmoid.configuration && latteView
+    active: plasmoid && plasmoid.configuration && mochaView
 
     sourceComponent: Item{
         id: root
         readonly property bool isVertical: plasmoid.formFactor === PlasmaCore.Types.Vertical
         readonly property bool isHorizontal: !isVertical
 
-        property int animationSpeed: LatteCore.WindowSystem.compositingActive ? 500 : 0
+        property int animationSpeed: MochaCore.WindowSystem.compositingActive ? 500 : 0
         property int panelAlignment: plasmoid.configuration.alignment
 
         readonly property real appliedOpacity: imageTiler.opacity
-        readonly property real maxOpacity: universalSettings.inConfigureAppletsMode || !LatteCore.WindowSystem.compositingActive ?
+        readonly property real maxOpacity: universalSettings.inConfigureAppletsMode || !MochaCore.WindowSystem.compositingActive ?
                                                1 : plasmoid.configuration.editBackgroundOpacity
 
         property real offset: {
@@ -40,10 +40,10 @@ Loader {
         }
 
         property string appChosenShadowColor: {
-            if (plasmoid.configuration.shadowColorType === LatteContainment.Types.ThemeColorShadow) {
+            if (plasmoid.configuration.shadowColorType === MochaContainment.Types.ThemeColorShadow) {
                 var strC = String(Kirigami.Theme.textColor);
                 return strC.indexOf("#") === 0 ? strC.substr(1) : strC;
-            } else if (plasmoid.configuration.shadowColorType === LatteContainment.Types.UserColorShadow) {
+            } else if (plasmoid.configuration.shadowColorType === MochaContainment.Types.UserColorShadow) {
                 return plasmoid.configuration.shadowColor;
             }
 
@@ -74,7 +74,7 @@ Loader {
             anchors.fill: parent
             opacity: root.maxOpacity
             fillMode: Image.Tile
-            source: latteView.layout ? latteView.layout.background : "../images/canvas/blueprint.jpg"
+            source: mochaView.layout ? mochaView.layout.background : "../images/canvas/blueprint.jpg"
 
             Behavior on opacity {
                 NumberAnimation {
@@ -84,10 +84,10 @@ Loader {
             }
         }
 
-        LatteApp.ContextMenuLayer {
+        MochaApp.ContextMenuLayer {
             id: contextMenuLayer
             anchors.fill: parent
-            view: latteView
+            view: mochaView
         }
 
         MouseArea {

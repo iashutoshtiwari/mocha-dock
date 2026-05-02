@@ -12,7 +12,7 @@
 #include <QQmlEngine>
 #include <QJSEngine>
 
-namespace Latte {
+namespace Mocha {
 
 /**
  * @brief The QuickWindowSystem class,

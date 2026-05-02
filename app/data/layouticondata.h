@@ -13,7 +13,7 @@
 #include <QMetaType>
 #include <QString>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 class LayoutIcon : public Generic
@@ -38,6 +38,6 @@ public:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::LayoutIcon)
+Q_DECLARE_METATYPE(Mocha::Data::LayoutIcon)
 
 #endif

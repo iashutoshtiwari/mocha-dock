@@ -14,7 +14,7 @@ import org.kde.plasma.components as PlasmaComponents
 
 import org.kde.plasma.plasmoid
 
-import "." as LatteExtraControls
+import "." as MochaExtraControls
 
 import "private" as Private
 
@@ -69,14 +69,14 @@ PlasmoidItem {
             anchors.horizontalCenter: level === 2 ? parent.horizontalCenter : undefined
             anchors.verticalCenter: parent.verticalCenter
 
-            LatteExtraControls.Header {
+            MochaExtraControls.Header {
                 id: headerText
                 text: item.text
                 enabled: item.checked && item.enabled
                 visible: level === 1
             }
 
-            LatteExtraControls.SubHeader {
+            MochaExtraControls.SubHeader {
                 id: subHeaderText
                 text: item.text
                 enabled: item.checked && item.enabled

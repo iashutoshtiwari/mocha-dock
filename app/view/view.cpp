@@ -16,7 +16,7 @@
 #include "settings/viewsettingsfactory.h"
 #include "settings/widgetexplorerview.h"
 #include "../apptypes.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../data/layoutdata.h"
 #include "../data/viewstable.h"
 #include "../declarativeimports/interfaces.h"
@@ -58,7 +58,7 @@
 #define BLOCKHIDINGNEEDSATTENTIONTYPE "View::Containment::NeedsAttentionState()"
 #define BLOCKHIDINGREQUESTSINPUTTYPE "View::Containment::RequestsInputState()"
 
-namespace Latte {
+namespace Mocha {
 
 //! both alwaysVisible and byPassWMX11 are passed through corona because
 //! during the view window creation containment hasn't been set, but these variables
@@ -73,7 +73,7 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
     //this is disabled because under wayland breaks Views positioning
     //setVisible(false);
 
-    m_corona = qobject_cast<Latte::Corona *>(corona);
+    m_corona = qobject_cast<Mocha::Corona *>(corona);
 
     //! needs to be created after Effects because it catches some of its signals
     //! and avoid a crash from View::winId() at the same time
@@ -192,11 +192,11 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
 
             //! Try to find the Interfaces QML object directly since _latte_view_interfacesobject
             //! may not be set yet (Component.onCompleted ran before we set _latte_view_object)
-            Latte::Interfaces *ifacesGraphicObject = qobject_cast<Latte::Interfaces *>(containmentGraphicItem->property("_latte_view_interfacesobject").value<QObject *>());
+            Mocha::Interfaces *ifacesGraphicObject = qobject_cast<Mocha::Interfaces *>(containmentGraphicItem->property("_latte_view_interfacesobject").value<QObject *>());
 
             if (!ifacesGraphicObject) {
                 //! Search for it as a child of the containment graphic item
-                ifacesGraphicObject = containmentGraphicItem->findChild<Latte::Interfaces *>();
+                ifacesGraphicObject = containmentGraphicItem->findChild<Mocha::Interfaces *>();
             }
 
             if (ifacesGraphicObject) {
@@ -236,7 +236,7 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
     }, Qt::DirectConnection);
 
     if (m_corona) {
-        connect(m_corona, &Latte::Corona::viewLocationChanged, this, &View::dockLocationChanged);
+        connect(m_corona, &Mocha::Corona::viewLocationChanged, this, &View::dockLocationChanged);
     }
 }
 
@@ -363,10 +363,10 @@ void View::init(Plasma::Containment *plasma_containment)
     });
 
     //! used in order to disconnect it when it should NOT be called because it creates crashes
-    connect(this, &View::availableScreenRectChangedFrom, m_corona, &Latte::Corona::availableScreenRectChangedFrom);
-    connect(this, &View::availableScreenRegionChangedFrom, m_corona, &Latte::Corona::availableScreenRegionChangedFrom);
-    connect(m_corona, &Latte::Corona::availableScreenRectChangedFrom, this, &View::availableScreenRectChangedFromSlot);
-    connect(m_corona, &Latte::Corona::verticalUnityViewHasFocus, this, &View::topViewAlwaysOnTop);
+    connect(this, &View::availableScreenRectChangedFrom, m_corona, &Mocha::Corona::availableScreenRectChangedFrom);
+    connect(this, &View::availableScreenRegionChangedFrom, m_corona, &Mocha::Corona::availableScreenRegionChangedFrom);
+    connect(m_corona, &Mocha::Corona::availableScreenRectChangedFrom, this, &View::availableScreenRectChangedFromSlot);
+    connect(m_corona, &Mocha::Corona::verticalUnityViewHasFocus, this, &View::topViewAlwaysOnTop);
 
     connect(this, &View::byPassWMChanged, this, &View::saveConfig);
     connect(this, &View::isPreferredForShortcutsChanged, this, &View::saveConfig);
@@ -390,7 +390,7 @@ void View::init(Plasma::Containment *plasma_containment)
     connect(m_interface, &ViewPart::ContainmentInterface::hasExpandedAppletChanged, this, &View::verticalUnityViewHasFocus);
 
     //! View sends this signal in order to avoid crashes from ViewPart::Indicator when the view is recreated
-    connect(m_corona->indicatorFactory(), &Latte::Indicator::Factory::indicatorChanged, this, [&](const QString &indicatorId) {
+    connect(m_corona->indicatorFactory(), &Mocha::Indicator::Factory::indicatorChanged, this, [&](const QString &indicatorId) {
         emit indicatorPluginChanged(indicatorId);
     });
 
@@ -400,13 +400,13 @@ void View::init(Plasma::Containment *plasma_containment)
         }
     });
 
-    connect(m_corona->indicatorFactory(), &Latte::Indicator::Factory::indicatorRemoved, this, &View::indicatorPluginRemoved);
+    connect(m_corona->indicatorFactory(), &Mocha::Indicator::Factory::indicatorRemoved, this, &View::indicatorPluginRemoved);
 
     //! NOTE: Interface assignment moved to containmentChanged handler because in Plasma 6,
     //! itemForApplet() returns null before setContainment() is called by the base class.
     //! The containmentChanged signal fires after setContainment() completes.
 
-    setSource(corona()->kPackage().filePath("lattedockui"));
+    setSource(corona()->kPackage().filePath("mochadockui"));
 
     qDebug() << "SOURCE:" << source();
 }
@@ -437,10 +437,10 @@ void View::disconnectSensitiveSignals()
 {
     m_initLayoutTimer.stop();
 
-    disconnect(this, &View::availableScreenRectChangedFrom, m_corona, &Latte::Corona::availableScreenRectChangedFrom);
-    disconnect(this, &View::availableScreenRegionChangedFrom, m_corona, &Latte::Corona::availableScreenRegionChangedFrom);
-    disconnect(m_corona, &Latte::Corona::availableScreenRectChangedFrom, this, &View::availableScreenRectChangedFromSlot);
-    disconnect(m_corona, &Latte::Corona::verticalUnityViewHasFocus, this, &View::topViewAlwaysOnTop);
+    disconnect(this, &View::availableScreenRectChangedFrom, m_corona, &Mocha::Corona::availableScreenRectChangedFrom);
+    disconnect(this, &View::availableScreenRegionChangedFrom, m_corona, &Mocha::Corona::availableScreenRegionChangedFrom);
+    disconnect(m_corona, &Mocha::Corona::availableScreenRectChangedFrom, this, &View::availableScreenRectChangedFromSlot);
+    disconnect(m_corona, &Mocha::Corona::verticalUnityViewHasFocus, this, &View::topViewAlwaysOnTop);
 
     setLayout(nullptr);
 }
@@ -478,7 +478,7 @@ void View::duplicateView()
 
 void View::exportTemplate()
 {
-    Latte::Settings::Dialog::ExportTemplateDialog *exportDlg = new Latte::Settings::Dialog::ExportTemplateDialog(this);
+    Mocha::Settings::Dialog::ExportTemplateDialog *exportDlg = new Mocha::Settings::Dialog::ExportTemplateDialog(this);
     exportDlg->show();
 }
 
@@ -710,8 +710,8 @@ void View::addTransientWindow(QWindow *window)
         QString winPtrStr = "0x" + QString::number((qulonglong)window,16);
         m_visibility->addBlockHidingEvent(winPtrStr);
 
-        if (m_visibility->hasBlockHidingEvent(Latte::GlobalShortcuts::SHORTCUTBLOCKHIDINGTYPE)) {
-            m_visibility->removeBlockHidingEvent(Latte::GlobalShortcuts::SHORTCUTBLOCKHIDINGTYPE);
+        if (m_visibility->hasBlockHidingEvent(Mocha::GlobalShortcuts::SHORTCUTBLOCKHIDINGTYPE)) {
+            m_visibility->removeBlockHidingEvent(Mocha::GlobalShortcuts::SHORTCUTBLOCKHIDINGTYPE);
         }
 
         connect(window, &QWindow::visibleChanged, this, &View::removeTransientWindow);
@@ -728,8 +728,8 @@ void View::removeTransientWindow(const bool &visible)
         disconnect(window, &QWindow::visibleChanged, this, &View::removeTransientWindow);
         m_transientWindows.removeAll(window);
 
-        if (m_visibility->hasBlockHidingEvent(Latte::GlobalShortcuts::SHORTCUTBLOCKHIDINGTYPE)) {
-            m_visibility->removeBlockHidingEvent(Latte::GlobalShortcuts::SHORTCUTBLOCKHIDINGTYPE);
+        if (m_visibility->hasBlockHidingEvent(Mocha::GlobalShortcuts::SHORTCUTBLOCKHIDINGTYPE)) {
+            m_visibility->removeBlockHidingEvent(Mocha::GlobalShortcuts::SHORTCUTBLOCKHIDINGTYPE);
         }
 
         updateTransientWindowsTracking();
@@ -947,7 +947,7 @@ void View::setIsTouchingTopViewAndIsBusy(bool touchAndBusy)
     emit isTouchingTopViewAndIsBusyChanged();
 }
 
-void View::preferredViewForShortcutsChangedSlot(Latte::View *view)
+void View::preferredViewForShortcutsChangedSlot(Mocha::View *view)
 {
     if (view != this) {
         setIsPreferredForShortcuts(false);
@@ -1161,9 +1161,9 @@ void View::applyActivitiesToWindows()
         }
 
         if (m_appletConfigView) {
-            Latte::WindowSystem::WindowId appletconfigviewid;
+            Mocha::WindowSystem::WindowId appletconfigviewid;
 
-            appletconfigviewid = m_corona->wm()->winIdFor("latte-dock", m_appletConfigView->title());
+            appletconfigviewid = m_corona->wm()->winIdFor("mocha-dock", m_appletConfigView->title());
 
             m_positioner->setWindowOnActivities(appletconfigviewid, runningActivities);
         }
@@ -1212,15 +1212,15 @@ void View::setLayout(Layout::GenericLayout *layout)
 
     if (m_layout) {
         connectionsLayout << connect(containment(), &Plasma::Applet::destroyedChanged, m_layout, &Layout::GenericLayout::destroyedChanged);
-        connectionsLayout << connect(containment(), &Plasma::Applet::locationChanged, m_corona, &Latte::Corona::viewLocationChanged);
-        connectionsLayout << connect(containment(), &Plasma::Containment::appletAlternativesRequested, m_corona, &Latte::Corona::showAlternativesForApplet, Qt::QueuedConnection);
+        connectionsLayout << connect(containment(), &Plasma::Applet::locationChanged, m_corona, &Mocha::Corona::viewLocationChanged);
+        connectionsLayout << connect(containment(), &Plasma::Containment::appletAlternativesRequested, m_corona, &Mocha::Corona::showAlternativesForApplet, Qt::QueuedConnection);
 
         if (m_corona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts) {
             connectionsLayout << connect(containment(), &Plasma::Containment::appletCreated, m_layout, &Layout::GenericLayout::appletCreated);
         }
 
-        connectionsLayout << connect(m_positioner, &Latte::ViewPart::Positioner::edgeChanged, m_layout, &Layout::GenericLayout::viewEdgeChanged);
-        connectionsLayout << connect(m_layout, &Layout::GenericLayout::popUpMarginChanged, m_effects, &Latte::ViewPart::Effects::popUpMarginChanged);
+        connectionsLayout << connect(m_positioner, &Mocha::ViewPart::Positioner::edgeChanged, m_layout, &Layout::GenericLayout::viewEdgeChanged);
+        connectionsLayout << connect(m_layout, &Layout::GenericLayout::popUpMarginChanged, m_effects, &Mocha::ViewPart::Effects::popUpMarginChanged);
 
         //! Sometimes the activity isn't completely ready, by adding a delay
         //! we try to catch up
@@ -1236,7 +1236,7 @@ void View::setLayout(Layout::GenericLayout *layout)
 
         connectionsLayout << connect(m_layout, &Layout::GenericLayout::preferredViewForShortcutsChanged, this, &View::preferredViewForShortcutsChangedSlot);
 
-        Latte::Corona *latteCorona = qobject_cast<Latte::Corona *>(this->corona());
+        Mocha::Corona *latteCorona = qobject_cast<Mocha::Corona *>(this->corona());
 
         connectionsLayout << connect(latteCorona->activitiesConsumer(), &KActivities::Consumer::currentActivityChanged, this, [&]() {
             if (m_layout && m_visibility) {
@@ -1333,9 +1333,9 @@ bool View::mimeContainsPlasmoid(QMimeData *mimeData, QString name)
     return false;
 }
 
-Latte::Data::View View::data() const
+Mocha::Data::View View::data() const
 {
-    Latte::Data::View vdata;
+    Mocha::Data::View vdata;
     vdata.id = QString::number(containment()->id());
     vdata.name = name();
     vdata.isActive = true;
@@ -1356,7 +1356,7 @@ Latte::Data::View View::data() const
     vdata.alignment = m_alignment;
     vdata.subcontainments = Layouts::Storage::self()->subcontainments(layout(), containment());
 
-    vdata.setState(Latte::Data::View::IsCreated);
+    vdata.setState(Mocha::Data::View::IsCreated);
     return vdata;
 }
 
@@ -1430,12 +1430,12 @@ ViewPart::WindowsTracker *View::windowsTracker() const
     return m_windowsTracker;
 }
 
-Latte::Interfaces *View::interfacesGraphicObj() const
+Mocha::Interfaces *View::interfacesGraphicObj() const
 {
     return m_interfacesGraphicObj;
 }
 
-void View::setInterfacesGraphicObj(Latte::Interfaces *ifaces)
+void View::setInterfacesGraphicObj(Mocha::Interfaces *ifaces)
 {
     if (m_interfacesGraphicObj == ifaces) {
         return;
@@ -1642,8 +1642,8 @@ void View::topViewAlwaysOnTop()
     }
 
     if (location() == Plasma::Types::TopEdge
-            && m_visibility->mode() != Latte::Types::WindowsCanCover
-            && m_visibility->mode() != Latte::Types::WindowsAlwaysCover) {
+            && m_visibility->mode() != Mocha::Types::WindowsCanCover
+            && m_visibility->mode() != Mocha::Types::WindowsAlwaysCover) {
         //! this is needed in order to preserve that the top dock will be above others.
         //! Unity layout paradigm is a good example for this. The top panel shadow
         //! should be always on top compared to left panel
@@ -1655,8 +1655,8 @@ void View::verticalUnityViewHasFocus()
 {
     if (formFactor() == Plasma::Types::Vertical
             && (y() != screenGeometry().y())
-            && ( (m_alignment == Latte::Types::Justify && m_maxLength == 1.0)
-                 ||(m_alignment == Latte::Types::Top && m_offset == 0.0) )) {
+            && ( (m_alignment == Mocha::Types::Justify && m_maxLength == 1.0)
+                 ||(m_alignment == Mocha::Types::Top && m_offset == 0.0) )) {
         emit m_corona->verticalUnityViewHasFocus();
     }
 }
@@ -1685,7 +1685,7 @@ void View::restoreConfig()
 
     auto config = this->containment()->config();
     m_onPrimary = config.readEntry("onPrimary", true);
-    m_alignment = static_cast<Latte::Types::Alignment>(config.group("General").readEntry("alignment", (int)Latte::Types::Center));
+    m_alignment = static_cast<Mocha::Types::Alignment>(config.group("General").readEntry("alignment", (int)Mocha::Types::Center));
     m_byPassWM = config.readEntry("byPassWM", false);
     m_isPreferredForShortcuts = config.readEntry("isPreferredForShortcuts", false);
     m_name = config.readEntry("name", QString());

@@ -7,7 +7,7 @@
 #define VIEWSUBWINDOW_H
 
 // local
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../wm/windowinfowrap.h"
 
 // Qt
@@ -15,12 +15,12 @@
 #include <QQuickView>
 #include <QTimer>
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 //! What is the importance of this class?
@@ -32,7 +32,7 @@ class SubWindow : public QQuickView
     Q_OBJECT
 
 public:
-    SubWindow(Latte::View *view, QString debugType);
+    SubWindow(Mocha::View *view, QString debugType);
     ~SubWindow() override;
 
     int location();
@@ -43,8 +43,8 @@ public:
     void hideWithMask();
     void showWithMask();
 
-    Latte::View *parentView();
-    Latte::WindowSystem::WindowId trackedWindowId();
+    Mocha::View *parentView();
+    Mocha::WindowSystem::WindowId trackedWindowId();
 
 signals:
     void forcedShown(); //[workaround] forced shown to avoid a KWin issue that hides windows when activities are stopped
@@ -89,11 +89,11 @@ protected:
     //! Connections for the KWin visibility hack
     QList<QMetaObject::Connection> connectionsHack;
 
-    Latte::View *m_latteView{nullptr};
+    Mocha::View *m_latteView{nullptr};
 
-    QPointer<Latte::Corona> m_corona;
+    QPointer<Mocha::Corona> m_corona;
 
-    Latte::WindowSystem::WindowId m_trackedWindowId;
+    Mocha::WindowSystem::WindowId m_trackedWindowId;
 };
 
 }

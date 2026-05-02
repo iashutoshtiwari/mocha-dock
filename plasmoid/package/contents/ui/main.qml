@@ -20,10 +20,10 @@ import org.kde.taskmanager as TaskManagerApplet
 
 import org.kde.activities as Activities
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
 
-import org.kde.latte.private.tasks as LatteTasks
+import org.kde.mocha.private.tasks as MochaTasks
 
 import "abilities" as Ability
 import "previews" as Previews
@@ -129,11 +129,11 @@ PlasmoidItem {
 
     //BEGIN properties
     property bool groupTasksByDefault: plasmoid.configuration.groupTasksByDefault
-    property bool highlightWindows: hoverAction === LatteTasks.Types.HighlightWindows || hoverAction === LatteTasks.Types.PreviewAndHighlightWindows
+    property bool highlightWindows: hoverAction === MochaTasks.Types.HighlightWindows || hoverAction === MochaTasks.Types.PreviewAndHighlightWindows
 
     property bool scrollingEnabled: plasmoid.configuration.scrollTasksEnabled
     property bool autoScrollTasksEnabled: scrollingEnabled && plasmoid.configuration.autoScrollTasksEnabled
-    property bool manualScrollTasksEnabled: scrollingEnabled &&  manualScrollTasksType !== LatteTasks.Types.ManualScrollDisabled
+    property bool manualScrollTasksEnabled: scrollingEnabled &&  manualScrollTasksType !== MochaTasks.Types.ManualScrollDisabled
     property int manualScrollTasksType: plasmoid.configuration.manualScrollTasksType
 
     property bool showInfoBadge: plasmoid.configuration.showInfoBadge
@@ -144,7 +144,7 @@ PlasmoidItem {
     property bool showOnlyCurrentScreen: plasmoid.configuration.showOnlyCurrentScreen
     property bool showOnlyCurrentDesktop: plasmoid.configuration.showOnlyCurrentDesktop
     property bool showOnlyCurrentActivity: plasmoid.configuration.showOnlyCurrentActivity
-    property bool showPreviews:  hoverAction === LatteTasks.Types.PreviewWindows || hoverAction === LatteTasks.Types.PreviewAndHighlightWindows
+    property bool showPreviews:  hoverAction === MochaTasks.Types.PreviewWindows || hoverAction === MochaTasks.Types.PreviewAndHighlightWindows
     property bool showWindowActions: plasmoid.configuration.showWindowActions && !disableAllWindowsFunctionality
     property bool showWindowsOnlyFromLaunchers: plasmoid.configuration.showWindowsOnlyFromLaunchers && !disableAllWindowsFunctionality
 
@@ -157,22 +157,22 @@ PlasmoidItem {
     property int modifierClickAction: plasmoid.configuration.modifierClickAction
     property int modifierClick: plasmoid.configuration.modifierClick
     property int modifierQt:{
-        if (modifier === LatteTasks.Types.Shift)
+        if (modifier === MochaTasks.Types.Shift)
             return Qt.ShiftModifier;
-        else if (modifier === LatteTasks.Types.Ctrl)
+        else if (modifier === MochaTasks.Types.Ctrl)
             return Qt.ControlModifier;
-        else if (modifier === LatteTasks.Types.Alt)
+        else if (modifier === MochaTasks.Types.Alt)
             return Qt.AltModifier;
-        else if (modifier === LatteTasks.Types.Meta)
+        else if (modifier === MochaTasks.Types.Meta)
             return Qt.MetaModifier;
         else return -1;
     }
     property int taskScrollAction: plasmoid.configuration.taskScrollAction
 
     onTaskScrollActionChanged: {
-        if (taskScrollAction > LatteTasks.Types.ScrollToggleMinimized) {
-            //! migrating scroll action to LatteTasks.Types.ScrollAction
-            plasmoid.configuration.taskScrollAction = plasmoid.configuration.taskScrollAction-LatteTasks.Types.ScrollToggleMinimized;
+        if (taskScrollAction > MochaTasks.Types.ScrollToggleMinimized) {
+            //! migrating scroll action to MochaTasks.Types.ScrollAction
+            plasmoid.configuration.taskScrollAction = plasmoid.configuration.taskScrollAction-MochaTasks.Types.ScrollToggleMinimized;
         }
     }
 
@@ -186,21 +186,21 @@ PlasmoidItem {
 
     property alias tasksCount: tasksModel.count
 
-    //END Latte Dock Panel properties
+    //END Mocha Dock Panel properties
 
-    readonly property bool inEditMode: latteInEditMode || plasmoid.userConfiguring
+    readonly property bool inEditMode: mochaInEditMode || plasmoid.userConfiguring
 
-    //BEGIN Latte Dock Communicator
-    property QtObject latteBridge: null
+    //BEGIN Mocha Dock Communicator
+    property QtObject mochaBridge: null
 
-    readonly property bool inPlasma: latteBridge === null
+    readonly property bool inPlasma: mochaBridge === null
     readonly property bool inPlasmaDesktop: inPlasma && !inPlasmaPanel
     readonly property bool inPlasmaPanel: inPlasma && (plasmoid.location === PlasmaCore.Types.LeftEdge
                                                        || plasmoid.location === PlasmaCore.Types.RightEdge
                                                        || plasmoid.location === PlasmaCore.Types.BottomEdge
                                                        || plasmoid.location === PlasmaCore.Types.TopEdge)
-    readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
-    //END  Latte Dock Communicator
+    readonly property bool mochaInEditMode: mochaBridge && mochaBridge.inEditMode
+    //END  Mocha Dock Communicator
 
     Plasmoid.backgroundHints: inPlasmaDesktop ? PlasmaCore.Types.StandardBackground : PlasmaCore.Types.NoBackground
 
@@ -249,7 +249,7 @@ PlasmoidItem {
         onIsReadyChanged: {
             if (appletAbilities.myView.isReady) {
                 plasmoid.internalAction("configure").visible = false;
-                plasmoid.configuration.isInLatteDock = true;
+                plasmoid.configuration.isInMochaDock = true;
             }
         }
     }
@@ -312,7 +312,7 @@ PlasmoidItem {
 
 
     function forcePreviewsHiding(debug) {
-        // console.log(" org.kde.latte   Tasks: Force hide previews event called: "+debug);
+        // console.log(" org.kde.mocha   Tasks: Force hide previews event called: "+debug);
         windowsPreviewDlg.activeItem = null;
         windowsPreviewDlg.visible = false;
     }
@@ -341,7 +341,7 @@ PlasmoidItem {
 
     ////BEGIN interfaces
 
-    LatteCore.Dialog{
+    MochaCore.Dialog{
         id: windowsPreviewDlg
         type: plasmoid.configuration.previewWindowAsPopup ? PlasmaCore.Dialog.PopupMenu : PlasmaCore.Dialog.Tooltip
         flags: plasmoid.configuration.previewWindowAsPopup ? Qt.WindowStaysOnTopHint | Qt.WindowDoesNotAcceptFocus | Qt.Popup :
@@ -676,16 +676,16 @@ PlasmoidItem {
 
     AppletAbilities {
         id: _appletAbilities
-        bridge: latteBridge
+        bridge: mochaBridge
         layout: icList.contentItem
         tasksModel: tasksModel
 
         animations.local.speedFactor.current: plasmoid.configuration.durationTime
-        animations.local.requirements.zoomFactor: hasHighThicknessAnimation && LatteCore.WindowSystem.compositingActive ? 1.65 : 1.0
+        animations.local.requirements.zoomFactor: hasHighThicknessAnimation && MochaCore.WindowSystem.compositingActive ? 1.65 : 1.0
 
         indexer.updateIsBlocked: root.inDraggingPhase || root.inActivityChange || tasksExtendedManager.launchersInPausedStateCount>0
 
-        indicators.local.isEnabled: !plasmoid.configuration.isInLatteDock
+        indicators.local.isEnabled: !plasmoid.configuration.isInMochaDock
 
         launchers.group: plasmoid.configuration.launchersGroup
         launchers.isStealingDroppedLaunchers: plasmoid.configuration.isPreferredForDroppedLaunchers
@@ -711,7 +711,7 @@ PlasmoidItem {
 
         requires.activeIndicatorEnabled: false
         requires.lengthMarginsEnabled: false
-        requires.latteSideColoringEnabled: false
+        requires.mochaSideColoringEnabled: false
         requires.screenEdgeMarginSupported: true
 
         thinTooltip.local.showIsBlocked: root.contextMenu || root.windowPreviewIsShown
@@ -768,7 +768,7 @@ PlasmoidItem {
         width: ( icList.orientation === Qt.Horizontal ) ? icList.width + spacing : smallSize
         height: ( icList.orientation === Qt.Vertical ) ? icList.height + spacing : smallSize
 
-        property int spacing: latteBridge ? 0 : appletAbilities.metrics.iconSize / 2
+        property int spacing: mochaBridge ? 0 : appletAbilities.metrics.iconSize / 2
         property int smallSize: Math.max(0.10 * appletAbilities.metrics.iconSize, 16)
 
         Behavior on opacity{
@@ -1022,7 +1022,7 @@ PlasmoidItem {
             flickable: scrollableList
         } // ScrollEdgeShadows
 
-        LatteComponents.AddingArea {
+        MochaComponents.AddingArea {
             id: newDroppedLauncherVisual
             width: root.vertical ? appletAbilities.metrics.totals.thickness : scrollableList.length
             height: root.vertical ? scrollableList.length : appletAbilities.metrics.totals.thickness
@@ -1156,10 +1156,10 @@ PlasmoidItem {
         ///REMOVE
         onCountChanged: {
             /*  if(activityInfo.currentActivity != "00000000-0000-0000-0000-000000000000"){
-                console.log("----------- Latte Plasmoid Signal: Activities number was changed ---------");
+                console.log("----------- Mocha Plasmoid Signal: Activities number was changed ---------");
                 var allActivities = activities();
                 ActivitiesTools.cleanupRecords(allActivities);
-                console.log("----------- Latte Plasmoid Signal End ---------");
+                console.log("----------- Mocha Plasmoid Signal End ---------");
             }*/
         }
     }
@@ -1291,7 +1291,7 @@ PlasmoidItem {
         ///Bottom Edge
         State {
             name: "bottomCenter"
-            when: (root.location===PlasmaCore.Types.BottomEdge && root.alignment===LatteCore.Types.Center)
+            when: (root.location===PlasmaCore.Types.BottomEdge && root.alignment===MochaCore.Types.Center)
 
             AnchorChanges {
                 target: barLine
@@ -1300,7 +1300,7 @@ PlasmoidItem {
         },
         State {
             name: "bottomLeft"
-            when: (root.location===PlasmaCore.Types.BottomEdge && root.alignment===LatteCore.Types.Left)
+            when: (root.location===PlasmaCore.Types.BottomEdge && root.alignment===MochaCore.Types.Left)
 
             AnchorChanges {
                 target: barLine
@@ -1309,7 +1309,7 @@ PlasmoidItem {
         },
         State {
             name: "bottomRight"
-            when: (root.location===PlasmaCore.Types.BottomEdge && root.alignment===LatteCore.Types.Right)
+            when: (root.location===PlasmaCore.Types.BottomEdge && root.alignment===MochaCore.Types.Right)
 
             AnchorChanges {
                 target: barLine
@@ -1319,7 +1319,7 @@ PlasmoidItem {
         ///Top Edge
         State {
             name: "topCenter"
-            when: (root.location===PlasmaCore.Types.TopEdge && root.alignment===LatteCore.Types.Center)
+            when: (root.location===PlasmaCore.Types.TopEdge && root.alignment===MochaCore.Types.Center)
 
             AnchorChanges {
                 target: barLine
@@ -1328,7 +1328,7 @@ PlasmoidItem {
         },
         State {
             name: "topLeft"
-            when: (root.location===PlasmaCore.Types.TopEdge && root.alignment===LatteCore.Types.Left)
+            when: (root.location===PlasmaCore.Types.TopEdge && root.alignment===MochaCore.Types.Left)
 
             AnchorChanges {
                 target: barLine
@@ -1337,7 +1337,7 @@ PlasmoidItem {
         },
         State {
             name: "topRight"
-            when: (root.location===PlasmaCore.Types.TopEdge && root.alignment===LatteCore.Types.Right)
+            when: (root.location===PlasmaCore.Types.TopEdge && root.alignment===MochaCore.Types.Right)
 
             AnchorChanges {
                 target: barLine
@@ -1347,7 +1347,7 @@ PlasmoidItem {
         ////Left Edge
         State {
             name: "leftCenter"
-            when: (root.location===PlasmaCore.Types.LeftEdge && root.alignment===LatteCore.Types.Center)
+            when: (root.location===PlasmaCore.Types.LeftEdge && root.alignment===MochaCore.Types.Center)
 
             AnchorChanges {
                 target: barLine
@@ -1356,7 +1356,7 @@ PlasmoidItem {
         },
         State {
             name: "leftTop"
-            when: (root.location===PlasmaCore.Types.LeftEdge && root.alignment===LatteCore.Types.Top)
+            when: (root.location===PlasmaCore.Types.LeftEdge && root.alignment===MochaCore.Types.Top)
 
             AnchorChanges {
                 target: barLine
@@ -1365,7 +1365,7 @@ PlasmoidItem {
         },
         State {
             name: "leftBottom"
-            when: (root.location===PlasmaCore.Types.LeftEdge && root.alignment===LatteCore.Types.Bottom)
+            when: (root.location===PlasmaCore.Types.LeftEdge && root.alignment===MochaCore.Types.Bottom)
 
             AnchorChanges {
                 target: barLine
@@ -1375,7 +1375,7 @@ PlasmoidItem {
         ///Right Edge
         State {
             name: "rightCenter"
-            when: (root.location===PlasmaCore.Types.RightEdge && root.alignment===LatteCore.Types.Center)
+            when: (root.location===PlasmaCore.Types.RightEdge && root.alignment===MochaCore.Types.Center)
 
             AnchorChanges {
                 target: barLine
@@ -1384,7 +1384,7 @@ PlasmoidItem {
         },
         State {
             name: "rightTop"
-            when: (root.location===PlasmaCore.Types.RightEdge && root.alignment===LatteCore.Types.Top)
+            when: (root.location===PlasmaCore.Types.RightEdge && root.alignment===MochaCore.Types.Top)
 
             AnchorChanges {
                 target: barLine
@@ -1393,7 +1393,7 @@ PlasmoidItem {
         },
         State {
             name: "rightBottom"
-            when: (root.location===PlasmaCore.Types.RightEdge && root.alignment===LatteCore.Types.Bottom)
+            when: (root.location===PlasmaCore.Types.RightEdge && root.alignment===MochaCore.Types.Bottom)
 
             AnchorChanges {
                 target: barLine

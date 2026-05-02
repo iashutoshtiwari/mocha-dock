@@ -6,7 +6,7 @@
 #include "layouticondata.h"
 
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 LayoutIcon::LayoutIcon()

@@ -13,8 +13,8 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.extras as PlasmaExtras
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
 
 import "../../code/MathTools.js" as MathTools
 
@@ -279,7 +279,7 @@ Item{
         target: wrapper
         property: "layoutThickness"
         restoreMode: Binding.RestoreNone
-        when: latteView && (wrapper.zoomScale === 1 || communicator.parabolicEffectIsSupported)
+        when: mochaView && (wrapper.zoomScale === 1 || communicator.parabolicEffectIsSupported)
         value: {
             if (appletItem.isInternalViewSplitter){
                 return !root.inConfigureAppletsMode ? 0 : proposedItemThickness;
@@ -298,7 +298,7 @@ Item{
         target: wrapper
         property: "layoutLength"
         restoreMode: Binding.RestoreNone
-        when: latteView && !appletItem.isAutoFillApplet && (wrapper.zoomScale === 1)
+        when: mochaView && !appletItem.isAutoFillApplet && (wrapper.zoomScale === 1)
         value: {
             if (applet && ( appletMaximumLength < appletItem.metrics.iconSize
                            || appletPreferredLength > appletItem.metrics.iconSize
@@ -323,7 +323,7 @@ Item{
         target: wrapper
         property: "disableLengthScale"
         restoreMode: Binding.RestoreNone
-        when: latteView && !(appletItem.isAutoFillApplet || appletItem.indexerIsSupported)
+        when: mochaView && !(appletItem.isAutoFillApplet || appletItem.indexerIsSupported)
         value: {
             var blockParabolicEffectInLength = false;
 
@@ -362,7 +362,7 @@ Item{
         target: wrapper
         property: "marginsLength"
         restoreMode: Binding.RestoreNone
-        when: latteView && (!root.inStartup || visibilityManager.inRelocationHiding)
+        when: mochaView && (!root.inStartup || visibilityManager.inRelocationHiding)
         value: localLengthMargins
     }
 
@@ -381,7 +381,7 @@ Item{
         property bool showVisualIndicatorRequested: false
 
         Connections {
-            target: root.latteView ? root.latteView.extendedInterface : null
+            target: root.mochaView ? root.mochaView.extendedInterface : null
             onAppletRequestedVisualIndicator: {
                 if (plasmoidId === appletItem.applet.id) {
                     visualIndicator.showVisualIndicatorRequested = true;
@@ -533,8 +533,8 @@ Item{
             property color backgroundColor: "transparent"
             property color glowColor: "transparent"
 
-            //! Plasma Applets RoundToIconSize should be ALWAYS false when Latte has discovered
-            //! the iconitem for these applets. This way we can be sure that applets and latte
+            //! Plasma Applets RoundToIconSize should be ALWAYS false when Mocha has discovered
+            //! the iconitem for these applets. This way we can be sure that applets and mocha
             //! tasks will follow the same icon size if it is possible; in any other case
             //! the plasma applets might look to small
             readonly property bool isRoundToIconSizeEnabled: !communicator.appletIconItem
@@ -547,7 +547,7 @@ Item{
                 communicator.appletIconItem.roundToIconSize = isRoundToIconSizeEnabled;
             }
 
-            sourceComponent: LatteCore.IconItem{
+            sourceComponent: MochaCore.IconItem{
                 id: overlayIconItem
                 anchors.fill: parent
                 visible: false
@@ -679,7 +679,7 @@ Item{
 
         active: appletItem.isInternalViewSplitter && root.inConfigureAppletsMode
 
-        sourceComponent: LatteComponents.SpriteRectangle {
+        sourceComponent: MochaComponents.SpriteRectangle {
             isHorizontal: root.isHorizontal
             color: appletItem.highlightColor
             spriteSize: 8

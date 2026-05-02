@@ -11,7 +11,7 @@
 #include <QMetaEnum>
 #include <QMetaType>
 
-namespace Latte {
+namespace Mocha {
 namespace Tasks {
 
 class Types

@@ -9,7 +9,7 @@ import QtQuick.Layouts
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 import "controls" as SettingsControls
 
@@ -41,8 +41,8 @@ Item {
         }
 
         if (plasmoid.location === PlasmaCore.Types.LeftEdge) {
-            var screenEdge = latteView.behaveAsPlasmaPanel ? latteView.screenEdgeMargin : 0;
-            return screenEdge + latteView.maxNormalThickness + ruler.thickness + headMargin * 2 - width/2 + height/2;
+            var screenEdge = mochaView.behaveAsPlasmaPanel ? mochaView.screenEdgeMargin : 0;
+            return screenEdge + mochaView.maxNormalThickness + ruler.thickness + headMargin * 2 - width/2 + height/2;
         } else if (plasmoid.location === PlasmaCore.Types.RightEdge) {
             return headMargin - width/2 + height/2;
         }

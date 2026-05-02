@@ -14,7 +14,7 @@
 #include <QRect>
 #include <QString>
 
-namespace Latte {
+namespace Mocha {
 
 float colorBrightness(QColor color);
 float colorBrightness(QRgb rgb);

@@ -1,5 +1,5 @@
 /*
-    SPDX-FileCopyrightText: 2024 Latte Dock Team
+    SPDX-FileCopyrightText: 2024 Mocha Dock Team
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
@@ -9,7 +9,7 @@
 #include <QObject>
 #include <QString>
 
-namespace Latte {
+namespace Mocha {
 namespace Tasks {
 
 class LauncherHelper : public QObject
@@ -23,6 +23,6 @@ public:
 };
 
 } // namespace Tasks
-} // namespace Latte
+} // namespace Mocha
 
 #endif

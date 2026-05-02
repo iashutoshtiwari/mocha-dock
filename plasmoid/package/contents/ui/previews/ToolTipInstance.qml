@@ -18,7 +18,7 @@ import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.kquickcontrolsaddons as KQuickControlsAddons
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 import org.kde.draganddrop
 
@@ -190,10 +190,10 @@ Column {
                 id:previewThumbLoader
                 anchors.fill: parent
                 anchors.margins: Math.max(2, previewShadow.radius)
-                active: LatteCore.WindowSystem.isPlatformWayland
+                active: MochaCore.WindowSystem.isPlatformWayland
                 visible: !albumArtImage.visible && !thumbnailSourceItem.isMinimized
                 source:  {
-                    if (LatteCore.WindowSystem.isPlatformWayland) {
+                    if (MochaCore.WindowSystem.isPlatformWayland) {
                         if (root.plasmaAtLeast526) {
                             return "PipeWireThumbnail.5.26.qml";
                         } else if (root.plasmaAtLeast525) {

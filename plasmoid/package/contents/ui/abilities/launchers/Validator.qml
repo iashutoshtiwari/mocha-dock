@@ -7,7 +7,7 @@ import QtQuick
 
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 //! Launchers Validate Timer
 Timer{

@@ -5,7 +5,7 @@
 
 import QtQuick
 
-import org.kde.latte.abilities.definition as AbilityDefinition
+import org.kde.mocha.abilities.definition as AbilityDefinition
 
 import "./indicators" as LocalIndicator
 
@@ -26,7 +26,7 @@ AbilityDefinition.Indicators {
 
     readonly property AbilityDefinition.Indicators local: AbilityDefinition.Indicators {
         isEnabled: false
-        type: "org.kde.latte.default"
+        type: "org.kde.mocha.default"
 
         info.needsIconColors: false
         info.needsMouseEventCoordinates: false
@@ -43,20 +43,20 @@ AbilityDefinition.Indicators {
         info.minThicknessPadding: 0
         info.minLengthPadding:0
 
-        configuration: localLatteConfiguration
+        configuration: localMochaConfiguration
         resources: null
 
-        indicatorComponent: isEnabled ? latteLocalIndicator : null
+        indicatorComponent: isEnabled ? mochaLocalIndicator : null
 
-        //! Local Latte Indicator Configuration
-        LocalIndicator.LatteConfiguration{
-            id: localLatteConfiguration
+        //! Local Mocha Indicator Configuration
+        LocalIndicator.MochaConfiguration{
+            id: localMochaConfiguration
         }
 
-        //! Local Latte Indicator implementation
+        //! Local Mocha Indicator implementation
         Component {
-            id: latteLocalIndicator
-            LocalIndicator.LatteIndicator{}
+            id: mochaLocalIndicator
+            LocalIndicator.MochaIndicator{}
         }
     }
 }

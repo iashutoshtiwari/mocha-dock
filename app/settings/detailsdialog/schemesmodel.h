@@ -8,13 +8,13 @@
 
 #include <QAbstractListModel>
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 class SchemeColors;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Model {
 

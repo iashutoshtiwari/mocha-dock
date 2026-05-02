@@ -23,7 +23,7 @@ namespace Ui {
 class ExportTemplateDialog;
 }
 
-namespace Latte {
+namespace Mocha {
 class View;
 namespace Settings {
 namespace Controller {
@@ -36,7 +36,7 @@ class ExportTemplateHandler;
 }
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Dialog {
 
@@ -48,11 +48,11 @@ public:
     ExportTemplateDialog(QDialog *parent);
     ExportTemplateDialog(SettingsDialog *parent, const Data::Layout &layout);
     ExportTemplateDialog(ViewsDialog *parent, const Data::View &view);
-    ExportTemplateDialog(Latte::View *view);
+    ExportTemplateDialog(Mocha::View *view);
     ~ExportTemplateDialog();
 
     Ui::ExportTemplateDialog *ui() const;
-    Latte::Corona *corona() const;
+    Mocha::Corona *corona() const;
 
     QPushButton *exportButton() const;
 
@@ -78,7 +78,7 @@ private:
 
     QPushButton *m_exportButton{nullptr};
 
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
 
     Ui::ExportTemplateDialog *m_ui;
     Controller::Layouts *m_layoutsController{nullptr};

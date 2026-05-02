@@ -9,7 +9,7 @@
 #include "../viewsmodel.h"
 #include "../../generic/generictools.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace View {
 namespace Delegate {
@@ -41,8 +41,8 @@ void SingleText::paint(QPainter *painter, const QStyleOptionViewItem &option, co
         textopacity = 0.25;
     }
 
-    Latte::drawBackground(painter, option);
-    Latte::drawFormattedText(painter, myOptions, textopacity);
+    Mocha::drawBackground(painter, option);
+    Mocha::drawFormattedText(painter, myOptions, textopacity);
 }
 
 }

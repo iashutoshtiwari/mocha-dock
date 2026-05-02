@@ -8,9 +8,9 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
-import org.kde.latte.abilities.host as AbilityHost
+import org.kde.mocha.abilities.host as AbilityHost
 
 AbilityHost.ParabolicEffect {
     id: parabolic
@@ -138,7 +138,7 @@ AbilityHost.ParabolicEffect {
 
     //! TIMERS
 
-    //! Timer to check if the mouse is still outside the latteView in order to restore applets scales to 1.0
+    //! Timer to check if the mouse is still outside the mochaView in order to restore applets scales to 1.0
     Timer{
         id: restoreZoomTimer
         interval: 50

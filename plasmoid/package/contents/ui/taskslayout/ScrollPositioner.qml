@@ -9,18 +9,18 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Rectangle {
     id: listViewBase
     x: {
         if (!root.vertical) {
-            if (root.alignment === LatteCore.Types.Center) {
+            if (root.alignment === MochaCore.Types.Center) {
                 //! this way we get a perfectly centered offset value
                 return (icList.width-1) / 2;
-            } else if (root.alignment === LatteCore.Types.Left){
+            } else if (root.alignment === MochaCore.Types.Left){
                 return 0;
-            } else if (root.alignment === LatteCore.Types.Right){
+            } else if (root.alignment === MochaCore.Types.Right){
                 //! this way we get a perfectly right aligned offset value
                 return (icList.width-1);
             }
@@ -31,12 +31,12 @@ Rectangle {
 
     y: {
         if (root.vertical) {
-            if (root.alignment === LatteCore.Types.Center) {
+            if (root.alignment === MochaCore.Types.Center) {
                 //! this way we get a perfectly centered offset value
                 return (icList.height-1) / 2;
-            } else if (root.alignment === LatteCore.Types.Top){
+            } else if (root.alignment === MochaCore.Types.Top){
                 return 0;
-            } else if (root.alignment === LatteCore.Types.Bottom){
+            } else if (root.alignment === MochaCore.Types.Bottom){
                 //! this way we get a perfectly bottom aligned offset value
                 return (icList.height-1);
             }

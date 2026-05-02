@@ -9,7 +9,7 @@
 #include "primaryconfigview.h"
 #include "../panelshadows_p.h"
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../wm/abstractwindowinterface.h"
 
 // Qt
@@ -20,10 +20,10 @@
 #include <KWindowSystem>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-CanvasConfigView::CanvasConfigView(Latte::View *view, PrimaryConfigView *parent)
+CanvasConfigView::CanvasConfigView(Mocha::View *view, PrimaryConfigView *parent)
     : SubConfigView(view, QString("#canvasconfigview#"), false),
       m_parent(parent)
 {
@@ -55,7 +55,7 @@ QRect CanvasConfigView::geometryWhenVisible() const
     return m_geometryWhenVisible;
 }
 
-void CanvasConfigView::initParentView(Latte::View *view)
+void CanvasConfigView::initParentView(Mocha::View *view)
 {
     SubConfigView::initParentView(view);
 

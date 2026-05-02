@@ -16,7 +16,7 @@ namespace Ui {
 class ActionsDialog;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Handler {
 class ActionsHandler;
@@ -25,7 +25,7 @@ class TabPreferences;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Dialog {
 

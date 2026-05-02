@@ -13,7 +13,7 @@
 // Plasma
 #include <PlasmaQuick/AppletQuickItem>
 
-namespace Latte{
+namespace Mocha{
 
 class Interfaces: public QObject
 {

@@ -8,7 +8,7 @@ import QtQuick
 import org.kde.plasma.core as PlasmaCore
 import org.kde.draganddrop as DragDrop
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 DragDrop.DropArea {
     id: dragArea
@@ -16,11 +16,11 @@ DragDrop.DropArea {
     property bool containsDrag: false
 
     readonly property Item dragInfo: Item {
-        readonly property bool entered: latteView && latteView.containsDrag
+        readonly property bool entered: mochaView && mochaView.containsDrag
         property bool isTask: false
         property bool isPlasmoid: false
         property bool isSeparator: false
-        property bool isLatteTasks: false
+        property bool isMochaTasks: false
         property bool onlyLaunchers: false
 
         property bool computationsAreValid: false
@@ -37,10 +37,10 @@ DragDrop.DropArea {
     }
 
     Connections{
-        target: latteView
+        target: mochaView
 
         onContainsDragChanged: {
-            if(!latteView.containsDrag) {
+            if(!mochaView.containsDrag) {
                 dragArea.clearInfo();
             }
         }
@@ -51,13 +51,13 @@ DragDrop.DropArea {
     }
 
     function isDroppingOnlyLaunchers(event) {
-        if (!latteView) {
+        if (!mochaView) {
             return
         }
 
         if (event.mimeData.hasUrls || (event.mimeData.formats.indexOf("text/x-plasmoidservicename") !== 0)) {
             var onlyLaunchers = event.mimeData.urls.every(function (item) {
-                return latteView.extendedInterface.isApplication(item);
+                return mochaView.extendedInterface.isApplication(item);
             });
 
             return onlyLaunchers;
@@ -77,7 +77,7 @@ DragDrop.DropArea {
             dragArea.dragInfo.isTask = false;
             dragArea.dragInfo.isPlasmoid = false;
             dragArea.dragInfo.isSeparator = false;
-            dragArea.dragInfo.isLatteTasks = false;
+            dragArea.dragInfo.isMochaTasks = false;
             dragArea.dragInfo.onlyLaunchers = false;
 
             dndSpacer.parent = root;
@@ -95,12 +95,12 @@ DragDrop.DropArea {
 
         var isSeparator = event !== undefined
                 && event.mimeData !== undefined
-                && ( latteView.mimeContainsPlasmoid(event.mimeData, "audoban.applet.separator")
-                    || latteView.mimeContainsPlasmoid(event.mimeData, "org.kde.latte.separator") );
+                && ( mochaView.mimeContainsPlasmoid(event.mimeData, "audoban.applet.separator")
+                    || mochaView.mimeContainsPlasmoid(event.mimeData, "org.kde.mocha.separator") );
 
-        var isLatteTasks = event !== undefined
+        var isMochaTasks = event !== undefined
                 && event.mimeData !== undefined
-                && latteView.mimeContainsPlasmoid(event.mimeData, "org.kde.latte.plasmoid");
+                && mochaView.mimeContainsPlasmoid(event.mimeData, "org.kde.mocha.plasmoid");
 
         var isPlasmoid = event !== undefined
                 && event.mimeData !== undefined
@@ -111,7 +111,7 @@ DragDrop.DropArea {
         dragInfo.isTask = isTask;
         dragInfo.isPlasmoid = isPlasmoid;
         dragInfo.isSeparator = isSeparator;
-        dragInfo.isLatteTasks = isLatteTasks;
+        dragInfo.isMochaTasks = isMochaTasks;
         dragInfo.onlyLaunchers = isDroppingOnlyLaunchers(event);
         dragInfo.computationsAreValid = true;
 
@@ -193,7 +193,7 @@ DragDrop.DropArea {
 
             plasmoid.processMimeData(event.mimeData, eventx, eventy);
             //! inform others what plasmoid was drag n' dropped to be added
-            latteView.extendedInterface.appletDropped(event.mimeData, eventx, eventy);
+            mochaView.extendedInterface.appletDropped(event.mimeData, eventx, eventy);
             event.accept(event.proposedAction);
         }
 

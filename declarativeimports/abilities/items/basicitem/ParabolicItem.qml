@@ -10,7 +10,7 @@ import Qt5Compat.GraphicalEffects
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Item{
     id: parabolicItem
@@ -201,18 +201,18 @@ Item{
             }
         } //_contentItemContainer
 
-        //! Latte Side Painting-style if the user chose it
+        //! Mocha Side Painting-style if the user chose it
         Loader{
             anchors.fill: _contentItemContainer
             active: abilityItem.isMonochromaticForcedContentItem && abilityItem.monochromizedItem
 
             sourceComponent: ColorOverlay {
                 anchors.fill: parent
-                color: latteBridge ? latteBridge.palette.textColor : "transparent"
+                color: mochaBridge ? mochaBridge.palette.textColor : "transparent"
                 source: abilityItem.monochromizedItem
             }
         }
-        //! Latte Side Painting-style if the user chose it
+        //! Mocha Side Painting-style if the user chose it
 
         ShortcutBadge{
             id: shortcutBadge
@@ -266,7 +266,7 @@ Item{
     }
 
     Component.onCompleted: {
-        if (!LatteCore.WindowSystem.compositingActive) {
+        if (!MochaCore.WindowSystem.compositingActive) {
             opacity = 1;
         }
     }

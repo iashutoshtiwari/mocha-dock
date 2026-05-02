@@ -7,7 +7,7 @@
 #define SETTINGSLAYOUTSMODEL_H
 
 // local
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../data/activitydata.h"
 #include "../../data/layoutdata.h"
 #include "../../data/layouticondata.h"
@@ -21,7 +21,7 @@
 #include <PlasmaActivities/Info>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Model {
 
@@ -72,7 +72,7 @@ public:
         HIGHESTPRIORITY = 2000
     };
 
-    explicit Layouts(QObject *parent, Latte::Corona *corona);
+    explicit Layouts(QObject *parent, Mocha::Corona *corona);
     ~Layouts();
 
     bool containsCurrentName(const QString &name) const;
@@ -99,16 +99,16 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    const Latte::Data::Layout &at(const int &row);
-    const Latte::Data::Layout &currentData(const QString &id);
-    const Latte::Data::Layout originalData(const QString &id);
+    const Mocha::Data::Layout &at(const int &row);
+    const Mocha::Data::Layout &currentData(const QString &id);
+    const Mocha::Data::Layout originalData(const QString &id);
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
     int rowForId(const QString &id) const;
 
-    const Latte::Data::LayoutIcon currentLayoutIcon(const QString &id) const;
+    const Mocha::Data::LayoutIcon currentLayoutIcon(const QString &id) const;
 
     void clear();
     //! all current data will become also original
@@ -116,25 +116,25 @@ public:
     //! all original data will become also current
     void resetData();
 
-    void appendOriginalLayout(const Latte::Data::Layout &layout);
-    void appendLayout(const Latte::Data::Layout &layout);
+    void appendOriginalLayout(const Mocha::Data::Layout &layout);
+    void appendLayout(const Mocha::Data::Layout &layout);
     void removeLayout(const QString &id);
-    void setLayoutProperties(const Latte::Data::Layout &layout);
+    void setLayoutProperties(const Mocha::Data::Layout &layout);
 
     QString layoutNameForFreeActivities() const;
     void setCurrentLayoutForFreeActivities(const QString &id);
     void setOriginalLayoutForFreeActivities(const QString &id);
 
-    QList<Latte::Data::Layout> alteredLayouts() const;
+    QList<Mocha::Data::Layout> alteredLayouts() const;
 
-    const Latte::Data::LayoutsTable &currentLayoutsData();
-    const Latte::Data::LayoutsTable &originalLayoutsData();
+    const Mocha::Data::LayoutsTable &currentLayoutsData();
+    const Mocha::Data::LayoutsTable &originalLayoutsData();
 
     void setOriginalInMultipleMode(const bool &inmultiple);
-    void setOriginalData(Latte::Data::LayoutsTable &data);
+    void setOriginalData(Mocha::Data::LayoutsTable &data);
 
-    void setOriginalActivitiesForLayout(const Latte::Data::Layout &layout);
-    void setOriginalViewsForLayout(const Latte::Data::Layout &layout);
+    void setOriginalActivitiesForLayout(const Mocha::Data::Layout &layout);
+    void setOriginalViewsForLayout(const Mocha::Data::Layout &layout);
 
 signals:
     void activitiesStatesChanged();
@@ -158,28 +158,28 @@ private:
     void setActivities(const int &row, const QStringList &activities);
     void setId(const int &row, const QString &newId);
 
-    bool containsSpecificRunningActivity(const QStringList &runningIds, const Latte::Data::Layout &layout) const;
+    bool containsSpecificRunningActivity(const QStringList &runningIds, const Mocha::Data::Layout &layout) const;
 
     QString sortingPriority(const SortingPriority &priority, const int &row) const;
     QString sortableText(const int &priority, const int &row) const;
 
     QStringList cleanStrings(const QStringList &original, const QStringList &occupied);
 
-    Latte::Data::LayoutIcon icon(const int &row) const;
+    Mocha::Data::LayoutIcon icon(const int &row) const;
 
 private:
-    Latte::Data::ActivitiesTable m_activitiesTable;
+    Mocha::Data::ActivitiesTable m_activitiesTable;
     QHash<QString, KActivities::Info *> m_activitiesInfo;
 
     //! original data
     bool o_inMultipleMode{false};
-    Latte::Data::LayoutsTable o_layoutsTable;
+    Mocha::Data::LayoutsTable o_layoutsTable;
 
     //! current data
     bool m_inMultipleMode{false};
-    Latte::Data::LayoutsTable m_layoutsTable;
+    Mocha::Data::LayoutsTable m_layoutsTable;
 
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
 };
 
 }

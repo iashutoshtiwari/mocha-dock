@@ -8,7 +8,7 @@ import QtQuick
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 import "./myview" as MyViewTypes
 
@@ -35,8 +35,8 @@ Item {
 
     property bool badgesIn3DStyle: true
 
-    property int alignment: LatteCore.Types.Center
-    property int visibilityMode: LatteCore.Types.None
+    property int alignment: MochaCore.Types.Center
+    property int visibilityMode: MochaCore.Types.None
 
     property real backgroundOpacity: 1.0
 

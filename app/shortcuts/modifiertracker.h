@@ -14,7 +14,7 @@
 // KDE
 #include <KModifierKeyInfo>
 
-namespace Latte {
+namespace Mocha {
 namespace ShortcutsPart {
 
 class ModifierTracker: public QObject {

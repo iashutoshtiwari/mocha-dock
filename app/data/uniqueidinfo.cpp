@@ -5,7 +5,7 @@
 
 #include "uniqueidinfo.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 UniqueIdInfo::UniqueIdInfo()

@@ -5,8 +5,8 @@
 
 import QtQuick
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.abilities.definition as AbilityDefinition
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.abilities.definition as AbilityDefinition
 
 AbilityDefinition.Containment {
     property Item bridge: null

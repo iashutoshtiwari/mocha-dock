@@ -9,7 +9,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 MouseArea{
     id: rulerMouseArea
@@ -50,13 +50,13 @@ MouseArea{
         var newTotal = Math.abs(plasmoid.configuration.offset) + value;
 
         //centered and justify alignments based on offset and get out of the screen in some cases
-        var centeredCheck = ((plasmoid.configuration.alignment === LatteCore.Types.Center)
-                             || (plasmoid.configuration.alignment === LatteCore.Types.Justify))
+        var centeredCheck = ((plasmoid.configuration.alignment === MochaCore.Types.Center)
+                             || (plasmoid.configuration.alignment === MochaCore.Types.Justify))
                 && ((Math.abs(plasmoid.configuration.offset) + value/2) > 50);
 
         if (newTotal > 100 || centeredCheck) {
-            if ((plasmoid.configuration.alignment === LatteCore.Types.Center)
-                    || (plasmoid.configuration.alignment === LatteCore.Types.Justify)) {
+            if ((plasmoid.configuration.alignment === MochaCore.Types.Center)
+                    || (plasmoid.configuration.alignment === MochaCore.Types.Justify)) {
 
                 var suggestedValue = (plasmoid.configuration.offset<0) ? Math.min(0, -(100-value)): Math.max(0, 100-value);
 

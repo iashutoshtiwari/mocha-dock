@@ -7,7 +7,7 @@
 
 // local
 #include "../abstractwindowinterface.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../tools/commontools.h"
 
 // Qt
@@ -18,7 +18,7 @@
 #include <KDirWatch>
 
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -53,7 +53,7 @@ void Schemes::init()
     });
 
     //! track for changing default scheme
-    QString kdeSettingsFile = Latte::configPath() + "/kdeglobals";
+    QString kdeSettingsFile = Mocha::configPath() + "/kdeglobals";
 
     KDirWatch::self()->addFile(kdeSettingsFile);
 

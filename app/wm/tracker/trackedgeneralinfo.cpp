@@ -12,7 +12,7 @@
 #include "../abstractwindowinterface.h"
 #include "../schemecolors.h"
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 namespace Tracker {
 

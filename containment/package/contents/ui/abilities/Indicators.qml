@@ -6,7 +6,7 @@
 import QtQuick
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.items as AbilityItem
+import org.kde.mocha.abilities.items as AbilityItem
 
 import "./privates" as Ability
 
@@ -19,7 +19,7 @@ Ability.IndicatorsPrivate {
                                                    && view.indicator.configuration)
                                                 : false
 
-    type: view && view.indicator ? view.indicator.type : "org.kde.latte.default"
+    type: view && view.indicator ? view.indicator.type : "org.kde.mocha.default"
 
     indicatorComponent: view && view.indicator ? view.indicator.component : null
 

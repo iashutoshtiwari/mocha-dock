@@ -12,7 +12,7 @@
 // Qt
 #include <QObject>
 
-namespace Latte{
+namespace Mocha{
 class View;
 
 namespace ViewPart {
@@ -27,18 +27,18 @@ class AbstractWindowInterface;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 class WindowsTracker : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
 
-    Q_PROPERTY(Latte::ViewPart::TrackerPart::CurrentScreenTracker *currentScreen READ currentScreen NOTIFY currentScreenChanged)
-    Q_PROPERTY(Latte::ViewPart::TrackerPart::AllScreensTracker *allScreens READ allScreens NOTIFY allScreensChanged)
+    Q_PROPERTY(Mocha::ViewPart::TrackerPart::CurrentScreenTracker *currentScreen READ currentScreen NOTIFY currentScreenChanged)
+    Q_PROPERTY(Mocha::ViewPart::TrackerPart::AllScreensTracker *allScreens READ allScreens NOTIFY allScreensChanged)
 
 public:
-    explicit WindowsTracker(Latte::View *parent);
+    explicit WindowsTracker(Mocha::View *parent);
     virtual ~WindowsTracker();
 
     bool enabled() const;
@@ -47,7 +47,7 @@ public:
     TrackerPart::AllScreensTracker *allScreens() const;
     TrackerPart::CurrentScreenTracker *currentScreen() const;
 
-    Latte::View *view() const;
+    Mocha::View *view() const;
     WindowSystem::AbstractWindowInterface *wm() const;
 
 public slots:
@@ -62,7 +62,7 @@ signals:
     void currentScreenChanged();
 
 private:
-    Latte::View *m_latteView{nullptr};
+    Mocha::View *m_latteView{nullptr};
     WindowSystem::AbstractWindowInterface *m_wm{nullptr};
 
     TrackerPart::AllScreensTracker *m_allScreensTracker{nullptr};

@@ -35,12 +35,12 @@ namespace KActivities {
 class Controller;
 }
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class CentralLayout;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Dialog {
 
@@ -54,10 +54,10 @@ class SettingsDialog : public GenericDialog
 {
     Q_OBJECT
 public:
-    SettingsDialog(QWidget *parent, Latte::Corona *corona);
+    SettingsDialog(QWidget *parent, Mocha::Corona *corona);
     ~SettingsDialog();
 
-    Latte::Corona *corona() const;
+    Mocha::Corona *corona() const;
     Ui::SettingsDialog *ui() const;
 
     QMenuBar *appMenuBar() const;
@@ -115,7 +115,7 @@ private:
     QSize storedWindowSize() const;
 
 private:
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
     Ui::SettingsDialog *m_ui;
 
     //! Handlers for UI

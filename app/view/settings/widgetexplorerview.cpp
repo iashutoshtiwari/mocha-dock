@@ -10,7 +10,7 @@
 // local
 #include "../panelshadows_p.h"
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../wm/abstractwindowinterface.h"
 
 // Qt
@@ -23,10 +23,10 @@
 #include <KWindowSystem>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-WidgetExplorerView::WidgetExplorerView(Latte::View *view)
+WidgetExplorerView::WidgetExplorerView(Mocha::View *view)
     : SubConfigView(view, QString("#widgetexplorerview#"), true)
 {
     setResizeMode(QQuickView::SizeRootObjectToView);
@@ -84,7 +84,7 @@ QRect WidgetExplorerView::geometryWhenVisible() const
     return m_geometryWhenVisible;
 }
 
-void WidgetExplorerView::initParentView(Latte::View *view)
+void WidgetExplorerView::initParentView(Mocha::View *view)
 {
     SubConfigView::initParentView(view);
 
@@ -99,11 +99,11 @@ QRect WidgetExplorerView::availableScreenGeometry() const
 {
     int currentScrId = m_latteView->positioner()->currentScreenId();
 
-    QList<Latte::Types::Visibility> ignoreModes{Latte::Types::SidebarOnDemand,Latte::Types::SidebarAutoHide};
+    QList<Mocha::Types::Visibility> ignoreModes{Mocha::Types::SidebarOnDemand,Mocha::Types::SidebarAutoHide};
 
     if (m_latteView->visibility() && m_latteView->visibility()->isSidebar()) {
-        ignoreModes.removeAll(Latte::Types::SidebarOnDemand);
-        ignoreModes.removeAll(Latte::Types::SidebarAutoHide);
+        ignoreModes.removeAll(Mocha::Types::SidebarOnDemand);
+        ignoreModes.removeAll(Mocha::Types::SidebarAutoHide);
     }
 
     QString activityid = m_latteView->layout()->lastUsedActivity();

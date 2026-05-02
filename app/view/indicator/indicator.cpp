@@ -10,7 +10,7 @@
 #include "indicatorinfo.h"
 #include "../containmentinterface.h"
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../indicator/factory.h"
 
 // Qt
@@ -24,16 +24,16 @@
 #include <KPluginMetaData>
 #include <PlasmaQuick/SharedQmlEngine>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-Indicator::Indicator(Latte::View *parent)
+Indicator::Indicator(Mocha::View *parent)
     : QObject(parent),
       m_view(parent),
       m_info(new IndicatorPart::Info(this)),
       m_resources(new IndicatorPart::Resources(this))
 {
-    m_corona = qobject_cast<Latte::Corona *>(m_view->corona());
+    m_corona = qobject_cast<Mocha::Corona *>(m_view->corona());
     loadConfig();
 
     connect(this, &Indicator::enabledChanged, this, &Indicator::saveConfig);
@@ -41,13 +41,13 @@ Indicator::Indicator(Latte::View *parent)
 
     connect(m_view->extendedInterface(), &ContainmentInterface::hasLatteTasksChanged, this, &Indicator::latteTasksArePresentChanged);
 
-    connect(m_view, &Latte::View::indicatorPluginChanged, [this](const QString &indicatorId) {
+    connect(m_view, &Mocha::View::indicatorPluginChanged, [this](const QString &indicatorId) {
         if (m_corona && m_corona->indicatorFactory()->isCustomType(indicatorId)) {
             emit customPluginsChanged();
         }
     });
 
-    connect(m_view, &Latte::View::indicatorPluginRemoved, [this](const QString &indicatorId) {
+    connect(m_view, &Mocha::View::indicatorPluginRemoved, [this](const QString &indicatorId) {
         if (m_corona && m_type == indicatorId && !m_corona->indicatorFactory()->pluginExists(indicatorId)) {
             setType("org.kde.latte.default");
         }

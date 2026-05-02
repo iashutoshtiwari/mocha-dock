@@ -14,7 +14,7 @@
 #include <QObject>
 #include <QRect>
 
-namespace Latte {
+namespace Mocha {
 class View;
 namespace WindowSystem {
 class AbstractWindowInterface;
@@ -25,7 +25,7 @@ class Windows;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -114,7 +114,7 @@ public slots:
 
     Q_INVOKABLE bool canBeDragged();
 
-    void requestMove(Latte::View *fromView, int localX, int localY);
+    void requestMove(Mocha::View *fromView, int localX, int localY);
 
     //! Debug
     void printHistory();

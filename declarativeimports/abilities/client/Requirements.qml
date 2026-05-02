@@ -5,7 +5,7 @@
 
 import QtQuick
 
-import org.kde.latte.abilities.definition as AbilityDefinition
+import org.kde.mocha.abilities.definition as AbilityDefinition
 
 AbilityDefinition.AppletRequirements {
     id: requirements
@@ -16,7 +16,7 @@ AbilityDefinition.AppletRequirements {
     onIsActiveChanged: {
         if (isActive) {
             bridge.applet.activeIndicatorEnabled = requirements.activeIndicatorEnabled;
-            bridge.applet.latteSideColoringEnabled = requirements.latteSideColoringEnabled;
+            bridge.applet.mochaSideColoringEnabled = requirements.mochaSideColoringEnabled;
             bridge.applet.lengthMarginsEnabled = requirements.lengthMarginsEnabled;
             bridge.applet.parabolicEffectLocked = requirements.parabolicEffectLocked;
             bridge.applet.screenEdgeMarginSupported = requirements.screenEdgeMarginSupported;
@@ -30,9 +30,9 @@ AbilityDefinition.AppletRequirements {
         }
     }
 
-    onLatteSideColoringEnabledChanged: {
+    onMochaSideColoringEnabledChanged: {
         if (isActive) {
-            bridge.applet.latteSideColoringEnabled = requirements.latteSideColoringEnabled;
+            bridge.applet.mochaSideColoringEnabled = requirements.mochaSideColoringEnabled;
         }
     }
 

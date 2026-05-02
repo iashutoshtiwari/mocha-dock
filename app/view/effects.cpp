@@ -9,7 +9,7 @@
 #include <coretypes.h>
 #include "panelshadows_p.h"
 #include "view.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../wm/abstractwindowinterface.h"
 
 // Qt
@@ -20,14 +20,14 @@
 #include <KWindowSystem>
 
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-Effects::Effects(Latte::View *parent)
+Effects::Effects(Mocha::View *parent)
     : QObject(parent),
       m_view(parent)
 {
-    m_corona = qobject_cast<Latte::Corona *>(m_view->corona());
+    m_corona = qobject_cast<Mocha::Corona *>(m_view->corona());
 
     init();
 }
@@ -53,7 +53,7 @@ void Effects::init()
     connect(this, &Effects::unitedMaskRegionsChanged, this, &Effects::updateMask);
     connect(m_view, &QQuickWindow::widthChanged, this, &Effects::updateMask);
     connect(m_view, &QQuickWindow::heightChanged, this, &Effects::updateMask);
-    connect(m_view, &Latte::View::behaveAsPlasmaPanelChanged, this, &Effects::updateMask);
+    connect(m_view, &Mocha::View::behaveAsPlasmaPanelChanged, this, &Effects::updateMask);
 
     connect(this, &Effects::backgroundRadiusChanged, this, &Effects::updateBackgroundCorners);
 
@@ -67,15 +67,15 @@ void Effects::init()
 
     connect(this, &Effects::popUpMarginChanged, this, &Effects::onPopUpMarginChanged);
 
-    connect(m_view, &Latte::View::alignmentChanged, this, &Effects::updateEnabledBorders);
-    connect(m_view, &Latte::View::maxLengthChanged, this, &Effects::updateEnabledBorders);
-    connect(m_view, &Latte::View::offsetChanged, this, &Effects::updateEnabledBorders);
-    connect(m_view, &Latte::View::screenEdgeMarginEnabledChanged, this, &Effects::updateEnabledBorders);
-    connect(m_view, &Latte::View::behaveAsPlasmaPanelChanged, this, &Effects::updateEffects);
+    connect(m_view, &Mocha::View::alignmentChanged, this, &Effects::updateEnabledBorders);
+    connect(m_view, &Mocha::View::maxLengthChanged, this, &Effects::updateEnabledBorders);
+    connect(m_view, &Mocha::View::offsetChanged, this, &Effects::updateEnabledBorders);
+    connect(m_view, &Mocha::View::screenEdgeMarginEnabledChanged, this, &Effects::updateEnabledBorders);
+    connect(m_view, &Mocha::View::behaveAsPlasmaPanelChanged, this, &Effects::updateEffects);
     connect(this, &Effects::drawShadowsChanged, this, &Effects::updateShadows);
-    connect(m_view, &Latte::View::behaveAsPlasmaPanelChanged, this, &Effects::updateShadows);
-    connect(m_view, &Latte::View::configWindowGeometryChanged, this, &Effects::updateMask);
-    connect(m_view, &Latte::View::layoutChanged, this, &Effects::onPopUpMarginChanged);
+    connect(m_view, &Mocha::View::behaveAsPlasmaPanelChanged, this, &Effects::updateShadows);
+    connect(m_view, &Mocha::View::configWindowGeometryChanged, this, &Effects::updateMask);
+    connect(m_view, &Mocha::View::layoutChanged, this, &Effects::onPopUpMarginChanged);
 
     connect(&m_theme, &Plasma::Theme::themeChanged, this, [&]() {
         updateBackgroundContrastValues();
@@ -618,7 +618,7 @@ void Effects::updateEnabledBorders()
 
     if (!m_backgroundAllCorners) {
         if ((m_view->location() == Plasma::Types::LeftEdge || m_view->location() == Plasma::Types::RightEdge)) {
-            if (m_view->maxLength() == 1 && m_view->alignment() == Latte::Types::Justify) {
+            if (m_view->maxLength() == 1 && m_view->alignment() == Mocha::Types::Justify) {
                 if (!m_forceTopBorder) {
                     borders &= ~KSvg::FrameSvg::TopBorder;
                 }
@@ -628,26 +628,26 @@ void Effects::updateEnabledBorders()
                 }
             }
 
-            if (m_view->alignment() == Latte::Types::Top && !m_forceTopBorder && m_view->offset() == 0) {
+            if (m_view->alignment() == Mocha::Types::Top && !m_forceTopBorder && m_view->offset() == 0) {
                 borders &= ~KSvg::FrameSvg::TopBorder;
             }
 
-            if (m_view->alignment() == Latte::Types::Bottom && !m_forceBottomBorder && m_view->offset() == 0) {
+            if (m_view->alignment() == Mocha::Types::Bottom && !m_forceBottomBorder && m_view->offset() == 0) {
                 borders &= ~KSvg::FrameSvg::BottomBorder;
             }
         }
 
         if (m_view->location() == Plasma::Types::TopEdge || m_view->location() == Plasma::Types::BottomEdge) {
-            if (m_view->maxLength() == 1 && m_view->alignment() == Latte::Types::Justify) {
+            if (m_view->maxLength() == 1 && m_view->alignment() == Mocha::Types::Justify) {
                 borders &= ~KSvg::FrameSvg::LeftBorder;
                 borders &= ~KSvg::FrameSvg::RightBorder;
             }
 
-            if (m_view->alignment() == Latte::Types::Left && m_view->offset() == 0) {
+            if (m_view->alignment() == Mocha::Types::Left && m_view->offset() == 0) {
                 borders &= ~KSvg::FrameSvg::LeftBorder;
             }
 
-            if (m_view->alignment() == Latte::Types::Right  && m_view->offset() == 0) {
+            if (m_view->alignment() == Mocha::Types::Right  && m_view->offset() == 0) {
                 borders &= ~KSvg::FrameSvg::RightBorder;
             }
         }

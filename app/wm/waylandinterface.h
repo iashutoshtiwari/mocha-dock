@@ -8,7 +8,7 @@
 #define WAYLANDINTERFACE_H
 
 // local
-#include <config-latte.h>
+#include <config-mocha.h>
 #include "abstractwindowinterface.h"
 #include "windowinfowrap.h"
 
@@ -25,11 +25,11 @@
 #include <taskmanager/virtualdesktopinfo.h>
 
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 
 class WaylandInterface : public AbstractWindowInterface
@@ -40,7 +40,7 @@ public:
     explicit WaylandInterface(QObject *parent = nullptr);
     ~WaylandInterface() override;
 
-    void setViewExtraFlags(QWindow *view, bool isPanelWindow = true, Latte::Types::Visibility mode = Latte::Types::WindowsGoBelow) override;
+    void setViewExtraFlags(QWindow *view, bool isPanelWindow = true, Mocha::Types::Visibility mode = Mocha::Types::WindowsGoBelow) override;
     void setViewStruts(QWindow *view, const QRect &rect
                        , Plasma::Types::Location location) override;
     void setWindowOnActivities(const WindowId &wid, const QStringList &nextactivities) override;
@@ -119,7 +119,7 @@ private:
     TaskManager::VirtualDesktopInfo *m_virtualDesktopInfo{nullptr};
 
 
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
 };
 
 }

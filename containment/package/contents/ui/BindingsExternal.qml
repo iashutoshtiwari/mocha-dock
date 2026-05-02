@@ -9,8 +9,8 @@ import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.containment as MochaContainment
 
 Item {
     property bool updateIsEnabled: autosize.inCalculatedIconSize
@@ -18,39 +18,39 @@ Item {
                                    && !visibilityManager.inSlidingOut
                                    && !visibilityManager.inRelocationHiding
 
-    //! Latte::View Main Bindings 
+    //! Mocha::View Main Bindings 
     Binding{
-        target: latteView
+        target: mochaView
         property:"maxThickness"
         restoreMode: Binding.RestoreNone
         //! prevents updating window geometry during closing window in wayland and such fixes a crash
-        when: latteView && !visibilityManager.inRelocationHiding && !visibilityManager.inClientSideScreenEdgeSliding //&& !inStartup
+        when: mochaView && !visibilityManager.inRelocationHiding && !visibilityManager.inClientSideScreenEdgeSliding //&& !inStartup
         value: root.behaveAsPlasmaPanel ? visibilityManager.thicknessAsPanel : metrics.maxThicknessForView
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property:"normalThickness"
         restoreMode: Binding.RestoreNone
-        when: latteView && updateIsEnabled
+        when: mochaView && updateIsEnabled
         value: root.behaveAsPlasmaPanel ? visibilityManager.thicknessAsPanel : metrics.mask.screenEdge + metrics.mask.thickness.maxNormalForItemsWithoutScreenEdge
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property:"maxNormalThickness"
         restoreMode: Binding.RestoreNone
-        when: latteView && updateIsEnabled
+        when: mochaView && updateIsEnabled
         value: metrics.mask.thickness.maxNormal
     }
 
     Binding {
-        target: latteView
+        target: mochaView
         property: "headThicknessGap"
         restoreMode: Binding.RestoreNone
-        when: latteView && updateIsEnabled && !visibilityManager.inClientSideScreenEdgeSliding
+        when: mochaView && updateIsEnabled && !visibilityManager.inClientSideScreenEdgeSliding
         value: {
-            if (root.behaveAsPlasmaPanel || root.viewType === LatteCore.Types.PanelView || (latteView && latteView.byPassWM)) {
+            if (root.behaveAsPlasmaPanel || root.viewType === MochaCore.Types.PanelView || (mochaView && mochaView.byPassWM)) {
                 return 0;
             }
 
@@ -59,69 +59,69 @@ Item {
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "type"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: root.viewType
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "behaveAsPlasmaPanel"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: root.behaveAsPlasmaPanel
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "fontPixelSize"
         value: Kirigami.Theme.defaultFont.pixelSize
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "maxLength"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: root.maxLengthPerCentage/100
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "offset"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: plasmoid.configuration.offset/100
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "screenEdgeMargin"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: Math.max(0, plasmoid.configuration.screenEdgeMargin)
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "screenEdgeMarginEnabled"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: root.screenEdgeMarginEnabled && !root.hideThickScreenGap
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "alignment"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: myView.alignment
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "isTouchingTopViewAndIsBusy"
         restoreMode: Binding.RestoreNone
         when: root.viewIsAvailable
@@ -130,153 +130,153 @@ Item {
                 return false;
             }
 
-            var isTouchingTopScreenEdge = (latteView.y === latteView.screenGeometry.y);
-            var isStickedOnTopBorder = (plasmoid.configuration.alignment === LatteCore.Types.Justify && plasmoid.configuration.maxLength===100)
-                    || (plasmoid.configuration.alignment === LatteCore.Types.Top && plasmoid.configuration.offset===0);
+            var isTouchingTopScreenEdge = (mochaView.y === mochaView.screenGeometry.y);
+            var isStickedOnTopBorder = (plasmoid.configuration.alignment === MochaCore.Types.Justify && plasmoid.configuration.maxLength===100)
+                    || (plasmoid.configuration.alignment === MochaCore.Types.Top && plasmoid.configuration.offset===0);
 
-            return root.isVertical && !latteView.visibility.isHidden && !isTouchingTopScreenEdge && isStickedOnTopBorder && background.isShown;
+            return root.isVertical && !mochaView.visibility.isHidden && !isTouchingTopScreenEdge && isStickedOnTopBorder && background.isShown;
         }
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "isTouchingBottomViewAndIsBusy"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: {
             if (!root.viewIsAvailable) {
                 return false;
             }
 
-            var latteBottom = latteView.y + latteView.height;
-            var screenBottom = latteView.screenGeometry.y + latteView.screenGeometry.height;
-            var isTouchingBottomScreenEdge = (latteBottom === screenBottom);
+            var mochaBottom = mochaView.y + mochaView.height;
+            var screenBottom = mochaView.screenGeometry.y + mochaView.screenGeometry.height;
+            var isTouchingBottomScreenEdge = (mochaBottom === screenBottom);
 
-            var isStickedOnBottomBorder = (plasmoid.configuration.alignment === LatteCore.Types.Justify && plasmoid.configuration.maxLength===100)
-                    || (plasmoid.configuration.alignment === LatteCore.Types.Bottom && plasmoid.configuration.offset===0);
+            var isStickedOnBottomBorder = (plasmoid.configuration.alignment === MochaCore.Types.Justify && plasmoid.configuration.maxLength===100)
+                    || (plasmoid.configuration.alignment === MochaCore.Types.Bottom && plasmoid.configuration.offset===0);
 
-            return root.isVertical && !latteView.visibility.isHidden && !isTouchingBottomScreenEdge && isStickedOnBottomBorder && background.isShown;
+            return root.isVertical && !mochaView.visibility.isHidden && !isTouchingBottomScreenEdge && isStickedOnBottomBorder && background.isShown;
         }
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "colorizer"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: colorizerManager
     }
 
     Binding{
-        target: latteView
+        target: mochaView
         property: "metrics"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: metrics
     }
 
     //! View::Effects bindings
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property: "backgroundAllCorners"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects
+        when: mochaView && mochaView.effects
         value: plasmoid.configuration.backgroundAllCorners
                && (!root.screenEdgeMarginEnabled /*no-floating*/
                    || (root.screenEdgeMarginEnabled /*floating with justify alignment and 100% maxlength*/
                        && plasmoid.configuration.maxLength===100
-                       && myView.alignment===LatteCore.Types.Justify
+                       && myView.alignment===MochaCore.Types.Justify
                        && !root.hideLengthScreenGaps))
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property: "backgroundRadius"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects
+        when: mochaView && mochaView.effects
         value: background.customRadius
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property: "backgroundRadiusEnabled"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects
+        when: mochaView && mochaView.effects
         value: background.customRadiusIsEnabled
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property: "backgroundOpacity"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects
+        when: mochaView && mochaView.effects
         value: plasmoid.configuration.panelTransparency===-1 /*Default option*/ ? -1 : background.currentOpacity
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property: "drawEffects"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects && !root.inStartup
-        value: LatteCore.WindowSystem.compositingActive
+        when: mochaView && mochaView.effects && !root.inStartup
+        value: MochaCore.WindowSystem.compositingActive
                && (((root.blurEnabled && root.useThemePanel) || (root.blurEnabled && root.forceSolidPanel))
                    && (!root.inStartup || visibilityManager.inRelocationHiding))
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property: "drawShadows"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects
-        value: root.drawShadowsExternal && (!root.inStartup || visibilityManager.inRelocationHiding) && !(latteView && latteView.visibility.isHidden)
+        when: mochaView && mochaView.effects
+        value: root.drawShadowsExternal && (!root.inStartup || visibilityManager.inRelocationHiding) && !(mochaView && mochaView.visibility.isHidden)
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property:"editShadow"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects
+        when: mochaView && mochaView.effects
         value: root.editShadow
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property:"innerShadow"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects
+        when: mochaView && mochaView.effects
         value: background.shadows.headThickness
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property: "panelBackgroundSvg"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects
+        when: mochaView && mochaView.effects
         value: background.panelBackgroundSvg
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: mochaView && mochaView.effects ? mochaView.effects : null
         property:"appletsLayoutGeometry"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.effects && visibilityManager.inNormalState
+        when: mochaView && mochaView.effects && visibilityManager.inNormalState
         value: {
             if (root.behaveAsPlasmaPanel
-                    || !LatteCore.WindowSystem.compositingActive
+                    || !MochaCore.WindowSystem.compositingActive
                     || (!parabolic.isEnabled && root.userShowPanelBackground && plasmoid.configuration.panelSize===100)) {
                 var paddingtail = background.tailRoundness + background.tailRoundnessMargin;
                 var paddinghead = background.headRoundness + background.headRoundnessMargin;
 
                 if (root.isHorizontal) {
-                    return Qt.rect(latteView.localGeometry.x + paddingtail,
-                                   latteView.localGeometry.y,
-                                   latteView.localGeometry.width - paddingtail - paddinghead,
-                                   latteView.localGeometry.height);
+                    return Qt.rect(mochaView.localGeometry.x + paddingtail,
+                                   mochaView.localGeometry.y,
+                                   mochaView.localGeometry.width - paddingtail - paddinghead,
+                                   mochaView.localGeometry.height);
                 } else {
-                    return Qt.rect(latteView.localGeometry.x,
-                                   latteView.localGeometry.y + paddingtail,
-                                   latteView.localGeometry.width,
-                                   latteView.localGeometry.height - paddingtail - paddinghead);
+                    return Qt.rect(mochaView.localGeometry.x,
+                                   mochaView.localGeometry.y + paddingtail,
+                                   mochaView.localGeometry.width,
+                                   mochaView.localGeometry.height - paddingtail - paddinghead);
                 }
             }
 
@@ -286,35 +286,35 @@ Item {
 
     //! View::Positioner bindings
     Binding{
-        target: latteView && latteView.positioner ? latteView.positioner : null
+        target: mochaView && mochaView.positioner ? mochaView.positioner : null
         property: "isStickedOnTopEdge"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.positioner
+        when: mochaView && mochaView.positioner
         value: plasmoid.configuration.isStickedOnTopEdge
     }
 
     Binding{
-        target: latteView && latteView.positioner ? latteView.positioner : null
+        target: mochaView && mochaView.positioner ? mochaView.positioner : null
         property: "isStickedOnBottomEdge"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.positioner
+        when: mochaView && mochaView.positioner
         value: plasmoid.configuration.isStickedOnBottomEdge
     }
 
     //! View::VisibilityManager
     Binding{
-        target: latteView && latteView.visibility ? latteView.visibility : null
+        target: mochaView && mochaView.visibility ? mochaView.visibility : null
         property: "isShownFully"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.visibility
+        when: mochaView && mochaView.visibility
         value: myView.isShownFully
     }
 
     Binding{
-        target: latteView && latteView.visibility ? latteView.visibility : null
+        target: mochaView && mochaView.visibility ? mochaView.visibility : null
         property: "strutsThickness"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.visibility
+        when: mochaView && mochaView.visibility
         value: {
             var isCapableToHideScreenGap = root.screenEdgeMarginEnabled && plasmoid.configuration.hideFloatingGapForMaximized
             var mirrorGapFactor = root.mirrorScreenGap ? 2 : 1;
@@ -340,55 +340,55 @@ Item {
     }
 
     Binding {
-        target: latteView && latteView.visibility ? latteView.visibility : null
+        target: mochaView && mochaView.visibility ? mochaView.visibility : null
         property: "isFloatingGapWindowEnabled"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.visibility
+        when: mochaView && mochaView.visibility
         value: root.hasFloatingGapInputEventsDisabled
-               && (latteView.visibility.mode === LatteCore.Types.AutoHide
-                   || latteView.visibility.mode === LatteCore.Types.DodgeActive
-                   || latteView.visibility.mode === LatteCore.Types.DodgeAllWindows
-                   || latteView.visibility.mode === LatteCore.Types.DodgeMaximized
-                   || latteView.visibility.mode === LatteCore.Types.SidebarAutoHide)
+               && (mochaView.visibility.mode === MochaCore.Types.AutoHide
+                   || mochaView.visibility.mode === MochaCore.Types.DodgeActive
+                   || mochaView.visibility.mode === MochaCore.Types.DodgeAllWindows
+                   || mochaView.visibility.mode === MochaCore.Types.DodgeMaximized
+                   || mochaView.visibility.mode === MochaCore.Types.SidebarAutoHide)
     }
 
     //! View::WindowsTracker bindings
     Binding{
-        target: latteView && latteView.windowsTracker ? latteView.windowsTracker : null
+        target: mochaView && mochaView.windowsTracker ? mochaView.windowsTracker : null
         property: "enabled"
         restoreMode: Binding.RestoreNone
         //! During startup phase windows tracking is not enabled and does not
         //! influence startup sequence at all. At the same time no windows tracking
         //! takes place during startup and as such startup time is reduced
-        when: latteView && latteView.windowsTracker && latteView.visibility && !root.inStartup
-        value: (latteView && latteView.visibility
-                && !(latteView.visibility.mode === LatteCore.Types.AlwaysVisible /* Visibility */
-                     || latteView.visibility.mode === LatteCore.Types.WindowsGoBelow
-                     || latteView.visibility.mode === LatteCore.Types.AutoHide))
+        when: mochaView && mochaView.windowsTracker && mochaView.visibility && !root.inStartup
+        value: (mochaView && mochaView.visibility
+                && !(mochaView.visibility.mode === MochaCore.Types.AlwaysVisible /* Visibility */
+                     || mochaView.visibility.mode === MochaCore.Types.WindowsGoBelow
+                     || mochaView.visibility.mode === MochaCore.Types.AutoHide))
                || indexer.clientsTrackingWindowsCount  > 0                   /*Applets Need Windows Tracking */
                || root.dragActiveWindowEnabled                               /*Dragging Active Window(Empty Areas)*/
                || ((root.backgroundOnlyOnMaximized                           /*Dynamic Background */
                     || plasmoid.configuration.solidBackgroundForMaximized
                     || root.disablePanelShadowMaximized
-                    || root.windowColors !== LatteContainment.Types.NoneWindowColors))
+                    || root.windowColors !== MochaContainment.Types.NoneWindowColors))
                || (root.screenEdgeMarginsEnabled                             /*Dynamic Screen Edge Margin*/
                    && plasmoid.configuration.hideFloatingGapForMaximized)
     }
 
     //! View::ExtendedInterface bindings
     Binding{
-        target: latteView && latteView.extendedInterface ? latteView.extendedInterface : null
+        target: mochaView && mochaView.extendedInterface ? mochaView.extendedInterface : null
         property: "plasmoid"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.extendedInterface
+        when: mochaView && mochaView.extendedInterface
         value: plasmoid
     }
 
     Binding{
-        target: latteView && latteView.extendedInterface ? latteView.extendedInterface : null
+        target: mochaView && mochaView.extendedInterface ? mochaView.extendedInterface : null
         property: "layoutManager"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.extendedInterface
+        when: mochaView && mochaView.extendedInterface
         value: fastLayoutManager
     }
 }

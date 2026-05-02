@@ -11,7 +11,7 @@
 #include <QDebug>
 
 
-namespace Latte {
+namespace Mocha {
 
 QuickWindowSystem::QuickWindowSystem(QObject *parent)
     : QObject(parent)

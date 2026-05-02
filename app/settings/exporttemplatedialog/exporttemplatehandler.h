@@ -20,7 +20,7 @@ namespace Ui {
 class ExportTemplateDialog;
 }
 
-namespace Latte{
+namespace Mocha{
 class View;
 namespace Settings{
 namespace Dialog{
@@ -29,7 +29,7 @@ class ExportTemplateDialog;
 }
 }
 
-namespace Latte{
+namespace Mocha{
 namespace Settings{
 namespace Model {
 class Applets;
@@ -38,7 +38,7 @@ class Applets;
 }
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Handler {
 
@@ -53,13 +53,13 @@ public:
     ExportTemplateHandler(Dialog::ExportTemplateDialog *dialog);
     ExportTemplateHandler(Dialog::ExportTemplateDialog *dialog, const Data::Layout &layout);
     ExportTemplateHandler(Dialog::ExportTemplateDialog *dialog, const Data::View &view);
-    ExportTemplateHandler(Dialog::ExportTemplateDialog *dialog, Latte::View *view);
+    ExportTemplateHandler(Dialog::ExportTemplateDialog *dialog, Mocha::View *view);
     ~ExportTemplateHandler();
 
     bool hasChangedData() const override;
     bool inDefaultValues() const override;
 
-    Latte::Data::AppletsTable currentData() const;
+    Mocha::Data::AppletsTable currentData() const;
 
 public slots:
     void reset() override;
@@ -75,7 +75,7 @@ private:
     void initDefaults();
 
     void loadApplets(const QString &file);
-    void loadViewApplets(Latte::View *view);
+    void loadViewApplets(Mocha::View *view);
 
     void setFilepath(const QString &filepath);
 

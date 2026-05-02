@@ -19,7 +19,7 @@ namespace Ui {
 class ActionsDialog;
 }
 
-namespace Latte{
+namespace Mocha{
 namespace Settings{
 namespace Dialog{
 class ActionsDialog;
@@ -28,7 +28,7 @@ class ActionsDialog;
 }
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Handler {
 

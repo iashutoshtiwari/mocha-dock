@@ -18,7 +18,7 @@
 #include <QPainter>
 #include <QStandardItemModel>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Layout {
 namespace Delegate {

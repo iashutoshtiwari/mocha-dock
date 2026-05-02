@@ -13,14 +13,14 @@ Ability.LaunchersPrivate {
     updateIsBlocked: (root.dragOverlay && root.dragOverlay.pressed)
                      || layouter.appletsInParentChange
 
-    readonly property bool isReady: latteView && latteView.layout && universalSettings && root.layoutsManager !== null
-    readonly property bool isCapableOfLayoutLaunchers: latteView && latteView.layout
-    readonly property bool isCapableOfUniversalLaunchers: latteView && universalSettings
+    readonly property bool isReady: mochaView && mochaView.layout && universalSettings && root.layoutsManager !== null
+    readonly property bool isCapableOfLayoutLaunchers: mochaView && mochaView.layout
+    readonly property bool isCapableOfUniversalLaunchers: mochaView && universalSettings
 
     property string layoutName: ""
 
-    readonly property var layoutLaunchers: latteView && latteView.layout ? latteView.layout.launchers : []
-    readonly property var universalLaunchers: latteView && universalSettings ? universalSettings.launchers : []
+    readonly property var layoutLaunchers: mochaView && mochaView.layout ? mochaView.layout.launchers : []
+    readonly property var universalLaunchers: mochaView && universalSettings ? universalSettings.launchers : []
 
     function addAbilityClient(client) {
         layoutsManager.syncedLaunchers.addAbilityClient(client);
@@ -100,7 +100,7 @@ Ability.LaunchersPrivate {
 
     function setLayoutLaunchers(launchers) {
         if (isCapableOfLayoutLaunchers) {
-            latteView.layout.launchers = launchers;
+            mochaView.layout.launchers = launchers;
         }
     }
 

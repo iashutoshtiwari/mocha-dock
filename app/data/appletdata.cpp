@@ -5,7 +5,7 @@
 
 #include "appletdata.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 Applet::Applet()

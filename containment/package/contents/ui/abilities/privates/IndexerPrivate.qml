@@ -6,7 +6,7 @@
 import QtQuick
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.definition as AbilityDefinition
+import org.kde.mocha.abilities.definition as AbilityDefinition
 
 AbilityDefinition.Indexer {
     id: indxr

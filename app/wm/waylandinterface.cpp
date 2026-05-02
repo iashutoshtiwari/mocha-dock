@@ -13,7 +13,7 @@
 #include "../view/view.h"
 #include "../view/settings/subconfigview.h"
 #include "../view/helpers/screenedgeghostwindow.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 
 // Qt
 #include <QApplication>
@@ -35,13 +35,13 @@
 
 using namespace KWayland::Client;
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 
 WaylandInterface::WaylandInterface(QObject *parent)
     : AbstractWindowInterface(parent)
 {
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<Mocha::Corona *>(parent);
 
     //! VirtualDesktopInfo self-initializes via Wayland protocols
     m_virtualDesktopInfo = new TaskManager::VirtualDesktopInfo(this);
@@ -117,7 +117,7 @@ void WaylandInterface::unregisterIgnoredWindow(WindowId wid)
     }
 }
 
-void WaylandInterface::setViewExtraFlags(QWindow *view, bool isPanelWindow, Latte::Types::Visibility mode)
+void WaylandInterface::setViewExtraFlags(QWindow *view, bool isPanelWindow, Mocha::Types::Visibility mode)
 {
     if (!view) {
         return;
@@ -129,7 +129,7 @@ void WaylandInterface::setViewExtraFlags(QWindow *view, bool isPanelWindow, Latt
         return;
     }
 
-    bool atBottom = !isPanelWindow && (mode == Latte::Types::WindowsCanCover || mode == Latte::Types::WindowsAlwaysCover);
+    bool atBottom = !isPanelWindow && (mode == Mocha::Types::WindowsCanCover || mode == Mocha::Types::WindowsAlwaysCover);
 
     if (atBottom) {
         layerWindow->setLayer(LayerShellQt::Window::LayerBottom);
@@ -761,7 +761,7 @@ bool WaylandInterface::isAcceptableWindow(const KWayland::Client::PlasmaWindow *
             registerPlasmaIgnoredWindow(w->uuid());
             return false;
         }
-    } else if ((w->appId() == QLatin1String("latte-dock"))
+    } else if ((w->appId() == QLatin1String("mocha-dock"))
                || (w->appId().startsWith(QLatin1String("ksmserver")))) {
         if (isFullScreenWindow(w)) {
             registerIgnoredWindow(w->uuid());
@@ -847,7 +847,7 @@ void WaylandInterface::windowCreatedProxy(KWayland::Client::PlasmaWindow *w)
     trackWindow(w);
     emit windowAdded(w->uuid());
 
-    if (w->appId() == QLatin1String("latte-dock")) {
+    if (w->appId() == QLatin1String("mocha-dock")) {
         emit latteWindowAdded();
     }
 }

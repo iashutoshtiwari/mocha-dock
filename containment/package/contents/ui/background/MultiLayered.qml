@@ -17,7 +17,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 import "../colorizer" as Colorizer
 
@@ -127,11 +127,11 @@ BackgroundProperties{
     }
 
     length: {
-        if (root.behaveAsPlasmaPanel && LatteCore.WindowSystem.compositingActive) {
+        if (root.behaveAsPlasmaPanel && MochaCore.WindowSystem.compositingActive) {
             return root.isVertical ? root.height : root.width;
         }
 
-        if (myView.alignment === LatteCore.Types.Justify) {
+        if (myView.alignment === MochaCore.Types.Justify) {
             return root.maxLength;
         }
 
@@ -152,22 +152,22 @@ BackgroundProperties{
         }
 
         if (root.isHorizontal) {
-            if (myView.alignment === LatteCore.Types.Left) {
+            if (myView.alignment === MochaCore.Types.Left) {
                 return root.offset - shadows.left;
-            } else if (myView.alignment === LatteCore.Types.Right) {
+            } else if (myView.alignment === MochaCore.Types.Right) {
                 return root.offset - shadows.right;
             }
         }
 
         if (root.isVertical) {
-            if (myView.alignment === LatteCore.Types.Top) {
+            if (myView.alignment === MochaCore.Types.Top) {
                 return root.offset - shadows.top;
-            } else if (myView.alignment === LatteCore.Types.Bottom) {
+            } else if (myView.alignment === MochaCore.Types.Bottom) {
                 return root.offset - shadows.bottom;
             }
         }
 
-        var parabolicOffseting = myView.alignment === LatteCore.Types.Center ? layoutsContainerItem.mainLayout.parabolicOffsetting : 0;
+        var parabolicOffseting = myView.alignment === MochaCore.Types.Center ? layoutsContainerItem.mainLayout.parabolicOffsetting : 0;
         return root.offset + parabolicOffseting;
     }
 
@@ -179,7 +179,7 @@ BackgroundProperties{
             maximumItem = maximumItem - totals.minThickness;
         }
 
-        var percentage = LatteCore.WindowSystem.compositingActive ? plasmoid.configuration.panelSize/100 : 1;
+        var percentage = MochaCore.WindowSystem.compositingActive ? plasmoid.configuration.panelSize/100 : 1;
         return Math.max(totals.minThickness, totals.minThickness + (percentage*maximumItem));
     }
 
@@ -191,7 +191,7 @@ BackgroundProperties{
             maximumItem = maximumItem - totals.minThickness;
         }
 
-        var percentage = LatteCore.WindowSystem.compositingActive ? plasmoid.configuration.panelSize/100 : 1;
+        var percentage = MochaCore.WindowSystem.compositingActive ? plasmoid.configuration.panelSize/100 : 1;
         return Math.max(totals.minThickness, totals.minThickness + (percentage*maximumItem));
     }
 
@@ -256,7 +256,7 @@ BackgroundProperties{
     //! CustomShadowedRectangle  properties
     readonly property bool customShadowedRectangleIsEnabled: customRadiusIsEnabled || (customDefShadowIsEnabled || customUserShadowIsEnabled)
 
-    readonly property bool customShadowIsSupported: LatteCore.WindowSystem.compositingActive
+    readonly property bool customShadowIsSupported: MochaCore.WindowSystem.compositingActive
                                                     && kirigamiLibraryIsFound
 
     //!current shadow state but do not change other values of normal mode, for example if a Dock hides its screen edge thickness
@@ -290,7 +290,7 @@ BackgroundProperties{
 
     Behavior on opacity{
         NumberAnimation {
-            duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0
+            duration: MochaCore.WindowSystem.compositingActive ? barLine.animationTime : 0
         }
     }
 
@@ -322,7 +322,7 @@ BackgroundProperties{
         id: shadowsSvgItem
         width: root.isVertical ?  background.thickness + totals.shadowsThickness : totals.visualLength
         height: root.isVertical ? totals.visualLength : background.thickness + totals.shadowsThickness
-        enabledBorders: latteView && latteView.effects ? latteView.effects.enabledBorders : KSvg.FrameSvg.NoBorder
+        enabledBorders: mochaView && mochaView.effects ? mochaView.effects.enabledBorders : KSvg.FrameSvg.NoBorder
         imagePath: "widgets/panel-background"
         prefix: "shadow"
         opacity: hideShadow || !root.useThemePanel || (root.forceTransparentPanel && !root.forcePanelForBusyBackground) ? 0 : 1
@@ -332,13 +332,13 @@ BackgroundProperties{
         readonly property bool themeHasShadow: themeExtended ? themeExtended.hasShadow : true
 
         readonly property bool hideShadow: root.behaveAsPlasmaPanel
-                                           || !LatteCore.WindowSystem.compositingActive
+                                           || !MochaCore.WindowSystem.compositingActive
                                            || !root.panelShadowsActive
                                            || !themeHasShadow
                                            || customShadowedRectangleIsEnabled
 
         Behavior on opacity {
-            NumberAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
+            NumberAnimation { duration: MochaCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
     }
 
@@ -351,13 +351,13 @@ BackgroundProperties{
         opacity: normalizedOpacity
         backgroundColor: colorizerManager.backgroundColor
         roundness: overlayedBackground.roundness
-        visible: LatteCore.WindowSystem.compositingActive && solidBackground.exceedsThemeOpacityLimits
+        visible: MochaCore.WindowSystem.compositingActive && solidBackground.exceedsThemeOpacityLimits
 
         readonly property real normalizedOpacity: visible ?  Math.min(1, (appliedOpacity - solidBackground.themeMaxOpacity)/(1-solidBackground.themeMaxOpacity)) : 0
         readonly property real appliedOpacity: visible ? solidBackground.appliedOpacity : 0
 
         Behavior on opacity{
-            NumberAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
+            NumberAnimation { duration: MochaCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
     }
 
@@ -377,7 +377,7 @@ BackgroundProperties{
         opacity: normalizedOpacity
 
         readonly property bool exceedsThemeOpacityLimits: appliedOpacity > themeMaxOpacity
-        readonly property bool forceSolidness: root.forceSolidPanel || !LatteCore.WindowSystem.compositingActive
+        readonly property bool forceSolidness: root.forceSolidPanel || !MochaCore.WindowSystem.compositingActive
 
         //! must be normalized to plasma theme maximum opacity
         readonly property real normalizedOpacity: Math.min(1, appliedOpacity / themeMaxOpacity)
@@ -422,7 +422,7 @@ BackgroundProperties{
         }
 
         Connections {
-            target: latteView ? latteView.visibility : null
+            target: mochaView ? mochaView.visibility : null
             onIsHiddenChanged: solidBackground.updateEffectsArea();
         }
 
@@ -440,10 +440,10 @@ BackgroundProperties{
         }
 
         function invUpdateEffectsArea(){
-            if (!latteView)
+            if (!mochaView)
                 return;
 
-            if (!LatteCore.WindowSystem.compositingActive) {
+            if (!MochaCore.WindowSystem.compositingActive) {
                 //! NOCOMPOSITING mode is a special case and Effects Area is also used for
                 //! different calculations for View::mask()
                 var rootGeometry = mapToItem(root, 0, 0);
@@ -452,7 +452,7 @@ BackgroundProperties{
                 efGeometry.width = width;
                 efGeometry.height = height;
             } else {
-                if (latteView.visibility.isHidden) {
+                if (mochaView.visibility.isHidden) {
                     //! valid hide mask
                     efGeometry.x = -1;
                     efGeometry.y = -1;
@@ -473,7 +473,7 @@ BackgroundProperties{
                 }
             }
 
-            latteView.effects.rect = efGeometry;
+            mochaView.effects.rect = efGeometry;
         }
 
         Timer {
@@ -487,10 +487,10 @@ BackgroundProperties{
                 adjustPrefix();
         }
 
-        enabledBorders: latteView && latteView.effects ? latteView.effects.enabledBorders : KSvg.FrameSvg.NoBorder
+        enabledBorders: mochaView && mochaView.effects ? mochaView.effects.enabledBorders : KSvg.FrameSvg.NoBorder
 
         Behavior on opacity{
-            NumberAnimation { duration: (LatteCore.WindowSystem.compositingActive && !solidBackground.paintInstantly) ? barLine.animationTime : 0 }
+            NumberAnimation { duration: (MochaCore.WindowSystem.compositingActive && !solidBackground.paintInstantly) ? barLine.animationTime : 0 }
         }
 
         function adjustPrefix() {
@@ -563,14 +563,14 @@ BackgroundProperties{
             }
         }
 
-        readonly property bool forceSolidness: root.forceSolidPanel || !LatteCore.WindowSystem.compositingActive
+        readonly property bool forceSolidness: root.forceSolidPanel || !MochaCore.WindowSystem.compositingActive
 
         Behavior on backgroundOpacity{
-            NumberAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
+            NumberAnimation { duration: MochaCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
 
         Behavior on backgroundColor{
-            ColorAnimation { duration: LatteCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
+            ColorAnimation { duration: MochaCore.WindowSystem.compositingActive ? barLine.animationTime : 0 }
         }
     }
 
@@ -605,7 +605,7 @@ BackgroundProperties{
         ///Left
         State {
             name: "leftCenter"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(myView.alignment === LatteCore.Types.Center)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(myView.alignment === MochaCore.Types.Center)
 
             AnchorChanges {
                 target: barLine
@@ -623,7 +623,7 @@ BackgroundProperties{
         },
         State {
             name: "leftJustify"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(myView.alignment === LatteCore.Types.Justify)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(myView.alignment === MochaCore.Types.Justify)
 
             AnchorChanges {
                 target: barLine
@@ -642,7 +642,7 @@ BackgroundProperties{
         ///Left
         State {
             name: "leftTop"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(myView.alignment === LatteCore.Types.Top)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(myView.alignment === MochaCore.Types.Top)
 
             AnchorChanges {
                 target: barLine
@@ -661,7 +661,7 @@ BackgroundProperties{
         ///Left
         State {
             name: "leftBottom"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(myView.alignment === LatteCore.Types.Bottom)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(myView.alignment === MochaCore.Types.Bottom)
 
             AnchorChanges {
                 target: barLine
@@ -680,7 +680,7 @@ BackgroundProperties{
         ///Right
         State {
             name: "rightCenter"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(myView.alignment === LatteCore.Types.Center)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(myView.alignment === MochaCore.Types.Center)
 
             AnchorChanges {
                 target: barLine
@@ -698,7 +698,7 @@ BackgroundProperties{
         },
         State {
             name: "rightJustify"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(myView.alignment === LatteCore.Types.Justify)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(myView.alignment === MochaCore.Types.Justify)
 
             AnchorChanges {
                 target: barLine
@@ -716,7 +716,7 @@ BackgroundProperties{
         },
         State {
             name: "rightTop"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(myView.alignment === LatteCore.Types.Top)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(myView.alignment === MochaCore.Types.Top)
 
             AnchorChanges {
                 target: barLine
@@ -734,7 +734,7 @@ BackgroundProperties{
         },
         State {
             name: "rightBottom"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(myView.alignment === LatteCore.Types.Bottom)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(myView.alignment === MochaCore.Types.Bottom)
 
             AnchorChanges {
                 target: barLine
@@ -753,7 +753,7 @@ BackgroundProperties{
         ///Bottom
         State {
             name: "bottomCenter"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(myView.alignment === LatteCore.Types.Center)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(myView.alignment === MochaCore.Types.Center)
 
             AnchorChanges {
                 target: barLine
@@ -771,7 +771,7 @@ BackgroundProperties{
         },
         State {
             name: "bottomJustify"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(myView.alignment === LatteCore.Types.Justify)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(myView.alignment === MochaCore.Types.Justify)
 
             AnchorChanges {
                 target: barLine
@@ -790,8 +790,8 @@ BackgroundProperties{
         State {
             name: "bottomLeft"
             when: (plasmoid.location === PlasmaCore.Types.BottomEdge)
-                  &&(((myView.alignment === LatteCore.Types.Left)&&(Qt.application.layoutDirection !== Qt.RightToLeft))
-                     || ((myView.alignment === LatteCore.Types.Right)&&(Qt.application.layoutDirection === Qt.RightToLeft)))
+                  &&(((myView.alignment === MochaCore.Types.Left)&&(Qt.application.layoutDirection !== Qt.RightToLeft))
+                     || ((myView.alignment === MochaCore.Types.Right)&&(Qt.application.layoutDirection === Qt.RightToLeft)))
 
             AnchorChanges {
                 target: barLine
@@ -811,8 +811,8 @@ BackgroundProperties{
         State {
             name: "bottomRight"
             when: (plasmoid.location === PlasmaCore.Types.BottomEdge)
-                  &&(((myView.alignment === LatteCore.Types.Right)&&(Qt.application.layoutDirection !== Qt.RightToLeft))
-                     ||((myView.alignment === LatteCore.Types.Left)&&(Qt.application.layoutDirection === Qt.RightToLeft)))
+                  &&(((myView.alignment === MochaCore.Types.Right)&&(Qt.application.layoutDirection !== Qt.RightToLeft))
+                     ||((myView.alignment === MochaCore.Types.Left)&&(Qt.application.layoutDirection === Qt.RightToLeft)))
 
             AnchorChanges {
                 target: barLine
@@ -831,7 +831,7 @@ BackgroundProperties{
         ///Top
         State {
             name: "topCenter"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(myView.alignment === LatteCore.Types.Center)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(myView.alignment === MochaCore.Types.Center)
 
             AnchorChanges {
                 target: barLine
@@ -849,7 +849,7 @@ BackgroundProperties{
         },
         State {
             name: "topJustify"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(myView.alignment === LatteCore.Types.Justify)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(myView.alignment === MochaCore.Types.Justify)
 
             AnchorChanges {
                 target: barLine
@@ -868,8 +868,8 @@ BackgroundProperties{
         State {
             name: "topLeft"
             when: (plasmoid.location === PlasmaCore.Types.TopEdge)
-                  &&(((myView.alignment === LatteCore.Types.Left)&&(Qt.application.layoutDirection !== Qt.RightToLeft))
-                     || ((myView.alignment === LatteCore.Types.Right)&&(Qt.application.layoutDirection === Qt.RightToLeft)))
+                  &&(((myView.alignment === MochaCore.Types.Left)&&(Qt.application.layoutDirection !== Qt.RightToLeft))
+                     || ((myView.alignment === MochaCore.Types.Right)&&(Qt.application.layoutDirection === Qt.RightToLeft)))
 
             AnchorChanges {
                 target: barLine
@@ -888,8 +888,8 @@ BackgroundProperties{
         State {
             name: "topRight"
             when: (plasmoid.location === PlasmaCore.Types.TopEdge)
-                  &&(((myView.alignment === LatteCore.Types.Right)&&(Qt.application.layoutDirection !== Qt.RightToLeft))
-                     ||((myView.alignment === LatteCore.Types.Left)&&(Qt.application.layoutDirection === Qt.RightToLeft)))
+                  &&(((myView.alignment === MochaCore.Types.Right)&&(Qt.application.layoutDirection !== Qt.RightToLeft))
+                     ||((myView.alignment === MochaCore.Types.Left)&&(Qt.application.layoutDirection === Qt.RightToLeft)))
 
             AnchorChanges {
                 target: barLine

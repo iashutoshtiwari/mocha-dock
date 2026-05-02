@@ -9,7 +9,7 @@
 #define INFOVIEW_H
 
 // local
-#include "lattecorona.h"
+#include "mochacorona.h"
 #include "wm/windowinfowrap.h"
 
 // Qt
@@ -17,7 +17,7 @@
 #include <QQuickView>
 #include <QScreen>
 
-namespace Latte {
+namespace Mocha {
 
 class InfoView : public QQuickView
 {
@@ -26,7 +26,7 @@ class InfoView : public QQuickView
     Q_PROPERTY(KSvg::FrameSvg::EnabledBorders enabledBorders READ enabledBorders NOTIFY enabledBordersChanged)
 
 public:
-    InfoView(Latte::Corona *corona, QString message, QScreen *screen, QWindow *parent = nullptr);
+    InfoView(Mocha::Corona *corona, QString message, QScreen *screen, QWindow *parent = nullptr);
     ~InfoView() override;
 
     QString validTitle() const;
@@ -60,9 +60,9 @@ private:
 
     KSvg::FrameSvg::EnabledBorders m_borders{KSvg::FrameSvg::TopBorder | KSvg::FrameSvg::BottomBorder};
 
-    Latte::WindowSystem::WindowId m_trackedWindowId;
+    Mocha::WindowSystem::WindowId m_trackedWindowId;
 
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
 };
 
 }

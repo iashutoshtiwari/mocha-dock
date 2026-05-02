@@ -9,7 +9,7 @@
 #include "primaryconfigview.h"
 #include "../view.h"
 #include "../indicator/indicator.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../indicator/factory.h"
 
 // Qt
@@ -22,7 +22,7 @@
 #include <KPluginMetaData>
 #include <PlasmaQuick/SharedQmlEngine>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 namespace Config {
 
@@ -30,7 +30,7 @@ IndicatorUiManager::IndicatorUiManager(ViewPart::PrimaryConfigView *parent)
     : QObject(parent),
       m_primary(parent)
 {
-    qmlRegisterAnonymousType<Latte::ViewPart::Config::IndicatorUiManager>("latte-dock", 1);
+    qmlRegisterAnonymousType<Mocha::ViewPart::Config::IndicatorUiManager>("mocha-dock", 1);
 }
 
 IndicatorUiManager::~IndicatorUiManager()
@@ -91,7 +91,7 @@ void IndicatorUiManager::showNextIndicator()
     }
 }
 
-void IndicatorUiManager::ui(const QString &type, Latte::View *view)
+void IndicatorUiManager::ui(const QString &type, Mocha::View *view)
 {
     if (!m_parentItem) {
         return;

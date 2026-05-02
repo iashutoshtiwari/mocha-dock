@@ -11,21 +11,21 @@ import org.kde.plasma.plasmoid
 
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.private.app as LatteApp
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.private.app as MochaApp
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.containment as MochaContainment
 
 import "../debugger" as Debugger
 
 Item{
     id: layoutsContainer
     //! WorkAround: Do not use "visible" because when it becomes "false" the contained applets can hide/show their elements.
-    //! That approach can create a conflict with Latte Tasks that after showing the view they reshow windows
+    //! That approach can create a conflict with Mocha Tasks that after showing the view they reshow windows
     //! that were already shown before hiding.
-    //! visible: !(latteView && latteView.visibility.isHidden)
-    opacity: !(latteView && latteView.visibility.isHidden) ? 1 : 0
+    //! visible: !(mochaView && mochaView.visibility.isHidden)
+    opacity: !(mochaView && mochaView.visibility.isHidden) ? 1 : 0
 
-    readonly property bool isHidden: root.inStartup || (latteView && latteView.visibility && latteView.visibility.isHidden)
+    readonly property bool isHidden: root.inStartup || (mochaView && mochaView.visibility && mochaView.visibility.isHidden)
 
     property int currentSpot: -1000
 
@@ -46,15 +46,15 @@ Item{
                 return 0;
             }
 
-            if ( latteView && root.isHorizontal && root.myView.alignment === LatteCore.Types.Justify ){
-                return ((latteView.width/2) - (root.maxLength/2) + background.offset);
+            if ( mochaView && root.isHorizontal && root.myView.alignment === MochaCore.Types.Justify ){
+                return ((mochaView.width/2) - (root.maxLength/2) + background.offset);
             } else {
                 if ((root.myView.inSlidingIn || root.myView.inSlidingOut) && root.isVertical){
                     return;
                 }
 
                 if (layoutsContainer.isHidden && root.isVertical) {
-                    if (LatteCore.WindowSystem.compositingActive) {
+                    if (MochaCore.WindowSystem.compositingActive) {
                         return visibilityManager.slidingOutToPos;
                     } else {
                         if ((plasmoid.location===PlasmaCore.Types.LeftEdge)||(plasmoid.location===PlasmaCore.Types.TopEdge)) {
@@ -80,15 +80,15 @@ Item{
                 return 0;
             }
 
-            if ( latteView && root.isVertical && root.myView.alignment === LatteCore.Types.Justify ) {
-                return ((latteView.height/2) - (root.maxLength/2) + background.offset);
+            if ( mochaView && root.isVertical && root.myView.alignment === MochaCore.Types.Justify ) {
+                return ((mochaView.height/2) - (root.maxLength/2) + background.offset);
             } else {
                 if ((root.myView.inSlidingIn || root.myView.inSlidingOut) && root.isHorizontal){
                     return;
                 }
 
                 if (layoutsContainer.isHidden && root.isHorizontal) {
-                    if (LatteCore.WindowSystem.compositingActive) {
+                    if (MochaCore.WindowSystem.compositingActive) {
                         return visibilityManager.slidingOutToPos;
                     } else {
                         if ((plasmoid.location===PlasmaCore.Types.LeftEdge)||(plasmoid.location===PlasmaCore.Types.TopEdge)) {
@@ -104,12 +104,12 @@ Item{
         }
     }
 
-    width: root.isHorizontal && root.myView.alignment === LatteCore.Types.Justify ? root.maxLength : parent.width
-    height: root.isVertical && root.myView.alignment === LatteCore.Types.Justify ? root.maxLength : parent.height
+    width: root.isHorizontal && root.myView.alignment === MochaCore.Types.Justify ? root.maxLength : parent.width
+    height: root.isVertical && root.myView.alignment === MochaCore.Types.Justify ? root.maxLength : parent.height
     z:10
 
     property bool animationSent: false
-    property bool shouldCheckHalfs: (plasmoid.configuration.alignment === LatteCore.Types.Justify) && (_mainLayout.children>1)
+    property bool shouldCheckHalfs: (plasmoid.configuration.alignment === MochaCore.Types.Justify) && (_mainLayout.children>1)
 
     property int contentsWidth: root.isHorizontal ? _startLayout.width + _mainLayout.width + _endLayout.width :
                                                     Math.max(_startLayout.width, _mainLayout.width ,_endLayout.width)
@@ -122,13 +122,13 @@ Item{
             return 0;
         }
 
-        if (root.myView.alignment === LatteCore.Types.Left) {
+        if (root.myView.alignment === MochaCore.Types.Left) {
             return background.shadows.left;
-        } else if (root.myView.alignment === LatteCore.Types.Right) {
+        } else if (root.myView.alignment === MochaCore.Types.Right) {
             return background.shadows.right;
-        } else if (root.myView.alignment === LatteCore.Types.Top) {
+        } else if (root.myView.alignment === MochaCore.Types.Top) {
             return background.shadows.top;
-        } else if (root.myView.alignment === LatteCore.Types.Bottom) {
+        } else if (root.myView.alignment === MochaCore.Types.Bottom) {
             return background.shadows.bottom;
         }
 
@@ -141,13 +141,13 @@ Item{
             return 0;
         }
 
-        if (root.myView.alignment === LatteCore.Types.Left) {
+        if (root.myView.alignment === MochaCore.Types.Left) {
             return background.shadows.right;
-        } else if (root.myView.alignment === LatteCore.Types.Right) {
+        } else if (root.myView.alignment === MochaCore.Types.Right) {
             return background.shadows.left;
-        } else if (root.myView.alignment === LatteCore.Types.Top) {
+        } else if (root.myView.alignment === MochaCore.Types.Top) {
             return background.shadows.bottom;
-        } else if (root.myView.alignment === LatteCore.Types.Bottom) {
+        } else if (root.myView.alignment === MochaCore.Types.Bottom) {
             return background.shadows.top;
         }
 
@@ -159,46 +159,46 @@ Item{
         var minimumPadding = metrics.margin.length;
         var bestMatchingPadding = 0;
 
-        if (root.myView.alignment === LatteCore.Types.Left) {
+        if (root.myView.alignment === MochaCore.Types.Left) {
             bestMatchingPadding = Math.max(background.paddings.left, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Right) {
+        } else if (root.myView.alignment === MochaCore.Types.Right) {
             bestMatchingPadding = Math.max(background.paddings.right, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Top) {
+        } else if (root.myView.alignment === MochaCore.Types.Top) {
             bestMatchingPadding = Math.max(background.paddings.top, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Bottom) {
+        } else if (root.myView.alignment === MochaCore.Types.Bottom) {
             bestMatchingPadding = Math.max(background.paddings.bottom, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Center) {
+        } else if (root.myView.alignment === MochaCore.Types.Center) {
             bestMatchingPadding = Math.max(background.paddings.left, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Justify) {
+        } else if (root.myView.alignment === MochaCore.Types.Justify) {
             var backpadding = root.isHorizontal ? background.paddings.left : background.paddings.top;
             bestMatchingPadding = Math.max(backpadding, minimumPadding) - minimumPadding;
         }
 
         //shadow is already calculated in Justify mode
-        return root.myView.alignment !== LatteCore.Types.Justify ? backgroundShadowTailLength + bestMatchingPadding : bestMatchingPadding;
+        return root.myView.alignment !== MochaCore.Types.Justify ? backgroundShadowTailLength + bestMatchingPadding : bestMatchingPadding;
     }
 
     readonly property int lengthHeadPadding: {
         var minimumPadding = metrics.margin.length;
         var bestMatchingPadding = 0;
 
-        if (root.myView.alignment === LatteCore.Types.Left) {
+        if (root.myView.alignment === MochaCore.Types.Left) {
             bestMatchingPadding = Math.max(background.paddings.right, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Right) {
+        } else if (root.myView.alignment === MochaCore.Types.Right) {
             bestMatchingPadding = Math.max(background.paddings.left, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Top) {
+        } else if (root.myView.alignment === MochaCore.Types.Top) {
             bestMatchingPadding = Math.max(background.paddings.bottom, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Bottom) {
+        } else if (root.myView.alignment === MochaCore.Types.Bottom) {
             bestMatchingPadding = Math.max(background.paddings.top, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Center) {
+        } else if (root.myView.alignment === MochaCore.Types.Center) {
             bestMatchingPadding = Math.max(background.paddings.right, minimumPadding) - minimumPadding;
-        } else if (root.myView.alignment === LatteCore.Types.Justify) {
+        } else if (root.myView.alignment === MochaCore.Types.Justify) {
             var backpadding = root.isHorizontal ? background.paddings.right : background.paddings.bottom;
             bestMatchingPadding = Math.max(backpadding, minimumPadding) - minimumPadding;
         }
 
         //shadow is already calculated in Justify mode
-        return root.myView.alignment !== LatteCore.Types.Justify ? backgroundShadowHeadLength + bestMatchingPadding : bestMatchingPadding;
+        return root.myView.alignment !== MochaCore.Types.Justify ? backgroundShadowHeadLength + bestMatchingPadding : bestMatchingPadding;
     }
 
     onContentsWidthChanged: {
@@ -211,7 +211,7 @@ Item{
                 secondHalfExited = ( (_endLayout.width + _mainLayout.width/2) >= root.maxLength/2 );
             }
 
-            if (latteView && ((contentsWidth >= root.maxLength) || firstHalfExited || secondHalfExited)) {
+            if (mochaView && ((contentsWidth >= root.maxLength) || firstHalfExited || secondHalfExited)) {
                 autosize.updateIconSize();
             }
 
@@ -236,7 +236,7 @@ Item{
                 secondHalfExited = ( (_endLayout.height + _mainLayout.height/2) >= root.maxLength/2 );
             }
 
-            if (latteView && ((contentsHeight >= root.maxLength) || firstHalfExited || secondHalfExited)) {
+            if (mochaView && ((contentsHeight >= root.maxLength) || firstHalfExited || secondHalfExited)) {
                 autosize.updateIconSize();
             }
 
@@ -256,14 +256,14 @@ Item{
 
     EnvironmentActions {
         id: environmentActions
-        active: root.scrollAction !== LatteContainment.Types.ScrollNone || root.dragActiveWindowEnabled || root.closeActiveWindowEnabled
+        active: root.scrollAction !== MochaContainment.Types.ScrollNone || root.dragActiveWindowEnabled || root.closeActiveWindowEnabled
         alignment: _mainLayout.alignment
     }
 
-    LatteApp.ContextMenuLayer {
+    MochaApp.ContextMenuLayer {
         id: contextMenuLayer
         anchors.fill: parent
-        view: latteView
+        view: mochaView
     }
 
     AppletsContainer {
@@ -272,13 +272,13 @@ Item{
         offset: lengthTailPadding
         alignment: {
             switch(plasmoid.location) {
-            case PlasmaCore.Types.BottomEdge: return LatteCore.Types.BottomEdgeLeftAlign;
-            case PlasmaCore.Types.TopEdge: return LatteCore.Types.TopEdgeLeftAlign;
-            case PlasmaCore.Types.LeftEdge: return LatteCore.Types.LeftEdgeTopAlign;
-            case PlasmaCore.Types.RightEdge: return LatteCore.Types.RightEdgeTopAlign;
+            case PlasmaCore.Types.BottomEdge: return MochaCore.Types.BottomEdgeLeftAlign;
+            case PlasmaCore.Types.TopEdge: return MochaCore.Types.TopEdgeLeftAlign;
+            case PlasmaCore.Types.LeftEdge: return MochaCore.Types.LeftEdgeTopAlign;
+            case PlasmaCore.Types.RightEdge: return MochaCore.Types.RightEdgeTopAlign;
             }
 
-            return LatteCore.Types.BottomEdgeLeftAlign;
+            return MochaCore.Types.BottomEdgeLeftAlign;
         }
     }
 
@@ -299,7 +299,7 @@ Item{
                 return background.offset + lengthTailPadding;
             }
 
-            return (root.myView.alignment === LatteCore.Types.Justify) ? inJustifyCenterOffset : background.offset - parabolicOffsetting
+            return (root.myView.alignment === MochaCore.Types.Justify) ? inJustifyCenterOffset : background.offset - parabolicOffsetting
         }
 
         ignoredLength: startParabolicSpacer.length + endParabolicSpacer.length
@@ -307,53 +307,53 @@ Item{
         readonly property alias startParabolicSpacer: _startParabolicSpacer
         readonly property alias endParabolicSpacer: _endParabolicSpacer
 
-        readonly property bool centered: (root.myView.alignment === LatteCore.Types.Center) || (root.myView.alignment === LatteCore.Types.Justify)
+        readonly property bool centered: (root.myView.alignment === MochaCore.Types.Center) || (root.myView.alignment === MochaCore.Types.Justify)
         readonly property bool reversed: Qt.application.layoutDirection === Qt.RightToLeft
         readonly property real parabolicOffsetting: (startParabolicSpacer.length - endParabolicSpacer.length) / 2
         property int inJustifyCenterOffset: 0
 
         alignment: {
             if (plasmoid.location === PlasmaCore.Types.LeftEdge) {
-                if (centered) return LatteCore.Types.LeftEdgeCenterAlign;
-                if (root.myView.alignment === LatteCore.Types.Top) return LatteCore.Types.LeftEdgeTopAlign;
-                if (root.myView.alignment === LatteCore.Types.Bottom) return LatteCore.Types.LeftEdgeBottomAlign;
+                if (centered) return MochaCore.Types.LeftEdgeCenterAlign;
+                if (root.myView.alignment === MochaCore.Types.Top) return MochaCore.Types.LeftEdgeTopAlign;
+                if (root.myView.alignment === MochaCore.Types.Bottom) return MochaCore.Types.LeftEdgeBottomAlign;
             }
 
             if (plasmoid.location === PlasmaCore.Types.RightEdge) {
-                if (centered) return LatteCore.Types.RightEdgeCenterAlign;
-                if (root.myView.alignment === LatteCore.Types.Top) return LatteCore.Types.RightEdgeTopAlign;
-                if (root.myView.alignment === LatteCore.Types.Bottom) return LatteCore.Types.RightEdgeBottomAlign;
+                if (centered) return MochaCore.Types.RightEdgeCenterAlign;
+                if (root.myView.alignment === MochaCore.Types.Top) return MochaCore.Types.RightEdgeTopAlign;
+                if (root.myView.alignment === MochaCore.Types.Bottom) return MochaCore.Types.RightEdgeBottomAlign;
             }
 
             if (plasmoid.location === PlasmaCore.Types.BottomEdge) {
-                if (centered) return LatteCore.Types.BottomEdgeCenterAlign;
+                if (centered) return MochaCore.Types.BottomEdgeCenterAlign;
 
-                if ((root.myView.alignment === LatteCore.Types.Left && !reversed)
-                        || (root.myView.alignment === LatteCore.Types.Right && reversed)) {
-                    return LatteCore.Types.BottomEdgeLeftAlign;
+                if ((root.myView.alignment === MochaCore.Types.Left && !reversed)
+                        || (root.myView.alignment === MochaCore.Types.Right && reversed)) {
+                    return MochaCore.Types.BottomEdgeLeftAlign;
                 }
 
-                if ((root.myView.alignment === LatteCore.Types.Right && !reversed)
-                        || (root.myView.alignment === LatteCore.Types.Left && reversed)) {
-                    return LatteCore.Types.BottomEdgeRightAlign;
+                if ((root.myView.alignment === MochaCore.Types.Right && !reversed)
+                        || (root.myView.alignment === MochaCore.Types.Left && reversed)) {
+                    return MochaCore.Types.BottomEdgeRightAlign;
                 }
             }
 
             if (plasmoid.location === PlasmaCore.Types.TopEdge) {
-                if (centered) return LatteCore.Types.TopEdgeCenterAlign;
+                if (centered) return MochaCore.Types.TopEdgeCenterAlign;
 
-                if ((root.myView.alignment === LatteCore.Types.Left && !reversed)
-                        || (root.myView.alignment === LatteCore.Types.Right && reversed)) {
-                    return LatteCore.Types.TopEdgeLeftAlign;
+                if ((root.myView.alignment === MochaCore.Types.Left && !reversed)
+                        || (root.myView.alignment === MochaCore.Types.Right && reversed)) {
+                    return MochaCore.Types.TopEdgeLeftAlign;
                 }
 
-                if ((root.myView.alignment === LatteCore.Types.Right && !reversed)
-                        || (root.myView.alignment === LatteCore.Types.Left && reversed)) {
-                    return LatteCore.Types.TopEdgeRightAlign;
+                if ((root.myView.alignment === MochaCore.Types.Right && !reversed)
+                        || (root.myView.alignment === MochaCore.Types.Left && reversed)) {
+                    return MochaCore.Types.TopEdgeRightAlign;
                 }
             }
 
-            return LatteCore.Types.BottomEdgeCenterAlign;
+            return MochaCore.Types.BottomEdgeCenterAlign;
         }
 
         transitions: Transition {
@@ -380,7 +380,7 @@ Item{
             restoreMode: Binding.RestoreNone
             when: !layouter.appletsInParentChange && layouter.inNormalFillCalculationsState
             value: {
-                if (root.myView.alignment !== LatteCore.Types.Justify) {
+                if (root.myView.alignment !== MochaCore.Types.Justify) {
                     return 0;
                 }
 
@@ -409,13 +409,13 @@ Item{
         offset: lengthHeadPadding
         alignment: {
             switch(plasmoid.location) {
-            case PlasmaCore.Types.BottomEdge: return LatteCore.Types.BottomEdgeRightAlign;
-            case PlasmaCore.Types.TopEdge: return LatteCore.Types.TopEdgeRightAlign;
-            case PlasmaCore.Types.LeftEdge: return LatteCore.Types.LeftEdgeBottomAlign;
-            case PlasmaCore.Types.RightEdge: return LatteCore.Types.RightEdgeBottomAlign;
+            case PlasmaCore.Types.BottomEdge: return MochaCore.Types.BottomEdgeRightAlign;
+            case PlasmaCore.Types.TopEdge: return MochaCore.Types.TopEdgeRightAlign;
+            case PlasmaCore.Types.LeftEdge: return MochaCore.Types.LeftEdgeBottomAlign;
+            case PlasmaCore.Types.RightEdge: return MochaCore.Types.RightEdgeBottomAlign;
             }
 
-            return LatteCore.Types.BottomEdgeLeftAlign;
+            return MochaCore.Types.BottomEdgeLeftAlign;
         }
     }
 

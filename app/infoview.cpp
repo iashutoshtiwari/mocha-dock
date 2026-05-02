@@ -23,9 +23,9 @@
 #include <KPackage/Package>
 #include <KWindowSystem>
 
-namespace Latte {
+namespace Mocha {
 
-InfoView::InfoView(Latte::Corona *corona, QString message, QScreen *screen, QWindow *parent)
+InfoView::InfoView(Mocha::Corona *corona, QString message, QScreen *screen, QWindow *parent)
     : QQuickView(parent),
       m_corona(corona),
       m_message(message),
@@ -61,7 +61,7 @@ void InfoView::init()
     rootContext()->setContextProperty(QStringLiteral("infoWindow"), this);
 
     KLocalizedContext *context = new KLocalizedContext(engine());
-    context->setTranslationDomain(QStringLiteral("latte-dock"));
+    context->setTranslationDomain(QStringLiteral("mocha-dock"));
     engine()->rootContext()->setContextObject(context);
 
     auto source = QUrl::fromLocalFile(m_corona->kPackage().filePath("infoviewui"));
@@ -121,7 +121,7 @@ void InfoView::showEvent(QShowEvent *ev)
 
 void InfoView::updateWaylandId()
 {
-    Latte::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("latte-dock", validTitle());
+    Mocha::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("mocha-dock", validTitle());
 
     if (m_trackedWindowId != newId) {
         if (!m_trackedWindowId.isNull()) {

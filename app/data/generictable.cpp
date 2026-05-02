@@ -15,7 +15,7 @@
 // Qt
 #include <QDebug>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 template <class T>

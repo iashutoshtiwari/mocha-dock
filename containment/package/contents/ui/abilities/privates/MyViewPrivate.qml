@@ -7,11 +7,11 @@ import QtQuick
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
-import org.kde.latte.abilities.host as AbilityHost
+import org.kde.mocha.abilities.host as AbilityHost
 
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.private.containment as MochaContainment
 
 AbilityHost.MyView {
     id: _myView
@@ -24,10 +24,10 @@ AbilityHost.MyView {
                                                       background.themeExtendedBackground.maxOpacity : plasmoid.configuration.panelTransparency / 100
 
     readonly property string itemShadowCurrentColor: {
-        if (plasmoid.configuration.shadowColorType === LatteContainment.Types.ThemeColorShadow) {
+        if (plasmoid.configuration.shadowColorType === MochaContainment.Types.ThemeColorShadow) {
             var strC = String(Kirigami.Theme.textColor);
             return strC.indexOf("#") === 0 ? strC.substr(1) : strC;
-        } else if (plasmoid.configuration.shadowColorType === LatteContainment.Types.UserColorShadow) {
+        } else if (plasmoid.configuration.shadowColorType === MochaContainment.Types.UserColorShadow) {
             return plasmoid.configuration.shadowColor;
         }
 

@@ -13,14 +13,14 @@
 // Qt
 #include <QList>
 
-namespace Latte {
+namespace Mocha {
 
 class ClonedView;
 
 class OriginalView : public View
 {
     Q_OBJECT
-    Q_PROPERTY(Latte::Types::ScreensGroup screensGroup READ screensGroup NOTIFY screensGroupChanged)
+    Q_PROPERTY(Mocha::Types::ScreensGroup screensGroup READ screensGroup NOTIFY screensGroupChanged)
 
 public:
     OriginalView(Plasma::Corona *corona, QScreen *targetScreen = nullptr, bool byPassX11WM = false);
@@ -32,12 +32,12 @@ public:
 
     int clonesCount() const;
 
-    int expectedScreenIdFromScreenGroup(const Latte::Types::ScreensGroup &nextScreensGroup) const;
+    int expectedScreenIdFromScreenGroup(const Mocha::Types::ScreensGroup &nextScreensGroup) const;
 
-    Latte::Types::ScreensGroup screensGroup() const override;
-    void setScreensGroup(const Latte::Types::ScreensGroup &group);
+    Mocha::Types::ScreensGroup screensGroup() const override;
+    void setScreensGroup(const Mocha::Types::ScreensGroup &group);
 
-    void addClone(Latte::ClonedView *view);
+    void addClone(Mocha::ClonedView *view);
     void setNextLocationForClones(const QString layoutName, int edge, int alignment);
     void addApplet(const QString &pluginId, const int &excludecloneid);
     void addApplet(QObject *mimedata, const int &x, const int &y, const int &excludecloneid);
@@ -58,11 +58,11 @@ private slots:
 
 private:
     void createClone(int screenId);
-    void removeClone(Latte::ClonedView *view);
+    void removeClone(Mocha::ClonedView *view);
 
 private:
-    Latte::Types::ScreensGroup m_screensGroup{Latte::Types::SingleScreenGroup};
-    QList<Latte::ClonedView *> m_clones;
+    Mocha::Types::ScreensGroup m_screensGroup{Mocha::Types::SingleScreenGroup};
+    QList<Mocha::ClonedView *> m_clones;
 
     QList<int> m_waitingCreation;
 };

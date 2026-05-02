@@ -30,9 +30,9 @@ Item {
     property alias cfg_dotsOnActive: dotsOnActive.checked
     property alias cfg_durationTime : durationTime.value
 
-    property alias cfg_isInLatteDock: mainItem.isInLatteDock
+    property alias cfg_isInMochaDock: mainItem.isInMochaDock
 
-    property bool isInLatteDock
+    property bool isInMochaDock
 
     ColumnLayout {
         id:mainColumn
@@ -59,7 +59,7 @@ Item {
                     ComboBox {
                         // 16, 22, 32, 48, 64,128, 256
                         id: iconSizeCmb
-                        enabled: !mainItem.isInLatteDock
+                        enabled: !mainItem.isInMochaDock
 
                         property int realValue
                         property bool startup: true
@@ -199,7 +199,7 @@ Item {
             Label{Layout.columnSpan: 3}
 
             Item{
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInMochaDock
                 Layout.columnSpan: 3
                 Layout.fillWidth: true
                 Label {
@@ -213,7 +213,7 @@ Item {
             //////
 
             Label {
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInMochaDock
                 Layout.alignment: Qt.AlignHCenter
                 horizontalAlignment: Text.AlignHCenter
 
@@ -222,7 +222,7 @@ Item {
 
             Slider {
                 id: zoomLevel
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInMochaDock
                 Layout.fillWidth: true
                 minimumValue: 0
                 maximumValue: 20
@@ -232,7 +232,7 @@ Item {
 
             Label {
                 id:zoomLevelText
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInMochaDock
                 Layout.minimumWidth: metricsLabel2.width
                 Layout.maximumWidth: metricsLabel2.width
                 Layout.alignment: Qt.AlignHCenter
@@ -260,7 +260,7 @@ Item {
 
             CheckBox {
                 id: zoomHelper
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInMochaDock
                 text: i18n("Show a red line on the limit needed for animations")
 
                 Layout.columnSpan: 3
@@ -270,30 +270,30 @@ Item {
 
     DropShadow {
         id:shadowText
-        anchors.fill: inLatteDockLabel
+        anchors.fill: inMochaDockLabel
         fast: true
-        enabled: isInLatteDock
+        enabled: isInMochaDock
         radius: 3
         samples: 5
         color: "#cc080808"
-        source: inLatteDockLabel
+        source: inMochaDockLabel
 
         verticalOffset: 2
         horizontalOffset: -1
-        visible: isInLatteDock
+        visible: isInMochaDock
     }
 
 
     Label {
-        id:inLatteDockLabel
+        id:inMochaDockLabel
         anchors.horizontalCenter: mainItem.horizontalCenter
         anchors.bottom: mainColumn.bottom
         anchors.bottomMargin: mainColumn.height / 12
       //  anchors.verticalCenterOffset:  (mainColumn.height / 4)
 
         width: 0.85 * mainItem.width
-        text: i18n("For the disabled settings you should use the Latte Dock Configuration Window")
-        visible: mainItem.isInLatteDock
+        text: i18n("For the disabled settings you should use the Mocha Dock Configuration Window")
+        visible: mainItem.isInMochaDock
 
         horizontalAlignment: Text.AlignHCenter
         //  font.bold: true

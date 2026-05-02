@@ -10,7 +10,7 @@ import QtQuick.Layouts
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kirigami as Kirigami
 
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.components as MochaComponents
 
 Rectangle {
     id: root
@@ -104,7 +104,7 @@ Rectangle {
     }
 
     //overlayed combobox
-    LatteComponents.ComboBox {
+    MochaComponents.ComboBox {
         id: mainComboBox
         anchors.right: mainButton.right
         anchors.top: parent.top

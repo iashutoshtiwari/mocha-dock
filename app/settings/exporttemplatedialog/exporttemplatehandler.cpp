@@ -12,7 +12,7 @@
 #include "appletsmodel.h"
 #include "delegates/normalcheckboxdelegate.h"
 #include "../settingsdialog/layoutscontroller.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../data/appletdata.h"
 #include "../../layout/genericlayout.h"
 #include "../../layouts/storage.h"
@@ -35,7 +35,7 @@
 #include <Plasma/Containment>
 #include <kmessagebox.h>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Handler {
 
@@ -68,10 +68,10 @@ ExportTemplateHandler::ExportTemplateHandler(Dialog::ExportTemplateDialog *dialo
     setFilepath(o_filepath);
 }
 
-ExportTemplateHandler::ExportTemplateHandler(Dialog::ExportTemplateDialog *dialog, Latte::View *view)
+ExportTemplateHandler::ExportTemplateHandler(Dialog::ExportTemplateDialog *dialog, Mocha::View *view)
     : ExportTemplateHandler(dialog)
 {
-    QString type = (view->type() == Latte::Types::PanelView ? i18n("Panel") : i18n("Dock"));
+    QString type = (view->type() == Mocha::Types::PanelView ? i18n("Panel") : i18n("Dock"));
 
     QString temporiginfile = view->layout()->storedView(view->containment()->id());
 
@@ -135,7 +135,7 @@ void ExportTemplateHandler::setFilepath(const QString &filepath)
 void ExportTemplateHandler::loadApplets(const QString &file)
 {
     m_originFilePath = file;
-    Data::AppletsTable c_data = Latte::Layouts::Storage::self()->plugins(file);
+    Data::AppletsTable c_data = Mocha::Layouts::Storage::self()->plugins(file);
     m_appletsModel->setData(c_data);
 }
 
@@ -161,9 +161,9 @@ void ExportTemplateHandler::chooseFileDialog()
     QStringList filters;
 
     if (inLayoutState) {
-        filters << QString(i18nc("layout template", "Latte Dock Layout Template file v0.2") + "(*.layout.latte)");
+        filters << QString(i18nc("layout template", "Mocha Dock Layout Template file v0.2") + "(*.layout.latte)");
     } else {
-        filters << QString(i18nc("view template", "Latte Dock View Template file v0.2") + "(*.view.latte)");
+        filters << QString(i18nc("view template", "Mocha Dock View Template file v0.2") + "(*.view.latte)");
     }
 
     chooseFileDlg->setNameFilters(filters);

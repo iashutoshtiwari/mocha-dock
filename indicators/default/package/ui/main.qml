@@ -11,10 +11,10 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
 
-LatteComponents.IndicatorItem{
+MochaComponents.IndicatorItem{
     id: root
     extraMaskThickness: reversedEnabled && glowEnabled ? 1.7 * (factor * indicator.maxIconSize) : 0
 
@@ -81,7 +81,7 @@ LatteComponents.IndicatorItem{
         columnSpacing: 0
         rowSpacing: 0
 
-        LatteComponents.GlowPoint{
+        MochaComponents.GlowPoint{
             id:firstPoint
             width: stateWidth
             height: stateHeight
@@ -103,7 +103,7 @@ LatteComponents.IndicatorItem{
 
             size: root.size
             glow3D: glow3D
-            animation: Math.max(1.65*3*LatteCore.Environment.longDuration,indicator.durationTime*3*LatteCore.Environment.longDuration)
+            animation: Math.max(1.65*3*MochaCore.Environment.longDuration,indicator.durationTime*3*MochaCore.Environment.longDuration)
             location: plasmoid.location
             glowOpacity: root.glowOpacity
             contrastColor: indicator.shadowColor
@@ -137,7 +137,7 @@ LatteComponents.IndicatorItem{
                 return root.size;
             }
 
-            property int animationTime: indicator.durationTime* (0.75*LatteCore.Environment.longDuration)
+            property int animationTime: indicator.durationTime* (0.75*MochaCore.Environment.longDuration)
 
             property bool isActive: indicator.hasActive || indicator.isActive
 
@@ -211,14 +211,14 @@ LatteComponents.IndicatorItem{
             height: secondPoint.visible ? 0.5*root.size : 0
         }
 
-        LatteComponents.GlowPoint{
+        MochaComponents.GlowPoint{
             id:secondPoint
             width: visible ? root.size : 0
             height: width
 
             size: root.size
             glow3D: glow3D
-            animation: Math.max(1.65*3*LatteCore.Environment.longDuration,indicator.durationTime*3*LatteCore.Environment.longDuration)
+            animation: Math.max(1.65*3*MochaCore.Environment.longDuration,indicator.durationTime*3*MochaCore.Environment.longDuration)
             location: plasmoid.location
             glowOpacity: root.glowOpacity
             contrastColor: indicator.shadowColor

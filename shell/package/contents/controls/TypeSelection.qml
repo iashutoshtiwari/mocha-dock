@@ -15,8 +15,8 @@ import org.kde.plasma.components as PlasmaComponents
 
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.containment as MochaContainment
 
 Grid {
     id: typeRow
@@ -49,20 +49,20 @@ Grid {
     PlasmaComponents.Button {
         id: dockTypeButton
         width: horizontal ? (parent.width - parent.spacing)/ 2 : parent.width
-        enabled: LatteCore.WindowSystem.compositingActive
+        enabled: MochaCore.WindowSystem.compositingActive
 
         checkable: true
-        checked: latteView.type === LatteCore.Types.DockView
+        checked: mochaView.type === MochaCore.Types.DockView
         text: i18nc("dock type","Dock")
         ButtonGroup.group: viewTypeGroup
         tooltip: i18n("Change the behavior and appearance to Dock type")
 
         onPressedChanged: {
             if (pressed && !checked) {
-                latteView.userRequestedViewType(LatteCore.Types.DockView);
+                mochaView.userRequestedViewType(MochaCore.Types.DockView);
 
-                latteView.visibility.mode = LatteCore.Types.DodgeActive;
-                plasmoid.configuration.alignment = LatteCore.Types.Center;
+                mochaView.visibility.mode = MochaCore.Types.DodgeActive;
+                plasmoid.configuration.alignment = MochaCore.Types.Center;
                 plasmoid.configuration.useThemePanel = true;
                 plasmoid.configuration.solidPanel = false;
                 plasmoid.configuration.panelSize = 5;
@@ -72,7 +72,7 @@ Grid {
 
                 //! Empty Areas
                 plasmoid.configuration.dragActiveWindowEnabled = false;
-                plasmoid.configuration.scrollAction = LatteContainment.Types.ScrollNone;
+                plasmoid.configuration.scrollAction = MochaContainment.Types.ScrollNone;
 
                 //! Items
                 plasmoid.configuration.autoSizeEnabled = true;
@@ -93,20 +93,20 @@ Grid {
     PlasmaComponents.Button {
         id: panelTypeButton
         width: dockTypeButton.width
-        enabled: LatteCore.WindowSystem.compositingActive
+        enabled: MochaCore.WindowSystem.compositingActive
 
         checkable: true
-        checked: latteView.type === LatteCore.Types.PanelView
+        checked: mochaView.type === MochaCore.Types.PanelView
         text: i18nc("panel type","Panel")
         ButtonGroup.group: viewTypeGroup
         tooltip: i18n("Change the behavior and appearance to Panel type")
 
         onPressedChanged: {
             if (pressed && !checked) {
-                latteView.userRequestedViewType(LatteCore.Types.PanelView);
+                mochaView.userRequestedViewType(MochaCore.Types.PanelView);
 
-                latteView.visibility.mode = LatteCore.Types.AlwaysVisible;
-                plasmoid.configuration.alignment = LatteCore.Types.Justify;
+                mochaView.visibility.mode = MochaCore.Types.AlwaysVisible;
+                plasmoid.configuration.alignment = MochaCore.Types.Justify;
                 plasmoid.configuration.useThemePanel = true;
                 plasmoid.configuration.solidPanel = false;
                 plasmoid.configuration.panelSize = 100;

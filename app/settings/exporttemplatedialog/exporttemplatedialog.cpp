@@ -14,7 +14,7 @@
 #include "../../settings/universalsettings.h"
 #include "../../view/view.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Dialog {
 
@@ -51,12 +51,12 @@ ExportTemplateDialog::ExportTemplateDialog(ViewsDialog *parent, const Data::View
     initSignals();
 }
 
-ExportTemplateDialog::ExportTemplateDialog(Latte::View *view)
+ExportTemplateDialog::ExportTemplateDialog(Mocha::View *view)
     : GenericDialog(nullptr),
       m_ui(new Ui::ExportTemplateDialog)/*this is necessary, in order to create the ui*/
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
-    m_corona = qobject_cast<Latte::Corona *>(view->corona());
+    m_corona = qobject_cast<Mocha::Corona *>(view->corona());
 
     init();
     initExportButton(i18n("Export your selected view as template"));
@@ -69,7 +69,7 @@ ExportTemplateDialog::~ExportTemplateDialog()
 {
 }
 
-Latte::Corona *ExportTemplateDialog::corona() const
+Mocha::Corona *ExportTemplateDialog::corona() const
 {
     return m_corona;
 }

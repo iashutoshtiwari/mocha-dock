@@ -10,7 +10,7 @@
 #include <coretypes.h>
 #include "layoutsheaderview.h"
 #include "layoutsmodel.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../data/layoutdata.h"
 #include "../../data/layoutstable.h"
 #include "../../data/screendata.h"
@@ -23,7 +23,7 @@
 #include <QTableView>
 
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class CentralLayout;
 class SettingsDialog;
@@ -38,7 +38,7 @@ class TemplatesKeeper;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Controller {
 
@@ -66,16 +66,16 @@ public:
     bool hasSelectedLayout() const;
     bool isSelectedLayoutOriginal() const;
     bool isLayoutOriginal(const QString &currentLayoutId) const;
-    const Latte::Data::Layout selectedLayoutCurrentData() const;
-    const Latte::Data::Layout selectedLayoutOriginalData() const;
-    const Latte::Data::LayoutIcon selectedLayoutIcon() const;
-    const Latte::Data::ViewsTable selectedLayoutViews();
+    const Mocha::Data::Layout selectedLayoutCurrentData() const;
+    const Mocha::Data::Layout selectedLayoutOriginalData() const;
+    const Mocha::Data::LayoutIcon selectedLayoutIcon() const;
+    const Mocha::Data::ViewsTable selectedLayoutViews();
 
-    const Latte::Data::Layout currentData(const QString &currentLayoutId) const;
-    const Latte::Data::Layout originalData(const QString &currentLayoutId) const;
+    const Mocha::Data::Layout currentData(const QString &currentLayoutId) const;
+    const Mocha::Data::Layout originalData(const QString &currentLayoutId) const;
 
     void selectRow(const QString &id);
-    void setLayoutProperties(const Latte::Data::Layout &layout);
+    void setLayoutProperties(const Mocha::Data::Layout &layout);
 
     //! actions
     void reset();
@@ -94,12 +94,12 @@ public:
     void setLayoutCurrentErrorsWarnings(const QString &layoutCurrentId, const int &errors, const int &warnings);
 
     void duplicateSelectedLayout();
-    const Latte::Data::Layout addLayoutForFile(QString file, QString layoutName = QString(), bool newTempDirectory = true);
-    const Latte::Data::Layout addLayoutByText(QString rawLayoutText);
+    const Mocha::Data::Layout addLayoutForFile(QString file, QString layoutName = QString(), bool newTempDirectory = true);
+    const Mocha::Data::Layout addLayoutByText(QString rawLayoutText);
 
     CentralLayout *centralLayout(const QString &currentLayoutId);
 
-    const Latte::Data::ScreensTable screensData();
+    const Mocha::Data::ScreensTable screensData();
 
     //! import layouts from Latte versions <= v0.7.x
     bool importLayoutsFromV1ConfigFile(QString file);

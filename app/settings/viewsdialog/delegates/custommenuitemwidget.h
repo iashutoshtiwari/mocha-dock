@@ -17,7 +17,7 @@
 #include <QPaintEvent>
 #include <QRadioButton>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace View {
 namespace Widget {
@@ -31,14 +31,14 @@ public:
     QSize minimumSizeHint() const override;
     void paintEvent(QPaintEvent* e) override;
 
-    void setScreen(const Latte::Data::Screen &screen);
-    void setView(const Latte::Data::View &view);
+    void setScreen(const Mocha::Data::Screen &screen);
+    void setView(const Mocha::Data::View &view);
 
 private:
     QAction *m_action{nullptr};
 
-    Latte::Data::Screen m_screen;
-    Latte::Data::View m_view;
+    Mocha::Data::Screen m_screen;
+    Mocha::Data::View m_view;
 };
 
 }

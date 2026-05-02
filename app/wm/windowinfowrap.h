@@ -13,7 +13,7 @@
 #include <QRect>
 #include <QVariant>
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 class WindowId : public QVariant
 {
@@ -34,9 +34,9 @@ public:
 }
 }
 
-uint qHash(const Latte::WindowSystem::WindowId&, uint);
+uint qHash(const Mocha::WindowSystem::WindowId&, uint);
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 
 class WindowInfoWrap

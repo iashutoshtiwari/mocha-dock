@@ -8,7 +8,7 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.abilities.definition as AbilityDefinition
+import org.kde.mocha.abilities.definition as AbilityDefinition
 
 AbilityDefinition.ParabolicEffect {
     id: parabolic
@@ -184,7 +184,7 @@ AbilityDefinition.ParabolicEffect {
     //! TIMERS
 
     //! Timer to check if the mouse is outside the applet in order to restore items scales to 1.0
-    //! IMPORTANT ::: This timer should be used only when the Latte plasmoid is not inside a Latte dock
+    //! IMPORTANT ::: This timer should be used only when the Mocha plasmoid is not inside a Mocha dock
     Timer{
         id: restoreZoomTimer
         interval: 50

@@ -17,7 +17,7 @@
 #include <QPainterPath>
 #include <QString>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Details {
 namespace Delegate {
@@ -45,13 +45,13 @@ void ColorCmbBoxItem::paint(QPainter *painter, const QStyleOptionViewItem &optio
     QString colorPath = index.data(Model::Colors::PATHROLE).toString();
     QString textColor = index.data(Model::Colors::TEXTCOLORROLE).toString();
 
-    bool selected = Latte::isSelected(option);
+    bool selected = Mocha::isSelected(option);
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     //! draw background
     if (selected) {
         QPalette::ColorRole selectedColorRole = QPalette::Highlight;
-        QColor selectedColor = option.palette.brush(Latte::colorGroup(option), selectedColorRole).color();
+        QColor selectedColor = option.palette.brush(Mocha::colorGroup(option), selectedColorRole).color();
 
         QPainterPath back;
         back.addRect(option.rect);

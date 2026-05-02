@@ -25,20 +25,20 @@
 // Plasma
 #include <Plasma/Theme>
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 namespace WindowSystem {
 class SchemeColors;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace PlasmaExtended {
 class PanelBackground;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace PlasmaExtended {
 
 struct CornerRegions {
@@ -62,14 +62,14 @@ class Theme: public QObject
     Q_PROPERTY(int marginsAreaBottom READ marginsAreaBottom NOTIFY marginsAreaChanged)
     Q_PROPERTY(int marginsAreaRight READ marginsAreaRight NOTIFY marginsAreaChanged)
 
-    Q_PROPERTY(Latte::PlasmaExtended::PanelBackground *backgroundTopEdge READ backgroundTopEdge NOTIFY backgroundsChanged)
-    Q_PROPERTY(Latte::PlasmaExtended::PanelBackground *backgroundLeftEdge READ backgroundLeftEdge NOTIFY backgroundsChanged)
-    Q_PROPERTY(Latte::PlasmaExtended::PanelBackground *backgroundBottomEdge READ backgroundBottomEdge NOTIFY backgroundsChanged)
-    Q_PROPERTY(Latte::PlasmaExtended::PanelBackground *backgroundRightEdge READ backgroundRightEdge NOTIFY backgroundsChanged)
+    Q_PROPERTY(Mocha::PlasmaExtended::PanelBackground *backgroundTopEdge READ backgroundTopEdge NOTIFY backgroundsChanged)
+    Q_PROPERTY(Mocha::PlasmaExtended::PanelBackground *backgroundLeftEdge READ backgroundLeftEdge NOTIFY backgroundsChanged)
+    Q_PROPERTY(Mocha::PlasmaExtended::PanelBackground *backgroundBottomEdge READ backgroundBottomEdge NOTIFY backgroundsChanged)
+    Q_PROPERTY(Mocha::PlasmaExtended::PanelBackground *backgroundRightEdge READ backgroundRightEdge NOTIFY backgroundsChanged)
 
-    Q_PROPERTY(Latte::WindowSystem::SchemeColors *defaultTheme READ defaultTheme NOTIFY themeChanged)
-    Q_PROPERTY(Latte::WindowSystem::SchemeColors *lightTheme READ lightTheme NOTIFY themeChanged)
-    Q_PROPERTY(Latte::WindowSystem::SchemeColors *darkTheme READ darkTheme NOTIFY themeChanged)
+    Q_PROPERTY(Mocha::WindowSystem::SchemeColors *defaultTheme READ defaultTheme NOTIFY themeChanged)
+    Q_PROPERTY(Mocha::WindowSystem::SchemeColors *lightTheme READ lightTheme NOTIFY themeChanged)
+    Q_PROPERTY(Mocha::WindowSystem::SchemeColors *darkTheme READ darkTheme NOTIFY themeChanged)
 
 public:
     Theme(KSharedConfig::Ptr config, QObject *parent);
@@ -159,7 +159,7 @@ private:
     PanelBackground *m_backgroundBottomEdge{nullptr};
     PanelBackground *m_backgroundRightEdge{nullptr};
 
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
     WindowSystem::SchemeColors *m_defaultScheme{nullptr};
     WindowSystem::SchemeColors *m_reversedScheme{nullptr};
 };

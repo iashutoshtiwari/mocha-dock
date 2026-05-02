@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
-project(lattedock)
+project(mochadock)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 20)
@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(VERSION 0.10.240)
 set(AUTHOR "Michail Vourlakos, Smith Ar")
 set(EMAIL "mvourlakos@gmail.com, audoban@openmailbox.org")
-set(WEBSITE "https://userbase.kde.org/LatteDock")
-set(BUG_ADDRESS "https://bugs.kde.org/enter_bug.cgi?product=lattedock")
-set(FAQS "https://userbase.kde.org/LatteDock/FAQ")
+set(WEBSITE "https://github.com/mocha-dock/mocha-dock")
+set(BUG_ADDRESS "https://github.com/mocha-dock/mocha-dock/issues")
+set(FAQS "https://github.com/mocha-dock/mocha-dock/wiki/FAQ")
 
 if(DEFINED ENV{GENERATE_COMPILE_COMMANDS})
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -74,7 +74,7 @@ add_definitions(-DPLASMA_WORKSPACE_VERSION="${LibTaskManager_VERSION}")
 
 find_package(QtWaylandScanner REQUIRED)
 find_package(Qt${QT_MAJOR_VERSION}WaylandClient)
-find_package(PlasmaWaylandProtocols 1.6 REQUIRED)
+# find_package(PlasmaWaylandProtocols 1.6 REQUIRED)
 find_package(Wayland REQUIRED COMPONENTS Client)
 
 string(REGEX MATCH "\\.([^]]+)\\." KF6_VERSION_MINOR ${KF6_VERSION})
@@ -89,8 +89,8 @@ ecm_find_qmlmodule(org.kde.kquickcontrolsaddons 2.0 REQUIRED)
 ecm_find_qmlmodule(org.kde.plasma.core 2.0 REQUIRED)
 ecm_find_qmlmodule(org.kde.plasma.components 2.0 REQUIRED)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app/config-latte.h.cmake
-               ${CMAKE_CURRENT_BINARY_DIR}/app/config-latte.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app/config-mocha.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/app/config-mocha.h)
 
 #hide warnings
 string(REPLACE "-Wall" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
@@ -110,7 +110,7 @@ configure_file(declarativeimports/coretypes.h.in declarativeimports/core/types.h
 set(CORETYPESHEADER "APPCORETYPES_H")
 configure_file(declarativeimports/coretypes.h.in app/coretypes.h)
 set(CORETYPESHEADER "LATTEGENERALCONTAINMENTTYPES_H")
-configure_file(declarativeimports/coretypes.h.in containment/plugin/lattetypes.h)
+configure_file(declarativeimports/coretypes.h.in containment/plugin/mochatypes.h)
 
 # Share App::Settings::GenericTools to containment actions
 configure_file(app/settings/generic/generictools.h containmentactions/contextmenu/generictools.h)

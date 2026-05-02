@@ -8,7 +8,7 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.abilities.client as AbilityClient
+import org.kde.mocha.abilities.client as AbilityClient
 
 Item {
     id: _abilityContainer

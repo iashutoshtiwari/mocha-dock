@@ -5,11 +5,11 @@
 
 import QtQuick
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Item {
     property bool isFirstAppletInContainment: false
     property bool isLastAppletInContainment: false
 
-    property int alignment: LatteCore.Types.Center
+    property int alignment: MochaCore.Types.Center
 }

@@ -5,7 +5,7 @@
 
 #include "genericbasictable.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 GenericBasicTable::GenericBasicTable()

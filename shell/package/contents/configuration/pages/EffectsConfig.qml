@@ -14,11 +14,11 @@ import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.extras as PlasmaExtras
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
+import org.kde.mocha.private.containment as MochaContainment
 
-import "../../controls" as LatteExtraControls
+import "../../controls" as MochaExtraControls
 
 PlasmaComponents.Page {
     id: page
@@ -39,7 +39,7 @@ PlasmaComponents.Page {
 
             spacing: Kirigami.Units.smallSpacing
 
-            LatteComponents.HeaderSwitch {
+            MochaComponents.HeaderSwitch {
                 id: showAppletShadow
                 Layout.fillWidth: true
                 Layout.minimumHeight: implicitHeight
@@ -66,7 +66,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: shadowSizeSlider
                         Layout.fillWidth: true
                         enabled: showAppletShadow.checked
@@ -114,7 +114,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: shadowOpacitySlider
                         Layout.fillWidth: true
 
@@ -180,7 +180,7 @@ PlasmaComponents.Page {
                         ButtonGroup.group: shadowColorGroup
                         tooltip: i18n("Default shadow for applets")
 
-                        readonly property int type: LatteContainment.Types.DefaultColorShadow
+                        readonly property int type: MochaContainment.Types.DefaultColorShadow
 
                         onPressedChanged: {
                             if (pressed) {
@@ -199,7 +199,7 @@ PlasmaComponents.Page {
                         ButtonGroup.group: shadowColorGroup
                         tooltip: i18n("Shadow from theme color palette")
 
-                        readonly property int type: LatteContainment.Types.ThemeColorShadow
+                        readonly property int type: MochaContainment.Types.ThemeColorShadow
 
                         onPressedChanged: {
                             if (pressed) {
@@ -221,7 +221,7 @@ PlasmaComponents.Page {
                         tooltip: i18n("Use set shadow color")
                         ButtonGroup.group: shadowColorGroup
 
-                        readonly property int type: LatteContainment.Types.UserColorShadow
+                        readonly property int type: MochaContainment.Types.UserColorShadow
 
                         onPressedChanged: {
                             if (pressed) {
@@ -296,7 +296,7 @@ PlasmaComponents.Page {
             Layout.topMargin: Kirigami.Units.smallSpacing
             spacing: Kirigami.Units.smallSpacing
 
-            LatteComponents.HeaderSwitch {
+            MochaComponents.HeaderSwitch {
                 id: animationsHeader
                 Layout.fillWidth: true
                 Layout.minimumHeight: implicitHeight
@@ -386,17 +386,17 @@ PlasmaComponents.Page {
         ColumnLayout{
             spacing: Kirigami.Units.smallSpacing
 
-            LatteComponents.HeaderSwitch {
+            MochaComponents.HeaderSwitch {
                 id: indicatorsSwitch
                 Layout.fillWidth: true
                 Layout.minimumHeight: implicitHeight
 
-                checked: latteView.indicator.enabled
+                checked: mochaView.indicator.enabled
                 text: i18n("Indicators")
                 tooltip: i18n("Enable/disable indicators")
 
                 onPressed: {
-                    latteView.indicator.enabled = !latteView.indicator.enabled;
+                    mochaView.indicator.enabled = !mochaView.indicator.enabled;
                 }
             }
 
@@ -406,7 +406,7 @@ PlasmaComponents.Page {
                 spacing: Kirigami.Units.smallSpacing
                 enabled: indicatorsSwitch.checked
 
-                /*   LatteComponents.SubHeader {
+                /*   MochaComponents.SubHeader {
                     text: i18n("Style")
                 }*/
 
@@ -418,27 +418,27 @@ PlasmaComponents.Page {
                         id: tabBar
                         width: parent.width
 
-                        property string type: latteView.indicator.type
+                        property string type: mochaView.indicator.type
 
                         TabButton {
-                            id: latteBtn
-                            text: i18nc("latte indicator style", "Latte")
-                            readonly property string type: "org.kde.latte.default"
+                            id: mochaBtn
+                            text: i18nc("mocha indicator style", "Mocha")
+                            readonly property string type: "org.kde.mocha.default"
                         }
                         TabButton {
                             id: plasmaBtn
                             text: i18nc("plasma indicator style", "Plasma")
-                            readonly property string type: "org.kde.latte.plasma"
+                            readonly property string type: "org.kde.mocha.plasma"
                         }
 
                         TabButton {
                             id: customBtn
 
-                            LatteExtraControls.CustomIndicatorButton {
+                            MochaExtraControls.CustomIndicatorButton {
                                 id: customIndicator
                                 anchors.fill: parent
-                                implicitWidth: latteBtn.implicitWidth
-                                implicitHeight: latteBtn.implicitHeight
+                                implicitWidth: mochaBtn.implicitWidth
+                                implicitHeight: mochaBtn.implicitHeight
 
                                 checked: parent.checked
                                 comboBoxMinimumPopUpWidth: 1.5 * customIndicator.width
@@ -452,19 +452,19 @@ PlasmaComponents.Page {
                         }
 
                         onCurrentIndexChanged: {
-                            var tabs = [latteBtn, plasmaBtn, customBtn];
+                            var tabs = [mochaBtn, plasmaBtn, customBtn];
                             if (currentIndex >= 0 && currentIndex < tabs.length) {
                                 var tab = tabs[currentIndex];
                                 if (currentIndex === 2) {
                                     customIndicator.onButtonIsPressed();
                                 } else if (tab.type) {
-                                    latteView.indicator.type = tab.type;
+                                    mochaView.indicator.type = tab.type;
                                 }
                             }
                         }
 
                         function selectTab(type) {
-                            if (type === latteBtn.type) {
+                            if (type === mochaBtn.type) {
                                 tabBar.currentIndex = 0;
                             } else if (type === plasmaBtn.type) {
                                 tabBar.currentIndex = 1;
@@ -501,7 +501,7 @@ PlasmaComponents.Page {
                     id: indicatorsStackView
                     Layout.fillWidth: true
                     Layout.maximumHeight: Layout.minimumHeight
-                    enabled: latteView.indicator.enabled
+                    enabled: mochaView.indicator.enabled
 
                     property bool forwardSliding: true
 
@@ -550,7 +550,7 @@ PlasmaComponents.Page {
 
 
     //! Manager / Handler of loading/showing/hiding indicator config uis
-    LatteExtraControls.IndicatorConfigUiManager {
+    MochaExtraControls.IndicatorConfigUiManager {
         id: indicatorUiManager
         visible: false
         stackView: indicatorsStackView

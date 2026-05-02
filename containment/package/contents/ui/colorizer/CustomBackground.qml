@@ -54,7 +54,7 @@ Item{
         return i;
     }
 
-    readonly property bool allBorders: (latteView && latteView.effects && (latteView.effects.enabledBorders === KSvg.FrameSvg.AllBorders))
+    readonly property bool allBorders: (mochaView && mochaView.effects && (mochaView.effects.enabledBorders === KSvg.FrameSvg.AllBorders))
 
     readonly property bool bothVerticals: (leftBorder && rightBorder)
     readonly property bool bothHorizontals: (bottomBorder && topBorder)
@@ -67,9 +67,9 @@ Item{
         target: main
         property: "topBorder"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & KSvg.FrameSvg.TopBorder)) > 0) || allBorders;
+            return (mochaView && mochaView.effects && ((mochaView.effects.enabledBorders & KSvg.FrameSvg.TopBorder)) > 0) || allBorders;
         }
     }
 
@@ -77,9 +77,9 @@ Item{
         target: main
         property: "leftBorder"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & KSvg.FrameSvg.LeftBorder)) > 0) || allBorders;
+            return (mochaView && mochaView.effects && ((mochaView.effects.enabledBorders & KSvg.FrameSvg.LeftBorder)) > 0) || allBorders;
         }
     }
 
@@ -87,9 +87,9 @@ Item{
         target: main
         property: "bottomBorder"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & KSvg.FrameSvg.BottomBorder)) > 0) || allBorders;
+            return (mochaView && mochaView.effects && ((mochaView.effects.enabledBorders & KSvg.FrameSvg.BottomBorder)) > 0) || allBorders;
         }
     }
 
@@ -97,9 +97,9 @@ Item{
         target: main
         property: "rightBorder"
         restoreMode: Binding.RestoreNone
-        when: latteView
+        when: mochaView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & KSvg.FrameSvg.RightBorder)) > 0) || allBorders;
+            return (mochaView && mochaView.effects && ((mochaView.effects.enabledBorders & KSvg.FrameSvg.RightBorder)) > 0) || allBorders;
         }
     }
 
@@ -107,7 +107,7 @@ Item{
         id: kirigamiRect
         anchors.fill: painter
         active: root.kirigamiLibraryIsFound && main.shadowSize>0
-        //! this "source" approach is needed in order for KF5<=5.68 to load Latte correctly with no
+        //! this "source" approach is needed in order for KF5<=5.68 to load Mocha correctly with no
         //! qml breakage because Kirigami2.ShadowedRectangle is not present
         source: root.kirigamiLibraryIsFound ? "KirigamiShadowedRectangle.qml" : "NormalRectangle.qml"
     }

@@ -9,9 +9,9 @@ import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.app as LatteApp
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.app as MochaApp
+import org.kde.mocha.private.containment as MochaContainment
 
 import "../../code/ColorizerTools.js" as ColorizerTools
 
@@ -39,7 +39,7 @@ Loader{
     }
 
     //! the loader loads the backgroundTracker component
-    active: root.themeColors === LatteContainment.Types.SmartThemeColors
+    active: root.themeColors === MochaContainment.Types.SmartThemeColors
 
     readonly property bool backgroundIsBusy: item ? item.isBusy : false
 
@@ -66,62 +66,62 @@ Loader{
     }
 
     readonly property bool editModeTextColorIsBright: ColorizerTools.colorBrightness(editModeTextColor) > 127.5
-    readonly property color editModeTextColor: latteView && latteView.layout ? latteView.layout.textColor : "white"
+    readonly property color editModeTextColor: mochaView && mochaView.layout ? mochaView.layout.textColor : "white"
 
     readonly property bool mustBeShown: (applyTheme && applyTheme !== _defaultTheme)
-                                        || (root.inConfigureAppletsMode && (root.themeColors === LatteContainment.Types.SmartThemeColors))
+                                        || (root.inConfigureAppletsMode && (root.themeColors === MochaContainment.Types.SmartThemeColors))
 
     readonly property real currentBackgroundBrightness: item ? item.currentBrightness : -1000
 
-    readonly property bool applyingWindowColors: (root.windowColors === LatteContainment.Types.ActiveWindowColors && latteView && latteView.windowsTracker
+    readonly property bool applyingWindowColors: (root.windowColors === MochaContainment.Types.ActiveWindowColors && mochaView && mochaView.windowsTracker
                                                   && selectedWindowsTracker.activeWindowScheme)
-                                                 || (root.windowColors === LatteContainment.Types.TouchingWindowColors && latteView && latteView.windowsTracker
-                                                     && latteView.windowsTracker.currentScreen.touchingWindowScheme)
+                                                 || (root.windowColors === MochaContainment.Types.TouchingWindowColors && mochaView && mochaView.windowsTracker
+                                                     && mochaView.windowsTracker.currentScreen.touchingWindowScheme)
 
     property QtObject applyTheme: {
         if (!root.environment.isGraphicsSystemAccelerated) {
             return _defaultTheme;
         }
 
-        if (latteView && latteView.windowsTracker && !(root.plasmaBackgroundForPopups && root.hasExpandedApplet)) {
-            if (root.windowColors === LatteContainment.Types.ActiveWindowColors && selectedWindowsTracker.activeWindowScheme) {
+        if (mochaView && mochaView.windowsTracker && !(root.plasmaBackgroundForPopups && root.hasExpandedApplet)) {
+            if (root.windowColors === MochaContainment.Types.ActiveWindowColors && selectedWindowsTracker.activeWindowScheme) {
                 return selectedWindowsTracker.activeWindowScheme;
             }
 
-            if (root.windowColors === LatteContainment.Types.TouchingWindowColors && latteView.windowsTracker.currentScreen.touchingWindowScheme) {
+            if (root.windowColors === MochaContainment.Types.TouchingWindowColors && mochaView.windowsTracker.currentScreen.touchingWindowScheme) {
                 //! we must track touching windows and when they are not active
                 //! the active window scheme is used for convenience
-                if (latteView.windowsTracker.currentScreen.existsWindowTouching || latteView.windowsTracker.currentScreen.existsWindowTouchingEdge
-                        && !(latteView.windowsTracker.currentScreen.activeWindowTouching || latteView.windowsTracker.currentScreen.activeWindowTouchingEdge)
-                        && latteView.windowsTracker.currentScreen.activeWindowScheme) {
-                    return latteView.windowsTracker.currentScreen.activeWindowScheme;
+                if (mochaView.windowsTracker.currentScreen.existsWindowTouching || mochaView.windowsTracker.currentScreen.existsWindowTouchingEdge
+                        && !(mochaView.windowsTracker.currentScreen.activeWindowTouching || mochaView.windowsTracker.currentScreen.activeWindowTouchingEdge)
+                        && mochaView.windowsTracker.currentScreen.activeWindowScheme) {
+                    return mochaView.windowsTracker.currentScreen.activeWindowScheme;
                 }
 
-                return latteView.windowsTracker.currentScreen.touchingWindowScheme;
+                return mochaView.windowsTracker.currentScreen.touchingWindowScheme;
             }
         }
 
         if (themeExtended) {
             if (root.userShowPanelBackground && root.plasmaBackgroundForPopups && root.hasExpandedApplet /*for expanded popups when it is enabled*/
                     || root.plasmaStyleBusyForTouchingBusyVerticalView
-                    || (root.themeColors === LatteContainment.Types.SmartThemeColors /*for Smart theming that Windows colors are not used and the user wants solidness at some cases*/
-                        && root.windowColors === LatteContainment.Types.NoneWindowColors
+                    || (root.themeColors === MochaContainment.Types.SmartThemeColors /*for Smart theming that Windows colors are not used and the user wants solidness at some cases*/
+                        && root.windowColors === MochaContainment.Types.NoneWindowColors
                         && root.forceSolidPanel) ) {
                 /* plasma style*/
                 return _defaultTheme;
             }
 
-            if (root.themeColors === LatteContainment.Types.DarkThemeColors) {
+            if (root.themeColors === MochaContainment.Types.DarkThemeColors) {
                 return themeExtended.darkTheme;
-            } else if (root.themeColors === LatteContainment.Types.LightThemeColors) {
+            } else if (root.themeColors === MochaContainment.Types.LightThemeColors) {
                 return themeExtended.lightTheme;
-            } else if (root.themeColors === LatteContainment.Types.ReverseThemeColors) {
+            } else if (root.themeColors === MochaContainment.Types.ReverseThemeColors) {
                 return themeExtended.isLightTheme ? themeExtended.darkTheme : themeExtended.lightTheme;
-            } else if (root.themeColors === LatteContainment.Types.LayoutThemeColors && latteView && latteView.layout) {
-                return latteView.layout.scheme;
+            } else if (root.themeColors === MochaContainment.Types.LayoutThemeColors && mochaView && mochaView.layout) {
+                return mochaView.layout.scheme;
             }
 
-            if (root.themeColors === LatteContainment.Types.SmartThemeColors) {
+            if (root.themeColors === MochaContainment.Types.SmartThemeColors) {
                 //! Smart Colors Case
                 if (!root.forcePanelForBusyBackground) {
                     //! simple case that not a busy background is applied
@@ -152,12 +152,12 @@ Loader{
 
     readonly property color backgroundColor:applyTheme.backgroundColor
     readonly property color textColor: {
-        if (latteView && latteView.layout
+        if (mochaView && mochaView.layout
                 && root.inConfigureAppletsMode
-                && LatteCore.WindowSystem.compositingActive
+                && MochaCore.WindowSystem.compositingActive
                 && root.myView.backgroundStoredOpacity<0.40
-                && (root.themeColors === LatteContainment.Types.SmartThemeColors)) {
-            return latteView.layout.textColor;
+                && (root.themeColors === MochaContainment.Types.SmartThemeColors)) {
+            return mochaView.layout.textColor;
         }
 
         return applyTheme.textColor;
@@ -178,8 +178,8 @@ Loader{
     readonly property color buttonFocusColor: applyTheme.buttonFocusColor
 
     readonly property string scheme: {
-        if (root.inConfigureAppletsMode && (root.themeColors === LatteContainment.Types.SmartThemeColors)) {
-            if (!LatteCore.WindowSystem.compositingActive && applyTheme !== _defaultTheme) {
+        if (root.inConfigureAppletsMode && (root.themeColors === MochaContainment.Types.SmartThemeColors)) {
+            if (!MochaCore.WindowSystem.compositingActive && applyTheme !== _defaultTheme) {
                 return applyTheme.schemeFile;
             }
 
@@ -211,9 +211,9 @@ Loader{
         return applyTheme.schemeFile;
     }
 
-    sourceComponent: LatteApp.BackgroundTracker {
+    sourceComponent: MochaApp.BackgroundTracker {
         activity: root.myView.isReady ? root.myView.lastUsedActivity : ""
         location: plasmoid.location
-        screenName: latteView && latteView.positioner ? latteView.positioner.currentScreenName : ""
+        screenName: mochaView && mochaView.positioner ? mochaView.positioner.currentScreenName : ""
     }
 }

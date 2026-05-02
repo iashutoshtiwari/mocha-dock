@@ -10,7 +10,7 @@
 #include <QModelIndex>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace View {
 

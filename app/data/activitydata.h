@@ -16,7 +16,7 @@
 #include <QIcon>
 #include <QString>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 class Activity : public Generic
@@ -47,7 +47,7 @@ typedef GenericTable<Data::Activity> ActivitiesTable;
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::Activity)
-Q_DECLARE_METATYPE(Latte::Data::ActivitiesTable)
+Q_DECLARE_METATYPE(Mocha::Data::Activity)
+Q_DECLARE_METATYPE(Mocha::Data::ActivitiesTable)
 
 #endif

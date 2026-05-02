@@ -10,7 +10,7 @@ import QtQuick.Controls
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Flickable{
     id: flickableContainer
@@ -24,7 +24,7 @@ Flickable{
     property real offset: 0
 
     readonly property bool animationsFinished: !horizontalAnimation.running && !verticalAnimation.running
-    readonly property bool centered: root.alignment === LatteCore.Types.Center
+    readonly property bool centered: root.alignment === MochaCore.Types.Center
     readonly property bool reversed: Qt.application.layoutDirection === Qt.RightToLeft
 
     //! Math.floor is needed in order to make calculations in (int) world
@@ -40,46 +40,46 @@ Flickable{
 
     readonly property int alignment: {
         if (root.location === PlasmaCore.Types.LeftEdge) {
-            if (centered) return LatteCore.Types.LeftEdgeCenterAlign;
-            if (root.alignment === LatteCore.Types.Top) return LatteCore.Types.LeftEdgeTopAlign;
-            if (root.alignment === LatteCore.Types.Bottom) return LatteCore.Types.LeftEdgeBottomAlign;
+            if (centered) return MochaCore.Types.LeftEdgeCenterAlign;
+            if (root.alignment === MochaCore.Types.Top) return MochaCore.Types.LeftEdgeTopAlign;
+            if (root.alignment === MochaCore.Types.Bottom) return MochaCore.Types.LeftEdgeBottomAlign;
         }
 
         if (root.location === PlasmaCore.Types.RightEdge) {
-            if (centered) return LatteCore.Types.RightEdgeCenterAlign;
-            if (root.alignment === LatteCore.Types.Top) return LatteCore.Types.RightEdgeTopAlign;
-            if (root.alignment === LatteCore.Types.Bottom) return LatteCore.Types.RightEdgeBottomAlign;
+            if (centered) return MochaCore.Types.RightEdgeCenterAlign;
+            if (root.alignment === MochaCore.Types.Top) return MochaCore.Types.RightEdgeTopAlign;
+            if (root.alignment === MochaCore.Types.Bottom) return MochaCore.Types.RightEdgeBottomAlign;
         }
 
         if (root.location === PlasmaCore.Types.BottomEdge) {
-            if (centered) return LatteCore.Types.BottomEdgeCenterAlign;
+            if (centered) return MochaCore.Types.BottomEdgeCenterAlign;
 
-            if ((root.alignment === LatteCore.Types.Left && !reversed)
-                    || (root.alignment === LatteCore.Types.Right && reversed)) {
-                return LatteCore.Types.BottomEdgeLeftAlign;
+            if ((root.alignment === MochaCore.Types.Left && !reversed)
+                    || (root.alignment === MochaCore.Types.Right && reversed)) {
+                return MochaCore.Types.BottomEdgeLeftAlign;
             }
 
-            if ((root.alignment === LatteCore.Types.Right && !reversed)
-                    || (root.alignment === LatteCore.Types.Left && reversed)) {
-                return LatteCore.Types.BottomEdgeRightAlign;
+            if ((root.alignment === MochaCore.Types.Right && !reversed)
+                    || (root.alignment === MochaCore.Types.Left && reversed)) {
+                return MochaCore.Types.BottomEdgeRightAlign;
             }
         }
 
         if (root.location === PlasmaCore.Types.TopEdge) {
-            if (centered) return LatteCore.Types.TopEdgeCenterAlign;
+            if (centered) return MochaCore.Types.TopEdgeCenterAlign;
 
-            if ((root.alignment === LatteCore.Types.Left && !reversed)
-                    || (root.alignment === LatteCore.Types.Right && reversed)) {
-                return LatteCore.Types.TopEdgeLeftAlign;
+            if ((root.alignment === MochaCore.Types.Left && !reversed)
+                    || (root.alignment === MochaCore.Types.Right && reversed)) {
+                return MochaCore.Types.TopEdgeLeftAlign;
             }
 
-            if ((root.alignment === LatteCore.Types.Right && !reversed)
-                    || (root.alignment === LatteCore.Types.Left && reversed)) {
-                return LatteCore.Types.TopEdgeRightAlign;
+            if ((root.alignment === MochaCore.Types.Right && !reversed)
+                    || (root.alignment === MochaCore.Types.Left && reversed)) {
+                return MochaCore.Types.TopEdgeRightAlign;
             }
         }
 
-        return LatteCore.Types.BottomEdgeCenterAlign;
+        return MochaCore.Types.BottomEdgeCenterAlign;
     }
 
     function increasePos() {
@@ -210,7 +210,7 @@ Flickable{
         ///Left Edge
         State {
             name: "leftCenter"
-            when: flickableContainer.alignment === LatteCore.Types.LeftEdgeCenterAlign
+            when: flickableContainer.alignment === MochaCore.Types.LeftEdgeCenterAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -224,7 +224,7 @@ Flickable{
         },
         State {
             name: "leftTop"
-            when: flickableContainer.alignment === LatteCore.Types.LeftEdgeTopAlign
+            when: flickableContainer.alignment === MochaCore.Types.LeftEdgeTopAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -238,7 +238,7 @@ Flickable{
         },
         State {
             name: "leftBottom"
-            when: flickableContainer.alignment === LatteCore.Types.LeftEdgeBottomAlign
+            when: flickableContainer.alignment === MochaCore.Types.LeftEdgeBottomAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -253,7 +253,7 @@ Flickable{
         ///Right Edge
         State {
             name: "rightCenter"
-            when: flickableContainer.alignment === LatteCore.Types.RightEdgeCenterAlign
+            when: flickableContainer.alignment === MochaCore.Types.RightEdgeCenterAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -267,7 +267,7 @@ Flickable{
         },
         State {
             name: "rightTop"
-            when: flickableContainer.alignment === LatteCore.Types.RightEdgeTopAlign
+            when: flickableContainer.alignment === MochaCore.Types.RightEdgeTopAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -281,7 +281,7 @@ Flickable{
         },
         State {
             name: "rightBottom"
-            when: flickableContainer.alignment === LatteCore.Types.RightEdgeBottomAlign
+            when: flickableContainer.alignment === MochaCore.Types.RightEdgeBottomAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -296,7 +296,7 @@ Flickable{
         ///Bottom Edge
         State {
             name: "bottomCenter"
-            when: flickableContainer.alignment === LatteCore.Types.BottomEdgeCenterAlign
+            when: flickableContainer.alignment === MochaCore.Types.BottomEdgeCenterAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -310,7 +310,7 @@ Flickable{
         },
         State {
             name: "bottomLeft"
-            when: flickableContainer.alignment === LatteCore.Types.BottomEdgeLeftAlign
+            when: flickableContainer.alignment === MochaCore.Types.BottomEdgeLeftAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -324,7 +324,7 @@ Flickable{
         },
         State {
             name: "bottomRight"
-            when: flickableContainer.alignment === LatteCore.Types.BottomEdgeRightAlign
+            when: flickableContainer.alignment === MochaCore.Types.BottomEdgeRightAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -339,7 +339,7 @@ Flickable{
         ///Top Edge
         State {
             name: "topCenter"
-            when: flickableContainer.alignment === LatteCore.Types.TopEdgeCenterAlign
+            when: flickableContainer.alignment === MochaCore.Types.TopEdgeCenterAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -353,7 +353,7 @@ Flickable{
         },
         State {
             name: "topLeft"
-            when: flickableContainer.alignment === LatteCore.Types.TopEdgeLeftAlign
+            when: flickableContainer.alignment === MochaCore.Types.TopEdgeLeftAlign
 
             AnchorChanges {
                 target: flickableContainer
@@ -367,7 +367,7 @@ Flickable{
         },
         State {
             name: "topRight"
-            when: flickableContainer.alignment === LatteCore.Types.TopEdgeRightAlign
+            when: flickableContainer.alignment === MochaCore.Types.TopEdgeRightAlign
 
             AnchorChanges {
                 target: flickableContainer

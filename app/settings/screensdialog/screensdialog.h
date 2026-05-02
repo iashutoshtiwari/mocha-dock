@@ -20,7 +20,7 @@ namespace Ui {
 class ScreensDialog;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Controller {
 class Layouts;
@@ -32,7 +32,7 @@ class ScreensHandler;
 }
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Dialog {
 
@@ -45,7 +45,7 @@ public:
     ~ScreensDialog();
 
     Ui::ScreensDialog *ui() const;
-    Latte::Corona *corona() const;
+    Mocha::Corona *corona() const;
     Controller::Layouts *layoutsController() const;
 
     QPushButton *removeNowButton() const;
@@ -68,7 +68,7 @@ private:
 private:
     QPushButton *m_removeNowButton{nullptr};
 
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
 
     Ui::ScreensDialog *m_ui;
     Controller::Layouts *m_layoutsController{nullptr};

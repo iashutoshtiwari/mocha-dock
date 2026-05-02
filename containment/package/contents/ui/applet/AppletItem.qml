@@ -14,10 +14,10 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
 
-import org.kde.latte.abilities.items as AbilityItem
+import org.kde.mocha.abilities.items as AbilityItem
 
 import "colorizer" as Colorizer
 import "communicator" as Communicator
@@ -78,7 +78,7 @@ Item {
                                                        && root.dragOverlay.currentApplet
                                                        && root.dragOverlay.pressed
 
-    property bool appletBlocksColorizing: !communicator.requires.latteSideColoringEnabled || communicator.indexerIsSupported
+    property bool appletBlocksColorizing: !communicator.requires.mochaSideColoringEnabled || communicator.indexerIsSupported
     property bool appletBlocksParabolicEffect: communicator.requires.parabolicEffectLocked
     readonly property bool lockZoom: !parabolicEffectIsSupported
                                      || appletBlocksParabolicEffect
@@ -100,8 +100,8 @@ Item {
     property bool isPlaceHolder: false
     property bool isPressed: viewSignalsConnector.pressed
     property bool isSeparator: applet && (appletItem.appletPluginName === "audoban.applet.separator"
-                                          || appletItem.appletPluginName === "org.kde.latte.separator")
-    property bool isSpacer: applet && (appletItem.appletPluginName === "org.kde.latte.spacer")
+                                          || appletItem.appletPluginName === "org.kde.mocha.separator")
+    property bool isSpacer: applet && (appletItem.appletPluginName === "org.kde.mocha.spacer")
     property bool isSystray: applet && (appletItem.appletPluginName === "org.kde.plasma.systemtray" || appletItem.appletPluginName === "org.nomad.systemtray" )
 
     property bool firstChildOfStartLayout: index === appletItem.layouter.startLayout.firstVisibleIndex
@@ -110,11 +110,11 @@ Item {
     property bool lastChildOfEndLayout: index === appletItem.layouter.endLayout.lastVisibleIndex
 
     readonly property bool atScreenEdge: {
-        if (appletItem.myView.alignment === LatteCore.Types.Center) {
+        if (appletItem.myView.alignment === MochaCore.Types.Center) {
             return false;
         }
 
-        if (appletItem.myView.alignment === LatteCore.Types.Justify) {
+        if (appletItem.myView.alignment === MochaCore.Types.Justify) {
             //! Justify case
             if (root.maxLengthPerCentage!==100 || plasmoid.configuration.offset!==0) {
                 return false;
@@ -122,33 +122,33 @@ Item {
 
             if (root.isHorizontal) {
                 if (firstChildOfStartLayout) {
-                    return latteView && latteView.x === latteView.screenGeometry.x;
+                    return mochaView && mochaView.x === mochaView.screenGeometry.x;
                 } else if (lastChildOfEndLayout) {
-                    return latteView && ((latteView.x + latteView.width) === (latteView.screenGeometry.x + latteView.screenGeometry.width));
+                    return mochaView && ((mochaView.x + mochaView.width) === (mochaView.screenGeometry.x + mochaView.screenGeometry.width));
                 }
             } else {
                 if (firstChildOfStartLayout) {
-                    return latteView && latteView.y === latteView.screenGeometry.y;
+                    return mochaView && mochaView.y === mochaView.screenGeometry.y;
                 } else if (lastChildOfEndLayout) {
-                    return latteView && ((latteView.y + latteView.height) === (latteView.screenGeometry.y + latteView.screenGeometry.height));
+                    return mochaView && ((mochaView.y + mochaView.height) === (mochaView.screenGeometry.y + mochaView.screenGeometry.height));
                 }
             }
 
             return false;
         }
 
-        if (appletItem.myView.alignment === LatteCore.Types.Left && plasmoid.configuration.offset===0) {
+        if (appletItem.myView.alignment === MochaCore.Types.Left && plasmoid.configuration.offset===0) {
             //! Left case
             return firstChildOfMainLayout;
-        } else if (appletItem.myView.alignment === LatteCore.Types.Right && plasmoid.configuration.offset===0) {
+        } else if (appletItem.myView.alignment === MochaCore.Types.Right && plasmoid.configuration.offset===0) {
             //! Right case
             return lastChildOfMainLayout;
         }
 
-        if (appletItem.myView.alignment === LatteCore.Types.Top && plasmoid.configuration.offset===0) {
-            return firstChildOfMainLayout && latteView && latteView.y === latteView.screenGeometry.y;
-        } else if (appletItem.myView.alignment === LatteCore.Types.Bottom && plasmoid.configuration.offset===0) {
-            return lastChildOfMainLayout && latteView && ((latteView.y + latteView.height) === (latteView.screenGeometry.y + latteView.screenGeometry.height));
+        if (appletItem.myView.alignment === MochaCore.Types.Top && plasmoid.configuration.offset===0) {
+            return firstChildOfMainLayout && mochaView && mochaView.y === mochaView.screenGeometry.y;
+        } else if (appletItem.myView.alignment === MochaCore.Types.Bottom && plasmoid.configuration.offset===0) {
+            return lastChildOfMainLayout && mochaView && ((mochaView.y + mochaView.height) === (mochaView.screenGeometry.y + mochaView.screenGeometry.height));
         }
 
         return false;
@@ -174,9 +174,9 @@ Item {
                                               && !communicator.requires.parabolicEffectLocked
 
     //! This property is an effort in order to group behaviors into one property. This property is responsible to enable/disable
-    //! Applets OnTop MouseArea which is used for ParabolicEffect and ThinTooltips. For Latte panels things
+    //! Applets OnTop MouseArea which is used for ParabolicEffect and ThinTooltips. For Mocha panels things
     //! are pretty straight, the original plasma behavior is replicated so parabolic effect and thin tooltips are disabled.
-    //! For Latte docks things are a bit more complicated. Applets that can not support parabolic effect inside docks
+    //! For Mocha docks things are a bit more complicated. Applets that can not support parabolic effect inside docks
     //! are presenting their original plasma behavior and also applets that even though can be zoomed user has chose
     //! to lock its parabolic effect.
     readonly property bool originalAppletBehavior: root.behaveAsPlasmaPanel
@@ -291,7 +291,7 @@ Item {
     property int internalWidthMargins: root.isVertical ? metrics.totals.thicknessEdges : 2 * lengthAppletPadding
     property int internalHeightMargins: root.isHorizontal ? root.metrics.totals.thicknessEdges : 2 * lengthAppletPadding
 
-    readonly property string pluginName: isInternalViewSplitter ? "org.kde.latte.splitter" : (applet ? appletItem.appletPluginName : "")
+    readonly property string pluginName: isInternalViewSplitter ? "org.kde.mocha.splitter" : (applet ? appletItem.appletPluginName : "")
 
     //! are set by the indicator
     readonly property int iconOffsetX: indicatorBackLayer.level.requested.iconOffsetX
@@ -317,7 +317,7 @@ Item {
     readonly property bool appletBusy: appletPlasmoid ? appletPlasmoid.busy ?? false : false
     readonly property int appletId: appletPlasmoid ? appletPlasmoid.id ?? 0 : 0
 
-    property Item latteStyleApplet: applet && (appletPluginName === "org.kde.latte.spacer" || appletPluginName === "org.kde.latte.separator") ?
+    property Item mochaStyleApplet: applet && (appletPluginName === "org.kde.mocha.spacer" || appletPluginName === "org.kde.mocha.separator") ?
                                         (applet.children[0] ? applet.children[0] : null) : null
 
     property Item appletWrapper: wrapper.wrapperContainer
@@ -472,7 +472,7 @@ Item {
 
         if (appletItemContainsMouse && !wrapperContainsMouse && appletNeutralAreaEnabled) {
             //console.log("PASSED");
-            latteView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
+            mochaView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
         } else {
             //console.log("REJECTED");
         }
@@ -645,7 +645,7 @@ Item {
             var visibleIndex = appletItem.indexer.visibleIndex(appletItem.index);
 
             if (visibleIndex === entryIndex && !communicator.positionShortcutsAreSupported) {
-                latteView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
+                mochaView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
             }
         }
 
@@ -657,14 +657,14 @@ Item {
             var visibleIndex = appletItem.indexer.visibleIndex(appletItem.index);
 
             if (visibleIndex === entryIndex && !communicator.positionShortcutsAreSupported) {
-                latteView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
+                mochaView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
             }
         }
     }
 
     Connections {
         id: viewSignalsConnector
-        target: root.latteView ? root.latteView : null
+        target: root.mochaView ? root.mochaView : null
         enabled: !appletItem.indexerIsSupported && !appletItem.isSeparator && !appletItem.isSpacer && !appletItem.isHidden
 
         property bool pressed: false
@@ -696,27 +696,27 @@ Item {
             scrollDelayer.start();
 
             if (appletItem.containsPos(pos)
-                    && (root.latteView.extendedInterface.appletIsExpandable(appletItem.appletId)
-                        || (root.latteView.extendedInterface.appletIsActivationTogglesExpanded(appletItem.appletId)))) {
+                    && (root.mochaView.extendedInterface.appletIsExpandable(appletItem.appletId)
+                        || (root.mochaView.extendedInterface.appletIsActivationTogglesExpanded(appletItem.appletId)))) {
                 var angle = angleDelta.y / 8;
-                var expanded = root.latteView.extendedInterface.appletIsExpanded(appletItem.appletId);
+                var expanded = root.mochaView.extendedInterface.appletIsExpanded(appletItem.appletId);
 
                 if ((angle > 12 && !expanded) /*positive direction*/
                         || (angle < -12 && expanded) /*negative direction*/) {
-                    latteView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
+                    mochaView.extendedInterface.toggleAppletExpanded(appletItem.appletId);
                 }
             }
         }
     }
 
     Connections {
-        target: root.latteView ? root.latteView.extendedInterface : null
+        target: root.mochaView ? root.mochaView.extendedInterface : null
         enabled: !appletItem.indexerIsSupported && !appletItem.isSeparator && !appletItem.isSpacer && !appletItem.isHidden
 
         onExpandedAppletStateChanged: {
-            if (latteView.extendedInterface.hasExpandedApplet && appletItem.applet) {
-                appletItem.isExpanded = latteView.extendedInterface.appletIsExpandable(appletItem.appletId)
-                        && latteView.extendedInterface.appletIsExpanded(appletItem.appletId);
+            if (mochaView.extendedInterface.hasExpandedApplet && appletItem.applet) {
+                appletItem.isExpanded = mochaView.extendedInterface.appletIsExpandable(appletItem.appletId)
+                        && mochaView.extendedInterface.appletIsExpanded(appletItem.appletId);
             } else {
                 appletItem.isExpanded = false;
             }

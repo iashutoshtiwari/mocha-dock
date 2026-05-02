@@ -6,7 +6,7 @@
 
 import QtQuick
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Item{
     id: hiddenSpacer
@@ -20,7 +20,7 @@ Item{
 
     property bool hasNeighbourSeparator: isRightSpacer ? appletItem.headAppletIsSeparator : appletItem.tailAppletIsSeparator
 
-    property int separatorSpace: hasNeighbourSeparator && appletItem.parabolic.isEnabled ? LatteCore.Environment.separatorLength / 2 : 0
+    property int separatorSpace: hasNeighbourSeparator && appletItem.parabolic.isEnabled ? MochaCore.Environment.separatorLength / 2 : 0
 
     property real nHiddenSize: {
         if (isSeparator || !communicator.requires.lengthMarginsEnabled) {

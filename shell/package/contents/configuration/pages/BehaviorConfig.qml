@@ -13,11 +13,11 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
+import org.kde.mocha.private.containment as MochaContainment
 
-import "../../controls" as LatteExtraControls
+import "../../controls" as MochaExtraControls
 
 PlasmaComponents.Page {
     id: page
@@ -43,11 +43,11 @@ PlasmaComponents.Page {
                 Layout.topMargin: Kirigami.Units.smallSpacing
                 spacing: Kirigami.Units.smallSpacing
 
-                LatteComponents.Header {
+                MochaComponents.Header {
                     text: i18n("Type")
                 }
 
-                LatteExtraControls.TypeSelection{
+                MochaExtraControls.TypeSelection{
                     id: viewTypeSelection
                     horizontal: true
                 }
@@ -61,7 +61,7 @@ PlasmaComponents.Page {
             spacing: Kirigami.Units.smallSpacing
             Layout.topMargin: Kirigami.Units.smallSpacing
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: screenRow.visible ? i18n("Screen") : i18n("Location")
             }
 
@@ -93,18 +93,18 @@ PlasmaComponents.Page {
                     var allsecscreens = {name: i18n("On All Secondary Screens"), icon: 'favorite'};
                     screensModel.append(allsecscreens);
 
-                    //check if the screen exists, it is used in cases Latte is moving
+                    //check if the screen exists, it is used in cases Mocha is moving
                     //the view automatically to primaryScreen in order for the user
                     //to has always a view with tasks shown
                     var screenExists = false
                     for (var i = 0; i < universalSettings.screens.length; i++) {
-                        if (universalSettings.screens[i].name === latteView.positioner.currentScreenName) {
+                        if (universalSettings.screens[i].name === mochaView.positioner.currentScreenName) {
                             screenExists = true;
                         }
                     }
 
-                    if (!screenExists && !latteView.onPrimary) {
-                        var scr = {name: latteView.positioner.currentScreenName, icon: 'view-fullscreen'};
+                    if (!screenExists && !mochaView.onPrimary) {
+                        var scr = {name: mochaView.positioner.currentScreenName, icon: 'view-fullscreen'};
                         screensModel.append(scr);
                     }
 
@@ -113,17 +113,17 @@ PlasmaComponents.Page {
                         screensModel.append(scr);
                     }
 
-                    if (latteView.onPrimary && latteView.screensGroup === LatteCore.Types.SingleScreenGroup) {
+                    if (mochaView.onPrimary && mochaView.screensGroup === MochaCore.Types.SingleScreenGroup) {
                         screenCmb.currentIndex = 0;
-                    } else if (latteView.screensGroup === LatteCore.Types.AllScreensGroup) {
+                    } else if (mochaView.screensGroup === MochaCore.Types.AllScreensGroup) {
                         screenCmb.currentIndex = 1;
-                    } else if (latteView.screensGroup === LatteCore.Types.AllSecondaryScreensGroup) {
+                    } else if (mochaView.screensGroup === MochaCore.Types.AllSecondaryScreensGroup) {
                         screenCmb.currentIndex = 2;
                     } else {
-                        screenCmb.currentIndex = screenCmb.findScreen(latteView.positioner.currentScreenName);
+                        screenCmb.currentIndex = screenCmb.findScreen(mochaView.positioner.currentScreenName);
                     }
 
-                    console.log(latteView.positioner.currentScreenName);
+                    console.log(mochaView.positioner.currentScreenName);
                 }
 
                 Connections{
@@ -135,7 +135,7 @@ PlasmaComponents.Page {
                     id: screensModel
                 }
 
-                LatteComponents.ComboBox {
+                MochaComponents.ComboBox {
                     id: screenCmb
                     Layout.fillWidth: true
                     model: screensModel
@@ -146,13 +146,13 @@ PlasmaComponents.Page {
 
                     onActivated: {
                         if (index === 0) { // primary
-                            latteView.positioner.setNextLocation("", LatteCore.Types.SingleScreenGroup, "{primary-screen}", PlasmaCore.Types.Floating, LatteCore.Types.NoneAlignment);
+                            mochaView.positioner.setNextLocation("", MochaCore.Types.SingleScreenGroup, "{primary-screen}", PlasmaCore.Types.Floating, MochaCore.Types.NoneAlignment);
                         } else if (index === 1) { // all screens
-                            latteView.positioner.setNextLocation("", LatteCore.Types.AllScreensGroup, "{primary-screen}", PlasmaCore.Types.Floating, LatteCore.Types.NoneAlignment);
+                            mochaView.positioner.setNextLocation("", MochaCore.Types.AllScreensGroup, "{primary-screen}", PlasmaCore.Types.Floating, MochaCore.Types.NoneAlignment);
                         } else if (index === 2) { // all secondary screens
-                            latteView.positioner.setNextLocation("", LatteCore.Types.AllSecondaryScreensGroup, "", PlasmaCore.Types.Floating, LatteCore.Types.NoneAlignment);
-                        } else if (index>2 && (index !== findScreen(latteView.positioner.currentScreenName) || latteView.onPrimary)) {// explicit screen
-                            latteView.positioner.setNextLocation("", LatteCore.Types.SingleScreenGroup, textAt(index), PlasmaCore.Types.Floating, LatteCore.Types.NoneAlignment);
+                            mochaView.positioner.setNextLocation("", MochaCore.Types.AllSecondaryScreensGroup, "", PlasmaCore.Types.Floating, MochaCore.Types.NoneAlignment);
+                        } else if (index>2 && (index !== findScreen(mochaView.positioner.currentScreenName) || mochaView.onPrimary)) {// explicit screen
+                            mochaView.positioner.setNextLocation("", MochaCore.Types.SingleScreenGroup, textAt(index), PlasmaCore.Types.Floating, MochaCore.Types.NoneAlignment);
                         }
                     }
 
@@ -198,7 +198,7 @@ PlasmaComponents.Page {
                     onClicked: {
                         //! clicked event is more wayland friendly because it release focus from the button before hiding the window
                         if (viewConfig.isReady && plasmoid.location !== edge) {
-                            latteView.positioner.setNextLocation("", latteView.screensGroup, "", edge, LatteCore.Types.NoneAlignment);
+                            mochaView.positioner.setNextLocation("", mochaView.screensGroup, "", edge, MochaCore.Types.NoneAlignment);
                         }
                     }
                 }
@@ -217,7 +217,7 @@ PlasmaComponents.Page {
                     onClicked: {
                         //! clicked event is more wayland friendly because it release focus from the button before hiding the window
                         if (viewConfig.isReady && plasmoid.location !== edge) {
-                            latteView.positioner.setNextLocation("", latteView.screensGroup, "", edge, LatteCore.Types.NoneAlignment);
+                            mochaView.positioner.setNextLocation("", mochaView.screensGroup, "", edge, MochaCore.Types.NoneAlignment);
                         }
                     }
                 }
@@ -236,7 +236,7 @@ PlasmaComponents.Page {
                     onClicked: {
                         //! clicked event is more wayland friendly because it release focus from the button before hiding the window
                         if (viewConfig.isReady && plasmoid.location !== edge) {
-                            latteView.positioner.setNextLocation("", latteView.screensGroup, "", edge, LatteCore.Types.NoneAlignment);
+                            mochaView.positioner.setNextLocation("", mochaView.screensGroup, "", edge, MochaCore.Types.NoneAlignment);
                         }
                     }
                 }
@@ -255,7 +255,7 @@ PlasmaComponents.Page {
                     onClicked: {
                         //! clicked event is more wayland friendly because it release focus from the button before hiding the window
                         if (viewConfig.isReady && plasmoid.location !== edge) {
-                            latteView.positioner.setNextLocation("", latteView.screensGroup, "", edge, LatteCore.Types.NoneAlignment);
+                            mochaView.positioner.setNextLocation("", mochaView.screensGroup, "", edge, MochaCore.Types.NoneAlignment);
                         }
                     }
                 }
@@ -268,7 +268,7 @@ PlasmaComponents.Page {
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Alignment")
             }
 
@@ -296,11 +296,11 @@ PlasmaComponents.Page {
                     checkable: false
                     ButtonGroup.group: alignmentGroup
 
-                    property int alignment: panelIsVertical ? LatteCore.Types.Top : LatteCore.Types.Left
+                    property int alignment: panelIsVertical ? MochaCore.Types.Top : MochaCore.Types.Left
 
                     onPressedChanged: {
                         if (pressed) {
-                            latteView.positioner.setNextLocation("", latteView.screensGroup, "", PlasmaCore.Types.Floating, alignment);
+                            mochaView.positioner.setNextLocation("", mochaView.screensGroup, "", PlasmaCore.Types.Floating, alignment);
                         }
                     }
                 }
@@ -313,11 +313,11 @@ PlasmaComponents.Page {
                     checkable: false
                     ButtonGroup.group: alignmentGroup
 
-                    property int alignment: LatteCore.Types.Center
+                    property int alignment: MochaCore.Types.Center
 
                     onPressedChanged: {
                         if (pressed) {
-                            latteView.positioner.setNextLocation("", latteView.screensGroup, "", PlasmaCore.Types.Floating, alignment);
+                            mochaView.positioner.setNextLocation("", mochaView.screensGroup, "", PlasmaCore.Types.Floating, alignment);
                         }
                     }
                 }
@@ -330,11 +330,11 @@ PlasmaComponents.Page {
                     checkable: false
                     ButtonGroup.group: alignmentGroup
 
-                    property int alignment: panelIsVertical ? LatteCore.Types.Bottom : LatteCore.Types.Right
+                    property int alignment: panelIsVertical ? MochaCore.Types.Bottom : MochaCore.Types.Right
 
                     onPressedChanged: {
                         if (pressed) {
-                            latteView.positioner.setNextLocation("", latteView.screensGroup, "", PlasmaCore.Types.Floating, alignment);
+                            mochaView.positioner.setNextLocation("", mochaView.screensGroup, "", PlasmaCore.Types.Floating, alignment);
                         }
                     }
                 }
@@ -348,11 +348,11 @@ PlasmaComponents.Page {
                     checkable: false
                     ButtonGroup.group: alignmentGroup
 
-                    property int alignment: LatteCore.Types.Justify
+                    property int alignment: MochaCore.Types.Justify
 
                     onPressedChanged: {
                         if (pressed) {
-                            latteView.positioner.setNextLocation("", latteView.screensGroup, "", PlasmaCore.Types.Floating, alignment);
+                            mochaView.positioner.setNextLocation("", mochaView.screensGroup, "", PlasmaCore.Types.Floating, alignment);
                         }
                     }
                 }
@@ -365,7 +365,7 @@ PlasmaComponents.Page {
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Visibility")
             }
 
@@ -378,7 +378,7 @@ PlasmaComponents.Page {
 
                 columns: 2
 
-                property int mode: latteView.visibility.mode
+                property int mode: mochaView.visibility.mode
                 readonly property int buttonSize: (dialog.optionsWidth - (columnSpacing)) / 2
 
                 ButtonGroup {
@@ -394,11 +394,11 @@ PlasmaComponents.Page {
                     checkable: false
                     ButtonGroup.group: visibilityGroup
 
-                    property int mode: LatteCore.Types.AlwaysVisible
+                    property int mode: MochaCore.Types.AlwaysVisible
 
                     onPressedChanged: {
                         if (pressed) {
-                            latteView.visibility.mode = mode;
+                            mochaView.visibility.mode = mode;
                         }
                     }
                 }
@@ -410,11 +410,11 @@ PlasmaComponents.Page {
                     checkable: false
                     ButtonGroup.group: visibilityGroup
 
-                    property int mode: LatteCore.Types.AutoHide
+                    property int mode: MochaCore.Types.AutoHide
 
                     onPressedChanged: {
                         if (pressed) {
-                            latteView.visibility.mode = mode;
+                            mochaView.visibility.mode = mode;
                         }
                     }
                 }
@@ -426,16 +426,16 @@ PlasmaComponents.Page {
                     checkable: false
                     ButtonGroup.group: visibilityGroup
 
-                    property int mode: LatteCore.Types.DodgeActive
+                    property int mode: MochaCore.Types.DodgeActive
 
                     onPressedChanged: {
                         if (pressed) {
-                            latteView.visibility.mode = mode;
+                            mochaView.visibility.mode = mode;
                         }
                     }
                 }
 
-                LatteExtraControls.CustomVisibilityModeButton {
+                MochaExtraControls.CustomVisibilityModeButton {
                     id: dodgeModeBtn
                     Layout.minimumWidth: parent.buttonSize
                     Layout.maximumWidth: Layout.minimumWidth
@@ -448,21 +448,21 @@ PlasmaComponents.Page {
                     mode: plasmoid.configuration.lastDodgeVisibilityMode
                     modes: [
                         {
-                            pluginId: LatteCore.Types.DodgeMaximized,
+                            pluginId: MochaCore.Types.DodgeMaximized,
                             name: i18n("Dodge Maximized"),
                             tooltip: ""
                         },
                         {
-                            pluginId: LatteCore.Types.DodgeAllWindows,
+                            pluginId: MochaCore.Types.DodgeAllWindows,
                             name: i18n("Dodge All Windows"),
                             tooltip: ""
                         }
                     ]
 
-                    onViewRelevantVisibilityModeChanged: plasmoid.configuration.lastDodgeVisibilityMode = latteView.visibility.mode;
+                    onViewRelevantVisibilityModeChanged: plasmoid.configuration.lastDodgeVisibilityMode = mochaView.visibility.mode;
                 }
 
-                LatteExtraControls.CustomVisibilityModeButton {
+                MochaExtraControls.CustomVisibilityModeButton {
                     id: windowsModeBtn
                     Layout.minimumWidth: parent.buttonSize
                     Layout.maximumWidth: Layout.minimumWidth
@@ -475,26 +475,26 @@ PlasmaComponents.Page {
                     mode: plasmoid.configuration.lastWindowsVisibilityMode
                     modes: [
                         {
-                            pluginId: LatteCore.Types.WindowsGoBelow,
+                            pluginId: MochaCore.Types.WindowsGoBelow,
                             name: i18n("Windows Go Below"),
                             tooltip: ""
                         },
                         {
-                            pluginId: LatteCore.Types.WindowsCanCover,
+                            pluginId: MochaCore.Types.WindowsCanCover,
                             name: i18n("Windows Can Cover"),
                             tooltip: ""
                         },
                         {
-                            pluginId: LatteCore.Types.WindowsAlwaysCover,
+                            pluginId: MochaCore.Types.WindowsAlwaysCover,
                             name: i18n("Windows Always Cover"),
                             tooltip: ""
                         }
                     ]
 
-                    onViewRelevantVisibilityModeChanged: plasmoid.configuration.lastWindowsVisibilityMode = latteView.visibility.mode;
+                    onViewRelevantVisibilityModeChanged: plasmoid.configuration.lastWindowsVisibilityMode = mochaView.visibility.mode;
                 }
 
-                LatteExtraControls.CustomVisibilityModeButton {
+                MochaExtraControls.CustomVisibilityModeButton {
                     id: sidebarModeBtn
                     Layout.minimumWidth: parent.buttonSize
                     Layout.maximumWidth: Layout.minimumWidth
@@ -507,18 +507,18 @@ PlasmaComponents.Page {
                     mode: plasmoid.configuration.lastSidebarVisibilityMode
                     modes: [
                         {
-                            pluginId: LatteCore.Types.SidebarOnDemand,
+                            pluginId: MochaCore.Types.SidebarOnDemand,
                             name: i18n("On Demand Sidebar"),
                             tooltip: i18n("Sidebar can be shown and become hidden only through an external applet, shortcut or script")
                         },
                         {
-                            pluginId: LatteCore.Types.SidebarAutoHide,
+                            pluginId: MochaCore.Types.SidebarAutoHide,
                             name: i18n("Auto Hide Sidebar"),
                             tooltip: i18n("Sidebar can be shown only through an external applet, shortcut or script but it can also autohide itself when it does not contain mouse")
                         }
                     ]
 
-                    onViewRelevantVisibilityModeChanged: plasmoid.configuration.lastSidebarVisibilityMode = latteView.visibility.mode;
+                    onViewRelevantVisibilityModeChanged: plasmoid.configuration.lastSidebarVisibilityMode = mochaView.visibility.mode;
                 }
 
             }
@@ -530,12 +530,12 @@ PlasmaComponents.Page {
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
 
-            enabled: !(latteView.visibility.mode === LatteCore.Types.AlwaysVisible
-                       || latteView.visibility.mode === LatteCore.Types.WindowsGoBelow
-                       || latteView.visibility.mode === LatteCore.Types.WindowsAlwaysCover
-                       || latteView.visibility.mode === LatteCore.Types.SidebarOnDemand)
+            enabled: !(mochaView.visibility.mode === MochaCore.Types.AlwaysVisible
+                       || mochaView.visibility.mode === MochaCore.Types.WindowsGoBelow
+                       || mochaView.visibility.mode === MochaCore.Types.WindowsAlwaysCover
+                       || mochaView.visibility.mode === MochaCore.Types.SidebarOnDemand)
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Delay")
             }
 
@@ -564,19 +564,19 @@ PlasmaComponents.Page {
                     RowLayout{
                         id: showTimerRow
                         anchors.horizontalCenter: parent.horizontalCenter
-                        enabled: latteView.visibility.mode !== LatteCore.Types.SidebarAutoHide
+                        enabled: mochaView.visibility.mode !== MochaCore.Types.SidebarAutoHide
                         PlasmaComponents.Label {
                             Layout.leftMargin: Qt.application.layoutDirection === Qt.RightToLeft ? Kirigami.Units.smallSpacing : 0
                             Layout.rightMargin: Qt.application.layoutDirection === Qt.RightToLeft ? 0 : Kirigami.Units.smallSpacing
                             text: i18n("Show ")
                         }
 
-                        LatteComponents.TextField {
+                        MochaComponents.TextField {
                             Layout.preferredWidth: implicitWidth
-                            text: latteView.visibility.timerShow
+                            text: mochaView.visibility.timerShow
 
                             onValueChanged: {
-                                latteView.visibility.timerShow = value
+                                mochaView.visibility.timerShow = value
                             }
                         }
                     }
@@ -602,13 +602,13 @@ PlasmaComponents.Page {
                             text: i18n("Hide")
                         }
 
-                        LatteComponents.TextField{
+                        MochaComponents.TextField{
                             Layout.preferredWidth: implicitWidth
-                            text: latteView.visibility.timerHide
+                            text: mochaView.visibility.timerHide
                             maxValue: 5000
 
                             onValueChanged: {
-                                latteView.visibility.timerHide = value
+                                mochaView.visibility.timerHide = value
                             }
                         }
                     }
@@ -622,7 +622,7 @@ PlasmaComponents.Page {
             spacing: Kirigami.Units.smallSpacing
             visible: dialog.advancedLevel
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Actions")
             }
 
@@ -648,7 +648,7 @@ PlasmaComponents.Page {
                             text: i18nc("track active window","Track")
                         }
 
-                        LatteComponents.ComboBox {
+                        MochaComponents.ComboBox {
                             id: activeWindowFilterCmb
                             Layout.fillWidth: true
                             model: [i18nc("track from current screen", "Active Window From Current Screen"),
@@ -658,11 +658,11 @@ PlasmaComponents.Page {
 
                             onCurrentIndexChanged: {
                                 switch(currentIndex) {
-                                case LatteContainment.Types.ActiveInCurrentScreen:
-                                    plasmoid.configuration.activeWindowFilter = LatteContainment.Types.ActiveInCurrentScreen;
+                                case MochaContainment.Types.ActiveInCurrentScreen:
+                                    plasmoid.configuration.activeWindowFilter = MochaContainment.Types.ActiveInCurrentScreen;
                                     break;
-                                case LatteContainment.Types.ActiveFromAllScreens:
-                                    plasmoid.configuration.activeWindowFilter = LatteContainment.Types.ActiveFromAllScreens;
+                                case MochaContainment.Types.ActiveFromAllScreens:
+                                    plasmoid.configuration.activeWindowFilter = MochaContainment.Types.ActiveFromAllScreens;
                                     break;
                                 }
                             }
@@ -732,7 +732,7 @@ PlasmaComponents.Page {
                             text: i18n("Mouse wheel")
                         }
 
-                        LatteComponents.ComboBox {
+                        MochaComponents.ComboBox {
                             id: scrollAction
                             Layout.fillWidth: true
                             model: [i18nc("none scroll actions", "No Action"),
@@ -746,20 +746,20 @@ PlasmaComponents.Page {
 
                             onCurrentIndexChanged: {
                                 switch(currentIndex) {
-                                case LatteContainment.Types.ScrollNone:
-                                    plasmoid.configuration.scrollAction = LatteContainment.Types.ScrollNone;
+                                case MochaContainment.Types.ScrollNone:
+                                    plasmoid.configuration.scrollAction = MochaContainment.Types.ScrollNone;
                                     break;
-                                case LatteContainment.Types.ScrollDesktops:
-                                    plasmoid.configuration.scrollAction = LatteContainment.Types.ScrollDesktops;
+                                case MochaContainment.Types.ScrollDesktops:
+                                    plasmoid.configuration.scrollAction = MochaContainment.Types.ScrollDesktops;
                                     break;
-                                case LatteContainment.Types.ScrollActivities:
-                                    plasmoid.configuration.scrollAction = LatteContainment.Types.ScrollActivities;
+                                case MochaContainment.Types.ScrollActivities:
+                                    plasmoid.configuration.scrollAction = MochaContainment.Types.ScrollActivities;
                                     break;
-                                case LatteContainment.Types.ScrollTasks:
-                                    plasmoid.configuration.scrollAction = LatteContainment.Types.ScrollTasks;
+                                case MochaContainment.Types.ScrollTasks:
+                                    plasmoid.configuration.scrollAction = MochaContainment.Types.ScrollTasks;
                                     break;
-                                case LatteContainment.Types.ScrollToggleMinimized:
-                                    plasmoid.configuration.scrollAction = LatteContainment.Types.ScrollToggleMinimized;
+                                case MochaContainment.Types.ScrollToggleMinimized:
+                                    plasmoid.configuration.scrollAction = MochaContainment.Types.ScrollToggleMinimized;
                                     break;
                                 }
                             }
@@ -767,16 +767,16 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.SubHeader {
+                MochaComponents.SubHeader {
                     text: i18n("Items")
                 }
 
-                LatteComponents.CheckBoxesColumn {
-                    LatteComponents.CheckBox {
+                MochaComponents.CheckBoxesColumn {
+                    MochaComponents.CheckBox {
                         id: titleTooltipsChk
                         Layout.maximumWidth: dialog.optionsWidth
                         text: i18n("Thin title tooltips on hovering")
-                        tooltip: i18n("Show narrow tooltips produced by Latte for items.\nThese tooltips are not drawn when applets zoom effect is disabled");
+                        tooltip: i18n("Show narrow tooltips produced by Mocha for items.\nThese tooltips are not drawn when applets zoom effect is disabled");
                         value: plasmoid.configuration.titleTooltips
 
                         onClicked: {
@@ -784,7 +784,7 @@ PlasmaComponents.Page {
                         }
                     }
 
-                    LatteComponents.CheckBox {
+                    MochaComponents.CheckBox {
                         id: mouseWheelChk
                         Layout.maximumWidth: dialog.optionsWidth
                         text: i18n("Expand popup through mouse wheel")
@@ -797,7 +797,7 @@ PlasmaComponents.Page {
                         }
                     }
 
-                    LatteComponents.CheckBox {
+                    MochaComponents.CheckBox {
                         id: autoSizeChk
                         Layout.maximumWidth: dialog.optionsWidth
                         text: i18n("Adjust size automatically when needed")
@@ -810,36 +810,36 @@ PlasmaComponents.Page {
                         }
                     }
 
-                    LatteComponents.CheckBox {
+                    MochaComponents.CheckBox {
                         Layout.maximumWidth: dialog.optionsWidth
                        // Layout.maximumHeight: mouseWheelChk.height
                         text: i18n("Activate based on position global shortcuts")
                         tooltip: i18n("This view is used for based on position global shortcuts. Take note that only one view can have that option enabled for each layout")
-                        value: latteView.isPreferredForShortcuts || (!latteView.layout.preferredForShortcutsTouched && latteView.isHighestPriorityView())
+                        value: mochaView.isPreferredForShortcuts || (!mochaView.layout.preferredForShortcutsTouched && mochaView.isHighestPriorityView())
 
                         onClicked: {
-                            latteView.isPreferredForShortcuts = checked;
-                            if (!latteView.layout.preferredForShortcutsTouched) {
-                                latteView.layout.preferredForShortcutsTouched = true;
+                            mochaView.isPreferredForShortcuts = checked;
+                            if (!mochaView.layout.preferredForShortcutsTouched) {
+                                mochaView.layout.preferredForShortcutsTouched = true;
                             }
                         }
                     }
                 }
             }
 
-            LatteComponents.SubHeader {
+            MochaComponents.SubHeader {
                 id: floatingSubCategory
                 text: i18n("Floating")
                 enabled: plasmoid.configuration.screenEdgeMargin >= 0
             }
 
-            LatteComponents.CheckBoxesColumn {
+            MochaComponents.CheckBoxesColumn {
                 Layout.leftMargin: Kirigami.Units.smallSpacing * 2
                 Layout.rightMargin: Kirigami.Units.smallSpacing * 2
                 enabled: floatingSubCategory.enabled
 
-                LatteComponents.CheckBoxesColumn {
-                    LatteComponents.CheckBox {
+                MochaComponents.CheckBoxesColumn {
+                    MochaComponents.CheckBox {
                         Layout.maximumWidth: dialog.optionsWidth
                         text: i18n("Always use floating gap for user interaction")
                         tooltip: i18n("Floating gap is always used for applets and window interaction")
@@ -851,7 +851,7 @@ PlasmaComponents.Page {
                         }
                     }
 
-                    LatteComponents.CheckBox {
+                    MochaComponents.CheckBox {
                         Layout.maximumWidth: dialog.optionsWidth
                         text: i18n("Hide floating gap for maximized windows")
                         tooltip: i18n("Floating gap is disabled when there are maximized windows")
@@ -862,7 +862,7 @@ PlasmaComponents.Page {
                         }
                     }
 
-                    LatteComponents.CheckBox {
+                    MochaComponents.CheckBox {
                         Layout.maximumWidth: dialog.optionsWidth
                         enabled: plasmoid.configuration.hideFloatingGapForMaximized
                         text: i18n("Delay floating gap hiding until mouse leaves")
@@ -874,9 +874,9 @@ PlasmaComponents.Page {
                         }
                     }
 
-                    LatteComponents.CheckBox {
+                    MochaComponents.CheckBox {
                         Layout.maximumWidth: dialog.optionsWidth
-                        enabled: latteView.visibility.mode === LatteCore.Types.AlwaysVisible
+                        enabled: mochaView.visibility.mode === MochaCore.Types.AlwaysVisible
                         text: i18n("Mirror floating gap when it is shown")
                         tooltip: i18n("Floating gap is mirrored when it is shown in Always Visible mode")
                         value: plasmoid.configuration.floatingGapIsMirrored
@@ -895,62 +895,62 @@ PlasmaComponents.Page {
             spacing: Kirigami.Units.smallSpacing
 
             visible: dialog.advancedLevel
-            enabled: !(latteView.visibility.mode === LatteCore.Types.AlwaysVisible
-                       || latteView.visibility.mode === LatteCore.Types.WindowsGoBelow
-                       || latteView.visibility.mode === LatteCore.Types.WindowsCanCover
-                       || latteView.visibility.mode === LatteCore.Types.WindowsAlwaysCover)
+            enabled: !(mochaView.visibility.mode === MochaCore.Types.AlwaysVisible
+                       || mochaView.visibility.mode === MochaCore.Types.WindowsGoBelow
+                       || mochaView.visibility.mode === MochaCore.Types.WindowsCanCover
+                       || mochaView.visibility.mode === MochaCore.Types.WindowsAlwaysCover)
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Environment")
             }
 
-            LatteComponents.CheckBoxesColumn {
+            MochaComponents.CheckBoxesColumn {
                 Layout.leftMargin: Kirigami.Units.smallSpacing * 2
                 Layout.rightMargin: Kirigami.Units.smallSpacing * 2
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Activate KWin edge after hiding")
                     tooltip: i18n("After the view becomes hidden, KWin is informed to track user feedback. For example an edge visual hint is shown whenever the mouse approaches the hidden view")
                     enabled: !dialog.viewIsPanel
-                             && !latteView.byPassWM
-                             && latteView.visibility.mode !== LatteCore.Types.SidebarOnDemand
-                             && latteView.visibility.mode !== LatteCore.Types.SidebarAutoHide
-                    value: latteView.visibility.enableKWinEdges
+                             && !mochaView.byPassWM
+                             && mochaView.visibility.mode !== MochaCore.Types.SidebarOnDemand
+                             && mochaView.visibility.mode !== MochaCore.Types.SidebarAutoHide
+                    value: mochaView.visibility.enableKWinEdges
 
                     onClicked: {
-                        latteView.visibility.enableKWinEdges = !latteView.visibility.enableKWinEdges;
+                        mochaView.visibility.enableKWinEdges = !mochaView.visibility.enableKWinEdges;
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Can be above fullscreen windows")
                     tooltip: i18n("BypassWindowManagerHint flag for the window. The view will be above all windows even those set as 'Always On Top'")
-                    value: latteView.byPassWM
+                    value: mochaView.byPassWM
 
                     onClicked: {
-                        latteView.byPassWM = !latteView.byPassWM;
+                        mochaView.byPassWM = !mochaView.byPassWM;
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Raise on desktop change")
-                    value: latteView.visibility.raiseOnDesktop
+                    value: mochaView.visibility.raiseOnDesktop
 
                     onClicked: {
-                        latteView.visibility.raiseOnDesktop = !latteView.visibility.raiseOnDesktop;
+                        mochaView.visibility.raiseOnDesktop = !mochaView.visibility.raiseOnDesktop;
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Raise on activity change")
-                    value: latteView.visibility.raiseOnActivity
+                    value: mochaView.visibility.raiseOnActivity
 
                     onClicked: {
-                        latteView.visibility.raiseOnActivity = !latteView.visibility.raiseOnActivity;
+                        mochaView.visibility.raiseOnActivity = !mochaView.visibility.raiseOnActivity;
                     }
                 }
             }

@@ -17,7 +17,7 @@
 #include "../exporttemplatedialog/exporttemplatedialog.h"
 #include "../viewsdialog/viewsdialog.h"
 #include "../../apptypes.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../layout/centrallayout.h"
 #include "../../layouts/importer.h"
 #include "../../layouts/manager.h"
@@ -41,7 +41,7 @@
 #include <KNSWidgets/Dialog>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Handler {
 
@@ -142,7 +142,7 @@ void TabLayouts::initLayoutMenu()
     m_newLayoutAction->setMenu(m_layoutTemplatesSubMenu);
     m_ui->newButton->setMenu(m_layoutTemplatesSubMenu);
 
-    connect(m_corona->templatesManager(), &Latte::Templates::Manager::layoutTemplatesChanged, this, &TabLayouts::initLayoutTemplatesSubMenu);
+    connect(m_corona->templatesManager(), &Mocha::Templates::Manager::layoutTemplatesChanged, this, &TabLayouts::initLayoutTemplatesSubMenu);
 
     m_duplicateLayoutAction = m_layoutMenu->addAction(i18nc("duplicate layout", "&Duplicate"));
     m_duplicateLayoutAction->setToolTip(i18n("Duplicate selected layout"));
@@ -294,12 +294,12 @@ void TabLayouts::initLayoutTemplatesSubMenu()
         openTemplatesDirectory->setIcon(QIcon::fromTheme("edit"));
 
         connect(openTemplatesDirectory, &QAction::triggered, this, [&]() {
-            KIO::highlightInFileManager({QString(Latte::configPath() + "/latte/templates/Dock.layout.latte")});
+            KIO::highlightInFileManager({QString(Mocha::configPath() + "/latte/templates/Dock.layout.latte")});
         });
     }
 }
 
-Latte::Corona *TabLayouts::corona() const
+Mocha::Corona *TabLayouts::corona() const
 {
     return m_corona;
 }
@@ -361,8 +361,8 @@ void TabLayouts::switchLayout()
         return;
     }
 
-    Latte::Data::Layout selectedLayoutCurrent = m_layoutsController->selectedLayoutCurrentData();
-    Latte::Data::Layout selectedLayoutOriginal = m_layoutsController->selectedLayoutOriginalData();
+    Mocha::Data::Layout selectedLayoutCurrent = m_layoutsController->selectedLayoutCurrentData();
+    Mocha::Data::Layout selectedLayoutOriginal = m_layoutsController->selectedLayoutOriginalData();
     selectedLayoutOriginal = selectedLayoutOriginal.isEmpty() ? selectedLayoutCurrent : selectedLayoutOriginal;
 
     if (m_layoutsController->layoutsAreChanged()) {
@@ -412,7 +412,7 @@ void TabLayouts::updatePerLayoutButtonsState()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    Mocha::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
 
     //! Switch Button
     setTwinProperty(m_switchLayoutAction, TWINENABLED, true);
@@ -477,10 +477,10 @@ void TabLayouts::downloadLayout()
         // FIXME: Check if this actually works lol
         for (const KNSCore::Entry &entry : dialog.changedEntries()) {
             for (const auto &entryFile : entry.installedFiles()) {
-                Latte::Layouts::Importer::LatteFileVersion version = Latte::Layouts::Importer::fileVersion(entryFile);
+                Mocha::Layouts::Importer::LatteFileVersion version = Mocha::Layouts::Importer::fileVersion(entryFile);
 
-                if (version == Latte::Layouts::Importer::LayoutVersion2) {
-                    Latte::Data::Layout downloaded = m_layoutsController->addLayoutForFile(entryFile);
+                if (version == Mocha::Layouts::Importer::LayoutVersion2) {
+                    Mocha::Data::Layout downloaded = m_layoutsController->addLayoutForFile(entryFile);
                     showInlineMessage(i18nc("settings:layout downloaded successfully","Layout <b>%1</b> downloaded successfully...", downloaded.name),
                                       KMessageWidget::Positive);
                     break;
@@ -504,7 +504,7 @@ void TabLayouts::removeLayout()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    Mocha::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
 
     if (selectedLayout.isActive) {
         showInlineMessage(i18nc("settings: active layout remove","<b>Active</b> layouts can not be removed..."),
@@ -551,21 +551,21 @@ void TabLayouts::importLayout()
     importFileDialog->setDefaultSuffix("layout.latte");
 
     QStringList filters;
-    filters << QString(i18nc("import latte layout", "Latte Dock Layout file v0.2") + "(*.layout.latte)")
-            << QString(i18nc("import older latte layout", "Latte Dock Layout file v0.1") + "(*.latterc)");
+    filters << QString(i18nc("import latte layout", "Mocha Dock Layout file v0.2") + "(*.layout.latte)")
+            << QString(i18nc("import older latte layout", "Mocha Dock Layout file v0.1") + "(*.latterc)");
     importFileDialog->setNameFilters(filters);
 
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
 
     connect(importFileDialog, &QFileDialog::fileSelected, this, [&](const QString & file) {
-        Latte::Layouts::Importer::LatteFileVersion version = Latte::Layouts::Importer::fileVersion(file);
+        Mocha::Layouts::Importer::LatteFileVersion version = Mocha::Layouts::Importer::fileVersion(file);
         qDebug() << "VERSION :::: " << version;
 
-        if (version == Latte::Layouts::Importer::LayoutVersion2) {
-            Latte::Data::Layout importedlayout = m_layoutsController->addLayoutForFile(file);
+        if (version == Mocha::Layouts::Importer::LayoutVersion2) {
+            Mocha::Data::Layout importedlayout = m_layoutsController->addLayoutForFile(file);
             showInlineMessage(i18nc("settings:layout imported successfully","Layout <b>%1</b> imported successfully...", importedlayout.name),
                               KMessageWidget::Positive);
-        } else if (version == Latte::Layouts::Importer::ConfigVersion1) {
+        } else if (version == Mocha::Layouts::Importer::ConfigVersion1) {
             if (!m_layoutsController->importLayoutsFromV1ConfigFile(file)) {
                 showInlineMessage(i18nc("settings:deprecated layouts import failed","Import layouts from deprecated version <b>failed</b>..."),
                                   KMessageWidget::Error,
@@ -617,7 +617,7 @@ void TabLayouts::exportLayoutForBackup()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    Mocha::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
 
     //! Update ALL active original layouts before exporting,
     m_corona->layoutsManager()->synchronizer()->syncActiveLayoutsToOriginalFiles();
@@ -631,7 +631,7 @@ void TabLayouts::exportLayoutForBackup()
     exportFileDialog->setDefaultSuffix("layout.latte");
 
     QStringList filters;
-    QString filter1(i18nc("export layout", "Latte Dock Layout file v0.2") + "(*.layout.latte)");
+    QString filter1(i18nc("export layout", "Mocha Dock Layout file v0.2") + "(*.layout.latte)");
 
     filters << filter1;
 
@@ -640,7 +640,7 @@ void TabLayouts::exportLayoutForBackup()
     connect(exportFileDialog, &QFileDialog::finished, exportFileDialog, &QFileDialog::deleteLater);
 
     connect(exportFileDialog, &QFileDialog::fileSelected, this, [ &, selectedLayout](const QString & file) {
-        auto showExportLayoutError = [this](const Latte::Data::Layout &layout) {
+        auto showExportLayoutError = [this](const Mocha::Data::Layout &layout) {
             showInlineMessage(i18nc("settings:layout export fail","Layout <b>%1</b> export <b>failed</b>...", layout.name),
                               KMessageWidget::Error,
                               true);
@@ -664,7 +664,7 @@ void TabLayouts::exportLayoutForBackup()
             }
 
             // cleanup clones from exported file
-            Latte::Layouts::Storage::self()->removeAllClonedViews(file);
+            Mocha::Layouts::Storage::self()->removeAllClonedViews(file);
 
             CentralLayout layoutS(this, file);
             layoutS.setActivities(QStringList());
@@ -735,7 +735,7 @@ void TabLayouts::showDetailsDialog()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    Mocha::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
     auto detailsDlg = new Settings::Dialog::DetailsDialog(m_parentDialog, m_layoutsController);
 
     detailsDlg->exec();
@@ -753,7 +753,7 @@ void TabLayouts::showViewsDialog()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    Mocha::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
     auto viewsDlg = new Settings::Dialog::ViewsDialog(m_parentDialog, m_layoutsController);
 
     m_isViewsDialogVisible = true;
@@ -767,7 +767,7 @@ void TabLayouts::onLayoutFilesDropped(const QStringList &paths)
 
     for (int i=0; i<paths.count(); ++i) {
         if (paths[i].endsWith(".layout.latte")) {
-            Latte::Data::Layout importedlayout = m_layoutsController->addLayoutForFile(paths[i]);
+            Mocha::Data::Layout importedlayout = m_layoutsController->addLayoutForFile(paths[i]);
             layoutNames << importedlayout.name;
         }
     }
@@ -784,7 +784,7 @@ void TabLayouts::onLayoutFilesDropped(const QStringList &paths)
 
 void TabLayouts::onRawLayoutDropped(const QString &rawLayout)
 {
-    Latte::Data::Layout importedlayout = m_layoutsController->addLayoutByText(rawLayout);
+    Mocha::Data::Layout importedlayout = m_layoutsController->addLayoutByText(rawLayout);
     showInlineMessage(i18nc("settings:layout imported successfully","Layout <b>%1</b> imported successfully...", importedlayout.name),
                       KMessageWidget::Positive);
 }

@@ -8,8 +8,8 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.abilities.definition as AbilityDefinition
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.abilities.definition as AbilityDefinition
 
 AbilityDefinition.Containment {
     id: apis
@@ -19,19 +19,19 @@ AbilityDefinition.Containment {
 
     alignment: {
         if (!myView) {
-            return LatteCore.Types.Center;
+            return MochaCore.Types.Center;
         }
 
-        if (myView.alignment === LatteCore.Types.Justify) {
+        if (myView.alignment === MochaCore.Types.Justify) {
             if (appletIndex>=0 && appletIndex<100) {
-                return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? LatteCore.Types.Left : LatteCore.Types.Top;
+                return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? MochaCore.Types.Left : MochaCore.Types.Top;
             } else if (appletIndex>=100 && appletIndex<200) {
-                return LatteCore.Types.Center;
+                return MochaCore.Types.Center;
             } else if (appletIndex>=200) {
-                return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? LatteCore.Types.Right : LatteCore.Types.Bottom;
+                return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? MochaCore.Types.Right : MochaCore.Types.Bottom;
             }
 
-            return LatteCore.Types.Center;
+            return MochaCore.Types.Center;
         }
 
         return myView.alignment;

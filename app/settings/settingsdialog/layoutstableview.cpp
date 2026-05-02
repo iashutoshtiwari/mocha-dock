@@ -14,7 +14,7 @@
 
 #define MARGIN 15
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace View {
 

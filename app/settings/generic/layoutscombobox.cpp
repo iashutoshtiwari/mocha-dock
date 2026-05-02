@@ -15,7 +15,7 @@
 #include <QStyleOptionComboBox>
 #include <QStylePainter>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 
 const int MARGIN = 2;
@@ -26,12 +26,12 @@ LayoutsComboBox::LayoutsComboBox(QWidget *parent)
 {
 }
 
-Latte::Data::LayoutIcon LayoutsComboBox::layoutIcon() const
+Mocha::Data::LayoutIcon LayoutsComboBox::layoutIcon() const
 {
     return m_layoutIcon;
 }
 
-void LayoutsComboBox::setLayoutIcon(const Latte::Data::LayoutIcon &icon)
+void LayoutsComboBox::setLayoutIcon(const Mocha::Data::LayoutIcon &icon)
 {
     if (m_layoutIcon == icon) {
         return;
@@ -54,8 +54,8 @@ void LayoutsComboBox::paintEvent(QPaintEvent *event)
     painter.drawComplexControl(QStyle::CC_ComboBox, opt);
 
     // icon
-    QRect remained = Latte::remainedFromLayoutIcon(opt, Qt::AlignLeft, 3, 5);
-    Latte::drawLayoutIcon(&painter, opt, m_layoutIcon.isBackgroundFile, m_layoutIcon.name, Qt::AlignLeft, 7, 6);
+    QRect remained = Mocha::remainedFromLayoutIcon(opt, Qt::AlignLeft, 3, 5);
+    Mocha::drawLayoutIcon(&painter, opt, m_layoutIcon.isBackgroundFile, m_layoutIcon.name, Qt::AlignLeft, 7, 6);
     opt.rect = remained;
 
     // adjust text place, move it a bit to the left

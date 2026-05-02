@@ -9,8 +9,8 @@ import QtQuick
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
 
 Item {
     id: background
@@ -41,7 +41,7 @@ Item {
             }
         ]
 
-        LatteComponents.BadgeText {
+        MochaComponents.BadgeText {
             anchors.centerIn: parent
             width: 0.8 * parent.width
             height: width
@@ -59,7 +59,7 @@ Item {
 
             style3d: taskItem.abilities.myView.badgesIn3DStyle
 
-            LatteCore.IconItem{
+            MochaCore.IconItem{
                 id: audioStreamIcon
                 anchors.centerIn: parent
                 width: 0.9*parent.width

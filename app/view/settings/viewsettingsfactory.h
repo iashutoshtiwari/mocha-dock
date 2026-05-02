@@ -15,7 +15,7 @@ class Containment;
 }
 
 
-namespace Latte {
+namespace Mocha {
 class View;
 
 namespace ViewPart {
@@ -25,7 +25,7 @@ class WidgetExplorerView;
 
 }
 
-namespace Latte {
+namespace Mocha {
 
 class ViewSettingsFactory : public QObject
 {
@@ -41,8 +41,8 @@ public:
     ViewPart::PrimaryConfigView *primaryConfigView();
 
     Plasma::Containment *lastContainment();
-    ViewPart::PrimaryConfigView *primaryConfigView(Latte::View *view);
-    ViewPart::WidgetExplorerView *widgetExplorerView(Latte::View *view);
+    ViewPart::PrimaryConfigView *primaryConfigView(Mocha::View *view);
+    ViewPart::WidgetExplorerView *widgetExplorerView(Mocha::View *view);
 
 private:
     QPointer<ViewPart::PrimaryConfigView> m_primaryConfigView;

@@ -8,7 +8,7 @@
 // Qt
 #include <QDir>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 Layout::Layout()

@@ -8,7 +8,7 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 import "./privates" as Ability
 
@@ -79,7 +79,7 @@ Ability.MetricsPrivate {
       // window geometry is updated after the local screen margin animation was zeroed*/
     mask.screenEdge: (!root.screenEdgeMarginEnabled || root.hideThickScreenGap) ? 0 : plasmoid.configuration.screenEdgeMargin
 
-    mask.thickness.hidden: LatteCore.WindowSystem.compositingActive ?  2 : 1
+    mask.thickness.hidden: MochaCore.WindowSystem.compositingActive ?  2 : 1
     mask.thickness.normal: mask.screenEdge + Math.max(totals.thickness + extraThicknessForNormal, background.thickness + background.shadows.headThickness)
     mask.thickness.medium: mask.screenEdge + mediumFactor*(iconSize+extraThicknessForZoomed) + mediumMarginsFactor*totals.thicknessEdges
     mask.thickness.zoomed: mask.screenEdge + ((iconSize+extraThicknessForZoomed) * parabolic.factor.maxZoom) + maxMarginsFactor*totals.thicknessEdges + 2

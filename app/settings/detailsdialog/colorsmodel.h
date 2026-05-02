@@ -7,7 +7,7 @@
 #define COLORSMODEL_H
 
 // local
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../data/layoutcolordata.h"
 
 // Qt
@@ -15,7 +15,7 @@
 #include <QModelIndex>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Model {
 
@@ -32,7 +32,7 @@ public:
         TEXTCOLORROLE
     };
 
-    explicit Colors(QObject *parent, Latte::Corona *corona);
+    explicit Colors(QObject *parent, Mocha::Corona *corona);
     ~Colors();
 
     int rowCount() const;
@@ -52,9 +52,9 @@ private:
 private:
     QString m_colorsPath;
 
-    QList<Latte::Data::LayoutColor> m_colorsTable;
+    QList<Mocha::Data::LayoutColor> m_colorsTable;
 
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
 };
 
 }

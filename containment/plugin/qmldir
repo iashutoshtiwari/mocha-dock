@@ -1,2 +1,2 @@
-module org.kde.latte.private.containment
-plugin lattecontainmentplugin 
+module org.kde.mocha.private.containment
+plugin mochacontainmentplugin

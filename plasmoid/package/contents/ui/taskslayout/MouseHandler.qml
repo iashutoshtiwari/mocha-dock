@@ -69,7 +69,7 @@ Item {
 
         function isDroppingSeparator(event) {
             var appletName = String(event.mimeData.getDataAsByteArray("text/x-plasmoidservicename"));
-            var isSeparator = (appletName === "audoban.applet.separator" || appletName === "org.kde.latte.separator");
+            var isSeparator = (appletName === "audoban.applet.separator" || appletName === "org.kde.mocha.separator");
 
             return ((event.mimeData.formats.indexOf("text/x-plasmoidservicename") === 0) && isSeparator);
         }
@@ -143,7 +143,7 @@ Item {
 
             // If we're mixing launcher tasks with other tasks and are moving
             // a (small) launcher task across a non-launcher task, don't allow
-            // the latter to be the move target twice in a row for a while, as
+            // the mochar to be the move target twice in a row for a while, as
             // it will naturally be moved underneath the cursor as result of the
             // initial move, due to being far larger than the launcher delegate.
             // TODO: This restriction (minus the timer, which improves things)

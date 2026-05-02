@@ -10,7 +10,7 @@ import QtQuick.Templates as T
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.components as MochaComponents
 
 import "private" as Private
 
@@ -59,7 +59,7 @@ T.CheckDelegate {
                 source: control.icon
             }
 
-            LatteComponents.ToolTip{
+            MochaComponents.ToolTip{
                 parent: iconElement
                 text: iconToolTip
                 visible: iconMouseArea.containsMouse

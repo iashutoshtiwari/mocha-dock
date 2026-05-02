@@ -5,12 +5,12 @@
 
 import QtQuick
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Item{
     function setProperty(appletId, parameter, value) {
-        if (parameter === "latteSideColoringEnabled") {
-            mainCommunicator.requires.latteSideColoringEnabled = value;
+        if (parameter === "mochaSideColoringEnabled") {
+            mainCommunicator.requires.mochaSideColoringEnabled = value;
         } else if (parameter === "activeIndicatorEnabled") {
             mainCommunicator.requires.activeIndicatorEnabled = value;
         } else if (parameter === "lengthMarginsEnabled") {
@@ -25,8 +25,8 @@ Item{
     }
 
     function getProperty(appletId, parameter) {
-        if (parameter === "latteSideColoringEnabled") {
-            return mainCommunicator.requires.latteSideColoringEnabled;
+        if (parameter === "mochaSideColoringEnabled") {
+            return mainCommunicator.requires.mochaSideColoringEnabled;
         } else if (parameter === "activeIndicatorEnabled") {
             return mainCommunicator.requires.activeIndicatorEnabled;
         } else if (parameter === "lengthMarginsEnabled") {
@@ -51,6 +51,6 @@ Item{
     }
 
     function version(major, minor, patch) {
-        return LatteCore.Environment.makeVersion(major, minor, patch)
+        return MochaCore.Environment.makeVersion(major, minor, patch)
     }
 }

@@ -7,7 +7,7 @@
 
 #include <QDebug>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 const char *TEMPIDPREFIX = "temp:";

@@ -8,10 +8,10 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.components as MochaComponents
 
 
-LatteComponents.ComboBoxButton{
+MochaComponents.ComboBoxButton{
     id: custom
     checkable: true
 
@@ -21,14 +21,14 @@ LatteComponents.ComboBoxButton{
     buttonIsTransparent: true
     buttonIsTriggeringMenu: custom.type === "install:"
     comboBoxButtonIsTransparent: true
-    comboBoxButtonIsVisible: latteView.indicator.customPluginsCount > 0
+    comboBoxButtonIsVisible: mochaView.indicator.customPluginsCount > 0
 
     comboBoxTextRole: "name"
     comboBoxIconRole: "icon"
     comboBoxIconToolTipRole: "iconToolTip"
     comboBoxIconOnlyWhenHoveredRole: "iconOnlyWhenHovered"
     comboBoxBlankSpaceForEmptyIcons: true
-    comboBoxForcePressed: latteView.indicator.type === type
+    comboBoxForcePressed: mochaView.indicator.type === type
     comboBoxPopUpAlignRight: Qt.application.layoutDirection !== Qt.RightToLeft
 
     property string type: ""
@@ -43,7 +43,7 @@ LatteComponents.ComboBoxButton{
     }
 
     Connections{
-        target: latteView.indicator
+        target: mochaView.indicator
         onCustomPluginsCountChanged: {
             custom.reloadModel();
             custom.updateButtonInformation();
@@ -75,7 +75,7 @@ LatteComponents.ComboBoxButton{
                 } else if (item.pluginId === "download:") {
                     viewConfig.indicatorUiManager.downloadIndicator();
                 } else {
-                    latteView.indicator.type = item.pluginId;
+                    mochaView.indicator.type = item.pluginId;
                 }
             }
 
@@ -86,7 +86,7 @@ LatteComponents.ComboBoxButton{
             if (index>=0) {
                 var item = actionsModel.get(index);
                 var pluginId = item.pluginId;
-                if (latteView.indicator.customLocalPluginIds.indexOf(pluginId)>=0) {
+                if (mochaView.indicator.customLocalPluginIds.indexOf(pluginId)>=0) {
                     viewConfig.indicatorUiManager.removeIndicator(pluginId);
                     custom.comboBox.popup.close();
                 }
@@ -105,19 +105,19 @@ LatteComponents.ComboBoxButton{
 
     function onButtonIsPressed() {
         if (custom.type !== "install:") {
-            latteView.indicator.type = custom.type;
+            mochaView.indicator.type = custom.type;
         }
     }
 
     function updateButtonInformation() {
-        if (latteView.indicator.customPluginsCount === 0) {
+        if (mochaView.indicator.customPluginsCount === 0) {
             custom.buttonText = i18n("Install...");
             custom.type = "install:";
             custom.checkable = false;
         } else {
             custom.checkable = true;
 
-            var curCustomIndex = latteView.indicator.customPluginIds.indexOf(latteView.indicator.customType);
+            var curCustomIndex = mochaView.indicator.customPluginIds.indexOf(mochaView.indicator.customType);
 
             if (curCustomIndex>=0) {
                 custom.buttonText = actionsModel.get(curCustomIndex).name;
@@ -132,10 +132,10 @@ LatteComponents.ComboBoxButton{
     function reloadModel() {
         actionsModel.clear();
 
-        if (latteView.indicator.customPluginsCount > 0) {
-            var pluginIds = latteView.indicator.customPluginIds;
-            var pluginNames = latteView.indicator.customPluginNames;
-            var localPluginIds = latteView.indicator.customLocalPluginIds;
+        if (mochaView.indicator.customPluginsCount > 0) {
+            var pluginIds = mochaView.indicator.customPluginIds;
+            var pluginNames = mochaView.indicator.customPluginNames;
+            var localPluginIds = mochaView.indicator.customLocalPluginIds;
 
             for(var i=0; i<pluginIds.length; ++i) {
                 var canBeRemoved = localPluginIds.indexOf(pluginIds[i])>=0;
@@ -159,7 +159,7 @@ LatteComponents.ComboBoxButton{
 
         comboBox.model = actionsModel;
 
-        if (custom.type === latteView.indicator.type) {
+        if (custom.type === mochaView.indicator.type) {
             selectChosenType();
         } else {
             comboBox.currentIndex = -1;

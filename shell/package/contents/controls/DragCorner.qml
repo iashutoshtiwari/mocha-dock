@@ -105,7 +105,7 @@ Rectangle {
                     newScaleHeight = Math.max(0.5, initScaleHeight + (percentY*initScaleHeight)).toFixed(3);
                 }
 
-                universalSettings.setScreenScales(latteView.positioner.currentScreenName, newScaleWidth, newScaleHeight);
+                universalSettings.setScreenScales(mochaView.positioner.currentScreenName, newScaleWidth, newScaleHeight);
                 dialog.userScaleWidth = newScaleWidth;
                 dialog.userScaleHeight = newScaleHeight;
                 viewConfig.syncGeometry();
@@ -121,7 +121,7 @@ Rectangle {
         onDoubleClicked: {
             dialog.userScaleWidth = 1;
             dialog.userScaleHeight = 1;
-            universalSettings.setScreenScales(latteView.positioner.currentScreenName, 1, 1);
+            universalSettings.setScreenScales(mochaView.positioner.currentScreenName, 1, 1);
             viewConfig.syncGeometry();
         }
     }

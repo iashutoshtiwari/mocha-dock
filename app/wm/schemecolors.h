@@ -11,7 +11,7 @@
 #include <QObject>
 #include <QColor>
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 
 class SchemeColors: public QObject

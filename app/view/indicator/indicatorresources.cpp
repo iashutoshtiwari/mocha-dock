@@ -13,7 +13,7 @@
 // KDE
 #include <KSvg/Svg>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 namespace IndicatorPart {
 

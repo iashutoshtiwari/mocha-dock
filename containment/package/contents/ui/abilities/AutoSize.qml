@@ -8,7 +8,7 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Item {
     id: sizer
@@ -19,10 +19,10 @@ Item {
                                      && plasmoid.configuration.autoSizeEnabled
                                      && !root.containsOnlyPlasmaTasks
                                      && layouter.fillApplets<=0
-                                     && !(root.inConfigureAppletsMode && plasmoid.configuration.alignment === LatteCore.Types.Justify) /*block shrinking for justify splitters*/
-                                     && latteView
-                                     && latteView.visibility.mode !== LatteCore.Types.SidebarOnDemand
-                                     && latteView.visibility.mode !== LatteCore.Types.SidebarAutoHide
+                                     && !(root.inConfigureAppletsMode && plasmoid.configuration.alignment === MochaCore.Types.Justify) /*block shrinking for justify splitters*/
+                                     && mochaView
+                                     && mochaView.visibility.mode !== MochaCore.Types.SidebarOnDemand
+                                     && mochaView.visibility.mode !== MochaCore.Types.SidebarAutoHide
 
     property int iconSize: -1 //it is not set, this is the default
 
@@ -61,7 +61,7 @@ Item {
         target: root
         onContainsOnlyPlasmaTasksChanged: sizer.updateIconSize();
         onMaxLengthChanged: {
-            if (latteView && latteView.positioner && !latteView.positioner.isOffScreen) {
+            if (mochaView && mochaView.positioner && !mochaView.positioner.isOffScreen) {
                 sizer.updateIconSize();
             }
         }
@@ -78,7 +78,7 @@ Item {
     }
 
     Connections {
-        target: latteView
+        target: mochaView
         onWidthChanged:{
             if (root.isHorizontal && metrics.portionIconSize!==-1) {
                 sizer.updateIconSize();
@@ -93,9 +93,9 @@ Item {
     }
 
     Connections {
-        target: latteView && latteView.positioner ? latteView.positioner : null
+        target: mochaView && mochaView.positioner ? mochaView.positioner : null
         onIsOffScreenChanged: {
-            if (!latteView.positioner.isOffScreen) {
+            if (!mochaView.positioner.isOffScreen) {
                 sizer.updateIconSize();
             }
         }
@@ -171,7 +171,7 @@ Item {
             //console.log("------Entered check-----");
             //console.log("max length: "+ maxLength);
 
-            layoutLength = (plasmoid.configuration.alignment === LatteCore.Types.Justify) ?
+            layoutLength = (plasmoid.configuration.alignment === MochaCore.Types.Justify) ?
                         layouts.startLayout.length+layouts.mainLayout.length+layouts.endLayout.length : layouts.mainLayout.length
 
 

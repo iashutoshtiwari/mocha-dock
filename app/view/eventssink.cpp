@@ -18,10 +18,10 @@
 #include <QRectF>
 
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-EventsSink::EventsSink(Latte::View *parent)
+EventsSink::EventsSink(Mocha::View *parent)
     : QObject(parent),
       m_view(parent)
 {

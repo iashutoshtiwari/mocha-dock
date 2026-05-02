@@ -118,6 +118,6 @@ QtObject {
     }
 
     Component.onCompleted: {
-        console.log("PulseAudio Latte interface was loaded...");
+        console.log("PulseAudio Mocha interface was loaded...");
     }
 }

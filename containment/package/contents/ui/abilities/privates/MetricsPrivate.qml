@@ -6,8 +6,8 @@
 import QtQuick
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.abilities.host as AbilityHost
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.abilities.host as AbilityHost
 
 import "./metrics" as MetricsPrivateTypes
 
@@ -30,10 +30,10 @@ AbilityHost.Metrics {
 
     //! Private Properties
     readonly property int portionIconSize: { //icon size based on screen height
-        if ((plasmoid.configuration.proportionIconSize===-1) || !latteView)
+        if ((plasmoid.configuration.proportionIconSize===-1) || !mochaView)
             return -1;
 
-        var basedOnScreenHeight = Math.max(16,Math.round(latteView.screenGeometry.height * plasmoid.configuration.proportionIconSize/100))
+        var basedOnScreenHeight = Math.max(16,Math.round(mochaView.screenGeometry.height * plasmoid.configuration.proportionIconSize/100))
 
         //! round to nearest odd number
         return 2 * Math.round(basedOnScreenHeight/2);
@@ -61,7 +61,7 @@ AbilityHost.Metrics {
     readonly property int extraThicknessForZoomed: marginBetweenContentsAndEditRuler + extraThicknessForNormal
 
     readonly property int extraThicknessFromShadows: {
-        if (LatteCore.WindowSystem.isPlatformWayland) {
+        if (MochaCore.WindowSystem.isPlatformWayland) {
             return 0;
         }
 

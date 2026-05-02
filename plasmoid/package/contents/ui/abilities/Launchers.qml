@@ -7,7 +7,7 @@ import QtQuick
 
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 import "launchers" as LaunchersPart
 
@@ -31,8 +31,8 @@ Item {
     property bool __isLoadedDuringViewStartup: false
 
     property string appletIndex: bridge && bridge.indexer ? String(bridge.indexer.appletIndex) : ""
-    property int group: LatteCore.Types.UniqueLaunchers
-    property string groupId: view && group === LatteCore.Types.UniqueLaunchers ? String(view.groupId) + "#" + appletIndex : ""
+    property int group: MochaCore.Types.UniqueLaunchers
+    property string groupId: view && group === MochaCore.Types.UniqueLaunchers ? String(view.groupId) + "#" + appletIndex : ""
 
     property Item bridge: null
     property Item layout: null
@@ -45,19 +45,19 @@ Item {
     readonly property string _NULLACTIVITYID_: "00000000-0000-0000-0000-000000000000"
 
     function inUniqueGroup() {
-        return group === LatteCore.Types.UniqueLaunchers;
+        return group === MochaCore.Types.UniqueLaunchers;
     }
 
     function inLayoutGroup() {
-        return group === LatteCore.Types.LayoutLaunchers;
+        return group === MochaCore.Types.LayoutLaunchers;
     }
 
     function inGlobalGroup() {
-        return group === LatteCore.Types.GlobalLaunchers;
+        return group === MochaCore.Types.GlobalLaunchers;
     }
 
     function isSeparator(launcher){
-        return (launcher.indexOf("latte-separator")!==-1 && launcher.indexOf(".desktop")!==1);
+        return (launcher.indexOf("mocha-separator")!==-1 && launcher.indexOf(".desktop")!==1);
     }
 
     function separatorExists(separator){
@@ -71,7 +71,7 @@ Item {
         var separatorName = "";
 
         while(!available && no<20) {
-            separatorName = "file:///latte-separator"+no+".desktop";
+            separatorName = "file:///mocha-separator"+no+".desktop";
             if (separatorExists(separatorName)) {
                 no = no + 1;
             } else {

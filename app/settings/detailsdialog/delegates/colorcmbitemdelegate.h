@@ -11,7 +11,7 @@
 // Qt
 #include <QAbstractItemDelegate>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Details {
 namespace Delegate {

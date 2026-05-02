@@ -13,8 +13,8 @@ import org.kde.taskmanager as TaskManagerApplet
 
 import org.kde.kirigami as Kirigami
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
 
 import "animations" as TaskAnimations
 
@@ -70,7 +70,7 @@ Item {
         active: taskItem.abilities.indicators.info.needsIconColors
         visible: false
 
-        sourceComponent: LatteCore.IconItem{
+        sourceComponent: MochaCore.IconItem{
             width:64
             height:64
             source: taskIconItem.source
@@ -176,7 +176,7 @@ Item {
 
                             sourceComponent: ColorOverlay {
                                 anchors.fill: parent
-                                color: latteBridge ? latteBridge.palette.textColor : "transparent"
+                                color: mochaBridge ? mochaBridge.palette.textColor : "transparent"
                                 source: taskIconItem
                             }
                         }
@@ -337,7 +337,7 @@ Item {
 
     //! GREY-ing the information badges when the task is dragged
     //! moved out of badgeVisualsLoader in order to avoid crashes
-    //! when the latte view is removed
+    //! when the mocha view is removed
     Loader {
         anchors.fill: parent
         active: badgeVisualsLoader.active
@@ -427,7 +427,7 @@ Item {
                                              && (root.dragSource === null)
                                              && (mouseHandler.hoveredItem === taskItem) ? 0.7 : 0
 
-        sourceComponent: LatteComponents.AddItem {
+        sourceComponent: MochaComponents.AddItem {
             anchors.fill: parent
             backgroundOpacity: dropFilesVisual.applyOpacity
         }

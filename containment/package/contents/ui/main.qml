@@ -15,12 +15,12 @@ import org.kde.plasma.components as PlasmaComponents
 import org.kde.kquickcontrolsaddons
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.host as AbilityHost
+import org.kde.mocha.abilities.host as AbilityHost
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
-import org.kde.latte.private.app as LatteApp
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
+import org.kde.mocha.private.app as MochaApp
+import org.kde.mocha.private.containment as MochaContainment
 
 import "abilities" as Ability
 import "applet" as Applet
@@ -48,23 +48,23 @@ ContainmentItem {
     //// END SIGNALS
 
     ////BEGIN properties
-    readonly property int version: LatteCore.Environment.makeVersion(0,9,75)
-    readonly property bool kirigamiLibraryIsFound: LatteCore.Environment.frameworksVersion >= LatteCore.Environment.makeVersion(5,69,0)
+    readonly property int version: MochaCore.Environment.makeVersion(0,9,75)
+    readonly property bool kirigamiLibraryIsFound: MochaCore.Environment.frameworksVersion >= MochaCore.Environment.makeVersion(5,69,0)
 
     property bool backgroundOnlyOnMaximized: plasmoid.configuration.backgroundOnlyOnMaximized
-    readonly property bool behaveAsPlasmaPanel: viewType === LatteCore.Types.PanelView
+    readonly property bool behaveAsPlasmaPanel: viewType === MochaCore.Types.PanelView
     readonly property bool behaveAsDockWithMask: !behaveAsPlasmaPanel
 
-    readonly property bool viewIsAvailable: latteView && latteView.visibility && latteView.effects
+    readonly property bool viewIsAvailable: mochaView && mochaView.visibility && mochaView.effects
 
     property int viewType: {
-        if (!latteView || !latteView.visibility) {
-            return LatteCore.Types.DockView;
+        if (!mochaView || !mochaView.visibility) {
+            return MochaCore.Types.DockView;
         }
 
         if (screenEdgeMarginEnabled && root.floatingInternalGapIsForced) {
             //! dont use when floating views are requesting internal floating gap which is in client side
-            return LatteCore.Types.DockView;
+            return MochaCore.Types.DockView;
         }
 
         return viewTypeInQuestion;
@@ -73,85 +73,85 @@ ContainmentItem {
     property int viewTypeInQuestion: {
         //! viewType as chosen before considering other options such as floating internal gap enforcement.
         //! It helps with binding loops
-        if (!latteView || !latteView.visibility) {
-            return LatteCore.Types.DockView;
+        if (!mochaView || !mochaView.visibility) {
+            return MochaCore.Types.DockView;
         }
 
         if (background.customShadowedRectangleIsEnabled) {
-            return LatteCore.Types.DockView;
+            return MochaCore.Types.DockView;
         }
 
         var staticLayout = (plasmoid.configuration.minLength === plasmoid.configuration.maxLength);
 
-        if ((plasmoid.configuration.alignment === LatteCore.Types.Justify || staticLayout)
+        if ((plasmoid.configuration.alignment === MochaCore.Types.Justify || staticLayout)
                 && background.isGreaterThanItemThickness
                 && (parabolic.factor.maxZoom === 1.0)) {
-            return LatteCore.Types.PanelView;
+            return MochaCore.Types.PanelView;
         }
 
-        return LatteCore.Types.DockView;
+        return MochaCore.Types.DockView;
     }
 
     property bool blurEnabled: plasmoid.configuration.blurEnabled && (!forceTransparentPanel || forcePanelForBusyBackground)
 
-    readonly property bool inDraggingOverAppletOrOutOfContainment: latteView && latteView.containsDrag && !backDropArea.containsDrag
+    readonly property bool inDraggingOverAppletOrOutOfContainment: mochaView && mochaView.containsDrag && !backDropArea.containsDrag
 
     readonly property Item dragInfo: Item {
         property bool entered: backDropArea.dragInfo.entered
         property bool isTask: backDropArea.dragInfo.isTask
         property bool isPlasmoid: backDropArea.dragInfo.isPlasmoid
         property bool isSeparator: backDropArea.dragInfo.isSeparator
-        property bool isLatteTasks: backDropArea.dragInfo.isLatteTasks
+        property bool isMochaTasks: backDropArea.dragInfo.isMochaTasks
         property bool onlyLaunchers: backDropArea.dragInfo.onlyLaunchers
     }
 
-    property bool containsOnlyPlasmaTasks: latteView ? latteView.extendedInterface.hasPlasmaTasks && !latteView.extendedInterface.hasLatteTasks : false
-    property bool dockContainsMouse: latteView && latteView.visibility ? latteView.visibility.containsMouse : false
+    property bool containsOnlyPlasmaTasks: mochaView ? mochaView.extendedInterface.hasPlasmaTasks && !mochaView.extendedInterface.hasMochaTasks : false
+    property bool dockContainsMouse: mochaView && mochaView.visibility ? mochaView.visibility.containsMouse : false
 
-    property bool disablePanelShadowMaximized: plasmoid.configuration.disablePanelShadowForMaximized && LatteCore.WindowSystem.compositingActive
+    property bool disablePanelShadowMaximized: plasmoid.configuration.disablePanelShadowForMaximized && MochaCore.WindowSystem.compositingActive
     property bool drawShadowsExternal: panelShadowsActive && behaveAsPlasmaPanel
 
     property bool editMode: plasmoid.userConfiguring
-    property bool windowIsTouching: latteView && latteView.windowsTracker
-                                    && (latteView.windowsTracker.currentScreen.activeWindowTouching
-                                        || latteView.windowsTracker.currentScreen.activeWindowTouchingEdge
+    property bool windowIsTouching: mochaView && mochaView.windowsTracker
+                                    && (mochaView.windowsTracker.currentScreen.activeWindowTouching
+                                        || mochaView.windowsTracker.currentScreen.activeWindowTouchingEdge
                                         || hasExpandedApplet)
 
     property bool floatingInternalGapIsForced: plasmoid.configuration.floatingInternalGapIsForced
 
     property bool hasFloatingGapInputEventsDisabled: root.screenEdgeMarginEnabled
-                                                     && !latteView.byPassWM
+                                                     && !mochaView.byPassWM
                                                      && !root.inConfigureAppletsMode
                                                      && !parabolic.isEnabled
                                                      && (root.behaveAsPlasmaPanel || (root.behaveAsDockWithMask && !root.floatingInternalGapIsForced))
 
-    property bool forceSolidPanel: (latteView && latteView.visibility
-                                    && LatteCore.WindowSystem.compositingActive
+    property bool forceSolidPanel: (mochaView && mochaView.visibility
+                                    && MochaCore.WindowSystem.compositingActive
                                     && !inConfigureAppletsMode
                                     && userShowPanelBackground
                                     && ( (plasmoid.configuration.solidBackgroundForMaximized
                                           && !(hasExpandedApplet && !plasmaBackgroundForPopups)
-                                          && (latteView.windowsTracker.currentScreen.existsWindowTouching
-                                              || latteView.windowsTracker.currentScreen.existsWindowTouchingEdge))
+                                          && (mochaView.windowsTracker.currentScreen.existsWindowTouching
+                                              || mochaView.windowsTracker.currentScreen.existsWindowTouchingEdge))
                                         || (hasExpandedApplet && plasmaBackgroundForPopups) ))
-                                   || !LatteCore.WindowSystem.compositingActive
+                                   || !MochaCore.WindowSystem.compositingActive
 
     property bool forceTransparentPanel: root.backgroundOnlyOnMaximized
-                                         && latteView && latteView.visibility
-                                         && LatteCore.WindowSystem.compositingActive
+                                         && mochaView && mochaView.visibility
+                                         && MochaCore.WindowSystem.compositingActive
                                          && !inConfigureAppletsMode
                                          && !forceSolidPanel
-                                         && !(latteView.windowsTracker.currentScreen.existsWindowTouching
-                                              || latteView.windowsTracker.currentScreen.existsWindowTouchingEdge)
-                                         && !(windowColors === LatteContainment.Types.ActiveWindowColors && selectedWindowsTracker.existsWindowActive)
+                                         && !(mochaView.windowsTracker.currentScreen.existsWindowTouching
+                                              || mochaView.windowsTracker.currentScreen.existsWindowTouchingEdge)
+                                         && !(windowColors === MochaContainment.Types.ActiveWindowColors && selectedWindowsTracker.existsWindowActive)
 
     property bool forcePanelForBusyBackground: userShowPanelBackground && (normalBusyForTouchingBusyVerticalView
                                                                            || ( root.forceTransparentPanel
                                                                                && colorizerManager.backgroundIsBusy
-                                                                               && root.themeColors === LatteContainment.Types.SmartThemeColors))
+                                                                               && root.themeColors === MochaContainment.Types.SmartThemeColors))
 
-    property bool normalBusyForTouchingBusyVerticalView: (latteView && latteView.windowsTracker /*is touching a vertical view that is in busy state and the user prefers isBusy transparency*/
-                                                          && latteView.windowsTracker.currentScreen.isTouchingBusyVerticalView
+    property bool normalBusyForTouchingBusyVerticalView: (mochaView && mochaView.windowsTracker /*is touching a vertical view that is in busy state and the user prefers isBusy transparency*/
+                                                          && mochaView.windowsTracker.currentScreen.isTouchingBusyVerticalView
                                                           && plasmoid.configuration.backgroundOnlyOnMaximized)
 
     property bool appletIsDragged: root.dragOverlay && root.dragOverlay.pressed
@@ -160,19 +160,19 @@ ContainmentItem {
 
     property bool mirrorScreenGap: screenEdgeMarginEnabled
                                    && plasmoid.configuration.floatingGapIsMirrored
-                                   && latteView.visibility.mode === LatteCore.Types.AlwaysVisible
+                                   && mochaView.visibility.mode === MochaCore.Types.AlwaysVisible
 
 
 
     property int themeColors: plasmoid.configuration.themeColors
     property int windowColors: plasmoid.configuration.windowColors
 
-    property bool colorizerEnabled: themeColors !== LatteContainment.Types.PlasmaThemeColors || windowColors !== LatteContainment.Types.NoneWindowColors
+    property bool colorizerEnabled: themeColors !== MochaContainment.Types.PlasmaThemeColors || windowColors !== MochaContainment.Types.NoneWindowColors
 
     property bool plasmaBackgroundForPopups: plasmoid.configuration.plasmaBackgroundForPopups
 
-    readonly property bool hasExpandedApplet: latteView && latteView.extendedInterface.hasExpandedApplet;
-    readonly property bool hasUserSpecifiedBackground: (latteView && latteView.layout && latteView.layout.background.startsWith("/")) ?
+    readonly property bool hasExpandedApplet: mochaView && mochaView.extendedInterface.hasExpandedApplet;
+    readonly property bool hasUserSpecifiedBackground: (mochaView && mochaView.layout && mochaView.layout.background.startsWith("/")) ?
                                                            true : false
 
     readonly property bool inConfigureAppletsMode: root.editMode && universalSettings && universalSettings.inConfigureAppletsMode
@@ -180,7 +180,7 @@ ContainmentItem {
     property bool closeActiveWindowEnabled: plasmoid.configuration.closeActiveWindowEnabled
     property bool dragActiveWindowEnabled: plasmoid.configuration.dragActiveWindowEnabled
     property bool immutable: plasmoid.immutable
-    property bool inFullJustify: (plasmoid.configuration.alignment === LatteCore.Types.Justify) && (maxLengthPerCentage===100)
+    property bool inFullJustify: (plasmoid.configuration.alignment === MochaCore.Types.Justify) && (maxLengthPerCentage===100)
     property bool inStartup: true
 
     property bool isHorizontal: plasmoid.formFactor === PlasmaCore.Types.Horizontal
@@ -194,8 +194,8 @@ ContainmentItem {
     //property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
     property bool smallAutomaticIconJumps: true
 
-    property bool userShowPanelBackground: LatteCore.WindowSystem.compositingActive ? plasmoid.configuration.useThemePanel : true
-    property bool useThemePanel: noApplets === 0 || !LatteCore.WindowSystem.compositingActive ?
+    property bool userShowPanelBackground: MochaCore.WindowSystem.compositingActive ? plasmoid.configuration.useThemePanel : true
+    property bool useThemePanel: noApplets === 0 || !MochaCore.WindowSystem.compositingActive ?
                                      true : (plasmoid.configuration.useThemePanel || plasmoid.configuration.solidBackgroundForMaximized)
 
     readonly property int minAppletLengthInConfigure: 16
@@ -206,20 +206,20 @@ ContainmentItem {
     property real maxLengthPerCentage: hideLengthScreenGaps ? 100 : plasmoid.configuration.maxLength
 
     property int minLength: {
-        if (myView.alignment === LatteCore.Types.Justify) {
+        if (myView.alignment === MochaCore.Types.Justify) {
             return maxLength;
         }
 
         if (root.isHorizontal) {
-            return behaveAsPlasmaPanel && LatteCore.WindowSystem.compositingActive ? width : width * (minLengthPerCentage/100)
+            return behaveAsPlasmaPanel && MochaCore.WindowSystem.compositingActive ? width : width * (minLengthPerCentage/100)
         } else {
-            return behaveAsPlasmaPanel && LatteCore.WindowSystem.compositingActive ? height : height * (minLengthPerCentage/100)
+            return behaveAsPlasmaPanel && MochaCore.WindowSystem.compositingActive ? height : height * (minLengthPerCentage/100)
         }
     }
 
     property int maxLength: {
         const maximize = behaveAsPlasmaPanel
-          || (maximizeWhenMaximized && latteView.windowsTracker.currentScreen.existsWindowMaximized);
+          || (maximizeWhenMaximized && mochaView.windowsTracker.currentScreen.existsWindowMaximized);
         if (root.isHorizontal) {
             return maximize ? width : width * (maxLengthPerCentage/100)
         } else {
@@ -232,7 +232,7 @@ ContainmentItem {
     property bool panelOutline: plasmoid.configuration.panelOutline
     property int panelEdgeSpacing: Math.max(background.lengthMargins, 1.5*myView.itemShadow.size)
 
-    property bool backgroundShadowsInRegularStateEnabled: LatteCore.WindowSystem.compositingActive
+    property bool backgroundShadowsInRegularStateEnabled: MochaCore.WindowSystem.compositingActive
                                                           && userShowPanelBackground
                                                           && plasmoid.configuration.panelShadows
 
@@ -246,7 +246,7 @@ ContainmentItem {
         }
 
         var forcedNoShadows = (plasmoid.configuration.panelShadows && disablePanelShadowMaximized
-                               && latteView && latteView.windowsTracker && latteView.windowsTracker.currentScreen.activeWindowMaximized);
+                               && mochaView && mochaView.windowsTracker && mochaView.windowsTracker.currentScreen.activeWindowMaximized);
 
         if (forcedNoShadows) {
             return false;
@@ -285,10 +285,10 @@ ContainmentItem {
     }
 
     property int editShadow: {
-        if (!LatteCore.WindowSystem.compositingActive) {
+        if (!MochaCore.WindowSystem.compositingActive) {
             return 0;
-        } else if (latteView && latteView.screenGeometry) {
-            return latteView.screenGeometry.height/90;
+        } else if (mochaView && mochaView.screenGeometry) {
+            return mochaView.screenGeometry.height/90;
         } else {
             return 7;
         }
@@ -322,19 +322,19 @@ ContainmentItem {
     readonly property alias maskManager: visibilityManager
     readonly property alias layoutsContainerItem: layoutsContainer
 
-    readonly property alias latteView: _interfaces.view
+    readonly property alias mochaView: _interfaces.view
     readonly property alias layoutsManager: _interfaces.layoutsManager
     readonly property alias shortcutsEngine: _interfaces.globalShortcuts
     readonly property alias themeExtended: _interfaces.themeExtended
     readonly property alias universalSettings: _interfaces.universalSettings
 
     readonly property QtObject selectedWindowsTracker: {
-        if (latteView && latteView.windowsTracker) {
+        if (mochaView && mochaView.windowsTracker) {
             switch(plasmoid.configuration.activeWindowFilter) {
-            case LatteContainment.Types.ActiveInCurrentScreen:
-                return latteView.windowsTracker.currentScreen;
-            case LatteContainment.Types.ActiveFromAllScreens:
-                return latteView.windowsTracker.allScreens;
+            case MochaContainment.Types.ActiveInCurrentScreen:
+                return mochaView.windowsTracker.currentScreen;
+            case MochaContainment.Types.ActiveFromAllScreens:
+                return mochaView.windowsTracker.allScreens;
             }
         }
 
@@ -393,8 +393,8 @@ ContainmentItem {
         when: !(plasmoid.configuration.floatingGapHidingWaitsMouse && dockContainsMouse)
         value: screenEdgeMarginEnabled
                && plasmoid.configuration.hideFloatingGapForMaximized
-               && latteView && latteView.windowsTracker
-               && latteView.windowsTracker.currentScreen.existsWindowMaximized
+               && mochaView && mochaView.windowsTracker
+               && mochaView.windowsTracker.currentScreen.existsWindowMaximized
     }
 
     //! Binding is needed in order for hideLengthScreenGaps to be activated or not only after
@@ -403,14 +403,14 @@ ContainmentItem {
         target: root
         property: "hideLengthScreenGaps"
         restoreMode: Binding.RestoreNone
-        when: latteView && latteView.positioner && latteView.visibility
-              && ((root.behaveAsPlasmaPanel && latteView.positioner.slideOffset === 0)
+        when: mochaView && mochaView.positioner && mochaView.visibility
+              && ((root.behaveAsPlasmaPanel && mochaView.positioner.slideOffset === 0)
                   || root.behaveAsDockWithMask)
               && !(plasmoid.configuration.floatingGapHidingWaitsMouse && dockContainsMouse)
         value: (hideThickScreenGap
-                && (latteView.visibility.mode === LatteCore.Types.AlwaysVisible
-                    || latteView.visibility.mode === LatteCore.Types.WindowsGoBelow)
-                && (plasmoid.configuration.alignment === LatteCore.Types.Justify)
+                && (mochaView.visibility.mode === MochaCore.Types.AlwaysVisible
+                    || mochaView.visibility.mode === MochaCore.Types.WindowsGoBelow)
+                && (plasmoid.configuration.alignment === MochaCore.Types.Justify)
                 && plasmoid.configuration.maxLength>85)
     }
 
@@ -432,9 +432,9 @@ ContainmentItem {
 
         //Block Hiding events
         if (editMode) {
-            latteView.visibility.addBlockHidingEvent("main[qml]::inEditMode()");
+            mochaView.visibility.addBlockHidingEvent("main[qml]::inEditMode()");
         } else {
-            latteView.visibility.removeBlockHidingEvent("main[qml]::inEditMode()");
+            mochaView.visibility.removeBlockHidingEvent("main[qml]::inEditMode()");
         }
     }
 
@@ -444,21 +444,21 @@ ContainmentItem {
 
     //! It is used only when the user chooses different alignment types and not during startup
     Connections {
-        target: latteView ? latteView : null
+        target: mochaView ? mochaView : null
         onAlignmentChanged: {
-            if (latteView.alignment === LatteCore.Types.NoneAlignment) {
+            if (mochaView.alignment === MochaCore.Types.NoneAlignment) {
                 return;
             }
 
             var previousalignment = plasmoid.configuration.alignment;
 
-            if (latteView.alignment===LatteCore.Types.Justify && previousalignment!==LatteCore.Types.Justify) { // main -> justify
+            if (mochaView.alignment===MochaCore.Types.Justify && previousalignment!==MochaCore.Types.Justify) { // main -> justify
                 layouter.appletsInParentChange = true;
                 fastLayoutManager.addJustifySplittersInMainLayout();
                 console.log("LAYOUTS: Moving applets from MAIN to THREE Layouts mode...");
                 fastLayoutManager.moveAppletsBasedOnJustifyAlignment();
                 layouter.appletsInParentChange = false;
-            } else if (latteView.alignment!==LatteCore.Types.Justify && previousalignment===LatteCore.Types.Justify ) { // justify ->main
+            } else if (mochaView.alignment!==MochaCore.Types.Justify && previousalignment===MochaCore.Types.Justify ) { // justify ->main
                 layouter.appletsInParentChange = true;
                 console.log("LAYOUTS: Moving applets from THREE to MAIN Layout mode...");
                 fastLayoutManager.joinLayoutsToMainLayout();
@@ -466,40 +466,40 @@ ContainmentItem {
             }
 
             root.updateIndexes();
-            plasmoid.configuration.alignment = latteView.alignment;
+            plasmoid.configuration.alignment = mochaView.alignment;
             fastLayoutManager.save();
         }
     }
 
-    onLatteViewChanged: {
-        if (latteView) {
-            if (latteView.positioner) {
-                latteView.positioner.hidingForRelocationStarted.connect(visibilityManager.slotHideDockDuringLocationChange);
-                latteView.positioner.showingAfterRelocationFinished.connect(visibilityManager.slotShowDockAfterLocationChange);
+    onMochaViewChanged: {
+        if (mochaView) {
+            if (mochaView.positioner) {
+                mochaView.positioner.hidingForRelocationStarted.connect(visibilityManager.slotHideDockDuringLocationChange);
+                mochaView.positioner.showingAfterRelocationFinished.connect(visibilityManager.slotShowDockAfterLocationChange);
             }
 
-            if (latteView.visibility) {
-                latteView.visibility.onContainsMouseChanged.connect(visibilityManager.slotContainsMouseChanged);
-                latteView.visibility.onMustBeHide.connect(visibilityManager.slotMustBeHide);
-                latteView.visibility.onMustBeShown.connect(visibilityManager.slotMustBeShown);
+            if (mochaView.visibility) {
+                mochaView.visibility.onContainsMouseChanged.connect(visibilityManager.slotContainsMouseChanged);
+                mochaView.visibility.onMustBeHide.connect(visibilityManager.slotMustBeHide);
+                mochaView.visibility.onMustBeShown.connect(visibilityManager.slotMustBeShown);
             }
         }
     }
 
     Connections {
-        target: latteView
+        target: mochaView
         onPositionerChanged: {
-            if (latteView.positioner) {
-                latteView.positioner.hidingForRelocationStarted.connect(visibilityManager.slotHideDockDuringLocationChange);
-                latteView.positioner.showingAfterRelocationFinished.connect(visibilityManager.slotShowDockAfterLocationChange);
+            if (mochaView.positioner) {
+                mochaView.positioner.hidingForRelocationStarted.connect(visibilityManager.slotHideDockDuringLocationChange);
+                mochaView.positioner.showingAfterRelocationFinished.connect(visibilityManager.slotShowDockAfterLocationChange);
             }
         }
 
         onVisibilityChanged: {
-            if (latteView.visibility) {
-                latteView.visibility.onContainsMouseChanged.connect(visibilityManager.slotContainsMouseChanged);
-                latteView.visibility.onMustBeHide.connect(visibilityManager.slotMustBeHide);
-                latteView.visibility.onMustBeShown.connect(visibilityManager.slotMustBeShown);
+            if (mochaView.visibility) {
+                mochaView.visibility.onContainsMouseChanged.connect(visibilityManager.slotContainsMouseChanged);
+                mochaView.visibility.onMustBeHide.connect(visibilityManager.slotMustBeHide);
+                mochaView.visibility.onMustBeShown.connect(visibilityManager.slotMustBeShown);
             }
         }
     }
@@ -517,15 +517,15 @@ ContainmentItem {
 
     onIsVerticalChanged: {
         if (isVertical) {
-            if (plasmoid.configuration.alignment === LatteCore.Types.Left)
-                plasmoid.configuration.alignment = LatteCore.Types.Top;
-            else if (plasmoid.configuration.alignment === LatteCore.Types.Right)
-                plasmoid.configuration.alignment = LatteCore.Types.Bottom;
+            if (plasmoid.configuration.alignment === MochaCore.Types.Left)
+                plasmoid.configuration.alignment = MochaCore.Types.Top;
+            else if (plasmoid.configuration.alignment === MochaCore.Types.Right)
+                plasmoid.configuration.alignment = MochaCore.Types.Bottom;
         } else {
-            if (plasmoid.configuration.alignment === LatteCore.Types.Top)
-                plasmoid.configuration.alignment = LatteCore.Types.Left;
-            else if (plasmoid.configuration.alignment === LatteCore.Types.Bottom)
-                plasmoid.configuration.alignment = LatteCore.Types.Right;
+            if (plasmoid.configuration.alignment === MochaCore.Types.Top)
+                plasmoid.configuration.alignment = MochaCore.Types.Left;
+            else if (plasmoid.configuration.alignment === MochaCore.Types.Bottom)
+                plasmoid.configuration.alignment = MochaCore.Types.Right;
         }
     }
 
@@ -538,21 +538,21 @@ ContainmentItem {
     }
 
     Component.onDestruction: {
-        console.debug("Destroying Latte Dock Containment ui...");
+        console.debug("Destroying Mocha Dock Containment ui...");
 
         layouter.appletsInParentChange = true;
         fastLayoutManager.save();
 
-        if (latteView) {
-            if (latteView.positioner) {
-                latteView.positioner.hidingForRelocationStarted.disconnect(visibilityManager.slotHideDockDuringLocationChange);
-                latteView.positioner.showingAfterRelocationFinished.disconnect(visibilityManager.slotShowDockAfterLocationChange);
+        if (mochaView) {
+            if (mochaView.positioner) {
+                mochaView.positioner.hidingForRelocationStarted.disconnect(visibilityManager.slotHideDockDuringLocationChange);
+                mochaView.positioner.showingAfterRelocationFinished.disconnect(visibilityManager.slotShowDockAfterLocationChange);
             }
 
-            if (latteView.visibility) {
-                latteView.visibility.onContainsMouseChanged.disconnect(visibilityManager.slotContainsMouseChanged);
-                latteView.visibility.onMustBeHide.disconnect(visibilityManager.slotMustBeHide);
-                latteView.visibility.onMustBeShown.disconnect(visibilityManager.slotMustBeShown);
+            if (mochaView.visibility) {
+                mochaView.visibility.onContainsMouseChanged.disconnect(visibilityManager.slotContainsMouseChanged);
+                mochaView.visibility.onMustBeHide.disconnect(visibilityManager.slotMustBeHide);
+                mochaView.visibility.onMustBeShown.disconnect(visibilityManager.slotMustBeShown);
             }
         }
     }
@@ -760,7 +760,7 @@ ContainmentItem {
     //    id: colorScopePalette
     //}
 
-    LatteContainment.LayoutManager{
+    MochaContainment.LayoutManager{
         id:fastLayoutManager
         plasmoidObj: plasmoid
         rootItem: root
@@ -876,7 +876,7 @@ ContainmentItem {
 
             property int thickMargin: metrics.margin.screenEdge
 
-            LatteComponents.AddItem{
+            MochaComponents.AddItem{
                 id: dndSpacerAddItem
                 anchors.centerIn: parent
                 width: length
@@ -992,13 +992,13 @@ ContainmentItem {
 
     Ability.Indicators{
         id: _indicators
-        view: latteView
+        view: mochaView
     }
 
     Ability.Launchers {
         id: _launchers
         layouts: layoutsContainer
-        layoutName: latteView && latteView.layout ? latteView.layout.name : ""
+        layoutName: mochaView && mochaView.layout ? mochaView.layout.name : ""
     }
 
     Ability.Layouter {
@@ -1027,7 +1027,7 @@ ContainmentItem {
         animations: _animations
         debug: _debug
         layouts: layoutsContainer
-        view: latteView
+        view: mochaView
         settings: universalSettings
     }
 
@@ -1040,15 +1040,15 @@ ContainmentItem {
         id: _thinTooltip
         debug: _debug
         layouts: layoutsContainer
-        view: latteView
+        view: mochaView
     }
 
     Ability.UserRequests {
         id: _userRequests
-        view: latteView
+        view: mochaView
     }
 
-    LatteApp.Interfaces {
+    MochaApp.Interfaces {
         id: _interfaces
         plasmoidInterface: plasmoid
 
@@ -1075,11 +1075,11 @@ ContainmentItem {
 
     ///////////////BEGIN TIMER elements
 
-    //! It is used in order to slide-in the latteView on startup
+    //! It is used in order to slide-in the mochaView on startup
     onInStartupChanged: {
         if (!inStartup) {
-            latteView.positioner.startupFinished();
-            latteView.positioner.slideInDuringStartup();
+            mochaView.positioner.startupFinished();
+            mochaView.positioner.slideInDuringStartup();
             visibilityManager.slotMustBeShown();
         }
     }
@@ -1112,11 +1112,11 @@ ContainmentItem {
         anchors.fill: parent
         active: debug.localGeometryEnabled
         sourceComponent: Rectangle{
-            x: latteView.localGeometry.x
-            y: latteView.localGeometry.y
+            x: mochaView.localGeometry.x
+            y: mochaView.localGeometry.y
             //! when view is resized there is a chance that geometry is faulty stacked in old values
-            width: Math.min(latteView.localGeometry.width, root.width) //! fixes updating
-            height: Math.min(latteView.localGeometry.height, root.height) //! fixes updating
+            width: Math.min(mochaView.localGeometry.width, root.width) //! fixes updating
+            height: Math.min(mochaView.localGeometry.height, root.height) //! fixes updating
 
             color: "blue"
             border.width: 2
@@ -1128,13 +1128,13 @@ ContainmentItem {
 
     Loader{
         anchors.fill: parent
-        active: latteView && latteView.effects && debug.inputMaskEnabled
+        active: mochaView && mochaView.effects && debug.inputMaskEnabled
         sourceComponent: Rectangle{
-            x: latteView.effects.inputMask.x
-            y: latteView.effects.inputMask.y
+            x: mochaView.effects.inputMask.x
+            y: mochaView.effects.inputMask.y
             //! when view is resized there is a chance that geometry is faulty stacked in old values
-            width: Math.min(latteView.effects.inputMask.width, root.width) //! fixes updating
-            height: Math.min(latteView.effects.inputMask.height, root.height) //! fixes updating
+            width: Math.min(mochaView.effects.inputMask.width, root.width) //! fixes updating
+            height: Math.min(mochaView.effects.inputMask.height, root.height) //! fixes updating
 
             color: "purple"
             border.width: 1

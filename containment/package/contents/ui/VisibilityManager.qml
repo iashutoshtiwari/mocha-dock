@@ -10,8 +10,8 @@ import QtQuick.Window
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.containment as MochaContainment
 
 Item{
     id: manager
@@ -25,13 +25,13 @@ Item{
                                           && !inSlidingIn
                                           && !inSlidingOut
 
-    property int animationSpeed: LatteCore.WindowSystem.compositingActive ?
+    property int animationSpeed: MochaCore.WindowSystem.compositingActive ?
                                      (root.editMode ? 400 : animations.speedFactor.current * 1.62 * animations.duration.large) : 0
 
     property bool inClientSideScreenEdgeSliding: root.behaveAsDockWithMask && hideThickScreenGap
     property bool inNormalState: ((animations.needBothAxis.count === 0) && (animations.needLength.count === 0))
-                                 || (latteView && latteView.visibility.isHidden && !latteView.visibility.containsMouse && animations.needThickness.count === 0)
-    property bool inRelocationAnimation: latteView && latteView.positioner && latteView.positioner.inRelocationAnimation
+                                 || (mochaView && mochaView.visibility.isHidden && !mochaView.visibility.containsMouse && animations.needThickness.count === 0)
+    property bool inRelocationAnimation: mochaView && mochaView.positioner && mochaView.positioner.inRelocationAnimation
 
     property bool inSlidingIn: false //necessary because of its init structure
     property alias inSlidingOut: slidingAnimationAutoHiddenOut.running
@@ -45,7 +45,7 @@ Item{
     property int slidingOutToPos: {
         if (root.behaveAsPlasmaPanel) {
             var edgeMargin = screenEdgeMarginEnabled ? plasmoid.configuration.screenEdgeMargin : 0
-            var thickmarg = latteView.visibility.isSidebar ? 0 : 1;
+            var thickmarg = mochaView.visibility.isSidebar ? 0 : 1;
 
             return root.isHorizontal ? root.height + edgeMargin - thickmarg : root.width + edgeMargin - thickmarg;
         } else {
@@ -54,7 +54,7 @@ Item{
         }
     }
 
-    //! when Latte behaves as Plasma panel
+    //! when Mocha behaves as Plasma panel
     property int thicknessAsPanel: metrics.totals.thickness
 
     property Item layouts: null
@@ -73,7 +73,7 @@ Item{
     }
 
     Connections{
-        target: latteView ? latteView : null
+        target: mochaView ? mochaView : null
         onXChanged: updateMaskArea();
         onYChanged: updateMaskArea()
         onWidthChanged: updateMaskArea();
@@ -98,7 +98,7 @@ Item{
     Connections{
         target: layoutsManager
         onCurrentLayoutIsSwitching: {
-            if (LatteCore.WindowSystem.compositingActive && latteView && latteView.layout && latteView.layout.name === layoutName) {
+            if (MochaCore.WindowSystem.compositingActive && mochaView && mochaView.layout && mochaView.layout.name === layoutName) {
                 parabolic.sglClearZoom();
             }
         }
@@ -119,17 +119,17 @@ Item{
     }
 
     Connections {
-        target: latteView ? latteView.effects : null
+        target: mochaView ? mochaView.effects : null
         onRectChanged: manager.updateMaskArea()
     }
 
     Connections{
         target: themeExtended ? themeExtended : null
-        onThemeChanged: latteView.effects.forceMaskRedraw();
+        onThemeChanged: mochaView.effects.forceMaskRedraw();
     }
 
     Connections {
-        target: LatteCore.WindowSystem
+        target: MochaCore.WindowSystem
         onCompositingActiveChanged: {
             manager.updateMaskArea();
         }
@@ -144,8 +144,8 @@ Item{
     }
 
     onInSlidingInChanged: {
-        if (latteView && !inSlidingIn && latteView.positioner.inRelocationShowing) {
-            latteView.positioner.inRelocationShowing = false;
+        if (mochaView && !inSlidingIn && mochaView.positioner.inRelocationShowing) {
+            mochaView.positioner.inRelocationShowing = false;
         }
     }
 
@@ -156,7 +156,7 @@ Item{
     }
 
     function slotContainsMouseChanged() {
-        if(latteView.visibility.containsMouse && latteView.visibility.mode !== LatteCore.Types.SidebarOnDemand) {
+        if(mochaView.visibility.containsMouse && mochaView.visibility.mode !== MochaCore.Types.SidebarOnDemand) {
             updateMaskArea();
 
             if (slidingAnimationAutoHiddenOut.running && !inRelocationHiding) {
@@ -172,13 +172,13 @@ Item{
         }
 
         //! WindowsCanCover case
-        if (latteView && latteView.visibility.mode === LatteCore.Types.WindowsCanCover) {
-            latteView.visibility.setViewOnFrontLayer();
+        if (mochaView && mochaView.visibility.mode === MochaCore.Types.WindowsCanCover) {
+            mochaView.visibility.setViewOnFrontLayer();
         }
 
-        if (!latteView.visibility.isHidden && latteView.positioner.inSlideAnimation) {
+        if (!mochaView.visibility.isHidden && mochaView.positioner.inSlideAnimation) {
             // Do not update when Positioner mid-slide animation takes place, for example:
-            // 1. Latte panel is hiding its floating gap for maximized window
+            // 1. Mocha panel is hiding its floating gap for maximized window
             // 2. the user clicks on an applet popup.
             // 3. Applet popups showing/hiding are triggering hidingIsBlockedChanged() signals.
             // 4. hidingIsBlockedChanged() signals create mustBeShown events when visibility::hidingIsBlocked() is not enabled.
@@ -188,7 +188,7 @@ Item{
         //! Normal Dodge/AutoHide case
         if (!slidingAnimationAutoHiddenIn.running
                 && !inRelocationHiding
-                && (latteView.visibility.isHidden || slidingAnimationAutoHiddenOut.running /*it is not already shown or is trying to hide*/)){
+                && (mochaView.visibility.isHidden || slidingAnimationAutoHiddenOut.running /*it is not already shown or is trying to hide*/)){
             slidingAnimationAutoHiddenIn.init();
         }
     }
@@ -204,16 +204,16 @@ Item{
             return;
         }
 
-        if (latteView && latteView.visibility.mode === LatteCore.Types.WindowsCanCover) {
-            latteView.visibility.setViewOnBackLayer();
+        if (mochaView && mochaView.visibility.mode === MochaCore.Types.WindowsCanCover) {
+            mochaView.visibility.setViewOnBackLayer();
             return;
         }
 
         //! Normal Dodge/AutoHide case
         if (!slidingAnimationAutoHiddenOut.running
-                && !latteView.visibility.blockHiding
-                && (!latteView.visibility.containsMouse || latteView.visibility.mode === LatteCore.Types.SidebarOnDemand /*for SidebarOnDemand mouse should be ignored on hiding*/)
-                && (!latteView.visibility.isHidden || slidingAnimationAutoHiddenIn.running /*it is not already hidden or is trying to show*/)) {
+                && !mochaView.visibility.blockHiding
+                && (!mochaView.visibility.containsMouse || mochaView.visibility.mode === MochaCore.Types.SidebarOnDemand /*for SidebarOnDemand mouse should be ignored on hiding*/)
+                && (!mochaView.visibility.isHidden || slidingAnimationAutoHiddenIn.running /*it is not already hidden or is trying to show*/)) {
             slidingAnimationAutoHiddenOut.init();
         }
     }
@@ -232,12 +232,12 @@ Item{
     }
 
     function sendHideDockDuringLocationChangeFinished(){
-        latteView.positioner.hidingForRelocationFinished();
+        mochaView.positioner.hidingForRelocationFinished();
     }
 
     function sendSlidingOutAnimationEnded() {
-        latteView.visibility.hide();
-        latteView.visibility.isHidden = true;
+        mochaView.visibility.hide();
+        mochaView.visibility.isHidden = true;
 
         if (debug.maskEnabled) {
             console.log("hiding animation ended...");
@@ -248,7 +248,7 @@ Item{
 
     ///test maskArea
     function updateMaskArea() {
-        if (!latteView || !root.viewIsAvailable) {
+        if (!mochaView || !root.viewIsAvailable) {
             return;
         }
 
@@ -258,13 +258,13 @@ Item{
         // debug maskArea criteria
         if (debug.maskEnabled) {
             console.log(animations.needBothAxis.count + ", " + animations.needLength.count + ", " +
-                        animations.needThickness.count + ", " + latteView.visibility.isHidden);
+                        animations.needThickness.count + ", " + mochaView.visibility.isHidden);
         }
 
         //console.log("reached updating geometry ::: "+dock.maskArea);
 
 
-        if (!latteView.visibility.isHidden && updateIsEnabled && inNormalState) {
+        if (!mochaView.visibility.isHidden && updateIsEnabled && inNormalState) {
             //! Important: Local Geometry must not be updated when view ISHIDDEN
             //! because it breaks Dodge(s) modes in such case
 
@@ -272,47 +272,47 @@ Item{
 
             //the shadows size must be removed from the maskArea
             //before updating the localDockGeometry
-            if (!latteView.behaveAsPlasmaPanel) {
+            if (!mochaView.behaveAsPlasmaPanel) {
                 var cleanThickness = metrics.totals.thickness;
                 var edgeMargin = metrics.mask.screenEdge;
 
                 if (plasmoid.location === PlasmaCore.Types.TopEdge) {
-                    localGeometry.x = latteView.effects.rect.x; // from effects area
-                    localGeometry.width = latteView.effects.rect.width; // from effects area
+                    localGeometry.x = mochaView.effects.rect.x; // from effects area
+                    localGeometry.width = mochaView.effects.rect.width; // from effects area
 
                     localGeometry.y = edgeMargin;
                     localGeometry.height = cleanThickness;
                 } else if (plasmoid.location === PlasmaCore.Types.BottomEdge) {
-                    localGeometry.x = latteView.effects.rect.x; // from effects area
-                    localGeometry.width = latteView.effects.rect.width; // from effects area
+                    localGeometry.x = mochaView.effects.rect.x; // from effects area
+                    localGeometry.width = mochaView.effects.rect.width; // from effects area
 
                     localGeometry.y = root.height - cleanThickness - edgeMargin;
                     localGeometry.height = cleanThickness;
                 } else if (plasmoid.location === PlasmaCore.Types.LeftEdge) {
-                    localGeometry.y = latteView.effects.rect.y; // from effects area
-                    localGeometry.height = latteView.effects.rect.height; // from effects area
+                    localGeometry.y = mochaView.effects.rect.y; // from effects area
+                    localGeometry.height = mochaView.effects.rect.height; // from effects area
 
                     localGeometry.x = edgeMargin;
                     localGeometry.width = cleanThickness;
                 } else if (plasmoid.location === PlasmaCore.Types.RightEdge) {
-                    localGeometry.y = latteView.effects.rect.y; // from effects area
-                    localGeometry.height = latteView.effects.rect.height; // from effects area
+                    localGeometry.y = mochaView.effects.rect.y; // from effects area
+                    localGeometry.height = mochaView.effects.rect.height; // from effects area
 
                     localGeometry.x = root.width - cleanThickness - edgeMargin;
                     localGeometry.width = cleanThickness;
                 }
 
-                //set the boundaries for latteView local geometry
+                //set the boundaries for mochaView local geometry
                 //qBound = qMax(min, qMin(value, max)).
 
-                localGeometry.x = Math.max(0, Math.min(localGeometry.x, latteView.width));
-                localGeometry.y = Math.max(0, Math.min(localGeometry.y, latteView.height));
-                localGeometry.width = Math.min(localGeometry.width, latteView.width);
-                localGeometry.height = Math.min(localGeometry.height, latteView.height);
+                localGeometry.x = Math.max(0, Math.min(localGeometry.x, mochaView.width));
+                localGeometry.y = Math.max(0, Math.min(localGeometry.y, mochaView.height));
+                localGeometry.width = Math.min(localGeometry.width, mochaView.width);
+                localGeometry.height = Math.min(localGeometry.height, mochaView.height);
             }
 
             //console.log("update geometry ::: "+localGeometry);
-            latteView.localGeometry = localGeometry;
+            mochaView.localGeometry = localGeometry;
         }
 
         //! Input Mask
@@ -326,14 +326,14 @@ Item{
         // by specifying inputThickness when ParabolicEffect is applied. (inputThickness->animated scenario)
         var animated = (animations.needBothAxis.count>0);
 
-        if (!LatteCore.WindowSystem.compositingActive || latteView.behaveAsPlasmaPanel) {
+        if (!MochaCore.WindowSystem.compositingActive || mochaView.behaveAsPlasmaPanel) {
             //! clear input mask
-            latteView.effects.inputMask = Qt.rect(0, 0, -1, -1);
+            mochaView.effects.inputMask = Qt.rect(0, 0, -1, -1);
         } else {
             var floatingInternalGapAcceptsInput = behaveAsDockWithMask && floatingInternalGapIsForced;
             var inputThickness;
 
-            if (latteView.visibility.isHidden) {
+            if (mochaView.visibility.isHidden) {
                 inputThickness = metrics.mask.thickness.hidden;
             } else if (root.hasFloatingGapInputEventsDisabled) {
                 inputThickness = animated ? metrics.mask.thickness.zoomedForItems - metrics.margins.screenEdge : metrics.totals.thickness;
@@ -341,59 +341,59 @@ Item{
                 inputThickness = animated ? metrics.mask.thickness.zoomedForItems : metrics.mask.screenEdge + metrics.totals.thickness;
             }
 
-            var subtractedScreenEdge = root.hasFloatingGapInputEventsDisabled && !latteView.visibility.isHidden ? metrics.mask.screenEdge : 0;
+            var subtractedScreenEdge = root.hasFloatingGapInputEventsDisabled && !mochaView.visibility.isHidden ? metrics.mask.screenEdge : 0;
 
             var inputGeometry = Qt.rect(0, 0, root.width, root.height);
 
             //!use view.localGeometry for length properties
             if (plasmoid.location === PlasmaCore.Types.TopEdge) {
                 if (!animated) {
-                    inputGeometry.x = latteView.localGeometry.x;
-                    inputGeometry.width = latteView.localGeometry.width;
+                    inputGeometry.x = mochaView.localGeometry.x;
+                    inputGeometry.width = mochaView.localGeometry.width;
                 }
 
                 inputGeometry.y = subtractedScreenEdge;
                 inputGeometry.height = inputThickness;
             } else if (plasmoid.location === PlasmaCore.Types.BottomEdge) {
                 if (!animated) {
-                    inputGeometry.x = latteView.localGeometry.x;
-                    inputGeometry.width = latteView.localGeometry.width;
+                    inputGeometry.x = mochaView.localGeometry.x;
+                    inputGeometry.width = mochaView.localGeometry.width;
                 }
 
                 inputGeometry.y = root.height - inputThickness - subtractedScreenEdge;
                 inputGeometry.height = inputThickness;
             } else if (plasmoid.location === PlasmaCore.Types.LeftEdge) {
                 if (!animated) {
-                    inputGeometry.y = latteView.localGeometry.y;
-                    inputGeometry.height = latteView.localGeometry.height;
+                    inputGeometry.y = mochaView.localGeometry.y;
+                    inputGeometry.height = mochaView.localGeometry.height;
                 }
 
                 inputGeometry.x = subtractedScreenEdge;
                 inputGeometry.width = inputThickness;
             } else if (plasmoid.location === PlasmaCore.Types.RightEdge) {
                 if (!animated) {
-                    inputGeometry.y = latteView.localGeometry.y;
-                    inputGeometry.height = latteView.localGeometry.height;
+                    inputGeometry.y = mochaView.localGeometry.y;
+                    inputGeometry.height = mochaView.localGeometry.height;
                 }
 
                 inputGeometry.x = root.width - inputThickness - subtractedScreenEdge;
                 inputGeometry.width = inputThickness;
             }
 
-            //set the boundaries for latteView local geometry
+            //set the boundaries for mochaView local geometry
             //qBound = qMax(min, qMin(value, max)).
 
-            inputGeometry.x = Math.max(0, Math.min(inputGeometry.x, latteView.width));
-            inputGeometry.y = Math.max(0, Math.min(inputGeometry.y, latteView.height));
-            inputGeometry.width = Math.min(inputGeometry.width, latteView.width);
-            inputGeometry.height = Math.min(inputGeometry.height, latteView.height);
+            inputGeometry.x = Math.max(0, Math.min(inputGeometry.x, mochaView.width));
+            inputGeometry.y = Math.max(0, Math.min(inputGeometry.y, mochaView.height));
+            inputGeometry.width = Math.min(inputGeometry.width, mochaView.width);
+            inputGeometry.height = Math.min(inputGeometry.height, mochaView.height);
 
-            if (latteView.visibility.isSidebar && latteView.visibility.isHidden) {
+            if (mochaView.visibility.isSidebar && mochaView.visibility.isHidden) {
                 //! this way we make sure than no input is accepted anywhere
                 inputGeometry = Qt.rect(-1, -1, 1, 1);
             }
 
-            latteView.effects.inputMask = inputGeometry;
+            mochaView.effects.inputMask = inputGeometry;
         }
     }
 
@@ -413,10 +413,10 @@ Item{
             }
 
             Rectangle{
-                x: latteView ? latteView.effects.mask.x : -1
-                y: latteView ? latteView.effects.mask.y : -1
-                height: latteView ? latteView.effects.mask.height : 0
-                width: latteView ? latteView.effects.mask.width : 0
+                x: mochaView ? mochaView.effects.mask.x : -1
+                y: mochaView ? mochaView.effects.mask.y : -1
+                height: mochaView ? mochaView.effects.mask.height : 0
+                width: mochaView ? mochaView.effects.mask.width : 0
 
                 border.color: "green"
                 border.width: 1
@@ -432,14 +432,14 @@ Item{
         id: slidingAnimationAutoHiddenOut
 
         PropertyAnimation {
-            target: !root.behaveAsPlasmaPanel ? layoutsContainer : latteView.positioner
+            target: !root.behaveAsPlasmaPanel ? layoutsContainer : mochaView.positioner
             property: !root.behaveAsPlasmaPanel ? (root.isVertical ? "x" : "y") : "slideOffset"
             to: {
                 if (root.behaveAsPlasmaPanel) {
                     return slidingOutToPos;
                 }
 
-                if (LatteCore.WindowSystem.compositingActive) {
+                if (MochaCore.WindowSystem.compositingActive) {
                     return slidingOutToPos;
                 } else {
                     if ((plasmoid.location===PlasmaCore.Types.LeftEdge)||(plasmoid.location===PlasmaCore.Types.TopEdge)) {
@@ -455,12 +455,12 @@ Item{
 
         ScriptAction{
             script: {
-                if (latteView && latteView.visibility) {
-                    latteView.visibility.isHidden = true;
+                if (mochaView && mochaView.visibility) {
+                    mochaView.visibility.isHidden = true;
 
-                    if (root.behaveAsPlasmaPanel && latteView.positioner.slideOffset !== 0) {
+                    if (root.behaveAsPlasmaPanel && mochaView.positioner.slideOffset !== 0) {
                         //! hide real panels when they slide-out
-                        latteView.visibility.hide();
+                        mochaView.visibility.hide();
                     }
                 }
             }
@@ -482,8 +482,8 @@ Item{
                 }
             }
 
-            if (latteView && latteView.visibility) {
-                latteView.visibility.slideOutFinished();
+            if (mochaView && mochaView.visibility) {
+                mochaView.visibility.slideOutFinished();
             }
             manager.updateInputGeometry();
 
@@ -497,7 +497,7 @@ Item{
         }
 
         function init() {
-            if (manager.inRelocationAnimation || root.inStartup/*used from recreating views*/ || !latteView.visibility.blockHiding) {
+            if (manager.inRelocationAnimation || root.inStartup/*used from recreating views*/ || !mochaView.visibility.blockHiding) {
                 start();
             }
         }
@@ -511,7 +511,7 @@ Item{
         }
 
         PropertyAnimation {
-            target: !root.behaveAsPlasmaPanel ? layoutsContainer : latteView.positioner
+            target: !root.behaveAsPlasmaPanel ? layoutsContainer : mochaView.positioner
             property: !root.behaveAsPlasmaPanel ? (root.isVertical ? "x" : "y") : "slideOffset"
             to: 0
             duration: manager.animationSpeed
@@ -526,7 +526,7 @@ Item{
         }
 
         onStarted: {
-            latteView.visibility.show();
+            mochaView.visibility.show();
             manager.updateInputGeometry();
 
             if (debug.maskEnabled) {
@@ -549,7 +549,7 @@ Item{
                 console.log("showing animation ended...");
             }
 
-            latteView.visibility.slideInFinished();
+            mochaView.visibility.slideInFinished();
 
             //! this is needed in order to update dock absolute geometry correctly in the end AND
             //! when a floating dock is sliding-in through masking techniques
@@ -567,7 +567,7 @@ Item{
                 slidingAnimationAutoHiddenOut.stop();
             }
 
-            latteView.visibility.isHidden = false;
+            mochaView.visibility.isHidden = false;
             updateMaskArea();
 
             start();
@@ -580,7 +580,7 @@ Item{
         id: slidingInRealFloating
 
         PropertyAnimation {
-            target: latteView ? latteView.positioner : null
+            target: mochaView ? mochaView.positioner : null
             property: "slideOffset"
             to: 0
             duration: manager.animationSpeed
@@ -589,11 +589,11 @@ Item{
 
         ScriptAction{
             script: {
-                latteView.positioner.inSlideAnimation = false;
+                mochaView.positioner.inSlideAnimation = false;
             }
         }
 
-        onStopped: latteView.positioner.inSlideAnimation = false;
+        onStopped: mochaView.positioner.inSlideAnimation = false;
 
     }
 
@@ -602,12 +602,12 @@ Item{
 
         ScriptAction{
             script: {
-                latteView.positioner.inSlideAnimation = true;
+                mochaView.positioner.inSlideAnimation = true;
             }
         }
 
         PropertyAnimation {
-            target: latteView ? latteView.positioner : null
+            target: mochaView ? mochaView.positioner : null
             property: "slideOffset"
             to: plasmoid.configuration.screenEdgeMargin
             duration: manager.animationSpeed
@@ -618,19 +618,19 @@ Item{
     Connections {
         target: root
         onHideThickScreenGapChanged: {
-            if (!latteView || !root.viewIsAvailable) {
+            if (!mochaView || !root.viewIsAvailable) {
                 return;
             }
 
-            if (root.behaveAsPlasmaPanel && !latteView.visibility.isHidden && !inSlidingIn && !inSlidingOut && !inStartup) {
+            if (root.behaveAsPlasmaPanel && !mochaView.visibility.isHidden && !inSlidingIn && !inSlidingOut && !inStartup) {
                 slideInOutRealFloating();
             }
         }
 
         onInStartupChanged: {
             //! used for positioning properly real floating panels when there is a maximized window
-            if (root.hideThickScreenGap && !inStartup && latteView.positioner.slideOffset===0) {
-                if (root.behaveAsPlasmaPanel && !latteView.visibility.isHidden) {
+            if (root.hideThickScreenGap && !inStartup && mochaView.positioner.slideOffset===0) {
+                if (root.behaveAsPlasmaPanel && !mochaView.visibility.isHidden) {
                     slideInOutRealFloating();
                 }
             }

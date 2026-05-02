@@ -6,7 +6,7 @@
 #include "theme.h"
 
 // local
-#include "lattecorona.h"
+#include "mochacorona.h"
 #include "panelbackground.h"
 #include "../../layouts/importer.h"
 #include "../../view/panelshadows_p.h"
@@ -28,7 +28,7 @@
 #define DEFAULTCOLORSCHEME "default.colors"
 #define REVERSEDCOLORSCHEME "reversed.colors"
 
-namespace Latte {
+namespace Mocha {
 namespace PlasmaExtended {
 
 Theme::Theme(KSharedConfig::Ptr config, QObject *parent) :
@@ -41,7 +41,7 @@ Theme::Theme(KSharedConfig::Ptr config, QObject *parent) :
 {
     qmlRegisterTypes();
 
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<Mocha::Corona *>(parent);
 
     //! compositing is always active on Wayland
     m_compositing = true;
@@ -367,7 +367,7 @@ void Theme::loadThemePaths()
     } else {
         //! when plasma theme uses the kde colors
         //! we track when kde color scheme is changing
-        QString kdeSettingsFile = Latte::configPath() + "/kdeglobals";
+        QString kdeSettingsFile = Mocha::configPath() + "/kdeglobals";
 
         KDirWatch::self()->addFile(kdeSettingsFile);
 
@@ -389,8 +389,8 @@ void Theme::loadThemePaths()
 
 void Theme::loadThemeLightness()
 {
-    float textColorLum = Latte::colorLumina(m_defaultScheme->textColor());
-    float backColorLum = Latte::colorLumina(m_defaultScheme->backgroundColor());
+    float textColorLum = Mocha::colorLumina(m_defaultScheme->textColor());
+    float backColorLum = Mocha::colorLumina(m_defaultScheme->backgroundColor());
 
     if (backColorLum > textColorLum) {
         m_isLightTheme = true;
@@ -525,8 +525,8 @@ void Theme::saveConfig()
 
 void Theme::qmlRegisterTypes()
 {
-    qmlRegisterAnonymousType<Latte::PlasmaExtended::Theme>("latte-dock", 1);
-    qmlRegisterAnonymousType<Latte::PlasmaExtended::PanelBackground>("latte-dock", 1);
+    qmlRegisterAnonymousType<Mocha::PlasmaExtended::Theme>("mocha-dock", 1);
+    qmlRegisterAnonymousType<Mocha::PlasmaExtended::PanelBackground>("mocha-dock", 1);
 }
 
 }

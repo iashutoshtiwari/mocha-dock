@@ -8,7 +8,7 @@
 
 // local
 #include "subwindow.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../wm/windowinfowrap.h"
 
 // Qt
@@ -16,12 +16,12 @@
 #include <QQuickView>
 #include <QTimer>
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 //! What is the importance of this class?
@@ -43,7 +43,7 @@ class FloatingGapWindow : public SubWindow
     Q_OBJECT
 
 public:
-    FloatingGapWindow(Latte::View *view);
+    FloatingGapWindow(Mocha::View *view);
     ~FloatingGapWindow() override;
 
     void callAsyncContainsMouse();

@@ -30,22 +30,22 @@ Item{
     readonly property color appliedBackgroundColor: checked ? checkedBackgroundColor : backgroundColor
     readonly property color appliedBorderColor: checked ? checkedBorderColor : borderColor
 
-    readonly property color textColor: containsMouse ? latteView.colorizer.buttonTextColor : settingsRoot.textColor
+    readonly property color textColor: containsMouse ? mochaView.colorizer.buttonTextColor : settingsRoot.textColor
     readonly property color backgroundColor: containsMouse ? hoveredBackground :  normalBackground
     readonly property color borderColor: containsMouse ? hoveredBorder : normalBorder// "transparent"
 
-    readonly property color checkedTextColor: latteView.colorizer.buttonTextColor
-    readonly property color checkedBackgroundColor: latteView.colorizer.buttonFocusColor
+    readonly property color checkedTextColor: mochaView.colorizer.buttonTextColor
+    readonly property color checkedBackgroundColor: mochaView.colorizer.buttonFocusColor
     readonly property color checkedBorderColor: hoveredBorder //"transparent" //checkedTextColor
 
-    readonly property color normalBackground: Qt.rgba(latteView.colorizer.buttonHoverColor.r,
-                                                      latteView.colorizer.buttonHoverColor.g,
-                                                      latteView.colorizer.buttonHoverColor.b,
+    readonly property color normalBackground: Qt.rgba(mochaView.colorizer.buttonHoverColor.r,
+                                                      mochaView.colorizer.buttonHoverColor.g,
+                                                      mochaView.colorizer.buttonHoverColor.b,
                                                       0.04)
 
-    readonly property color hoveredBackground: Qt.rgba(latteView.colorizer.buttonHoverColor.r,
-                                                       latteView.colorizer.buttonHoverColor.g,
-                                                       latteView.colorizer.buttonHoverColor.b,
+    readonly property color hoveredBackground: Qt.rgba(mochaView.colorizer.buttonHoverColor.r,
+                                                       mochaView.colorizer.buttonHoverColor.g,
+                                                       mochaView.colorizer.buttonHoverColor.b,
                                                        0.7)
 
     readonly property color normalBorder: Qt.rgba(settingsRoot.textColor.r,

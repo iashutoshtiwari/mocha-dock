@@ -13,7 +13,7 @@
 // Qt
 #include <QList>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 class LayoutsTable : public GenericTable<Layout>
@@ -35,6 +35,6 @@ public:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::LayoutsTable)
+Q_DECLARE_METATYPE(Mocha::Data::LayoutsTable)
 
 #endif

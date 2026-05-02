@@ -12,7 +12,7 @@
 #include <QWidget>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Widget {
 

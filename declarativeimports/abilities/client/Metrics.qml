@@ -5,7 +5,7 @@
 
 import QtQuick
 
-import org.kde.latte.abilities.definition as AbilityDefinition
+import org.kde.mocha.abilities.definition as AbilityDefinition
 
 AbilityDefinition.Metrics {
     property Item bridge: null

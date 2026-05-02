@@ -5,7 +5,7 @@
 
 import QtQuick
 
-import org.kde.latte.abilities.definition as AbilityDefinition
+import org.kde.mocha.abilities.definition as AbilityDefinition
 
 import "../../../code/AppletIdentifier.js" as AppletIdentifier
 
@@ -17,10 +17,10 @@ Item{
     //             LATTE<->APPLET COMMUNICATION PROTOCOL
     //             -------------------------------------
     //
-    // NAME: latteBridge
-    //   USAGE: property QtObject latteBridge: null
-    //   EXPLANATION: The main shared object that Latte is using to communicate with the applet
-    property bool appletContainsLatteBridge: appletRootItem && appletRootItem.hasOwnProperty("latteBridge") ? true : false
+    // NAME: mochaBridge
+    //   USAGE: property QtObject mochaBridge: null
+    //   EXPLANATION: The main shared object that Mocha is using to communicate with the applet
+    property bool appletContainsMochaBridge: appletRootItem && appletRootItem.hasOwnProperty("mochaBridge") ? true : false
     //!              END OF INTERNAL APPLET PROPERTIES
     //             -------------------------------------
 
@@ -35,8 +35,8 @@ Item{
     //! In Plasma 6, the PlasmoidItem IS the applet root (not applet.children[0] as in Plasma 5)
     property Item appletDefaultRootItem: applet ? applet : null
 
-    property Item appletIconItem: null //first applet's IconItem to be used by Latte
-    property Item appletImageItem: null //first applet's ImageItem to be used by Latte
+    property Item appletIconItem: null //first applet's IconItem to be used by Mocha
+    property Item appletImageItem: null //first applet's ImageItem to be used by Mocha
     //! END OF PROPERTIES
 
     //! BEGIN OF PUBLIC PROPERTIES SET THROUGH LATTEBRIDGE.ACTIONS   
@@ -80,8 +80,8 @@ Item{
     //! BEGIN OF LOADERS
     Loader{
         id: bridgeLoader
-        active: appletContainsLatteBridge
-        sourceComponent: LatteBridge{}
+        active: appletContainsMochaBridge
+        sourceComponent: MochaBridge{}
     }
     //! END OF LOADERS
 

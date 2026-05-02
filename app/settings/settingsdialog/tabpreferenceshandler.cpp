@@ -12,16 +12,16 @@
 #include "../universalsettings.h"
 #include "../actionsdialog/actionsdialog.h"
 #include "../../apptypes.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../plasma/extended/theme.h"
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Handler {
 
 
-TabPreferences::TabPreferences(Latte::Settings::Dialog::SettingsDialog *parent)
+TabPreferences::TabPreferences(Mocha::Settings::Dialog::SettingsDialog *parent)
     : Generic(parent),
       m_parentDialog(parent),
       m_corona(m_parentDialog->corona()),

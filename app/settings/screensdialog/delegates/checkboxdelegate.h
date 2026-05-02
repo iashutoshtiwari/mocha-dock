@@ -10,7 +10,7 @@
 #include <QStyledItemDelegate>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Screens {
 namespace Delegate {

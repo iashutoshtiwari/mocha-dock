@@ -18,10 +18,10 @@
 // KDE
 #include <KWindowSystem>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-ScreenEdgeGhostWindow::ScreenEdgeGhostWindow(Latte::View *view) :
+ScreenEdgeGhostWindow::ScreenEdgeGhostWindow(Mocha::View *view) :
     SubWindow(view, QString("Screen Ghost Window"))
 {
     if (m_debugMode) {
@@ -37,7 +37,7 @@ ScreenEdgeGhostWindow::ScreenEdgeGhostWindow(Latte::View *view) :
 
     setColor(m_showColor);
 
-    connect(m_latteView->positioner(), &Latte::ViewPart::Positioner::slideOffsetChanged, this, &ScreenEdgeGhostWindow::updateGeometry);
+    connect(m_latteView->positioner(), &Mocha::ViewPart::Positioner::slideOffsetChanged, this, &ScreenEdgeGhostWindow::updateGeometry);
 
     //! this timer is used in order to avoid fast enter/exit signals during first
     //! appearing after edge activation

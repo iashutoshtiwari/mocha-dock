@@ -13,7 +13,7 @@
 // KDE
 #include <KSharedConfig>
 
-namespace Latte {
+namespace Mocha {
 namespace ShortcutsPart {
 
 class ShortcutsTracker: public QObject {

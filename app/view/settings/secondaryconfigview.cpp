@@ -9,7 +9,7 @@
 #include "primaryconfigview.h"
 #include "../panelshadows_p.h"
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../wm/abstractwindowinterface.h"
 
 // Qt
@@ -24,10 +24,10 @@
 #include <KWindowSystem>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-SecondaryConfigView::SecondaryConfigView(Latte::View *view, PrimaryConfigView *parent)
+SecondaryConfigView::SecondaryConfigView(Mocha::View *view, PrimaryConfigView *parent)
     : SubConfigView(view, QString("#secondaryconfigview#")),
       m_parent(parent)
 {
@@ -50,7 +50,7 @@ void SecondaryConfigView::init()
 {
     SubConfigView::init();
 
-    QByteArray tempFilePath = "lattedocksecondaryconfigurationui";
+    QByteArray tempFilePath = "mochadocksecondaryconfigurationui";
 
     updateEnabledBorders();
 
@@ -65,7 +65,7 @@ QRect SecondaryConfigView::geometryWhenVisible() const
     return m_geometryWhenVisible;
 }
 
-void SecondaryConfigView::initParentView(Latte::View *view)
+void SecondaryConfigView::initParentView(Mocha::View *view)
 {   
     SubConfigView::initParentView(view);
 
@@ -157,7 +157,7 @@ void SecondaryConfigView::showEvent(QShowEvent *ev)
     }
 
     setFlags(wFlags());
-    m_corona->wm()->setViewExtraFlags(this, false, Latte::Types::NormalWindow);
+    m_corona->wm()->setViewExtraFlags(this, false, Mocha::Types::NormalWindow);
 
     syncGeometry();
 

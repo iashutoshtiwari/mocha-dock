@@ -13,7 +13,7 @@
 // Qt
 #include <QDebug>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Dialog {
 

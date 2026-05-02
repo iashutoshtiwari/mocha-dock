@@ -7,8 +7,8 @@ import QtQuick
 
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.abilities.client as AbilityClient
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.abilities.client as AbilityClient
 
 import "abilities" as Ability
 
@@ -48,11 +48,11 @@ AbilityClient.AppletAbilities {
     Connections {
         target: _abilityContainer.userRequests
         onSglViewType: {
-            if (viewType === LatteCore.Types.DockView) {
+            if (viewType === MochaCore.Types.DockView) {
                 plasmoid.configuration.animationLauncherBouncing = true;
                 plasmoid.configuration.animationWindowInAttention = true;
                 plasmoid.configuration.animationWindowAddedInGroup = true;
-            } else if (viewType === LatteCore.Types.PanelView) {
+            } else if (viewType === MochaCore.Types.PanelView) {
                 plasmoid.configuration.animationLauncherBouncing = false;
                 plasmoid.configuration.animationWindowInAttention = false;
                 plasmoid.configuration.animationWindowAddedInGroup = false;

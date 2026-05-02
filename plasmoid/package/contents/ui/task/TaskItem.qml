@@ -14,10 +14,10 @@ import org.kde.plasma.plasmoid
 
 import org.kde.taskmanager as TaskManagerApplet
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.private.tasks as LatteTasks
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.private.tasks as MochaTasks
 
-import org.kde.latte.abilities.items as AbilityItem
+import org.kde.mocha.abilities.items as AbilityItem
 
 import "animations" as TaskAnimations
 
@@ -416,7 +416,7 @@ AbilityItem.BasicItem {
     }
 
     function activateLauncher() {
-        if (LatteCore.WindowSystem.compositingActive) {
+        if (MochaCore.WindowSystem.compositingActive) {
             taskItem.taskLauncherActivated();
             hasAddedWaitingLauncher = true;
             tasksExtendedManager.addWaitingLauncher(taskItem.launcherUrl);
@@ -432,7 +432,7 @@ AbilityItem.BasicItem {
         }
 
         if (desktopFile !== "") {
-            LatteTasks.LauncherHelper.launchDesktopFile(desktopFile);
+            MochaTasks.LauncherHelper.launchDesktopFile(desktopFile);
         } else {
             tasksModel.requestNewInstance(modelIndex());
         }
@@ -616,9 +616,9 @@ AbilityItem.BasicItem {
 
     function modifierAccepted(mouse){
         if (mouse.modifiers & root.modifierQt){
-            if ((mouse.button === Qt.LeftButton && root.modifierClick === LatteTasks.Types.LeftClick)
-                    || (mouse.button === Qt.MiddleButton && root.modifierClick === LatteTasks.Types.MiddleClick)
-                    || (mouse.button === Qt.RightButton && root.modifierClick === LatteTasks.Types.RightClick))
+            if ((mouse.button === Qt.LeftButton && root.modifierClick === MochaTasks.Types.LeftClick)
+                    || (mouse.button === Qt.MiddleButton && root.modifierClick === MochaTasks.Types.MiddleClick)
+                    || (mouse.button === Qt.RightButton && root.modifierClick === MochaTasks.Types.RightClick))
                 return true;
         }
 
@@ -900,7 +900,7 @@ AbilityItem.BasicItem {
         var hideStartup =  ((!hasShownLauncher || !taskItem.abilities.launchers.inCurrentActivity(taskItem.launcherUrl))
                             && taskItem.isStartup);
 
-        if (!LatteCore.WindowSystem.compositingActive) {
+        if (!MochaCore.WindowSystem.compositingActive) {
             visible = true;
         } else if ( (isWindow || isStartup || isLauncher) && tasksExtendedManager.waitingLauncherExists(launcherUrl)) {
             tasksExtendedManager.waitingLauncherRemoved.connect(slotWaitingLauncherRemoved);

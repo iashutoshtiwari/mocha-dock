@@ -19,13 +19,13 @@
 //KF
 #include <KSvg/FrameSvg>
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 }
 
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 class SubConfigView : public QQuickView
@@ -34,7 +34,7 @@ class SubConfigView : public QQuickView
     Q_PROPERTY(KSvg::FrameSvg::EnabledBorders enabledBorders READ enabledBorders NOTIFY enabledBordersChanged)
 
 public:
-    SubConfigView(Latte::View *view, const QString &title, const bool &isNormalWindow = true);
+    SubConfigView(Mocha::View *view, const QString &title, const bool &isNormalWindow = true);
     ~SubConfigView() override;
 
     virtual void requestActivate();
@@ -43,12 +43,12 @@ public:
 
     KSvg::FrameSvg::EnabledBorders enabledBorders() const;
 
-    Latte::Corona *corona() const;
-    Latte::View *parentView() const;
-    virtual void setParentView(Latte::View *view, const bool &immediate = false);
+    Mocha::Corona *corona() const;
+    Mocha::View *parentView() const;
+    virtual void setParentView(Mocha::View *view, const bool &immediate = false);
     virtual void showAfter(int msecs = 0);
 
-    Latte::WindowSystem::WindowId trackedWindowId();
+    Mocha::WindowSystem::WindowId trackedWindowId();
 
 public slots:
     virtual void syncGeometry() = 0;
@@ -60,7 +60,7 @@ protected:
     virtual void syncSlideEffect();
 
     virtual void init();
-    virtual void initParentView(Latte::View *view);
+    virtual void initParentView(Mocha::View *view);
     virtual void updateEnabledBorders() = 0;
 
     void showEvent(QShowEvent *ev) override;
@@ -72,14 +72,14 @@ protected:
     bool m_isNormalWindow{true};
     QTimer m_screenSyncTimer;
 
-    QPointer<Latte::View> m_latteView;
+    QPointer<Mocha::View> m_latteView;
 
     QList<QMetaObject::Connection> connections;
     QList<QMetaObject::Connection> viewconnections;
 
     KSvg::FrameSvg::EnabledBorders m_enabledBorders{KSvg::FrameSvg::AllBorders};
 
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
 
 private slots:
     void updateWaylandId();
@@ -89,7 +89,7 @@ private:
 
     QTimer m_showTimer;
 
-    Latte::WindowSystem::WindowId m_waylandWindowId;
+    Mocha::WindowSystem::WindowId m_waylandWindowId;
 };
 
 }

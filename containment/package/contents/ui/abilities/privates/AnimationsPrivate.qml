@@ -6,7 +6,7 @@
 import QtQuick
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.host as AbilityHost
+import org.kde.mocha.abilities.host as AbilityHost
 
 AbilityHost.Animations {
     id: animationsPrivate

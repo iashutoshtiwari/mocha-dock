@@ -7,7 +7,7 @@
 #define TEMPLATESMANAGER_H
 
 // local
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../data/appletdata.h"
 #include "../data/layoutdata.h"
 #include "../data/layoutstable.h"
@@ -19,12 +19,12 @@
 // KDE
 #include <KLocalizedString>
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace Templates {
 
 const char DEFAULTLAYOUTTEMPLATENAME[] = "Default";
@@ -35,10 +35,10 @@ class Manager : public QObject
     Q_OBJECT
 
 public:
-    Manager(Latte::Corona *corona = nullptr);
+    Manager(Mocha::Corona *corona = nullptr);
     ~Manager() override;
 
-    Latte::Corona *corona();
+    Mocha::Corona *corona();
     void init();
 
     bool hasCustomLayoutTemplate(const QString &templateName) const;
@@ -46,7 +46,7 @@ public:
     bool hasViewTemplate(const QString &templateName) const;
 
     bool exportTemplate(const QString &originFile, const QString &destinationFile, const Data::AppletsTable &approvedApplets);
-    bool exportTemplate(const Latte::View *view, const QString &destinationFile, const Data::AppletsTable &approvedApplets);
+    bool exportTemplate(const Mocha::View *view, const QString &destinationFile, const Data::AppletsTable &approvedApplets);
 
     Data::Layout layoutTemplateForName(const QString &layoutName);
 
@@ -86,7 +86,7 @@ private:
     QString uniqueViewTemplateName(QString name) const;
 
 private:
-    Latte::Corona *m_corona;
+    Mocha::Corona *m_corona;
 
     Data::LayoutsTable m_layoutTemplates;
     Data::GenericBasicTable m_viewTemplates;

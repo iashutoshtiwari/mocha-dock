@@ -6,7 +6,7 @@
 import QtQuick
 
 import org.kde.plasma.core as PlasmaCore
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Item {
     property Item destination: null
@@ -15,10 +15,10 @@ Item {
     readonly property int tailThickness: destination ? destination.tailThicknessMargin : appletItem.metrics.margin.tailThickness
     readonly property int thickness: headThickness + tailThickness + (root.isHorizontal ? destination.height : destination.width)
     readonly property int lengthPadding: {
-        if ( (root.myView.alignment === LatteCore.Types.Justify && appletItem.firstChildOfStartLayout)
-                || (root.myView.alignment === LatteCore.Types.Justify && appletItem.lastChildOfEndLayout)
-                || (root.myView.alignment !== LatteCore.Types.Justify && appletItem.firstChildOfMainLayout)
-                || (root.myView.alignment !== LatteCore.Types.Justify && appletItem.lastChildOfMainLayout)) {
+        if ( (root.myView.alignment === MochaCore.Types.Justify && appletItem.firstChildOfStartLayout)
+                || (root.myView.alignment === MochaCore.Types.Justify && appletItem.lastChildOfEndLayout)
+                || (root.myView.alignment !== MochaCore.Types.Justify && appletItem.firstChildOfMainLayout)
+                || (root.myView.alignment !== MochaCore.Types.Justify && appletItem.lastChildOfMainLayout)) {
             //! Fitts Law on corners
             return destination ? destination.zoomScaleThickness * appletItem.lengthAppletFullMargin : appletItem.lengthAppletFullMargin;
         }
@@ -36,7 +36,7 @@ Item {
             anchors.fill: parent
             color: "yellow"
             opacity: 0.2
-            visible: root.latteView && root.latteView.sink.destinationItem === destination
+            visible: root.mochaView && root.mochaView.sink.destinationItem === destination
         }
     }
 

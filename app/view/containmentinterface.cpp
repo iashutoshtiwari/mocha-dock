@@ -7,7 +7,7 @@
 
 // local
 #include "view.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../layout/genericlayout.h"
 #include "../layouts/importer.h"
 #include "../layouts/storage.h"
@@ -28,14 +28,14 @@
 #include <KLocalizedString>
 #include <KPluginMetaData>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-ContainmentInterface::ContainmentInterface(Latte::View *parent)
+ContainmentInterface::ContainmentInterface(Mocha::View *parent)
     : QObject(parent),
       m_view(parent)
 {
-    m_corona = qobject_cast<Latte::Corona *>(m_view->corona());
+    m_corona = qobject_cast<Mocha::Corona *>(m_view->corona());
 
     m_latteTasksModel = new TasksModel(this);
     m_plasmaTasksModel = new TasksModel(this);
@@ -453,7 +453,7 @@ bool ContainmentInterface::appletIsExpandable(PlasmaQuick::AppletQuickItem *appl
 
     return ((appletQuickItem->fullRepresentation() != nullptr
             && appletQuickItem->preferredRepresentation() != appletQuickItem->fullRepresentation())
-            || Latte::Layouts::Storage::self()->isSubContainment(m_view->corona(), appletQuickItem->applet()));
+            || Mocha::Layouts::Storage::self()->isSubContainment(m_view->corona(), appletQuickItem->applet()));
 }
 
 bool ContainmentInterface::appletIsActivationTogglesExpanded(const int id) const
@@ -609,7 +609,7 @@ void ContainmentInterface::addApplet(const QString &pluginId)
         return;
     }
 
-    QStringList paths = Latte::Layouts::Importer::standardPaths();
+    QStringList paths = Mocha::Layouts::Importer::standardPaths();
     QString pluginpath;
 
     for(int i=0; i<paths.count(); ++i) {

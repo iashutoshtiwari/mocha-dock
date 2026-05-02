@@ -11,7 +11,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.extras as PlasmaExtras
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Window{
     width: mainGrid.width + 10
@@ -39,7 +39,7 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.name.length > 0 ? latteView.name : "___"
+                text: mochaView && mochaView.name.length > 0 ? mochaView.name : "___"
             }
 
             Text{
@@ -47,7 +47,7 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.positioner ? latteView.positioner.currentScreenName : "___"
+                text: mochaView && mochaView.positioner ? mochaView.positioner.currentScreenName : "___"
             }
 
             Text{
@@ -56,8 +56,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.screenGeometry){
-                        return latteView.screenGeometry.x+","+latteView.screenGeometry.y+ " "+latteView.screenGeometry.width+"x"+latteView.screenGeometry.height;
+                    if (mochaView && mochaView.screenGeometry){
+                        return mochaView.screenGeometry.x+","+mochaView.screenGeometry.y+ " "+mochaView.screenGeometry.width+"x"+mochaView.screenGeometry.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -70,8 +70,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView) {
-                        return  latteView.x + "," + latteView.y + " "+latteView.width+ "x"+latteView.height;
+                    if (mochaView) {
+                        return  mochaView.x + "," + mochaView.y + " "+mochaView.width+ "x"+mochaView.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -84,7 +84,7 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.onPrimary)
+                    if (mochaView && mochaView.onPrimary)
                         return "Yes";
                     else
                         return "No";
@@ -161,8 +161,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.effects && latteView.effects.mask) {
-                        return latteView.effects.mask.x +", "+ latteView.effects.mask.y+"  "+latteView.effects.mask.width+"x"+latteView.effects.mask.height;
+                    if (mochaView && mochaView.effects && mochaView.effects.mask) {
+                        return mochaView.effects.mask.x +", "+ mochaView.effects.mask.y+"  "+mochaView.effects.mask.width+"x"+mochaView.effects.mask.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -175,8 +175,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.effects && latteView.effects.inputMask) {
-                        return latteView.effects.inputMask.x +", "+ latteView.effects.inputMask.y+"  "+latteView.effects.inputMask.width+"x"+latteView.effects.inputMask.height;
+                    if (mochaView && mochaView.effects && mochaView.effects.inputMask) {
+                        return mochaView.effects.inputMask.x +", "+ mochaView.effects.inputMask.y+"  "+mochaView.effects.inputMask.width+"x"+mochaView.effects.inputMask.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -189,8 +189,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.localGeometry) {
-                        return latteView.localGeometry.x + ", " + latteView.localGeometry.y + "  " + latteView.localGeometry.width + "x" + latteView.localGeometry.height;
+                    if (mochaView && mochaView.localGeometry) {
+                        return mochaView.localGeometry.x + ", " + mochaView.localGeometry.y + "  " + mochaView.localGeometry.width + "x" + mochaView.localGeometry.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -203,8 +203,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.absoluteGeometry) {
-                        return latteView.absoluteGeometry.x + ", " + latteView.absoluteGeometry.y + "  " + latteView.absoluteGeometry.width + "x" + latteView.absoluteGeometry.height;
+                    if (mochaView && mochaView.absoluteGeometry) {
+                        return mochaView.absoluteGeometry.x + ", " + mochaView.absoluteGeometry.y + "  " + mochaView.absoluteGeometry.width + "x" + mochaView.absoluteGeometry.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -218,7 +218,7 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.effects && latteView.effects.drawEffects)
+                    if (mochaView && mochaView.effects && mochaView.effects.drawEffects)
                         return "Yes";
                     else
                         return "No";
@@ -231,8 +231,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.effects && latteView.effects.rect) {
-                        return latteView.effects.rect.x + ", " + latteView.effects.rect.y + "  " +latteView.effects.rect.width + "x" + latteView.effects.rect.height;
+                    if (mochaView && mochaView.effects && mochaView.effects.rect) {
+                        return mochaView.effects.rect.x + ", " + mochaView.effects.rect.y + "  " +mochaView.effects.rect.width + "x" + mochaView.effects.rect.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -253,7 +253,7 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.visibility && latteView.visibility.isHidden)
+                    if (mochaView && mochaView.visibility && mochaView.visibility.isHidden)
                         return "Yes";
                     else
                         return "No";
@@ -266,7 +266,7 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.visibility && latteView.visibility.containsMouse)
+                    if (mochaView && mochaView.visibility && mochaView.visibility.containsMouse)
                         return "Yes";
                     else
                         return "No";
@@ -326,22 +326,22 @@ Window{
             Text{
                 text: {
                     switch(plasmoid.configuration.alignment){
-                    case LatteCore.Types.Left:
+                    case MochaCore.Types.Left:
                         return "Left";
                         break;
-                    case LatteCore.Types.Right:
+                    case MochaCore.Types.Right:
                         return "Right";
                         break;
-                    case LatteCore.Types.Center:
+                    case MochaCore.Types.Center:
                         return "Center";
                         break;
-                    case LatteCore.Types.Top:
+                    case MochaCore.Types.Top:
                         return "Top";
                         break;
-                    case LatteCore.Types.Bottom:
+                    case MochaCore.Types.Bottom:
                         return "Bottom";
                         break;
-                    case LatteCore.Types.Justify:
+                    case MochaCore.Types.Justify:
                         return "Justify";
                         break;
                     }
@@ -356,52 +356,52 @@ Window{
 
             Text{
                 text: {
-                    if (!latteView || !latteView.visibility)
+                    if (!mochaView || !mochaView.visibility)
                         return "";
 
-                    switch(latteView.visibility.mode){
-                    case LatteCore.Types.AlwaysVisible:
+                    switch(mochaView.visibility.mode){
+                    case MochaCore.Types.AlwaysVisible:
                         return "Always Visible";
                         break;
-                    case LatteCore.Types.AutoHide:
+                    case MochaCore.Types.AutoHide:
                         return "Auto Hide";
                         break;
-                    case LatteCore.Types.DodgeActive:
+                    case MochaCore.Types.DodgeActive:
                         return "Dodge Active";
                         break;
-                    case LatteCore.Types.DodgeMaximized:
+                    case MochaCore.Types.DodgeMaximized:
                         return "Dodge Maximized";
                         break;
-                    case LatteCore.Types.DodgeAllWindows:
+                    case MochaCore.Types.DodgeAllWindows:
                         return "Dodge All Windows";
                         break;
-                    case LatteCore.Types.DodgeAllWindows:
+                    case MochaCore.Types.DodgeAllWindows:
                         return "Dodge All Windows";
                         break;
-                    case LatteCore.Types.WindowsGoBelow:
+                    case MochaCore.Types.WindowsGoBelow:
                         return "Windows Go Below";
                         break;
-                    case LatteCore.Types.WindowsCanCover:
+                    case MochaCore.Types.WindowsCanCover:
                         return "Windows Can Cover";
                         break;
-                    case LatteCore.Types.WindowsAlwaysCover:
+                    case MochaCore.Types.WindowsAlwaysCover:
                         return "Windows Always Cover";
                         break;
-                    case LatteCore.Types.SidebarOnDemand:
+                    case MochaCore.Types.SidebarOnDemand:
                         return "OnDemand Sidebar";
                         break;
-                    case LatteCore.Types.SidebarAutoHide:
+                    case MochaCore.Types.SidebarAutoHide:
                         return "AutoHide Sidebar";
                     break;
-                    case LatteCore.Types.NormalWindow:
+                    case MochaCore.Types.NormalWindow:
                         return "Normal Window";
                         break;
-                    case LatteCore.Types.None:
+                    case MochaCore.Types.None:
                         return "None";
                         break;
                     }
 
-                    return "<unknown> : " + latteView.visibility.mode;
+                    return "<unknown> : " + mochaView.visibility.mode;
                 }
             }
 
@@ -824,8 +824,8 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.windowsTracker && latteView.windowsTracker.currentScreen.lastActiveWindow && latteView.windowsTracker.currentScreen.lastActiveWindow.isValid ?
-                          latteView.windowsTracker.currentScreen.lastActiveWindow.winId : "--"
+                text: mochaView && mochaView.windowsTracker && mochaView.windowsTracker.currentScreen.lastActiveWindow && mochaView.windowsTracker.currentScreen.lastActiveWindow.isValid ?
+                          mochaView.windowsTracker.currentScreen.lastActiveWindow.winId : "--"
             }
 
             Text{
@@ -833,8 +833,8 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.windowsTracker && latteView.windowsTracker.currentScreen.lastActiveWindow && latteView.windowsTracker.currentScreen.lastActiveWindow.isValid ?
-                          latteView.windowsTracker.currentScreen.lastActiveWindow.display : "--"
+                text: mochaView && mochaView.windowsTracker && mochaView.windowsTracker.currentScreen.lastActiveWindow && mochaView.windowsTracker.currentScreen.lastActiveWindow.isValid ?
+                          mochaView.windowsTracker.currentScreen.lastActiveWindow.display : "--"
                 elide: Text.ElideRight
             }
 
@@ -843,8 +843,8 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.windowsTracker && latteView.windowsTracker.allScreens.lastActiveWindow && latteView.windowsTracker.allScreens.lastActiveWindow.isValid ?
-                          latteView.windowsTracker.allScreens.lastActiveWindow.winId : "--"
+                text: mochaView && mochaView.windowsTracker && mochaView.windowsTracker.allScreens.lastActiveWindow && mochaView.windowsTracker.allScreens.lastActiveWindow.isValid ?
+                          mochaView.windowsTracker.allScreens.lastActiveWindow.winId : "--"
             }
 
             Text{
@@ -852,8 +852,8 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.windowsTracker && latteView.windowsTracker.allScreens.lastActiveWindow && latteView.windowsTracker.allScreens.lastActiveWindow.isValid ?
-                          latteView.windowsTracker.allScreens.lastActiveWindow.display : "--"
+                text: mochaView && mochaView.windowsTracker && mochaView.windowsTracker.allScreens.lastActiveWindow && mochaView.windowsTracker.allScreens.lastActiveWindow.isValid ?
+                          mochaView.windowsTracker.allScreens.lastActiveWindow.display : "--"
                 elide: Text.ElideRight
             }
         }

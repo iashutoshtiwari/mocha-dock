@@ -8,7 +8,7 @@
 
 // local
 #include "subwindow.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../wm/windowinfowrap.h"
 
 // Qt
@@ -16,12 +16,12 @@
 #include <QQuickView>
 #include <QTimer>
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 //! What is the importance of this class?
@@ -35,7 +35,7 @@ namespace ViewPart {
 //! that aren't relevant any more.
 //!
 //! In order to workaround the above behaviour Latte is using a
-//! fake window to communicate with KWin and the MAIN Latte::View window
+//! fake window to communicate with KWin and the MAIN Mocha::View window
 //! continues to use only mask technique to hide
 //!
 //! KDE BUGS: https://bugs.kde.org/show_bug.cgi?id=382219
@@ -46,7 +46,7 @@ class ScreenEdgeGhostWindow : public SubWindow
     Q_OBJECT
 
 public:
-    ScreenEdgeGhostWindow(Latte::View *view);
+    ScreenEdgeGhostWindow(Mocha::View *view);
     ~ScreenEdgeGhostWindow() override;
 
     bool containsMouse() const;

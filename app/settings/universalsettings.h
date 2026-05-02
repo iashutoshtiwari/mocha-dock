@@ -11,7 +11,7 @@
 // local
 #include <coretypes.h>
 #include "../apptypes.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../data/preferencesdata.h"
 
 // Qt
@@ -28,13 +28,13 @@
 #include <KSharedConfig>
 #include <qtypes.h>
 
-namespace Latte {
+namespace Mocha {
 namespace Layouts {
 class Manager;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 //width_scale, height_scale
 typedef QPair<float, float> ScreenScales;
 
@@ -58,7 +58,7 @@ class UniversalSettings : public QObject
     Q_PROPERTY(QStringList launchers READ launchers WRITE setLaunchers NOTIFY launchersChanged)
     Q_PROPERTY(QStringList contextMenuActionsAlwaysShown READ contextMenuActionsAlwaysShown WRITE setContextMenuActionsAlwaysShown NOTIFY actionsChanged)
 
-    Q_PROPERTY(Latte::Settings::MouseSensitivity sensitivity READ sensitivity WRITE setSensitivity NOTIFY sensitivityChanged)
+    Q_PROPERTY(Mocha::Settings::MouseSensitivity sensitivity READ sensitivity WRITE setSensitivity NOTIFY sensitivityChanged)
 
     Q_PROPERTY(QQmlListProperty<QScreen> screens READ screens)
 
@@ -215,7 +215,7 @@ private:
     //! ScreenName, <width_scale, height_scale>
     QHash<QString, ScreenScales> m_screenScales;
 
-    QPointer<Latte::Corona> m_corona;
+    QPointer<Mocha::Corona> m_corona;
 
     KConfigGroup m_screenScalesGroup;
     KConfigGroup m_universalGroup;
@@ -229,7 +229,7 @@ private:
     KConfigGroup m_kwinrcWindowsGroup;
 
     friend class Layouts::Manager;
-    friend class Latte::Corona;
+    friend class Mocha::Corona;
 };
 
 }

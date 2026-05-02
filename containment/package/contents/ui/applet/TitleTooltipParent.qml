@@ -11,7 +11,7 @@ import org.kde.plasma.core as PlasmaCore
 
 Item{
     id: visual
-    //used from LatteCore.Dialog Tooltips in order to be anchored properly to their visual parent
+    //used from MochaCore.Dialog Tooltips in order to be anchored properly to their visual parent
     signal anchoredTooltipPositionChanged();
 
     width: root.isVertical ?  thickness : size

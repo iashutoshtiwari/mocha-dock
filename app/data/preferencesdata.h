@@ -13,7 +13,7 @@
 // Qt
 #include <QStringList>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 class Preferences

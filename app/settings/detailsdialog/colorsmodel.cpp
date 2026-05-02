@@ -12,11 +12,11 @@
 #include <KLocalizedString>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Model {
 
-Colors::Colors(QObject *parent, Latte::Corona *corona)
+Colors::Colors(QObject *parent, Mocha::Corona *corona)
     : QAbstractTableModel(parent),
       m_corona(corona)
 {
@@ -53,7 +53,7 @@ QString Colors::colorPath(const QString &color)
 
 void Colors::add(const QString &newid, const QString &newname, const QString &newpath, const QString &newtextcolor)
 {
-    Latte::Data::LayoutColor color;
+    Mocha::Data::LayoutColor color;
     color.setData(newid, newname, newpath, newtextcolor);
     m_colorsTable << color;
 }

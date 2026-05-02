@@ -13,7 +13,7 @@
 #include "../abstractwindowinterface.h"
 #include "../schemecolors.h"
 #include "../../apptypes.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../layout/genericlayout.h"
 #include "../../layouts/manager.h"
 #include "../../view/view.h"
@@ -22,7 +22,7 @@
 // Qt
 #include <KWindowSystem>
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -52,7 +52,7 @@ Windows::Windows(AbstractWindowInterface *parent)
 Windows::~Windows()
 {
     //! clear all the m_views tracking information
-    for (QHash<Latte::View *, TrackedViewInfo *>::iterator i=m_views.begin(); i!=m_views.end(); ++i) {
+    for (QHash<Mocha::View *, TrackedViewInfo *>::iterator i=m_views.begin(); i!=m_views.end(); ++i) {
         i.value()->deleteLater();
         m_views[i.key()] = nullptr;
     }
@@ -60,7 +60,7 @@ Windows::~Windows()
     m_views.clear();
 
     //! clear all the m_layouts tracking layouts
-    for (QHash<Latte::Layout::GenericLayout *, TrackedLayoutInfo *>::iterator i=m_layouts.begin(); i!=m_layouts.end(); ++i) {
+    for (QHash<Mocha::Layout::GenericLayout *, TrackedLayoutInfo *>::iterator i=m_layouts.begin(); i!=m_layouts.end(); ++i) {
         i.value()->deleteLater();
         m_layouts[i.key()] = nullptr;
     }
@@ -117,7 +117,7 @@ void Windows::init()
     connect(m_wm, &AbstractWindowInterface::isShowingDesktopChanged,  this, &Windows::updateAllHints);
 }
 
-void Windows::initLayoutHints(Latte::Layout::GenericLayout *layout)
+void Windows::initLayoutHints(Mocha::Layout::GenericLayout *layout)
 {
     if (!m_layouts.contains(layout)) {
         return;
@@ -129,7 +129,7 @@ void Windows::initLayoutHints(Latte::Layout::GenericLayout *layout)
     setActiveWindowScheme(layout, nullptr);
 }
 
-void Windows::initViewHints(Latte::View *view)
+void Windows::initViewHints(Mocha::View *view)
 {
     if (!m_views.contains(view)) {
         return;
@@ -153,7 +153,7 @@ AbstractWindowInterface *Windows::wm()
 }
 
 
-void Windows::addView(Latte::View *view)
+void Windows::addView(Mocha::View *view)
 {
     if (m_views.contains(view)) {
         return;
@@ -166,22 +166,22 @@ void Windows::addView(Latte::View *view)
     //! Consider Layouts
     addRelevantLayout(view);
 
-    connect(view, &Latte::View::layoutChanged, this, [&, view]() {
+    connect(view, &Mocha::View::layoutChanged, this, [&, view]() {
         addRelevantLayout(view);
     });
 
-    connect(view, &Latte::View::screenGeometryChanged, this, &Windows::updateScreenGeometries);
+    connect(view, &Mocha::View::screenGeometryChanged, this, &Windows::updateScreenGeometries);
 
-    connect(view, &Latte::View::isTouchingBottomViewAndIsBusyChanged, this, &Windows::updateExtraViewHints);
-    connect(view, &Latte::View::isTouchingTopViewAndIsBusyChanged, this, &Windows::updateExtraViewHints);
-    connect(view, &Latte::View::absoluteGeometryChanged, this, &Windows::updateAllHintsAfterTimer);
+    connect(view, &Mocha::View::isTouchingBottomViewAndIsBusyChanged, this, &Windows::updateExtraViewHints);
+    connect(view, &Mocha::View::isTouchingTopViewAndIsBusyChanged, this, &Windows::updateExtraViewHints);
+    connect(view, &Mocha::View::absoluteGeometryChanged, this, &Windows::updateAllHintsAfterTimer);
 
     updateAllHints();
 
     emit informationAnnounced(view);
 }
 
-void Windows::removeView(Latte::View *view)
+void Windows::removeView(Mocha::View *view)
 {
     if (!m_views.contains(view)) {
         return;
@@ -193,7 +193,7 @@ void Windows::removeView(Latte::View *view)
     updateRelevantLayouts();
 }
 
-void Windows::addRelevantLayout(Latte::View *view)
+void Windows::addRelevantLayout(Mocha::View *view)
 {
     if (view->layout()) {
         bool initializing {false};
@@ -217,12 +217,12 @@ void Windows::addRelevantLayout(Latte::View *view)
 
 void Windows::updateRelevantLayouts()
 {
-    QList<Latte::Layout::GenericLayout*> orphanedLayouts;
+    QList<Mocha::Layout::GenericLayout*> orphanedLayouts;
 
     //! REMOVE Orphaned Relevant layouts that have been removed or they don't contain any Views anymore
-    for (QHash<Latte::Layout::GenericLayout *, TrackedLayoutInfo *>::iterator i=m_layouts.begin(); i!=m_layouts.end(); ++i) {
+    for (QHash<Mocha::Layout::GenericLayout *, TrackedLayoutInfo *>::iterator i=m_layouts.begin(); i!=m_layouts.end(); ++i) {
         bool hasView{false};
-        for (QHash<Latte::View *, TrackedViewInfo *>::iterator j=m_views.begin(); j!=m_views.end(); ++j) {
+        for (QHash<Mocha::View *, TrackedViewInfo *>::iterator j=m_views.begin(); j!=m_views.end(); ++j) {
             if (j.key() && i.key() && i.key() == j.key()->layout()) {
                 hasView = true;
                 break;
@@ -242,9 +242,9 @@ void Windows::updateRelevantLayouts()
     }
 
     //! UPDATE Enabled layout window tracking based on the Views that are requesting windows tracking
-    for (QHash<Latte::Layout::GenericLayout *, TrackedLayoutInfo *>::iterator i=m_layouts.begin(); i!=m_layouts.end(); ++i) {
+    for (QHash<Mocha::Layout::GenericLayout *, TrackedLayoutInfo *>::iterator i=m_layouts.begin(); i!=m_layouts.end(); ++i) {
         bool hasViewEnabled{false};
-        for (QHash<Latte::View *, TrackedViewInfo *>::iterator j=m_views.begin(); j!=m_views.end(); ++j) {
+        for (QHash<Mocha::View *, TrackedViewInfo *>::iterator j=m_views.begin(); j!=m_views.end(); ++j) {
             if (i.key() == j.key()->layout() && j.value()->enabled()) {
                 hasViewEnabled = true;
                 break;
@@ -263,7 +263,7 @@ void Windows::updateRelevantLayouts()
 
 //! Views Properties And Hints
 
-bool Windows::enabled(Latte::View *view)
+bool Windows::enabled(Mocha::View *view)
 {
     if (!m_views.contains(view)) {
         return false;
@@ -272,7 +272,7 @@ bool Windows::enabled(Latte::View *view)
     return m_views[view]->enabled();
 }
 
-void Windows::setEnabled(Latte::View *view, const bool enabled)
+void Windows::setEnabled(Mocha::View *view, const bool enabled)
 {
     if (!m_views.contains(view) || m_views[view]->enabled() == enabled) {
         return;
@@ -291,7 +291,7 @@ void Windows::setEnabled(Latte::View *view, const bool enabled)
     emit enabledChanged(view);
 }
 
-bool Windows::activeWindowMaximized(Latte::View *view) const
+bool Windows::activeWindowMaximized(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return false;
@@ -300,7 +300,7 @@ bool Windows::activeWindowMaximized(Latte::View *view) const
     return m_views[view]->activeWindowMaximized();
 }
 
-void Windows::setActiveWindowMaximized(Latte::View *view, bool activeMaximized)
+void Windows::setActiveWindowMaximized(Mocha::View *view, bool activeMaximized)
 {
     if (!m_views.contains(view) || m_views[view]->activeWindowMaximized() == activeMaximized) {
         return;
@@ -310,7 +310,7 @@ void Windows::setActiveWindowMaximized(Latte::View *view, bool activeMaximized)
     emit activeWindowMaximizedChanged(view);
 }
 
-bool Windows::activeWindowTouching(Latte::View *view) const
+bool Windows::activeWindowTouching(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return false;
@@ -319,7 +319,7 @@ bool Windows::activeWindowTouching(Latte::View *view) const
     return m_views[view]->activeWindowTouching();
 }
 
-void Windows::setActiveWindowTouching(Latte::View *view, bool activeTouching)
+void Windows::setActiveWindowTouching(Mocha::View *view, bool activeTouching)
 {
     if (!m_views.contains(view) || m_views[view]->activeWindowTouching() == activeTouching) {
         return;
@@ -329,7 +329,7 @@ void Windows::setActiveWindowTouching(Latte::View *view, bool activeTouching)
     emit activeWindowTouchingChanged(view);
 }
 
-bool Windows::activeWindowTouchingEdge(Latte::View *view) const
+bool Windows::activeWindowTouchingEdge(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return false;
@@ -338,7 +338,7 @@ bool Windows::activeWindowTouchingEdge(Latte::View *view) const
     return m_views[view]->activeWindowTouchingEdge();
 }
 
-void Windows::setActiveWindowTouchingEdge(Latte::View *view, bool activeTouchingEdge)
+void Windows::setActiveWindowTouchingEdge(Mocha::View *view, bool activeTouchingEdge)
 {
     if (!m_views.contains(view) || m_views[view]->activeWindowTouchingEdge() == activeTouchingEdge) {
         return;
@@ -348,7 +348,7 @@ void Windows::setActiveWindowTouchingEdge(Latte::View *view, bool activeTouching
     emit activeWindowTouchingEdgeChanged(view);
 }
 
-bool Windows::existsWindowActive(Latte::View *view) const
+bool Windows::existsWindowActive(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return false;
@@ -357,7 +357,7 @@ bool Windows::existsWindowActive(Latte::View *view) const
     return m_views[view]->existsWindowActive();
 }
 
-void Windows::setExistsWindowActive(Latte::View *view, bool windowActive)
+void Windows::setExistsWindowActive(Mocha::View *view, bool windowActive)
 {
     if (!m_views.contains(view) || m_views[view]->existsWindowActive() == windowActive) {
         return;
@@ -367,7 +367,7 @@ void Windows::setExistsWindowActive(Latte::View *view, bool windowActive)
     emit existsWindowActiveChanged(view);
 }
 
-bool Windows::existsWindowMaximized(Latte::View *view) const
+bool Windows::existsWindowMaximized(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return false;
@@ -376,7 +376,7 @@ bool Windows::existsWindowMaximized(Latte::View *view) const
     return m_views[view]->existsWindowMaximized();
 }
 
-void Windows::setExistsWindowMaximized(Latte::View *view, bool windowMaximized)
+void Windows::setExistsWindowMaximized(Mocha::View *view, bool windowMaximized)
 {
     if (!m_views.contains(view) || m_views[view]->existsWindowMaximized() == windowMaximized) {
         return;
@@ -386,7 +386,7 @@ void Windows::setExistsWindowMaximized(Latte::View *view, bool windowMaximized)
     emit existsWindowMaximizedChanged(view);
 }
 
-bool Windows::existsWindowTouching(Latte::View *view) const
+bool Windows::existsWindowTouching(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return false;
@@ -395,7 +395,7 @@ bool Windows::existsWindowTouching(Latte::View *view) const
     return m_views[view]->existsWindowTouching();
 }
 
-void Windows::setExistsWindowTouching(Latte::View *view, bool windowTouching)
+void Windows::setExistsWindowTouching(Mocha::View *view, bool windowTouching)
 {
     if (!m_views.contains(view) || m_views[view]->existsWindowTouching() == windowTouching) {
         return;
@@ -405,7 +405,7 @@ void Windows::setExistsWindowTouching(Latte::View *view, bool windowTouching)
     emit existsWindowTouchingChanged(view);
 }
 
-bool Windows::existsWindowTouchingEdge(Latte::View *view) const
+bool Windows::existsWindowTouchingEdge(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return false;
@@ -414,7 +414,7 @@ bool Windows::existsWindowTouchingEdge(Latte::View *view) const
     return m_views[view]->existsWindowTouchingEdge();
 }
 
-void Windows::setExistsWindowTouchingEdge(Latte::View *view, bool windowTouchingEdge)
+void Windows::setExistsWindowTouchingEdge(Mocha::View *view, bool windowTouchingEdge)
 {
     if (!m_views.contains(view) || m_views[view]->existsWindowTouchingEdge() == windowTouchingEdge) {
         return;
@@ -425,7 +425,7 @@ void Windows::setExistsWindowTouchingEdge(Latte::View *view, bool windowTouching
 }
 
 
-bool Windows::isTouchingBusyVerticalView(Latte::View *view) const
+bool Windows::isTouchingBusyVerticalView(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return false;
@@ -434,7 +434,7 @@ bool Windows::isTouchingBusyVerticalView(Latte::View *view) const
     return m_views[view]->isTouchingBusyVerticalView();
 }
 
-void Windows::setIsTouchingBusyVerticalView(Latte::View *view, bool viewTouching)
+void Windows::setIsTouchingBusyVerticalView(Mocha::View *view, bool viewTouching)
 {
     if (!m_views.contains(view) || m_views[view]->isTouchingBusyVerticalView() == viewTouching) {
         return;
@@ -444,7 +444,7 @@ void Windows::setIsTouchingBusyVerticalView(Latte::View *view, bool viewTouching
     emit isTouchingBusyVerticalViewChanged(view);
 }
 
-SchemeColors *Windows::activeWindowScheme(Latte::View *view) const
+SchemeColors *Windows::activeWindowScheme(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return nullptr;
@@ -453,7 +453,7 @@ SchemeColors *Windows::activeWindowScheme(Latte::View *view) const
     return m_views[view]->activeWindowScheme();
 }
 
-void Windows::setActiveWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme)
+void Windows::setActiveWindowScheme(Mocha::View *view, WindowSystem::SchemeColors *scheme)
 {
     if (!m_views.contains(view) || m_views[view]->activeWindowScheme() == scheme) {
         return;
@@ -463,7 +463,7 @@ void Windows::setActiveWindowScheme(Latte::View *view, WindowSystem::SchemeColor
     emit activeWindowSchemeChanged(view);
 }
 
-SchemeColors *Windows::touchingWindowScheme(Latte::View *view) const
+SchemeColors *Windows::touchingWindowScheme(Mocha::View *view) const
 {
     if (!m_views.contains(view)) {
         return nullptr;
@@ -472,7 +472,7 @@ SchemeColors *Windows::touchingWindowScheme(Latte::View *view) const
     return m_views[view]->touchingWindowScheme();
 }
 
-void Windows::setTouchingWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme)
+void Windows::setTouchingWindowScheme(Mocha::View *view, WindowSystem::SchemeColors *scheme)
 {
     if (!m_views.contains(view) || m_views[view]->touchingWindowScheme() == scheme) {
         return;
@@ -482,7 +482,7 @@ void Windows::setTouchingWindowScheme(Latte::View *view, WindowSystem::SchemeCol
     emit touchingWindowSchemeChanged(view);
 }
 
-LastActiveWindow *Windows::lastActiveWindow(Latte::View *view)
+LastActiveWindow *Windows::lastActiveWindow(Mocha::View *view)
 {
     if (!m_views.contains(view)) {
         return nullptr;
@@ -492,7 +492,7 @@ LastActiveWindow *Windows::lastActiveWindow(Latte::View *view)
 }
 
 //! Layouts
-bool Windows::enabled(Latte::Layout::GenericLayout *layout)
+bool Windows::enabled(Mocha::Layout::GenericLayout *layout)
 {
     if (!m_layouts.contains(layout)) {
         return false;
@@ -501,7 +501,7 @@ bool Windows::enabled(Latte::Layout::GenericLayout *layout)
     return m_layouts[layout]->enabled();
 }
 
-bool Windows::activeWindowMaximized(Latte::Layout::GenericLayout *layout) const
+bool Windows::activeWindowMaximized(Mocha::Layout::GenericLayout *layout) const
 {
     if (!m_layouts.contains(layout)) {
         return false;
@@ -510,7 +510,7 @@ bool Windows::activeWindowMaximized(Latte::Layout::GenericLayout *layout) const
     return m_layouts[layout]->activeWindowMaximized();
 }
 
-void Windows::setActiveWindowMaximized(Latte::Layout::GenericLayout *layout, bool activeMaximized)
+void Windows::setActiveWindowMaximized(Mocha::Layout::GenericLayout *layout, bool activeMaximized)
 {
     if (!m_layouts.contains(layout) || m_layouts[layout]->activeWindowMaximized() == activeMaximized) {
         return;
@@ -520,7 +520,7 @@ void Windows::setActiveWindowMaximized(Latte::Layout::GenericLayout *layout, boo
     emit activeWindowMaximizedChangedForLayout(layout);
 }
 
-bool Windows::existsWindowActive(Latte::Layout::GenericLayout *layout) const
+bool Windows::existsWindowActive(Mocha::Layout::GenericLayout *layout) const
 {
     if (!m_layouts.contains(layout)) {
         return false;
@@ -529,7 +529,7 @@ bool Windows::existsWindowActive(Latte::Layout::GenericLayout *layout) const
     return m_layouts[layout]->existsWindowActive();
 }
 
-void Windows::setExistsWindowActive(Latte::Layout::GenericLayout *layout, bool windowActive)
+void Windows::setExistsWindowActive(Mocha::Layout::GenericLayout *layout, bool windowActive)
 {
     if (!m_layouts.contains(layout) || m_layouts[layout]->existsWindowActive() == windowActive) {
         return;
@@ -539,7 +539,7 @@ void Windows::setExistsWindowActive(Latte::Layout::GenericLayout *layout, bool w
     emit existsWindowActiveChangedForLayout(layout);
 }
 
-bool Windows::existsWindowMaximized(Latte::Layout::GenericLayout *layout) const
+bool Windows::existsWindowMaximized(Mocha::Layout::GenericLayout *layout) const
 {
     if (!m_layouts.contains(layout)) {
         return false;
@@ -548,7 +548,7 @@ bool Windows::existsWindowMaximized(Latte::Layout::GenericLayout *layout) const
     return m_layouts[layout]->existsWindowMaximized();
 }
 
-void Windows::setExistsWindowMaximized(Latte::Layout::GenericLayout *layout, bool windowMaximized)
+void Windows::setExistsWindowMaximized(Mocha::Layout::GenericLayout *layout, bool windowMaximized)
 {
     if (!m_layouts.contains(layout) || m_layouts[layout]->existsWindowMaximized() == windowMaximized) {
         return;
@@ -558,7 +558,7 @@ void Windows::setExistsWindowMaximized(Latte::Layout::GenericLayout *layout, boo
     emit existsWindowMaximizedChangedForLayout(layout);
 }
 
-SchemeColors *Windows::activeWindowScheme(Latte::Layout::GenericLayout *layout) const
+SchemeColors *Windows::activeWindowScheme(Mocha::Layout::GenericLayout *layout) const
 {
     if (!m_layouts.contains(layout)) {
         return nullptr;
@@ -567,7 +567,7 @@ SchemeColors *Windows::activeWindowScheme(Latte::Layout::GenericLayout *layout) 
     return m_layouts[layout]->activeWindowScheme();
 }
 
-void Windows::setActiveWindowScheme(Latte::Layout::GenericLayout *layout, WindowSystem::SchemeColors *scheme)
+void Windows::setActiveWindowScheme(Mocha::Layout::GenericLayout *layout, WindowSystem::SchemeColors *scheme)
 {
     if (!m_layouts.contains(layout) || m_layouts[layout]->activeWindowScheme() == scheme) {
         return;
@@ -577,7 +577,7 @@ void Windows::setActiveWindowScheme(Latte::Layout::GenericLayout *layout, Window
     emit activeWindowSchemeChangedForLayout(layout);
 }
 
-LastActiveWindow *Windows::lastActiveWindow(Latte::Layout::GenericLayout *layout)
+LastActiveWindow *Windows::lastActiveWindow(Mocha::Layout::GenericLayout *layout)
 {
     if (!m_layouts.contains(layout)) {
         return nullptr;
@@ -681,7 +681,7 @@ WindowInfoWrap Windows::infoFor(const WindowId &wid) const
 
 
 //! Windows Criteria Functions
-bool Windows::intersects(Latte::View *view, const WindowInfoWrap &winfo)
+bool Windows::intersects(Mocha::View *view, const WindowInfoWrap &winfo)
 {
     return (!winfo.isMinimized() && !winfo.isShaded() && winfo.geometry().intersects(view->absoluteGeometry()));
 }
@@ -691,7 +691,7 @@ bool Windows::isActive(const WindowInfoWrap &winfo)
     return (winfo.isValid() && winfo.isActive() && !winfo.isMinimized());
 }
 
-bool Windows::isActiveInViewScreen(Latte::View *view, const WindowInfoWrap &winfo)
+bool Windows::isActiveInViewScreen(Mocha::View *view, const WindowInfoWrap &winfo)
 {
     auto screenGeometry = m_views[view]->screenGeometry();
 
@@ -701,7 +701,7 @@ bool Windows::isActiveInViewScreen(Latte::View *view, const WindowInfoWrap &winf
             && screenGeometry.intersects(winfo.geometry()));
 }
 
-bool Windows::isMaximizedInViewScreen(Latte::View *view, const WindowInfoWrap &winfo)
+bool Windows::isMaximizedInViewScreen(Mocha::View *view, const WindowInfoWrap &winfo)
 {
     auto screenGeometry = m_views[view]->screenGeometry();
 
@@ -714,12 +714,12 @@ bool Windows::isMaximizedInViewScreen(Latte::View *view, const WindowInfoWrap &w
             && screenGeometry.intersects(winfo.geometry()));
 }
 
-bool Windows::isTouchingView(Latte::View *view, const WindowSystem::WindowInfoWrap &winfo)
+bool Windows::isTouchingView(Mocha::View *view, const WindowSystem::WindowInfoWrap &winfo)
 {
     return (winfo.isValid() && intersects(view, winfo));
 }
 
-bool Windows::isTouchingViewEdge(Latte::View *view, const QRect &windowgeometry)
+bool Windows::isTouchingViewEdge(Mocha::View *view, const QRect &windowgeometry)
 {
     if (!view) {
         return false;
@@ -767,7 +767,7 @@ bool Windows::isTouchingViewEdge(Latte::View *view, const QRect &windowgeometry)
     return (inViewThicknessEdge && inViewLengthBoundaries);
 }
 
-bool Windows::isTouchingViewEdge(Latte::View *view, const WindowInfoWrap &winfo)
+bool Windows::isTouchingViewEdge(Mocha::View *view, const WindowInfoWrap &winfo)
 {
     if (winfo.isValid() &&  !winfo.isMinimized()) {
         return isTouchingViewEdge(view, winfo.geometry());
@@ -863,7 +863,7 @@ void Windows::updateExtraViewHints()
     }
 }
 
-void Windows::updateHints(Latte::View *view)
+void Windows::updateHints(Mocha::View *view)
 {
     if (!m_views.contains(view) || !m_views[view]->enabled() || !m_views[view]->isTrackingCurrentActivity()) {
         return;
@@ -1047,7 +1047,7 @@ void Windows::updateHints(Latte::View *view)
     //qDebug() << "TRACKING | existsActiveGroupTouching: " << foundActiveGroupTouchInCurScreen;
 }
 
-void Windows::updateHints(Latte::Layout::GenericLayout *layout) {
+void Windows::updateHints(Mocha::Layout::GenericLayout *layout) {
     if (!m_layouts.contains(layout) || !m_layouts[layout]->enabled() || !m_layouts[layout]->isTrackingCurrentActivity()) {
         return;
     }

@@ -14,7 +14,7 @@
 #include "../effects.h"
 #include "../panelshadows_p.h"
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../layouts/manager.h"
 #include "../../layout/genericlayout.h"
 #include "../../settings/universalsettings.h"
@@ -37,10 +37,10 @@
 #define SECONDARYWINDOWINTERVAL 200
 #define SLIDEOUTINTERVAL 400
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-PrimaryConfigView::PrimaryConfigView(Latte::View *view)
+PrimaryConfigView::PrimaryConfigView(Mocha::View *view)
     : SubConfigView(view, QString("#primaryconfigview#")),
       m_indicatorUiManager(new Config::IndicatorUiManager(this))
 {
@@ -59,18 +59,18 @@ PrimaryConfigView::PrimaryConfigView(Latte::View *view)
     });
 
     if (m_corona) {
-        connections << connect(m_corona, &Latte::Corona::raiseViewsTemporaryChanged, this, &PrimaryConfigView::raiseDocksTemporaryChanged);
-        connections << connect(m_corona, &Latte::Corona::availableScreenRectChangedFrom, this, &PrimaryConfigView::updateAvailableScreenGeometry);
+        connections << connect(m_corona, &Mocha::Corona::raiseViewsTemporaryChanged, this, &PrimaryConfigView::raiseDocksTemporaryChanged);
+        connections << connect(m_corona, &Mocha::Corona::availableScreenRectChangedFrom, this, &PrimaryConfigView::updateAvailableScreenGeometry);
 
-        connections << connect(m_corona->layoutsManager(), &Latte::Layouts::Manager::currentLayoutIsSwitching, this, [this]() {
+        connections << connect(m_corona->layoutsManager(), &Mocha::Layouts::Manager::currentLayoutIsSwitching, this, [this]() {
             if (isVisible()) {
                 hideConfigWindow();
             }
         });
 
-        connect(m_corona->universalSettings(), &Latte::UniversalSettings::inAdvancedModeForEditSettingsChanged,
+        connect(m_corona->universalSettings(), &Mocha::UniversalSettings::inAdvancedModeForEditSettingsChanged,
                 this, &PrimaryConfigView::updateShowInlineProperties);
-        connect(m_corona->universalSettings(), &Latte::UniversalSettings::inAdvancedModeForEditSettingsChanged,
+        connect(m_corona->universalSettings(), &Mocha::UniversalSettings::inAdvancedModeForEditSettingsChanged,
                 this, &PrimaryConfigView::syncGeometry);
     }
 
@@ -100,7 +100,7 @@ void PrimaryConfigView::init()
 {
     SubConfigView::init();
 
-    QByteArray tempFilePath = "lattedockconfigurationui";
+    QByteArray tempFilePath = "mochadockconfigurationui";
 
     auto source = QUrl::fromLocalFile(m_latteView->containment()->corona()->kPackage().filePath(tempFilePath));
     setSource(source);
@@ -203,7 +203,7 @@ void PrimaryConfigView::hideSecondaryWindow()
     }
 }
 
-void PrimaryConfigView::setParentView(Latte::View *view, const bool &immediate)
+void PrimaryConfigView::setParentView(Mocha::View *view, const bool &immediate)
 {
     if (m_latteView == view) {
         return;
@@ -223,35 +223,35 @@ void PrimaryConfigView::setParentView(Latte::View *view, const bool &immediate)
     }
 }
 
-void PrimaryConfigView::initParentView(Latte::View *view)
+void PrimaryConfigView::initParentView(Mocha::View *view)
 {
     setIsReady(false);
 
     SubConfigView::initParentView(view);
 
-    viewconnections << connect(m_latteView, &Latte::View::layoutChanged, this, [this]() {
+    viewconnections << connect(m_latteView, &Mocha::View::layoutChanged, this, [this]() {
         if (m_latteView->layout()) {
             updateAvailableScreenGeometry();
         }
     });
 
-    viewconnections << connect(m_latteView, &Latte::View::editThicknessChanged, this, [this]() {
+    viewconnections << connect(m_latteView, &Mocha::View::editThicknessChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_latteView, &Latte::View::maxNormalThicknessChanged, this, [this]() {
+    viewconnections << connect(m_latteView, &Mocha::View::maxNormalThicknessChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_latteView, &Latte::View::locationChanged, this, [this]() {
+    viewconnections << connect(m_latteView, &Mocha::View::locationChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_latteView->positioner(), &Latte::ViewPart::Positioner::currentScreenChanged, this, [this]() {
+    viewconnections << connect(m_latteView->positioner(), &Mocha::ViewPart::Positioner::currentScreenChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_corona->universalSettings(), &Latte::UniversalSettings::inAdvancedModeForEditSettingsChanged, m_latteView, &Latte::View::inSettingsAdvancedModeChanged);
+    viewconnections << connect(m_corona->universalSettings(), &Mocha::UniversalSettings::inAdvancedModeForEditSettingsChanged, m_latteView, &Mocha::View::inSettingsAdvancedModeChanged);
     viewconnections << connect(m_latteView->containment(), &Plasma::Containment::immutabilityChanged, this, &PrimaryConfigView::immutabilityChanged);   
 
     m_originalByPassWM = m_latteView->byPassWM();
@@ -283,11 +283,11 @@ void PrimaryConfigView::instantUpdateAvailableScreenGeometry()
 
     int currentScrId = m_latteView->positioner()->currentScreenId();
 
-    QList<Latte::Types::Visibility> ignoreModes{Latte::Types::SidebarOnDemand,Latte::Types::SidebarAutoHide};
+    QList<Mocha::Types::Visibility> ignoreModes{Mocha::Types::SidebarOnDemand,Mocha::Types::SidebarAutoHide};
 
     if (m_latteView->visibility() && m_latteView->visibility()->isSidebar()) {
-        ignoreModes.removeAll(Latte::Types::SidebarOnDemand);
-        ignoreModes.removeAll(Latte::Types::SidebarAutoHide);
+        ignoreModes.removeAll(Mocha::Types::SidebarOnDemand);
+        ignoreModes.removeAll(Mocha::Types::SidebarAutoHide);
     }
 
     QString activityid = m_latteView->layout()->lastUsedActivity();
@@ -406,7 +406,7 @@ void PrimaryConfigView::showEvent(QShowEvent *ev)
     }
 
     setFlags(wFlags());
-    m_corona->wm()->setViewExtraFlags(this, false, Latte::Types::NormalWindow);
+    m_corona->wm()->setViewExtraFlags(this, false, Mocha::Types::NormalWindow);
 
     syncGeometry();
 

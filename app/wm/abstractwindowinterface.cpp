@@ -10,7 +10,7 @@
 // local
 #include "tracker/schemes.h"
 #include "tracker/windowstracker.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 
 // Qt
 #include <QDebug>
@@ -20,7 +20,7 @@
 #include <KWindowSystem>
 #include <PlasmaActivities/Controller>
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 
 #define MAXPLASMAPANELTHICKNESS 96
@@ -36,7 +36,7 @@ AbstractWindowInterface::AbstractWindowInterface(QObject *parent)
     m_activities = new KActivities::Consumer(this);
     m_currentActivity = m_activities->currentActivity();
 
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<Mocha::Corona *>(parent);
     m_windowsTracker = new Tracker::Windows(this);
     m_schemesTracker = new Tracker::Schemes(this);
 
@@ -113,7 +113,7 @@ QString AbstractWindowInterface::currentActivity()
     return m_currentActivity;
 }
 
-Latte::Corona *AbstractWindowInterface::corona()
+Mocha::Corona *AbstractWindowInterface::corona()
 {
     return m_corona;
 }

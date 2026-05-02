@@ -12,7 +12,7 @@
 #include "../universalsettings.h"
 #include "../generic/generictools.h"
 #include "../screensdialog/screensdialog.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../screenpool.h"
 #include "../../data/layoutdata.h"
 #include "../../layout/centrallayout.h"
@@ -36,11 +36,11 @@
 #include <KIO/OpenFileManagerWindowJob>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Dialog {
 
-SettingsDialog::SettingsDialog(QWidget *parent, Latte::Corona *corona)
+SettingsDialog::SettingsDialog(QWidget *parent, Mocha::Corona *corona)
     : GenericDialog(parent),
       m_ui(new Ui::SettingsDialog),
       m_corona(corona),
@@ -176,7 +176,7 @@ void SettingsDialog::initHelpMenu()
     m_helpMenu->action(KHelpMenu::menuWhatsThis)->setVisible(false);
 }
 
-Latte::Corona *SettingsDialog::corona() const
+Mocha::Corona *SettingsDialog::corona() const
 {
     return m_corona;
 }
@@ -266,17 +266,17 @@ void SettingsDialog::importFullConfiguration()
     importFileDialog->setDefaultSuffix("latterc");
 
     QStringList filters;
-    filters << QString(i18nc("import full configuration", "Latte Dock Full Configuration file") + "(*.latterc)");
+    filters << QString(i18nc("import full configuration", "Mocha Dock Full Configuration file") + "(*.latterc)");
     importFileDialog->setNameFilters(filters);
 
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
 
     connect(importFileDialog, &QFileDialog::fileSelected, this, [&](const QString & file) {
-        Latte::Layouts::Importer::LatteFileVersion version = Latte::Layouts::Importer::fileVersion(file);
+        Mocha::Layouts::Importer::LatteFileVersion version = Mocha::Layouts::Importer::fileVersion(file);
         qDebug() << "VERSION :::: " << version;
 
-        if (version == Latte::Layouts::Importer::ConfigVersion2
-                || version == Latte::Layouts::Importer::ConfigVersion1) {
+        if (version == Mocha::Layouts::Importer::ConfigVersion2
+                || version == Mocha::Layouts::Importer::ConfigVersion1) {
             auto msg = new QMessageBox(this);
             msg->setIcon(QMessageBox::Warning);
             msg->setWindowTitle(i18n("Import: Full Configuration File"));
@@ -331,7 +331,7 @@ void SettingsDialog::exportFullConfiguration()
     exportFileDialog->setDefaultSuffix("latterc");
 
     QStringList filters;
-    QString filter2(i18nc("export full configuration", "Latte Dock Full Configuration file v0.2") + "(*.latterc)");
+    QString filter2(i18nc("export full configuration", "Mocha Dock Full Configuration file v0.2") + "(*.latterc)");
 
     filters << filter2;
 
@@ -373,7 +373,7 @@ void SettingsDialog::exportFullConfiguration()
     exportFileDialog->open();
 
     QDate currentDate = QDate::currentDate();
-    QString proposedName = QStringLiteral("Latte Dock (") + currentDate.toString("yyyy-MM-dd")+")";
+    QString proposedName = QStringLiteral("Mocha Dock (") + currentDate.toString("yyyy-MM-dd")+")";
 
     exportFileDialog->selectFile(proposedName);
 }

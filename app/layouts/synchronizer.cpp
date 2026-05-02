@@ -11,7 +11,7 @@
 #include "../apptypes.h"
 #include "../screenpool.h"
 #include "../data/layoutdata.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../layout/centrallayout.h"
 #include "../layout/genericlayout.h"
 #include "../settings/universalsettings.h"
@@ -33,7 +33,7 @@
 
 #define LAYOUTSINITINTERVAL 350
 
-namespace Latte {
+namespace Mocha {
 namespace Layouts {
 
 Synchronizer::Synchronizer(QObject *parent)
@@ -84,7 +84,7 @@ KActivities::Controller *Synchronizer::activitiesController() const
     return m_activitiesController;
 }
 
-bool Synchronizer::latteViewExists(Latte::View *view) const
+bool Synchronizer::latteViewExists(Mocha::View *view) const
 {
     for (const auto layout : m_centralLayouts) {
         for (const auto &v : layout->latteViews()) {
@@ -348,9 +348,9 @@ QList<CentralLayout *> Synchronizer::centralLayoutsForActivity(const QString act
     return layouts;
 }
 
-QList<Latte::View *> Synchronizer::currentViews() const
+QList<Mocha::View *> Synchronizer::currentViews() const
 {
-    QList<Latte::View *> views;
+    QList<Mocha::View *> views;
 
     for(auto layout : currentLayouts()) {
         views << layout->latteViews();
@@ -359,9 +359,9 @@ QList<Latte::View *> Synchronizer::currentViews() const
     return views;
 }
 
-QList<Latte::View *> Synchronizer::currentOriginalViews() const
+QList<Mocha::View *> Synchronizer::currentOriginalViews() const
 {
-    QList<Latte::View *> views;
+    QList<Mocha::View *> views;
 
     for(auto layout : currentLayouts()) {
         views << layout->onlyOriginalViews();
@@ -370,9 +370,9 @@ QList<Latte::View *> Synchronizer::currentOriginalViews() const
     return views;
 }
 
-QList<Latte::View *> Synchronizer::currentViewsWithPlasmaShortcuts() const
+QList<Mocha::View *> Synchronizer::currentViewsWithPlasmaShortcuts() const
 {
-    QList<Latte::View *> views;
+    QList<Mocha::View *> views;
 
     for(auto layout : currentLayouts()) {
         views << layout->viewsWithPlasmaShortcuts();
@@ -381,19 +381,19 @@ QList<Latte::View *> Synchronizer::currentViewsWithPlasmaShortcuts() const
     return views;
 }
 
-QList<Latte::View *> Synchronizer::sortedCurrentViews() const
+QList<Mocha::View *> Synchronizer::sortedCurrentViews() const
 {
     return Layout::GenericLayout::sortedLatteViews(currentViews(), m_manager->corona()->screenPool()->primaryScreen());
 }
 
-QList<Latte::View *> Synchronizer::sortedCurrentOriginalViews() const
+QList<Mocha::View *> Synchronizer::sortedCurrentOriginalViews() const
 {
     return Layout::GenericLayout::sortedLatteViews(currentOriginalViews(), m_manager->corona()->screenPool()->primaryScreen());
 }
 
-QList<Latte::View *> Synchronizer::viewsBasedOnActivityId(const QString &id) const
+QList<Mocha::View *> Synchronizer::viewsBasedOnActivityId(const QString &id) const
 {
-    QList<Latte::View *> views;
+    QList<Mocha::View *> views;
 
     for(auto layout : centralLayoutsForActivity(id)) {
         if (m_centralLayouts.contains(layout)) {
@@ -422,10 +422,10 @@ int Synchronizer::screenForContainment(Plasma::Containment *containment)
     return -1;
 }
 
-Latte::View *Synchronizer::viewForContainment(uint id)
+Mocha::View *Synchronizer::viewForContainment(uint id)
 {
     for (auto layout : m_centralLayouts) {
-        Latte::View *view = layout->viewForContainment(id);
+        Mocha::View *view = layout->viewForContainment(id);
 
         if (view) {
             return view;
@@ -435,10 +435,10 @@ Latte::View *Synchronizer::viewForContainment(uint id)
     return nullptr;
 }
 
-Latte::View *Synchronizer::viewForContainment(Plasma::Containment *containment)
+Mocha::View *Synchronizer::viewForContainment(Plasma::Containment *containment)
 {
     for (auto layout : m_centralLayouts) {
-        Latte::View *view = layout->viewForContainment(containment);
+        Mocha::View *view = layout->viewForContainment(containment);
 
         if (view) {
             return view;
@@ -590,8 +590,8 @@ void Synchronizer::initLayouts()
 
     if (!m_isLoaded) {
         m_isLoaded = true;
-        connect(m_manager->corona()->templatesManager(), &Latte::Templates::Manager::newLayoutAdded, this, &Synchronizer::onLayoutAdded);
-        connect(m_manager->importer(), &Latte::Layouts::Importer::newLayoutAdded, this, &Synchronizer::onLayoutAdded);
+        connect(m_manager->corona()->templatesManager(), &Mocha::Templates::Manager::newLayoutAdded, this, &Synchronizer::onLayoutAdded);
+        connect(m_manager->importer(), &Mocha::Layouts::Importer::newLayoutAdded, this, &Synchronizer::onLayoutAdded);
     }
 }
 
@@ -704,7 +704,7 @@ bool Synchronizer::initSingleMode(QString layoutName)
         }
 
         m_manager->corona()->universalSettings()->setSingleModeLayoutName(layoutName);
-        m_manager->importer()->setMultipleLayoutsStatus(Latte::MultipleLayouts::Uninitialized);
+        m_manager->importer()->setMultipleLayoutsStatus(Mocha::MultipleLayouts::Uninitialized);
         emit initializationFinished();
     });
 
@@ -741,7 +741,7 @@ bool Synchronizer::initMultipleMode(QString layoutName)
         }
 
         syncMultipleLayoutsToActivities(layoutsinmultiplestorage);
-        m_manager->importer()->setMultipleLayoutsStatus(Latte::MultipleLayouts::Running);
+        m_manager->importer()->setMultipleLayoutsStatus(Mocha::MultipleLayouts::Running);
         emit initializationFinished();
     });
 

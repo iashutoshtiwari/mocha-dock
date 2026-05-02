@@ -8,7 +8,7 @@ import QtQuick
 
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 MouseArea {
     property var modelIndex
@@ -17,8 +17,8 @@ MouseArea {
 
     acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
     hoverEnabled: true
-    enabled: LatteCore.WindowSystem.isPlatformWayland ||
-             (!LatteCore.WindowSystem.isPlatformWayland && winId != 0)
+    enabled: MochaCore.WindowSystem.isPlatformWayland ||
+             (!MochaCore.WindowSystem.isPlatformWayland && winId != 0)
 
     onClicked: (mouse) => {
         //!used mainly to not close the previews window when the user closes many windows simultaneously

@@ -9,7 +9,7 @@
 // Qt
 #include <QListWidgetItem>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace ActionsDialog {
 

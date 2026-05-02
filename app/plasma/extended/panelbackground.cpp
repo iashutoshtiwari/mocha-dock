@@ -18,7 +18,7 @@
 
 #define BASELINESHADOWTHRESHOLD 5
 
-namespace Latte {
+namespace Mocha {
 namespace PlasmaExtended {
 
 PanelBackground::PanelBackground(Plasma::Types::Location edge, Theme *parent)

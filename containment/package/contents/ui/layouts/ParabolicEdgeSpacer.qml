@@ -4,7 +4,7 @@
 */
 
 import QtQuick
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Item {
     id: edgeSpacer
@@ -62,7 +62,7 @@ Item {
             return;
         }
 
-        if (myView.alignment === LatteCore.Types.Center || myView.alignment === LatteCore.Types.Justify) {
+        if (myView.alignment === MochaCore.Types.Center || myView.alignment === MochaCore.Types.Justify) {
             updateScale(isTailSpacer, newScales);
         } else {
             length = 0;
@@ -77,7 +77,7 @@ Item {
             return;
         }
 
-        if (myView.alignment === LatteCore.Types.Center || myView.alignment === LatteCore.Types.Justify) {
+        if (myView.alignment === MochaCore.Types.Center || myView.alignment === MochaCore.Types.Justify) {
             updateScale(isHeadSpacer, newScales);
         } else {
             length = 0;

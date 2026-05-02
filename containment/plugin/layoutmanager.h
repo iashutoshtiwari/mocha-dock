@@ -17,7 +17,7 @@
 // KDE
 #include <KConfigPropertyMap>
 
-namespace Latte{
+namespace Mocha{
 namespace Containment{
 
 class LayoutManager : public QObject

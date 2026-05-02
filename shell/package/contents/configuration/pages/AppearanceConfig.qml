@@ -14,9 +14,9 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
+import org.kde.mocha.private.containment as MochaContainment
 
 PlasmaComponents.Page {
     id: page
@@ -47,7 +47,7 @@ PlasmaComponents.Page {
 
             spacing: Kirigami.Units.smallSpacing
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Items")
             }
 
@@ -67,7 +67,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: appletsSizeSlider
                         Layout.fillWidth: true
                         //!round to nearest odd number
@@ -117,12 +117,12 @@ PlasmaComponents.Page {
                         enabled: proportionSizeSlider.value !== proportionSizeSlider.from
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: proportionSizeSlider
                         Layout.fillWidth: true
                         value: plasmoid.configuration.proportionIconSize
                         from: 1.0
-                        to: (latteView.visibility.mode === LatteCore.Types.SidebarOnDemand || latteView.visibility.mode === LatteCore.Types.SidebarAutoHide)  ? 25 : 12
+                        to: (mochaView.visibility.mode === MochaCore.Types.SidebarOnDemand || mochaView.visibility.mode === MochaCore.Types.SidebarAutoHide)  ? 25 : 12
                         stepSize: 0.1
                         wheelEnabled: false
 
@@ -156,7 +156,7 @@ PlasmaComponents.Page {
 
                         text: proportionSizeSlider.value !== proportionSizeSlider.from ?
                                   (absoluteSizeLblMouseArea.containsMouse ?
-                                       i18nc("number in pixels, e.g. 64 px.","%1 px.", latteView.metrics.maxIconSize) :
+                                       i18nc("number in pixels, e.g. 64 px.","%1 px.", mochaView.metrics.maxIconSize) :
                                        i18nc("number in percentage, e.g. 85 %","%1 %", proportionSizeSlider.value.toFixed(1))) :
                                   i18nc("no value in percentage","--- %")
                         horizontalAlignment: Text.AlignRight
@@ -174,14 +174,14 @@ PlasmaComponents.Page {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
                     spacing: Kirigami.Units.smallSpacing
-                    enabled: LatteCore.WindowSystem.compositingActive && plasmoid.configuration.animationsEnabled
+                    enabled: MochaCore.WindowSystem.compositingActive && plasmoid.configuration.animationsEnabled
 
                     PlasmaComponents.Label {
                         text: i18n("Zoom on hover")
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: zoomSlider
                         Layout.fillWidth: true
                         value: Number(1 + plasmoid.configuration.zoomLevel / 20).toFixed(2)
@@ -227,7 +227,7 @@ PlasmaComponents.Page {
 
             spacing: Kirigami.Units.smallSpacing
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Length")
             }
 
@@ -252,7 +252,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: maxLengthSlider
                         Layout.fillWidth: true
 
@@ -270,13 +270,13 @@ PlasmaComponents.Page {
                                 var newTotal = Math.abs(plasmoid.configuration.offset) + value;
 
                                 //centered and justify alignments based on offset and get out of the screen in some cases
-                                var centeredCheck = ((plasmoid.configuration.alignment === LatteCore.Types.Center)
-                                                     || (plasmoid.configuration.alignment === LatteCore.Types.Justify))
+                                var centeredCheck = ((plasmoid.configuration.alignment === MochaCore.Types.Center)
+                                                     || (plasmoid.configuration.alignment === MochaCore.Types.Justify))
                                         && ((Math.abs(plasmoid.configuration.offset) + value/2) > 50);
 
                                 if (newTotal > 100 || centeredCheck) {
-                                    if ((plasmoid.configuration.alignment === LatteCore.Types.Center)
-                                            || (plasmoid.configuration.alignment === LatteCore.Types.Justify)) {
+                                    if ((plasmoid.configuration.alignment === MochaCore.Types.Center)
+                                            || (plasmoid.configuration.alignment === MochaCore.Types.Justify)) {
 
                                         var suggestedValue = (plasmoid.configuration.offset<0) ? Math.min(0, -(100-value)): Math.max(0, 100-value);
 
@@ -323,7 +323,7 @@ PlasmaComponents.Page {
                         Layout.minimumWidth: Kirigami.Units.gridUnit * 4
                         Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
-                        LatteComponents.ScrollArea {
+                        MochaComponents.ScrollArea {
                             anchors.fill: parent
                             delayIsEnabled: false
 
@@ -355,7 +355,7 @@ PlasmaComponents.Page {
                     Layout.maximumWidth: Layout.minimumWidth
                     spacing: Kirigami.Units.smallSpacing
                     visible: dialog.advancedLevel
-                    enabled: (plasmoid.configuration.alignment !== LatteCore.Types.Justify)
+                    enabled: (plasmoid.configuration.alignment !== MochaCore.Types.Justify)
 
                     PlasmaComponents.Label {
                         id: minLengthLbl
@@ -363,7 +363,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: minLengthSlider
                         Layout.fillWidth: true
 
@@ -406,7 +406,7 @@ PlasmaComponents.Page {
                         Layout.minimumWidth: Kirigami.Units.gridUnit * 4
                         Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
-                        LatteComponents.ScrollArea {
+                        MochaComponents.ScrollArea {
                             anchors.fill: parent
                             delayIsEnabled: false
 
@@ -446,7 +446,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: offsetSlider
                         Layout.fillWidth: true
                         stepSize: 1
@@ -459,11 +459,11 @@ PlasmaComponents.Page {
                         property bool userInputIsValid: false
                         readonly property bool sliderIsReady: viewConfig.isReady && (from===fromValue) && (to===toValue)
 
-                        readonly property int fromValue: ((plasmoid.configuration.alignment === LatteCore.Types.Center)
-                                                          || (plasmoid.configuration.alignment === LatteCore.Types.Justify)) ? -offsetSlider.screenLengthMaxFactor :  0
+                        readonly property int fromValue: ((plasmoid.configuration.alignment === MochaCore.Types.Center)
+                                                          || (plasmoid.configuration.alignment === MochaCore.Types.Justify)) ? -offsetSlider.screenLengthMaxFactor :  0
 
-                        readonly property int toValue: ((plasmoid.configuration.alignment === LatteCore.Types.Center)
-                                                        || (plasmoid.configuration.alignment === LatteCore.Types.Justify)) ? offsetSlider.screenLengthMaxFactor :  2*offsetSlider.screenLengthMaxFactor
+                        readonly property int toValue: ((plasmoid.configuration.alignment === MochaCore.Types.Center)
+                                                        || (plasmoid.configuration.alignment === MochaCore.Types.Justify)) ? offsetSlider.screenLengthMaxFactor :  2*offsetSlider.screenLengthMaxFactor
 
                         property real offsetValue: plasmoid.configuration.offset
 
@@ -495,12 +495,12 @@ PlasmaComponents.Page {
                                 var newTotal = Math.abs(value) + plasmoid.configuration.maxLength;
 
                                 //centered and justify alignments based on offset and get out of the screen in some cases
-                                var centeredCheck = ((plasmoid.configuration.alignment === LatteCore.Types.Center)
-                                                     || (plasmoid.configuration.alignment === LatteCore.Types.Justify))
+                                var centeredCheck = ((plasmoid.configuration.alignment === MochaCore.Types.Center)
+                                                     || (plasmoid.configuration.alignment === MochaCore.Types.Justify))
                                         && ((Math.abs(value) + plasmoid.configuration.maxLength/2) > 50);
                                 if (newTotal > 100 || centeredCheck) {
-                                    plasmoid.configuration.maxLength = ((plasmoid.configuration.alignment === LatteCore.Types.Center)
-                                                                        || (plasmoid.configuration.alignment === LatteCore.Types.Justify)) ?
+                                    plasmoid.configuration.maxLength = ((plasmoid.configuration.alignment === MochaCore.Types.Center)
+                                                                        || (plasmoid.configuration.alignment === MochaCore.Types.Justify)) ?
                                                 2*(50 - Math.abs(value)) :100 - Math.abs(value);
                                 }
                             }
@@ -538,7 +538,7 @@ PlasmaComponents.Page {
                         Layout.minimumWidth: Kirigami.Units.gridUnit * 4
                         Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
-                        LatteComponents.ScrollArea {
+                        MochaComponents.ScrollArea {
                             anchors.fill: parent
                             delayIsEnabled: false
 
@@ -565,15 +565,15 @@ PlasmaComponents.Page {
                     }
                 }
             }
-            LatteComponents.SubHeader {
+            MochaComponents.SubHeader {
                 visible: dialog.advancedLevel
                 text: i18nc("@label dynamic length configuration", "Dynamic Length Adjustments")
                 enabled: true
             }
 
-            LatteComponents.CheckBoxesColumn {
+            MochaComponents.CheckBoxesColumn {
                 enabled: dialog.advancedLevel;
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     id: maximizeWhenMaximizedChk
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18nc("@label", "Maximize panel length in presence of maximized windows")
@@ -600,7 +600,7 @@ PlasmaComponents.Page {
 
             readonly property int maxMargin: 25
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Margins")
             }
 
@@ -620,7 +620,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: lengthExtMarginSlider
                         Layout.fillWidth: true
 
@@ -645,7 +645,7 @@ PlasmaComponents.Page {
                         Layout.minimumWidth: Kirigami.Units.gridUnit * 4
                         Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
-                        readonly property int currentValueInPixels: (lengthExtMarginSlider.value/100) * latteView.metrics.maxIconSize
+                        readonly property int currentValueInPixels: (lengthExtMarginSlider.value/100) * mochaView.metrics.maxIconSize
 
                         MouseArea {
                             id: lengthMarginLblMouseArea
@@ -665,7 +665,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: thickMarginSlider
                         Layout.fillWidth: true
 
@@ -674,7 +674,7 @@ PlasmaComponents.Page {
                         to: 60
                         stepSize: 1
                         wheelEnabled: false
-                        minimumInternalValue: latteView.indicator.info.minThicknessPadding * 100
+                        minimumInternalValue: mochaView.indicator.info.minThicknessPadding * 100
 
                         onPressedChanged: {
                             if (!pressed) {
@@ -692,7 +692,7 @@ PlasmaComponents.Page {
                         Layout.maximumWidth: Kirigami.Units.gridUnit * 4
 
                         readonly property int currentValue: Math.max(thickMarginSlider.minimumInternalValue, thickMarginSlider.value)
-                        readonly property int currentValueInPixels: (currentValue/100) * latteView.metrics.maxIconSize
+                        readonly property int currentValueInPixels: (currentValue/100) * mochaView.metrics.maxIconSize
 
                         MouseArea {
                             id: thickMarginLblMouseArea
@@ -712,7 +712,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: screenEdgeMarginSlider
                         Layout.fillWidth: true
 
@@ -747,7 +747,7 @@ PlasmaComponents.Page {
             spacing: Kirigami.Units.smallSpacing
             visible: dialog.advancedLevel
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 Layout.columnSpan: 4
                 text: i18n("Colors")
             }
@@ -769,28 +769,28 @@ PlasmaComponents.Page {
                     text: i18n("Palette")
                 }
 
-                LatteComponents.ComboBox {
+                MochaComponents.ComboBox {
                     Layout.fillWidth: true
                     model: [
                         {
                             name: i18nc("plasma theme colors", "Plasma Theme Colors"),
-                            value: LatteContainment.Types.PlasmaThemeColors
+                            value: MochaContainment.Types.PlasmaThemeColors
                         },{
                             name: i18nc("dark theme colors", "Dark Colors"),
-                            value: LatteContainment.Types.DarkThemeColors
+                            value: MochaContainment.Types.DarkThemeColors
                         },{
                             name: i18nc("light theme colors", "Light Colors"),
-                            value: LatteContainment.Types.LightThemeColors
+                            value: MochaContainment.Types.LightThemeColors
                         },{
                             name: i18nc("layout custom colors", "Layout Custom Colors"),
-                            value: LatteContainment.Types.LayoutThemeColors
+                            value: MochaContainment.Types.LayoutThemeColors
                         },
                         /*,{
                             name: i18nc("reverse plasma theme colors", "Reverse"),
-                            value: LatteContainment.Types.ReverseThemeColors
+                            value: MochaContainment.Types.ReverseThemeColors
                         }*/{
                             name: i18nc("smart theme colors", "Smart Colors Based On Desktop Background"),
-                            value: LatteContainment.Types.SmartThemeColors
+                            value: MochaContainment.Types.SmartThemeColors
                         }
                     ]
 
@@ -799,17 +799,17 @@ PlasmaComponents.Page {
                     onCurrentIndexChanged: plasmoid.configuration.themeColors = model[currentIndex].value
 
                     function colorsToIndex(colors) {
-                        if (colors === LatteContainment.Types.PlasmaThemeColors) {
+                        if (colors === MochaContainment.Types.PlasmaThemeColors) {
                             return 0;
-                        } else if (colors === LatteContainment.Types.DarkThemeColors) {
+                        } else if (colors === MochaContainment.Types.DarkThemeColors) {
                             return 1;
-                        } else if (colors === LatteContainment.Types.LightThemeColors) {
+                        } else if (colors === MochaContainment.Types.LightThemeColors) {
                             return 2;
-                        } else if (colors === LatteContainment.Types.ReverseThemeColors) {
+                        } else if (colors === MochaContainment.Types.ReverseThemeColors) {
                             return 3;
-                        } else if (colors === LatteContainment.Types.LayoutThemeColors) {
+                        } else if (colors === MochaContainment.Types.LayoutThemeColors) {
                             return 3;
-                        } else if (colors === LatteContainment.Types.SmartThemeColors) {
+                        } else if (colors === MochaContainment.Types.SmartThemeColors) {
                             return 4;
                         }
                     }
@@ -819,7 +819,7 @@ PlasmaComponents.Page {
                     text: i18n("From Window")
                 }
 
-                LatteComponents.ComboBox {
+                MochaComponents.ComboBox {
                     Layout.fillWidth: true
                     model: [
                         {
@@ -860,13 +860,13 @@ PlasmaComponents.Page {
             Layout.fillWidth: true
             spacing: Kirigami.Units.smallSpacing
 
-            LatteComponents.HeaderSwitch {
+            MochaComponents.HeaderSwitch {
                 id: showBackground
                 Layout.minimumWidth: dialog.optionsWidth + 2 *Kirigami.Units.smallSpacing
                 Layout.maximumWidth: Layout.minimumWidth
                 Layout.minimumHeight: implicitHeight
                 Layout.bottomMargin: Kirigami.Units.smallSpacing
-                enabled: LatteCore.WindowSystem.compositingActive
+                enabled: MochaCore.WindowSystem.compositingActive
 
                 checked: plasmoid.configuration.useThemePanel
                 text: i18n("Background")
@@ -885,7 +885,7 @@ PlasmaComponents.Page {
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    enabled: LatteCore.WindowSystem.compositingActive
+                    enabled: MochaCore.WindowSystem.compositingActive
 
                     PlasmaComponents.Label {
                         enabled: showBackground.checked
@@ -893,7 +893,7 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignLeft
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: panelSizeSlider
                         Layout.fillWidth: true
                         enabled: showBackground.checked
@@ -934,7 +934,7 @@ PlasmaComponents.Page {
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    enabled: LatteCore.WindowSystem.compositingActive
+                    enabled: MochaCore.WindowSystem.compositingActive
 
                     PlasmaComponents.Label {
                         text: plasmoid.configuration.backgroundOnlyOnMaximized && plasmoid.configuration.solidBackgroundForMaximized ?
@@ -943,7 +943,7 @@ PlasmaComponents.Page {
                         enabled: transparencySlider.enabled
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: transparencySlider
                         Layout.fillWidth: true
                         enabled: showBackground.checked //&& !blockOpacityAdjustment
@@ -992,7 +992,7 @@ PlasmaComponents.Page {
                         enabled: radiusSlider.enabled
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: radiusSlider
                         Layout.fillWidth: true
                         enabled: showBackground.checked
@@ -1026,7 +1026,7 @@ PlasmaComponents.Page {
                 RowLayout {
                     Layout.minimumWidth: dialog.optionsWidth
                     Layout.maximumWidth: Layout.minimumWidth
-                    enabled: LatteCore.WindowSystem.compositingActive
+                    enabled: MochaCore.WindowSystem.compositingActive
                     visible: dialog.advancedLevel && dialog.kirigamiLibraryIsFound
 
                     PlasmaComponents.Label {
@@ -1035,7 +1035,7 @@ PlasmaComponents.Page {
                         enabled: shadowSlider.enabled
                     }
 
-                    LatteComponents.Slider {
+                    MochaComponents.Slider {
                         id: shadowSlider
                         Layout.fillWidth: true
                         enabled: showBackground.checked && panelShadows.checked
@@ -1081,7 +1081,7 @@ PlasmaComponents.Page {
                         Layout.maximumWidth: Layout.minimumWidth
                         text: i18n("Blur")
                         checkable: true
-                        enabled: showBackground.checked && LatteCore.WindowSystem.compositingActive
+                        enabled: showBackground.checked && MochaCore.WindowSystem.compositingActive
                         tooltip: i18n("Background is blurred underneath")
 
                         readonly property int blurEnabled: plasmoid.configuration.blurEnabled
@@ -1099,7 +1099,7 @@ PlasmaComponents.Page {
                         Layout.maximumWidth: Layout.minimumWidth
                         text: i18n("Shadows")
                         checkable: true
-                        enabled: showBackground.checked && LatteCore.WindowSystem.compositingActive && themeExtended.hasShadow
+                        enabled: showBackground.checked && MochaCore.WindowSystem.compositingActive && themeExtended.hasShadow
                         tooltip: i18n("Background shows its shadows")
 
                         readonly property int panelShadows: plasmoid.configuration.panelShadows
@@ -1119,7 +1119,7 @@ PlasmaComponents.Page {
                         checkable: true
                         checked: plasmoid.configuration.panelOutline
                         enabled: showBackground.checked
-                        tooltip: i18n("Background draws a line for its borders. You can set the line size from Latte Preferences")
+                        tooltip: i18n("Background draws a line for its borders. You can set the line size from Mocha Preferences")
 
                         onClicked: {
                             plasmoid.configuration.panelOutline = checked;
@@ -1136,7 +1136,7 @@ PlasmaComponents.Page {
                         enabled: showBackground.checked
                                  && ((plasmoid.configuration.screenEdgeMargin===-1) /*no-floating*/
                                      || (plasmoid.configuration.screenEdgeMargin > -1 /*floating with justify alignment and 100% maxlength*/
-                                         && plasmoid.configuration.alignment ===LatteCore.Types.Justify
+                                         && plasmoid.configuration.alignment ===MochaCore.Types.Justify
                                          && plasmoid.configuration.maxLength===100))
                         tooltip: i18n("Background draws all corners at all cases.")
 
@@ -1146,15 +1146,15 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.SubHeader {
+                MochaComponents.SubHeader {
                     visible: dialog.advancedLevel
                     text: i18nc("dynamic visibility for background", "Dynamic Visibility")
-                    enabled: LatteCore.WindowSystem.compositingActive
+                    enabled: MochaCore.WindowSystem.compositingActive
                 }
 
-                LatteComponents.CheckBoxesColumn {
-                    enabled: LatteCore.WindowSystem.compositingActive
-                    LatteComponents.CheckBox {
+                MochaComponents.CheckBoxesColumn {
+                    enabled: MochaCore.WindowSystem.compositingActive
+                    MochaComponents.CheckBox {
                         id: solidForMaximizedChk
                         Layout.maximumWidth: dialog.optionsWidth
                         text: i18n("Prefer opaque background when touching any window")
@@ -1168,7 +1168,7 @@ PlasmaComponents.Page {
                         }
                     }
 
-                    LatteComponents.CheckBox {
+                    MochaComponents.CheckBox {
                         id: onlyOnMaximizedChk
                         Layout.maximumWidth: dialog.optionsWidth
                         text: i18n("Hide background when not needed")
@@ -1182,7 +1182,7 @@ PlasmaComponents.Page {
                         }
                     }
 
-                    LatteComponents.CheckBox {
+                    MochaComponents.CheckBox {
                         id: hideShadowsOnMaximizedChk
                         Layout.maximumWidth: dialog.optionsWidth
                         text: i18n("Hide background shadow for maximized windows")
@@ -1197,13 +1197,13 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.SubHeader {
+                MochaComponents.SubHeader {
                     visible: dialog.advancedLevel
                     text: i18n("Exceptions")
-                    enabled: LatteCore.WindowSystem.compositingActive
+                    enabled: MochaCore.WindowSystem.compositingActive
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     id: solidForPopupsChk
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Prefer Plasma background and colors for expanded applets")

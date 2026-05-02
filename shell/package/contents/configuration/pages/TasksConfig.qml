@@ -12,10 +12,10 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core as LatteCore
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
 
-import org.kde.latte.private.tasks as LatteTasks
+import org.kde.mocha.private.tasks as MochaTasks
 
 PlasmaComponents.Page {
     id: _tasksPage
@@ -27,8 +27,8 @@ PlasmaComponents.Page {
     readonly property bool isCurrentPage: (dialog.currentPage === _tasksPage)
 
     onIsCurrentPageChanged: {
-        if (isCurrentPage && latteView.extendedInterface.latteTasksModel.count>1) {
-            latteView.extendedInterface.appletRequestedVisualIndicator(tasks.id);
+        if (isCurrentPage && mochaView.extendedInterface.mochaTasksModel.count>1) {
+            mochaView.extendedInterface.appletRequestedVisualIndicator(tasks.id);
         }
     }
 
@@ -47,15 +47,15 @@ PlasmaComponents.Page {
             Layout.topMargin: Kirigami.Units.smallSpacing
             visible: dialog.advancedLevel
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Badges")
             }
 
-            LatteComponents.CheckBoxesColumn {
+            MochaComponents.CheckBoxesColumn {
                 Layout.leftMargin: Kirigami.Units.smallSpacing * 2
                 Layout.rightMargin: Kirigami.Units.smallSpacing * 2
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Notifications from tasks")
                     tooltip: i18n("Show unread messages or notifications from tasks")
@@ -66,7 +66,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Progress information for tasks")
                     tooltip: i18n("Show a progress animation for tasks e.g. when copying files with Dolphin")
@@ -77,7 +77,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Audio playing from tasks")
                     tooltip: i18n("Show audio playing from tasks")
@@ -88,7 +88,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Prominent color for notification badge")
                     enabled: tasks.configuration.showInfoBadge
@@ -100,7 +100,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Change volume when scrolling audio badge")
                     enabled: tasks.configuration.showAudioBadge
@@ -120,15 +120,15 @@ PlasmaComponents.Page {
             Layout.topMargin: dialog.basicLevel ? Kirigami.Units.smallSpacing : 0
             spacing: Kirigami.Units.smallSpacing
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Interaction")
             }
 
-            LatteComponents.CheckBoxesColumn {
+            MochaComponents.CheckBoxesColumn {
                 Layout.leftMargin: Kirigami.Units.smallSpacing * 2
                 Layout.rightMargin: Kirigami.Units.smallSpacing * 2
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Launchers are added only in current tasks applet")
                     tooltip: i18n("Launchers are added only in current tasks applet and not as regular applets or in any other applet")
@@ -139,7 +139,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     id: windowActionsChk
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Window actions in the context menu")
@@ -152,7 +152,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     id: previewPopupChk
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Preview window behaves as popup")
@@ -165,14 +165,14 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     id: unifyGlobalShortcutsChk
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Based on position shortcuts apply only on current tasks")
                     // checked: tasks.configuration.isPreferredForPositionShortcuts //! Disabled because it was not updated between multiple Tasks
                     tooltip: i18n("Based on position global shortcuts are enabled only for current tasks and not for other applets")
                     visible: dialog.advancedLevel
-                    enabled: latteView.isPreferredForShortcuts || (!latteView.layout.preferredForShortcutsTouched && latteView.isHighestPriorityView())
+                    enabled: mochaView.isPreferredForShortcuts || (!mochaView.layout.preferredForShortcutsTouched && mochaView.isHighestPriorityView())
                     value: tasks.configuration.isPreferredForPositionShortcuts
 
                     onClicked: {
@@ -188,15 +188,15 @@ PlasmaComponents.Page {
             spacing: Kirigami.Units.smallSpacing
 
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Filters")
             }
 
-            LatteComponents.CheckBoxesColumn {
+            MochaComponents.CheckBoxesColumn {
                 Layout.leftMargin: Kirigami.Units.smallSpacing * 2
                 Layout.rightMargin: Kirigami.Units.smallSpacing * 2
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Show only tasks from the current screen")
                     enabled: !disableAllWindowsFunctionality
@@ -207,7 +207,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Show only tasks from the current desktop")
                     enabled: !disableAllWindowsFunctionality
@@ -218,7 +218,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Show only tasks from the current activity")
                     enabled: !disableAllWindowsFunctionality
@@ -229,7 +229,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Show only tasks from launchers")
                     visible: dialog.advancedLevel
@@ -241,7 +241,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Show only launchers and hide all tasks")
                     tooltip: i18n("Tasks become hidden and only launchers are shown")
@@ -253,7 +253,7 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Show only grouped tasks for same application")
                     tooltip: i18n("By default group tasks of the same application")
@@ -276,37 +276,37 @@ PlasmaComponents.Page {
             enabled: plasmoid.configuration.animationsEnabled
             visible: dialog.advancedLevel
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Animations")
             }
 
-            LatteComponents.CheckBoxesColumn {
+            MochaComponents.CheckBoxesColumn {
                 Layout.leftMargin: Kirigami.Units.smallSpacing * 2
                 Layout.rightMargin: Kirigami.Units.smallSpacing * 2
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Bounce launchers when triggered")
                     value: tasks.configuration.animationLauncherBouncing
-                    enabled: !latteView.indicator.info.providesTaskLauncherAnimation
+                    enabled: !mochaView.indicator.info.providesTaskLauncherAnimation
 
                     onClicked: {
                         tasks.configuration.animationLauncherBouncing = !tasks.configuration.animationLauncherBouncing;
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Bounce tasks that need attention")
                     value: tasks.configuration.animationWindowInAttention
-                    enabled: !latteView.indicator.info.providesInAttentionAnimation
+                    enabled: !mochaView.indicator.info.providesInAttentionAnimation
 
                     onClicked: {
                         tasks.configuration.animationWindowInAttention = !tasks.configuration.animationWindowInAttention;
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Slide in and out single windows")
                     value: tasks.configuration.animationNewWindowSliding
@@ -316,22 +316,22 @@ PlasmaComponents.Page {
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Grouped tasks bounce their new windows")
                     value: tasks.configuration.animationWindowAddedInGroup
-                    enabled: !latteView.indicator.info.providesGroupedWindowAddedAnimation
+                    enabled: !mochaView.indicator.info.providesGroupedWindowAddedAnimation
 
                     onClicked: {
                         tasks.configuration.animationWindowAddedInGroup = !tasks.configuration.animationWindowAddedInGroup;
                     }
                 }
 
-                LatteComponents.CheckBox {
+                MochaComponents.CheckBox {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Grouped tasks slide out their closed windows")
                     value: tasks.configuration.animationWindowRemovedFromGroup
-                    enabled: !latteView.indicator.info.providesGroupedWindowRemovedAnimation
+                    enabled: !mochaView.indicator.info.providesGroupedWindowRemovedAnimation
 
                     onClicked: {
                         tasks.configuration.animationWindowRemovedFromGroup = !tasks.configuration.animationWindowRemovedFromGroup;
@@ -347,7 +347,7 @@ PlasmaComponents.Page {
             spacing: Kirigami.Units.smallSpacing
 
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Launchers")
             }
 
@@ -379,7 +379,7 @@ PlasmaComponents.Page {
                         ButtonGroup.group: launchersGroup
                         tooltip: i18n("Use a unique set of launchers for this view which is independent from any other view")
 
-                        readonly property int group: LatteCore.Types.UniqueLaunchers
+                        readonly property int group: MochaCore.Types.UniqueLaunchers
 
                         onPressedChanged: {
                             if (pressed) {
@@ -396,11 +396,11 @@ PlasmaComponents.Page {
                         checked: parent.group === group
                         checkable: false
                         ButtonGroup.group: launchersGroup
-                        tooltip: i18n("Use the current layout set of launchers for this latteView. This group provides launchers <b>synchronization</b> between different views in the <b>same layout</b>")
+                        tooltip: i18n("Use the current layout set of launchers for this mochaView. This group provides launchers <b>synchronization</b> between different views in the <b>same layout</b>")
                         //! it is shown only when the user has activated that option manually from the text layout file
                         visible: tasks.configuration.launchersGroup === group
 
-                        readonly property int group: LatteCore.Types.LayoutLaunchers
+                        readonly property int group: MochaCore.Types.LayoutLaunchers
 
                         onPressedChanged: {
                             if (pressed) {
@@ -416,9 +416,9 @@ PlasmaComponents.Page {
                         checked: parent.group === group
                         checkable: false
                         ButtonGroup.group: launchersGroup
-                        tooltip: i18n("Use the global set of launchers for this latteView. This group provides launchers <b>synchronization</b> between different views and between <b>different layouts</b>")
+                        tooltip: i18n("Use the global set of launchers for this mochaView. This group provides launchers <b>synchronization</b> between different views and between <b>different layouts</b>")
 
-                        readonly property int group: LatteCore.Types.GlobalLaunchers
+                        readonly property int group: MochaCore.Types.GlobalLaunchers
 
                         onPressedChanged: {
                             if (pressed) {
@@ -436,13 +436,13 @@ PlasmaComponents.Page {
             spacing: Kirigami.Units.smallSpacing
             visible: dialog.advancedLevel
 
-            LatteComponents.HeaderSwitch {
+            MochaComponents.HeaderSwitch {
                 id: scrollingHeader
                 Layout.minimumWidth: dialog.optionsWidth + 2 *Kirigami.Units.smallSpacing
                 Layout.maximumWidth: Layout.minimumWidth
                 Layout.minimumHeight: implicitHeight
                 Layout.bottomMargin: Kirigami.Units.smallSpacing
-                enabled: LatteCore.WindowSystem.compositingActive
+                enabled: MochaCore.WindowSystem.compositingActive
 
                 checked: tasks.configuration.scrollTasksEnabled
                 text: i18n("Scrolling")
@@ -471,7 +471,7 @@ PlasmaComponents.Page {
                         text: i18n("Manual")
                     }
 
-                    LatteComponents.ComboBox {
+                    MochaComponents.ComboBox {
                         id: manualScrolling
                         Layout.minimumWidth: leftClickAction.width
                         Layout.maximumWidth: leftClickAction.width
@@ -489,7 +489,7 @@ PlasmaComponents.Page {
                         text: i18n("Automatic")
                     }
 
-                    LatteComponents.ComboBox {
+                    MochaComponents.ComboBox {
                         id: autoScrolling
                         Layout.minimumWidth: leftClickAction.width
                         Layout.maximumWidth: leftClickAction.width
@@ -518,7 +518,7 @@ PlasmaComponents.Page {
             spacing: Kirigami.Units.smallSpacing
             visible: dialog.advancedLevel
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Actions")
             }
 
@@ -540,7 +540,7 @@ PlasmaComponents.Page {
                         text: i18n("Left Click")
                     }
 
-                    LatteComponents.ComboBox {
+                    MochaComponents.ComboBox {
                         id: leftClickAction
                         Layout.fillWidth: true
                         model: [i18nc("present windows action", "Present Windows"),
@@ -549,11 +549,11 @@ PlasmaComponents.Page {
 
                         currentIndex: {
                             switch(tasks.configuration.leftClickAction) {
-                            case LatteTasks.Types.PresentWindows:
+                            case MochaTasks.Types.PresentWindows:
                                 return 0;
-                            case LatteTasks.Types.CycleThroughTasks:
+                            case MochaTasks.Types.CycleThroughTasks:
                                 return 1;
-                            case LatteTasks.Types.PreviewWindows:
+                            case MochaTasks.Types.PreviewWindows:
                                 return 2;
                             }
 
@@ -563,13 +563,13 @@ PlasmaComponents.Page {
                         onCurrentIndexChanged: {
                             switch(currentIndex) {
                             case 0:
-                                tasks.configuration.leftClickAction = LatteTasks.Types.PresentWindows;
+                                tasks.configuration.leftClickAction = MochaTasks.Types.PresentWindows;
                                 break;
                             case 1:
-                                tasks.configuration.leftClickAction = LatteTasks.Types.CycleThroughTasks;
+                                tasks.configuration.leftClickAction = MochaTasks.Types.CycleThroughTasks;
                                 break;
                             case 2:
-                                tasks.configuration.leftClickAction = LatteTasks.Types.PreviewWindows;
+                                tasks.configuration.leftClickAction = MochaTasks.Types.PreviewWindows;
                                 break;
                             }
                         }
@@ -580,7 +580,7 @@ PlasmaComponents.Page {
                         text: i18n("Middle Click")
                     }
 
-                    LatteComponents.ComboBox {
+                    MochaComponents.ComboBox {
                         id: middleClickAction
                         Layout.fillWidth: true
                         model: [
@@ -600,7 +600,7 @@ PlasmaComponents.Page {
                         text: i18n("Hover")
                     }
 
-                    LatteComponents.ComboBox {
+                    MochaComponents.ComboBox {
                         id: hoverAction
                         Layout.fillWidth: true
                         model: [
@@ -612,13 +612,13 @@ PlasmaComponents.Page {
 
                         currentIndex: {
                             switch(tasks.configuration.hoverAction) {
-                            case LatteTasks.Types.NoneAction:
+                            case MochaTasks.Types.NoneAction:
                                 return 0;
-                            case LatteTasks.Types.PreviewWindows:
+                            case MochaTasks.Types.PreviewWindows:
                                 return 1;
-                            case LatteTasks.Types.HighlightWindows:
+                            case MochaTasks.Types.HighlightWindows:
                                 return 2;
-                            case LatteTasks.Types.PreviewAndHighlightWindows:
+                            case MochaTasks.Types.PreviewAndHighlightWindows:
                                 return 3;
                             }
 
@@ -628,16 +628,16 @@ PlasmaComponents.Page {
                         onCurrentIndexChanged: {
                             switch(currentIndex) {
                             case 0:
-                                tasks.configuration.hoverAction = LatteTasks.Types.NoneAction;
+                                tasks.configuration.hoverAction = MochaTasks.Types.NoneAction;
                                 break;
                             case 1:
-                                tasks.configuration.hoverAction = LatteTasks.Types.PreviewWindows;
+                                tasks.configuration.hoverAction = MochaTasks.Types.PreviewWindows;
                                 break;
                             case 2:
-                                tasks.configuration.hoverAction = LatteTasks.Types.HighlightWindows;
+                                tasks.configuration.hoverAction = MochaTasks.Types.HighlightWindows;
                                 break;
                             case 3:
-                                tasks.configuration.hoverAction = LatteTasks.Types.PreviewAndHighlightWindows;
+                                tasks.configuration.hoverAction = MochaTasks.Types.PreviewAndHighlightWindows;
                                 break;
                             }
                         }
@@ -647,7 +647,7 @@ PlasmaComponents.Page {
                         text: i18n("Wheel")
                     }
 
-                    LatteComponents.ComboBox {
+                    MochaComponents.ComboBox {
                         id: wheelAction
                         Layout.fillWidth: true
                         model: [
@@ -667,7 +667,7 @@ PlasmaComponents.Page {
                         Layout.minimumWidth: middleClickText.width
                         Layout.maximumWidth: middleClickText.width
 
-                        LatteComponents.ComboBox {
+                        MochaComponents.ComboBox {
                             id: modifier
                             Layout.fillWidth: true
                             model: ["Shift", "Ctrl", "Alt", "Meta"]
@@ -687,7 +687,7 @@ PlasmaComponents.Page {
 
                         readonly property int maxSize: 0.4 * dialog.optionsWidth
 
-                        LatteComponents.ComboBox {
+                        MochaComponents.ComboBox {
                             id: modifierClick
                             Layout.preferredWidth: 0.7 * parent.maxSize
                             Layout.maximumWidth: parent.maxSize
@@ -701,7 +701,7 @@ PlasmaComponents.Page {
                             text: "="
                         }
 
-                        LatteComponents.ComboBox {
+                        MochaComponents.ComboBox {
                             id: modifierClickAction
                             Layout.fillWidth: true
                             model: [i18nc("The click action", "None"), i18n("Close Window or Group"),
@@ -730,7 +730,7 @@ PlasmaComponents.Page {
             spacing: Kirigami.Units.smallSpacing
             visible: dialog.advancedLevel
 
-            LatteComponents.Header {
+            MochaComponents.Header {
                 text: i18n("Recycling")
             }
 
@@ -741,12 +741,12 @@ PlasmaComponents.Page {
                 Layout.rightMargin: Kirigami.Units.smallSpacing * 2
                 Layout.topMargin: Kirigami.Units.smallSpacing
 
-                text: i18n("Remove Latte Tasks Applet")
-                enabled: latteView.latteTasksArePresent
-                tooltip: i18n("Remove Latte Tasks plasmoid")
+                text: i18n("Remove Mocha Tasks Applet")
+                enabled: mochaView.mochaTasksArePresent
+                tooltip: i18n("Remove Mocha Tasks plasmoid")
 
                 onClicked: {
-                    latteView.removeTasksPlasmoid();
+                    mochaView.removeTasksPlasmoid();
                 }
             }
         }*/

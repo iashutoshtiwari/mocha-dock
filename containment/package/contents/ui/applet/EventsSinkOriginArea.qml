@@ -9,10 +9,10 @@ MouseArea {
     id: __originArea
     enabled: visible
     hoverEnabled: true
-    visible: root.latteView && root.latteView.sink.originParentItem !== originParentItem && width>0 && height>0
+    visible: root.mochaView && root.mochaView.sink.originParentItem !== originParentItem && width>0 && height>0
 
     onEntered: {
-        root.latteView.sink.setSink(originParentItem, destination);
+        root.mochaView.sink.setSink(originParentItem, destination);
     }
 
     Loader{

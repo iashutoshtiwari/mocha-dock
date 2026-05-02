@@ -17,17 +17,17 @@ namespace PlasmaQuick
 class SharedQmlEngine;
 }
 
-namespace Latte {
+namespace Mocha {
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 class PrimaryConfigView;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 namespace Config {
 
@@ -36,7 +36,7 @@ struct IndicatorUiData
     QString type;
     QString pluginPath;
     QString name;
-    QPointer<Latte::View> view;
+    QPointer<Mocha::View> view;
     QPointer<PlasmaQuick::SharedQmlEngine> ui;
 };
 
@@ -53,7 +53,7 @@ public slots:
     Q_INVOKABLE void downloadIndicator();
     Q_INVOKABLE void removeIndicator(QString pluginId);
     Q_INVOKABLE void setParentItem(QQuickItem *parentItem);
-    Q_INVOKABLE void ui(const QString &type, Latte::View *view);
+    Q_INVOKABLE void ui(const QString &type, Mocha::View *view);
 
     Q_INVOKABLE int index(const QString &type);
 private:

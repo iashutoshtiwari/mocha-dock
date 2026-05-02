@@ -25,11 +25,11 @@
 #include <PlasmaActivities/Info>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Model {
 
-Layouts::Layouts(QObject *parent, Latte::Corona *corona)
+Layouts::Layouts(QObject *parent, Mocha::Corona *corona)
     : QAbstractTableModel(parent),
       m_corona(corona)
 {
@@ -46,13 +46,13 @@ Layouts::Layouts(QObject *parent, Latte::Corona *corona)
 
     connect(this, &Layouts::activitiesStatesChanged, this, &Layouts::onActivitiesStatesChanged);
 
-    connect(m_corona->universalSettings(), &Latte::UniversalSettings::singleModeLayoutNameChanged, this, &Layouts::updateActiveStates); //! sort properly when switching single layouts
-    connect(m_corona->layoutsManager()->synchronizer(), &Latte::Layouts::Synchronizer::centralLayoutsChanged, this, &Layouts::updateActiveStates);
+    connect(m_corona->universalSettings(), &Mocha::UniversalSettings::singleModeLayoutNameChanged, this, &Layouts::updateActiveStates); //! sort properly when switching single layouts
+    connect(m_corona->layoutsManager()->synchronizer(), &Mocha::Layouts::Synchronizer::centralLayoutsChanged, this, &Layouts::updateActiveStates);
 
     connect(this, &Layouts::activitiesStatesChanged, this, &Layouts::updateConsideredActiveStates);
     connect(this, &Layouts::inMultipleModeChanged, this, &Layouts::updateConsideredActiveStates);
-    connect(m_corona->layoutsManager()->synchronizer(), &Latte::Layouts::Synchronizer::centralLayoutsChanged, this, &Layouts::updateConsideredActiveStates);
-    connect(m_corona->universalSettings(), &Latte::UniversalSettings::singleModeLayoutNameChanged, this, &Layouts::updateConsideredActiveStates);
+    connect(m_corona->layoutsManager()->synchronizer(), &Mocha::Layouts::Synchronizer::centralLayoutsChanged, this, &Layouts::updateConsideredActiveStates);
+    connect(m_corona->universalSettings(), &Mocha::UniversalSettings::singleModeLayoutNameChanged, this, &Layouts::updateConsideredActiveStates);
 }
 
 Layouts::~Layouts()
@@ -174,7 +174,7 @@ void Layouts::clear()
     }
 }
 
-void Layouts::appendLayout(const Latte::Data::Layout &layout)
+void Layouts::appendLayout(const Mocha::Data::Layout &layout)
 {
     int newRow = m_layoutsTable.sortedPosForName(layout.name);
 
@@ -185,7 +185,7 @@ void Layouts::appendLayout(const Latte::Data::Layout &layout)
     emit rowsInserted();
 }
 
-void Layouts::appendOriginalLayout(const Latte::Data::Layout &layout)
+void Layouts::appendOriginalLayout(const Mocha::Data::Layout &layout)
 {
     int newRow = o_layoutsTable.sortedPosForName(layout.name);
     o_layoutsTable.insert(newRow, layout);
@@ -221,7 +221,7 @@ void Layouts::removeLayout(const QString &id)
     }
 }
 
-void Layouts::setLayoutProperties(const Latte::Data::Layout &layout)
+void Layouts::setLayoutProperties(const Mocha::Data::Layout &layout)
 {
     if (m_layoutsTable.containsId(layout.id)) {
         m_layoutsTable[layout.id] = layout;
@@ -247,7 +247,7 @@ bool Layouts::removeRows(int row, int count, const QModelIndex &parent)
         bool freeActivitiesLayoutIsRemoved{false};
 
         for(int i=firstRow; i<=lastRow; ++i) {
-            if (m_layoutsTable[i].activities.contains(Latte::Data::Layout::FREEACTIVITIESID)) {
+            if (m_layoutsTable[i].activities.contains(Mocha::Data::Layout::FREEACTIVITIESID)) {
                 //! we need to reassign it properly
                 freeActivitiesLayoutIsRemoved = true;
                 break;
@@ -269,7 +269,7 @@ bool Layouts::removeRows(int row, int count, const QModelIndex &parent)
 QString Layouts::layoutNameForFreeActivities() const
 {
     for(int i=0; i<rowCount(); ++i) {
-        if (m_layoutsTable[i].activities.contains(Latte::Data::Layout::FREEACTIVITIESID)) {
+        if (m_layoutsTable[i].activities.contains(Mocha::Data::Layout::FREEACTIVITIESID)) {
             return m_layoutsTable[i].name;
         }
     }
@@ -390,12 +390,12 @@ Qt::ItemFlags Layouts::flags(const QModelIndex &index) const
     return flags;
 }
 
-Latte::Data::LayoutIcon Layouts::icon(const int &row) const
+Mocha::Data::LayoutIcon Layouts::icon(const int &row) const
 {
     return m_corona->layoutsManager()->iconForLayout(m_layoutsTable[row]);
 }
 
-const Latte::Data::LayoutIcon Layouts::currentLayoutIcon(const QString &id) const
+const Mocha::Data::LayoutIcon Layouts::currentLayoutIcon(const QString &id) const
 {
     int row = rowForId(id);
 
@@ -403,7 +403,7 @@ const Latte::Data::LayoutIcon Layouts::currentLayoutIcon(const QString &id) cons
         return icon(row);
     }
 
-    return Latte::Data::LayoutIcon();
+    return Mocha::Data::LayoutIcon();
 }
 
 QString Layouts::sortableText(const int &priority, const int &row) const
@@ -446,7 +446,7 @@ QVariant Layouts::data(const QModelIndex &index, int role) const
     }
 
     //! original data
-    Latte::Data::Layout original;
+    Mocha::Data::Layout original;
 
     if (!isNewLayout) {
         original = o_layoutsTable[m_layoutsTable[row].id];
@@ -466,9 +466,9 @@ QVariant Layouts::data(const QModelIndex &index, int role) const
         return m_layoutsTable[row].activities;
     } else if (role == ALLACTIVITIESSORTEDROLE) {
         QStringList activities;
-        activities << QString(Latte::Data::Layout::ALLACTIVITIESID);
-        activities << QString(Latte::Data::Layout::FREEACTIVITIESID);
-        activities << QString(Latte::Data::Layout::CURRENTACTIVITYID);
+        activities << QString(Mocha::Data::Layout::ALLACTIVITIESID);
+        activities << QString(Mocha::Data::Layout::FREEACTIVITIESID);
+        activities << QString(Mocha::Data::Layout::CURRENTACTIVITYID);
         activities << m_corona->layoutsManager()->synchronizer()->activities();
         return activities;
     } else if (role == ALLACTIVITIESDATAROLE) {
@@ -484,7 +484,7 @@ QVariant Layouts::data(const QModelIndex &index, int role) const
     } else if (role == LAYOUTHASCHANGESROLE) {
         return isNewLayout ? true : (original != m_layoutsTable[row]);
     } else if (role == BACKGROUNDUSERROLE) {
-        Latte::Data::LayoutIcon _icon = icon(row);
+        Mocha::Data::LayoutIcon _icon = icon(row);
         QVariant::fromValue(_icon);
     } else if (role == ERRORSROLE) {
         return m_layoutsTable[row].errors;
@@ -508,7 +508,7 @@ QVariant Layouts::data(const QModelIndex &index, int role) const
         if (role == Qt::DisplayRole) {
             return m_layoutsTable[row].background;
         } else if (role == Qt::UserRole) {
-            Latte::Data::LayoutIcon _icon = icon(row);
+            Mocha::Data::LayoutIcon _icon = icon(row);
             QVariant::fromValue(_icon);
         }
         break;
@@ -562,9 +562,9 @@ QVariant Layouts::data(const QModelIndex &index, int role) const
     case ACTIVITYCOLUMN:
         if (role == SORTINGROLE) {
             if (m_layoutsTable[row].activities.count() > 0) {
-                if (m_layoutsTable[row].activities.contains(Latte::Data::Layout::ALLACTIVITIESID)) {
+                if (m_layoutsTable[row].activities.contains(Mocha::Data::Layout::ALLACTIVITIESID)) {
                     return sortingPriority(HIGHESTPRIORITY, row);
-                } else if (m_layoutsTable[row].activities.contains(Latte::Data::Layout::FREEACTIVITIESID)) {
+                } else if (m_layoutsTable[row].activities.contains(Mocha::Data::Layout::FREEACTIVITIESID)) {
                     return sortingPriority(HIGHPRIORITY, row);
                 } else {
                     return sortingPriority(MEDIUMPRIORITY, row) + QString::number(m_layoutsTable[row].activities.count());
@@ -602,7 +602,7 @@ QStringList Layouts::cleanStrings(const QStringList &original, const QStringList
     return result;
 }
 
-void Layouts::setOriginalActivitiesForLayout(const Latte::Data::Layout &layout)
+void Layouts::setOriginalActivitiesForLayout(const Mocha::Data::Layout &layout)
 {
     if (o_layoutsTable.containsId(layout.id) && m_layoutsTable.containsId(layout.id)) {
         o_layoutsTable[layout.id].activities = layout.activities;
@@ -612,7 +612,7 @@ void Layouts::setOriginalActivitiesForLayout(const Latte::Data::Layout &layout)
     }
 }
 
-void Layouts::setOriginalViewsForLayout(const Latte::Data::Layout &layout)
+void Layouts::setOriginalViewsForLayout(const Mocha::Data::Layout &layout)
 {
     if (o_layoutsTable.containsId(layout.id) && m_layoutsTable.containsId(layout.id)) {
         o_layoutsTable[layout.id].views = layout.views;
@@ -791,9 +791,9 @@ void Layouts::updateConsideredActiveStates()
         for(int i=0; i<rowCount(); ++i) {
             bool iConsideredActive{false};
 
-            if (m_layoutsTable[i].activities.contains(Latte::Data::Layout::ALLACTIVITIESID)) {
+            if (m_layoutsTable[i].activities.contains(Mocha::Data::Layout::ALLACTIVITIESID)) {
                 iConsideredActive = true;
-            } else if (freeRunningActivities.count()>0 && m_layoutsTable[i].activities.contains(Latte::Data::Layout::FREEACTIVITIESID)) {
+            } else if (freeRunningActivities.count()>0 && m_layoutsTable[i].activities.contains(Mocha::Data::Layout::FREEACTIVITIESID)) {
                 iConsideredActive = true;
             } else if (m_layoutsTable[i].activities.count()>0 && containsSpecificRunningActivity(runningActivities, m_layoutsTable[i])) {
                 iConsideredActive = true;
@@ -814,37 +814,37 @@ int Layouts::rowForId(const QString &id) const
     return m_layoutsTable.indexOf(id);
 }
 
-const Latte::Data::Layout &Layouts::at(const int &row)
+const Mocha::Data::Layout &Layouts::at(const int &row)
 {
     return m_layoutsTable[row];
 }
 
-const Latte::Data::Layout &Layouts::currentData(const QString &id)
+const Mocha::Data::Layout &Layouts::currentData(const QString &id)
 {
     if (m_layoutsTable.containsId(id)){
         return m_layoutsTable[id];
     }
 
     // FIXME:
-    return Latte::Data::Layout();
+    return Mocha::Data::Layout();
 }
 
 
-const Latte::Data::Layout Layouts::originalData(const QString &id)
+const Mocha::Data::Layout Layouts::originalData(const QString &id)
 {
     if (o_layoutsTable.containsId(id)){
         return o_layoutsTable[id];
     }
 
-    return Latte::Data::Layout();
+    return Mocha::Data::Layout();
 }
 
-const Latte::Data::LayoutsTable &Layouts::originalLayoutsData()
+const Mocha::Data::LayoutsTable &Layouts::originalLayoutsData()
 {
     return o_layoutsTable;
 }
 
-const Latte::Data::LayoutsTable &Layouts::currentLayoutsData()
+const Mocha::Data::LayoutsTable &Layouts::currentLayoutsData()
 {
     return m_layoutsTable;
 }
@@ -860,7 +860,7 @@ void Layouts::setOriginalInMultipleMode(const bool &inmultiple)
     o_inMultipleMode = inmultiple;
 }
 
-void Layouts::setOriginalData(Latte::Data::LayoutsTable &data)
+void Layouts::setOriginalData(Mocha::Data::LayoutsTable &data)
 {
     clear();
 
@@ -875,9 +875,9 @@ void Layouts::setOriginalData(Latte::Data::LayoutsTable &data)
     updateConsideredActiveStates();
 }
 
-QList<Latte::Data::Layout> Layouts::alteredLayouts() const
+QList<Mocha::Data::Layout> Layouts::alteredLayouts() const
 {
-    QList<Latte::Data::Layout> layouts;
+    QList<Mocha::Data::Layout> layouts;
 
     for(int i=0; i<rowCount(); ++i) {
         QString currentId = m_layoutsTable[i].id;
@@ -894,24 +894,24 @@ QList<Latte::Data::Layout> Layouts::alteredLayouts() const
 //! Activities code
 void Layouts::initActivities()
 {
-    Latte::Data::Activity allActivities;
-    allActivities.id = Latte::Data::Layout::ALLACTIVITIESID;
+    Mocha::Data::Activity allActivities;
+    allActivities.id = Mocha::Data::Layout::ALLACTIVITIESID;
     allActivities.name = QString("[ " + i18n("All Activities") + " ]");
     allActivities.icon = "activities";
     allActivities.isRunningState = false;
     allActivities.isValidState = true;
     m_activitiesTable << allActivities;
 
-    Latte::Data::Activity freeActivities;
-    freeActivities.id = Latte::Data::Layout::FREEACTIVITIESID;
+    Mocha::Data::Activity freeActivities;
+    freeActivities.id = Mocha::Data::Layout::FREEACTIVITIESID;
     freeActivities.name = QString("[ " + i18n("Free Activities") + " ]");
     freeActivities.icon = "activities";
     freeActivities.isRunningState = false;
     freeActivities.isValidState = true;
     m_activitiesTable << freeActivities;
 
-    Latte::Data::Activity currentActivity;
-    currentActivity.id = Latte::Data::Layout::CURRENTACTIVITYID;
+    Mocha::Data::Activity currentActivity;
+    currentActivity.id = Mocha::Data::Layout::CURRENTACTIVITYID;
     currentActivity.name = QString("[ " + i18n("Current Activity") + " ]");
     currentActivity.icon = "dialog-yes";
     currentActivity.isRunningState = false;
@@ -951,7 +951,7 @@ void Layouts::onActivityAdded(const QString &id)
 {
     m_activitiesInfo[id] = new KActivities::Info(id, this);
 
-    Latte::Data::Activity activity;
+    Mocha::Data::Activity activity;
     activity.id = m_activitiesInfo[id]->id();
     activity.name = m_activitiesInfo[id]->name();
     activity.icon = m_activitiesInfo[id]->icon();
@@ -1018,7 +1018,7 @@ void Layouts::onRunningActivitiesChanged(const QStringList &runningIds)
     emit activitiesStatesChanged();
 }
 
-bool Layouts::containsSpecificRunningActivity(const QStringList &runningIds, const Latte::Data::Layout &layout) const
+bool Layouts::containsSpecificRunningActivity(const QStringList &runningIds, const Mocha::Data::Layout &layout) const
 {
     if (runningIds.count()>0 && layout.activities.count()>0) {
         for (int i=0; i<layout.activities.count(); ++i) {

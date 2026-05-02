@@ -11,18 +11,18 @@
 #include "../../view/view.h"
 
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 namespace Tracker {
 
 
-TrackedViewInfo::TrackedViewInfo(Tracker::Windows *tracker, Latte::View *view)
+TrackedViewInfo::TrackedViewInfo(Tracker::Windows *tracker, Mocha::View *view)
     : TrackedGeneralInfo(tracker) ,
       m_view(view)
 {
     m_activities = m_view->activities();
 
-    connect(m_view, &Latte::View::activitiesChanged, this, [&]() {
+    connect(m_view, &Mocha::View::activitiesChanged, this, [&]() {
         m_activities = m_view->activities();
         updateTrackingCurrentActivity();
     });
@@ -130,7 +130,7 @@ void TrackedViewInfo::setTouchingWindowScheme(SchemeColors *scheme)
     m_touchingWindowScheme = scheme;
 }
 
-Latte::View *TrackedViewInfo::view() const
+Mocha::View *TrackedViewInfo::view() const
 {
     return m_view;
 }

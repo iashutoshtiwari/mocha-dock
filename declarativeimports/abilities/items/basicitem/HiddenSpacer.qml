@@ -7,7 +7,7 @@
 import QtQuick
 
 import org.kde.plasma.core as PlasmaCore
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Item{
     id: hiddenSpacer
@@ -23,7 +23,7 @@ Item{
 
     property int separatorSpace: neighbourSeparator && !abilityItem.isSeparator && abilityItem.abilities.parabolic.isEnabled
                                  && !(abilityItem.abilities.indexer.separators.length>0 && abilityItem.isSeparatorInRealLength) ?
-                                     (LatteCore.Environment.separatorLength/2) : 0
+                                     (MochaCore.Environment.separatorLength/2) : 0
 
     property real nScale: 0
     property real nHiddenSize: 0

@@ -26,12 +26,12 @@ class Containment;
 class Types;
 }
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
 class WidgetExplorerView : public SubConfigView
@@ -40,7 +40,7 @@ class WidgetExplorerView : public SubConfigView
     Q_PROPERTY(bool hideOnWindowDeactivate READ hideOnWindowDeactivate WRITE setHideOnWindowDeactivate NOTIFY hideOnWindowDeactivateChanged)
 
 public:
-    WidgetExplorerView(Latte::View *view);
+    WidgetExplorerView(Mocha::View *view);
 
     bool hideOnWindowDeactivate() const;
     void setHideOnWindowDeactivate(bool hide);
@@ -62,7 +62,7 @@ protected:
     void focusOutEvent(QFocusEvent *ev) override;
 
     void init() override;
-    void initParentView(Latte::View *view) override;
+    void initParentView(Mocha::View *view) override;
     void updateEnabledBorders() override;
 
     Qt::WindowFlags wFlags() const override;

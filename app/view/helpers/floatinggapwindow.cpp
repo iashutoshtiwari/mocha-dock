@@ -18,10 +18,10 @@
 #include <KWindowSystem>
 
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-FloatingGapWindow::FloatingGapWindow(Latte::View *view) :
+FloatingGapWindow::FloatingGapWindow(Mocha::View *view) :
     SubWindow(view, QString("Floating Gap Window"))
 {
     if (m_debugMode) {

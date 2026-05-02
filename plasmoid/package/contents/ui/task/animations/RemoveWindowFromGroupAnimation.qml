@@ -12,7 +12,7 @@ import org.kde.plasma.core as PlasmaCore
 
 import org.kde.kirigami as Kirigami
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 /////Removing a Window from a group////
 Item{

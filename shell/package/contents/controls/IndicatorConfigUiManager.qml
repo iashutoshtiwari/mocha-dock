@@ -29,7 +29,7 @@ Item {
 
             //var pageShown = stackView.currentItem ? 1 : 0;
             //var total = page1.children.length + page2.children.length + hiddenPages.children.length + pageShown;
-            //console.log(" org.kde.latte >>>>>>>>>>>>>>>>> ALL PAGES :: " + total);
+            //console.log(" org.kde.mocha >>>>>>>>>>>>>>>>> ALL PAGES :: " + total);
 
             if (children.length > 0) {
                 nextIndicator = children[0];
@@ -47,7 +47,7 @@ Item {
                 nextIndicator.parent = nextPage;
                 nextIndicator.visible = true;
                 stackView.Layout.minimumHeight = nextIndicator.height;
-                nextPage.type = latteView.indicator.type;
+                nextPage.type = mochaView.indicator.type;
 
                 var currentIndex = -1;
 
@@ -55,7 +55,7 @@ Item {
                     currentIndex = viewConfig.indicatorUiManager.index(stackView.currentItem.type);
                 }
 
-                var nextIndex = viewConfig.indicatorUiManager.index(latteView.indicator.type);
+                var nextIndex = viewConfig.indicatorUiManager.index(mochaView.indicator.type);
 
                 stackView.forwardSliding = (nextIndex<currentIndex);
                 stackView.replace(stackView.currentItem, nextPage);
@@ -74,16 +74,16 @@ Item {
 
         Component.onCompleted: {
             viewConfig.indicatorUiManager.setParentItem(hiddenIndicatorPage);
-            tabBar.selectTab(latteView.indicator.type);
-            viewConfig.indicatorUiManager.ui(latteView.indicator.type, latteView);
+            tabBar.selectTab(mochaView.indicator.type);
+            viewConfig.indicatorUiManager.ui(mochaView.indicator.type, mochaView);
         }
 
         Connections {
-            target: latteView.indicator
+            target: mochaView.indicator
             onPluginChanged: {
                 if (viewConfig.isReady) {
-                    tabBar.selectTab(latteView.indicator.type);
-                    viewConfig.indicatorUiManager.ui(latteView.indicator.type, latteView);
+                    tabBar.selectTab(mochaView.indicator.type);
+                    viewConfig.indicatorUiManager.ui(mochaView.indicator.type, mochaView);
                 }
             }
         }
@@ -92,8 +92,8 @@ Item {
             target: viewConfig
             onIsReadyChanged: {
                 if (viewConfig.isReady) {
-                    tabBar.selectTab(latteView.indicator.type);
-                    viewConfig.indicatorUiManager.ui(latteView.indicator.type, latteView);
+                    tabBar.selectTab(mochaView.indicator.type);
+                    viewConfig.indicatorUiManager.ui(mochaView.indicator.type, mochaView);
                 }
             }
         }
@@ -105,7 +105,7 @@ Item {
         ColumnLayout {
             id: page1
             width: stackView.width
-            readonly property bool isCurrent: latteView.indicator.type === type && viewConfig.isReady/*update flag*/
+            readonly property bool isCurrent: mochaView.indicator.type === type && viewConfig.isReady/*update flag*/
             readonly property bool deprecatedOptionsAreHidden: true // @since 0.10.0
             readonly property int optionsWidth: dialog.optionsWidth
 
@@ -115,7 +115,7 @@ Item {
         ColumnLayout {
             id: page2
             width: stackView.width
-            readonly property bool isCurrent: latteView.indicator.type === type && viewConfig.isReady/*update flag*/
+            readonly property bool isCurrent: mochaView.indicator.type === type && viewConfig.isReady/*update flag*/
             readonly property bool deprecatedOptionsAreHidden: true // @since 0.10.0
             readonly property int optionsWidth: dialog.optionsWidth
 
@@ -125,7 +125,7 @@ Item {
         ColumnLayout {
             id: hiddenPages
             width: stackView.width
-            readonly property bool isCurrent: latteView.indicator.type === type && viewConfig.isReady/*update flag*/
+            readonly property bool isCurrent: mochaView.indicator.type === type && viewConfig.isReady/*update flag*/
             readonly property bool deprecatedOptionsAreHidden: true // @since 0.10.0
             readonly property int optionsWidth: dialog.optionsWidth
 

@@ -22,7 +22,7 @@
 
 #define PLASMARC "plasmashellrc"
 
-namespace Latte {
+namespace Mocha {
 namespace PlasmaExtended {
 
 ScreenPool::ScreenPool(QObject *parent)
@@ -34,7 +34,7 @@ ScreenPool::ScreenPool(QObject *parent)
 
     load();
 
-    QString plasmaSettingsFile = Latte::configPath() + "/" + PLASMARC;
+    QString plasmaSettingsFile = Mocha::configPath() + "/" + PLASMARC;
 
     KDirWatch::self()->addFile(plasmaSettingsFile);
 

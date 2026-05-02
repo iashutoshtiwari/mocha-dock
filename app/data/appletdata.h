@@ -15,7 +15,7 @@
 #include <QMetaType>
 #include <QString>
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 class Applet : public Generic
@@ -49,6 +49,6 @@ typedef GenericTable<Applet> AppletsTable;
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::Applet)
+Q_DECLARE_METATYPE(Mocha::Data::Applet)
 
 #endif

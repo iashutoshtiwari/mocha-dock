@@ -5,7 +5,7 @@
 
 import QtQuick
 
-import org.kde.latte.abilities.definition as AbilityDefinition
+import org.kde.mocha.abilities.definition as AbilityDefinition
 
 AbilityDefinition.Indexer {
     id: _indexer
@@ -133,7 +133,7 @@ AbilityDefinition.Indexer {
                         && !item.isSeparator /*not using "separators" array to avoid binding loops*/
                         && !(item.isHidden || item.isSeparatorHidden) /*not using "hidden" array to avoid binding loops*/
                         && item.itemIndex > ind) {
-                     //console.log("org/kde/latte SETTING UP ::: " + item.itemIndex + " / " + layout.children.length);
+                     //console.log("org.kde.mocha SETTING UP ::: " + item.itemIndex + " / " + layout.children.length);
                     ind = item.itemIndex;
                 }
             }

@@ -8,10 +8,10 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.components as MochaComponents
 
 
-LatteComponents.ExternalShadow{
+MochaComponents.ExternalShadow{
     id: editExternalShadow
 
     states: [

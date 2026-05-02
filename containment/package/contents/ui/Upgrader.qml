@@ -38,7 +38,7 @@ Item{
         id: v010_tasksUpgrader
         Repeater {
             id: v010_tasksRepeater
-            model: latteView && !plasmoid.configuration.tasksUpgraded ? latteView.extendedInterface.latteTasksModel : null
+            model: mochaView && !plasmoid.configuration.tasksUpgraded ? mochaView.extendedInterface.mochaTasksModel : null
             Item {
                 id: tasksApplet
                 Component.onCompleted: {

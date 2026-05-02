@@ -10,7 +10,7 @@
 #include <QDebug>
 #include <QKeySequence>
 
-namespace Latte {
+namespace Mocha {
 namespace ShortcutsPart {
 
 ModifierTracker::ModifierTracker(QObject *parent)

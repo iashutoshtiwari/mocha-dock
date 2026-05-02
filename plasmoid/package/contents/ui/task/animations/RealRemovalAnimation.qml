@@ -9,7 +9,7 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 SequentialAnimation {
     id: taskRealRemovalAnimation
@@ -25,13 +25,13 @@ SequentialAnimation {
                                || ((!taskItem.abilities.launchers.inCurrentActivity(taskItem.launcherUrl)/*no-launcher-in-current-activity*/
                                     && !taskItem.abilities.launchers.inCurrentActivity(taskItem.launcherUrlWithIcon)))
                                && !taskItem.isStartup
-                               && LatteCore.WindowSystem.compositingActive)
+                               && MochaCore.WindowSystem.compositingActive)
 
     property bool animation4: (tasksExtendedManager.launchersToBeRemovedCount /*update trigger*/
                                && (tasksExtendedManager.isLauncherToBeRemoved(taskItem.launcherUrl)
                                  || tasksExtendedManager.isLauncherToBeRemoved(taskItem.launcherUrlWithIcon))
                                && !taskItem.isStartup
-                               && LatteCore.WindowSystem.compositingActive)
+                               && MochaCore.WindowSystem.compositingActive)
 
     property bool enabledAnimation: (animation1 || animation4)
                                     && root.newWindowSlidingEnabled
@@ -107,7 +107,7 @@ SequentialAnimation {
             taskItem.abilities.animations.needLength.addEvent(needLengthEvent);
 
             if (taskItem.parabolicItem.zoom > 1 && !taskRealRemovalAnimation.enabledAnimation
-                    && !taskItem.inBouncingAnimation && LatteCore.WindowSystem.compositingActive) {
+                    && !taskItem.inBouncingAnimation && MochaCore.WindowSystem.compositingActive) {
                 tasksExtendedManager.setFrozenTask(taskItem.launcherUrl, taskItem.parabolicItem.zoom);
             } else {
                 //! remove frozen task if it is deprecated. This fixes the libreoffice launcher issue with custom indicator launcher animations,

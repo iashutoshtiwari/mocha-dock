@@ -5,7 +5,7 @@
 
 #include "activitydata.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 Activity::Activity()

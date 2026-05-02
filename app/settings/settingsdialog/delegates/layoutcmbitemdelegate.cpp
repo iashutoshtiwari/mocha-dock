@@ -16,7 +16,7 @@
 #include <QString>
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Layout {
 namespace Delegate {
@@ -31,12 +31,12 @@ void LayoutCmbItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     QStyleOptionViewItem myOptions = option;
 
     //! background
-    Latte::drawBackground(painter, option);
-    Latte::Data::LayoutIcon icon = index.data(Model::Layouts::BACKGROUNDUSERROLE).value<Latte::Data::LayoutIcon>();
+    Mocha::drawBackground(painter, option);
+    Mocha::Data::LayoutIcon icon = index.data(Model::Layouts::BACKGROUNDUSERROLE).value<Mocha::Data::LayoutIcon>();
 
     //! icon
-    QRect remained = Latte::remainedFromLayoutIcon(myOptions, Qt::AlignLeft, 4, 2);
-    Latte::drawLayoutIcon(painter, myOptions, icon.isBackgroundFile, icon.name, Qt::AlignLeft, 5, 2); //+1px in order to take into account popup window border
+    QRect remained = Mocha::remainedFromLayoutIcon(myOptions, Qt::AlignLeft, 4, 2);
+    Mocha::drawLayoutIcon(painter, myOptions, icon.isBackgroundFile, icon.name, Qt::AlignLeft, 5, 2); //+1px in order to take into account popup window border
     myOptions.rect = remained;
 
     //!

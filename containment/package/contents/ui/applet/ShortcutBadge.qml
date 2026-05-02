@@ -6,7 +6,7 @@
 import QtQuick
 import Qt5Compat.GraphicalEffects
 
-import org.kde.latte.components as LatteComponents
+import org.kde.mocha.components as MochaComponents
 
 Loader{
     id: appletNumberLoader
@@ -80,7 +80,7 @@ Loader{
             }
         }
 
-        LatteComponents.BadgeText {
+        MochaComponents.BadgeText {
             id: appletNumber
 
             // when iconSize < 48, height is always = 24, height / iconSize > 50%

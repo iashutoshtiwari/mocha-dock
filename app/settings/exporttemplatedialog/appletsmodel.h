@@ -14,7 +14,7 @@
 #include <QModelIndex>
 #include <QList>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Model {
 
@@ -55,10 +55,10 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    void setData(const Latte::Data::AppletsTable &applets);
-    void setSelected(const Latte::Data::AppletsTable &applets);
+    void setData(const Mocha::Data::AppletsTable &applets);
+    void setSelected(const Mocha::Data::AppletsTable &applets);
 
-    Latte::Data::AppletsTable selectedApplets();
+    Mocha::Data::AppletsTable selectedApplets();
 
     void deselectAll();
     void reset();
@@ -73,8 +73,8 @@ private:
     void clear();
 
 private:
-    Latte::Data::AppletsTable o_applets;
-    Latte::Data::AppletsTable c_applets;
+    Mocha::Data::AppletsTable o_applets;
+    Mocha::Data::AppletsTable c_applets;
 
     QList<QString> m_appletsWithNoPersonalData;
 };

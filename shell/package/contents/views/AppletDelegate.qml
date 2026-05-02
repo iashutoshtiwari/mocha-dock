@@ -50,7 +50,7 @@ Item {
             onDoubleClicked: {
                 if (!delegate.pendingUninstall) {
                     widgetExplorer.addApplet(pluginName);
-                    latteView.extendedInterface.appletCreated(pluginName);
+                    mochaView.extendedInterface.appletCreated(pluginName);
                 }
             }
             onEntered: delegate.GridView.view.currentIndex = index

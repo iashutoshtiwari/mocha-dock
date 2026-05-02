@@ -5,7 +5,7 @@
 
 #include "genericdata.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 Generic::Generic(Generic &&o)

@@ -12,7 +12,7 @@
 // Ugly thing to hash WindowId (effectively, QVariant) for use as a key in QHash.
 // FIXME:
 // Rewrite this into something less abominable.
-uint qHash(const Latte::WindowSystem::WindowId& wid, uint seed = 0)
+uint qHash(const Mocha::WindowSystem::WindowId& wid, uint seed = 0)
 {
     QByteArray bytes;
     bytes.reserve(1024);
@@ -26,7 +26,7 @@ uint qHash(const Latte::WindowSystem::WindowId& wid, uint seed = 0)
     return qHashBits(bytes.constData(), buf.pos(), seed);
 }
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 
 WindowInfoWrap::WindowInfoWrap()

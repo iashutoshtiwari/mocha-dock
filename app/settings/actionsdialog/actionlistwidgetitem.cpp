@@ -6,7 +6,7 @@
 #include "actionlistwidgetitem.h"
 
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace ActionsDialog {
 

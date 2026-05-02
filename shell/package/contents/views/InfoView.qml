@@ -13,7 +13,7 @@ import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.extras as PlasmaExtras
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 KSvg.FrameSvgItem {
     id: dialog
@@ -37,14 +37,14 @@ KSvg.FrameSvgItem {
             Layout.fillWidth: true
             Layout.minimumHeight: logo.height
 
-            LatteCore.IconItem {
+            MochaCore.IconItem {
                 id: logo
                 anchors.centerIn: parent
 
                 width: Kirigami.Units.iconSizes.huge
                 height: width
 
-                source: "latte-dock"
+                source: "mocha-dock"
             }
         }
 

@@ -3,16 +3,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef LATTEAPPLOCALTYPES_H
-#define LATTEAPPLOCALTYPES_H
+#ifndef MOCHAAPPLOCALTYPES_H
+#define MOCHAAPPLOCALTYPES_H
 
 // Qt
 #include <QObject>
 
-//! These are LatteApp::Types that will be used ONLY from Latte App c++ implementation.
+//! These are MochaApp::Types that will be used ONLY from Mocha App c++ implementation.
 //! Such types are irrelevant and not used from plasma applets.
 
-namespace Latte {
+namespace Mocha {
 namespace ImportExport {
 Q_NAMESPACE
 
@@ -27,7 +27,7 @@ Q_ENUM_NS(State);
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace MemoryUsage {
 
 enum LayoutsMemory
@@ -40,7 +40,7 @@ enum LayoutsMemory
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace MultipleLayouts {
 
 enum Status
@@ -53,10 +53,10 @@ enum Status
 }
 }
 
-//! These are LatteApp::Types that will be used from Latte App c++ implementation AND
-//! Latte containment qml. Such types are irrelevant and not used from plasma applets.
+//! These are MochaApp::Types that will be used from Mocha App c++ implementation AND
+//! Mocha containment qml. Such types are irrelevant and not used from plasma applets.
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 Q_NAMESPACE
 

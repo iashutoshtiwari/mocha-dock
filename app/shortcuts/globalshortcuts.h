@@ -23,7 +23,7 @@ namespace Plasma {
 class Containment;
 }
 
-namespace Latte {
+namespace Mocha {
 class Corona;
 class View;
 namespace ShortcutsPart{
@@ -32,7 +32,7 @@ class ShortcutsTracker;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 
 class GlobalShortcuts : public QObject
 {
@@ -62,17 +62,17 @@ private:
     void showViews();
     void showSettings();
 
-    bool activateLatteEntry(Latte::View *view, int index, Qt::Key modifier, bool *delayedExecution);
-    bool activatePlasmaTaskManager(const Latte::View *view, int index, Qt::Key modifier, bool *delayedExecution);
-    bool activateEntryForView(Latte::View *view, int index, Qt::Key modifier);
-    bool viewAtLowerEdgePriority(Latte::View *test, Latte::View *base);
-    bool viewAtLowerScreenPriority(Latte::View *test, Latte::View *base);
+    bool activateLatteEntry(Mocha::View *view, int index, Qt::Key modifier, bool *delayedExecution);
+    bool activatePlasmaTaskManager(const Mocha::View *view, int index, Qt::Key modifier, bool *delayedExecution);
+    bool activateEntryForView(Mocha::View *view, int index, Qt::Key modifier);
+    bool viewAtLowerEdgePriority(Mocha::View *test, Mocha::View *base);
+    bool viewAtLowerScreenPriority(Mocha::View *test, Mocha::View *base);
     bool viewsToHideAreValid();
 
     //! highest priority application launcher view
-    Latte::View *highestApplicationLauncherView(const QList<Latte::View *> &views) const;
+    Mocha::View *highestApplicationLauncherView(const QList<Mocha::View *> &views) const;
 
-    QList<Latte::View *> sortedViewsList(QHash<const Plasma::Containment *, Latte::View *> *views);
+    QList<Mocha::View *> sortedViewsList(QHash<const Plasma::Containment *, Mocha::View *> *views);
 
 private:
     bool m_metaShowedViews{false};
@@ -84,11 +84,11 @@ private:
 
     //! delayer for hiding the shown latte views
     QTimer m_hideViewsTimer;
-    QList<Latte::View *> m_hideViews;
+    QList<Mocha::View *> m_hideViews;
 
     QPointer<ShortcutsPart::ModifierTracker> m_modifierTracker;
     QPointer<ShortcutsPart::ShortcutsTracker> m_shortcutsTracker;
-    QPointer<Latte::Corona> m_corona;
+    QPointer<Mocha::Corona> m_corona;
 };
 
 }

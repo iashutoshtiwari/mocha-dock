@@ -21,7 +21,7 @@
 
 #define PRESSEDPROPERTY "PRESSED"
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace View {
 namespace Delegate {
@@ -46,27 +46,27 @@ QWidget *SingleOption::createEditor(QWidget *parent, const QStyleOptionViewItem 
 
     QString currentChoice = index.data(Qt::UserRole).toString();
 
-    Latte::Data::GenericBasicTable choices;
+    Mocha::Data::GenericBasicTable choices;
     QStringList activeChoices;
 
-    Latte::Data::ScreensTable screens;
-    Latte::Data::ViewsTable views; //views are used as examples for edges and alignments
+    Mocha::Data::ScreensTable screens;
+    Mocha::Data::ViewsTable views; //views are used as examples for edges and alignments
 
     if (column == Model::Views::SCREENCOLUMN) {
-        screens = index.data(Model::Views::CHOICESROLE).value<Latte::Data::ScreensTable>();
+        screens = index.data(Model::Views::CHOICESROLE).value<Mocha::Data::ScreensTable>();
 
         for (int i=0; i<screens.rowCount(); ++i) {
-            choices << Latte::Data::Generic(screens[i].id, screens[i].name);
+            choices << Mocha::Data::Generic(screens[i].id, screens[i].name);
 
             if (screens[i].isActive) {
                 activeChoices << screens[i].id;
             }
         }
     } else {
-        views = index.data(Model::Views::CHOICESROLE).value<Latte::Data::ViewsTable>();
+        views = index.data(Model::Views::CHOICESROLE).value<Mocha::Data::ViewsTable>();
 
         for (int i=0; i<views.rowCount(); ++i) {
-            choices << Latte::Data::Generic(views[i].id, views[i].name);
+            choices << Mocha::Data::Generic(views[i].id, views[i].name);
         }
     }
 
@@ -96,7 +96,7 @@ QWidget *SingleOption::createEditor(QWidget *parent, const QStyleOptionViewItem 
         if (column == Model::Views::SCREENCOLUMN) {
             optioncustomwidget->setScreen(screens[i]);
         } else {
-            Latte::Data::Screen viewscreen = index.data(Model::Views::SCREENROLE).value<Latte::Data::Screen>();
+            Mocha::Data::Screen viewscreen = index.data(Model::Views::SCREENROLE).value<Mocha::Data::Screen>();
             optioncustomwidget->setScreen(viewscreen);
             optioncustomwidget->setView(views[i]);
         }
@@ -172,8 +172,8 @@ void SingleOption::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         textopacity = 0.25;
     }
 
-    Latte::drawBackground(painter, option);
-    Latte::drawFormattedText(painter, myOptions, textopacity);
+    Mocha::drawBackground(painter, option);
+    Mocha::drawFormattedText(painter, myOptions, textopacity);
 }
 
 }

@@ -5,7 +5,7 @@
 
 #include "layoutcolordata.h"
 
-namespace Latte {
+namespace Mocha {
 namespace Data {
 
 LayoutColor::LayoutColor()

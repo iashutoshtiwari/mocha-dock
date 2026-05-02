@@ -9,7 +9,7 @@ import Qt5Compat.GraphicalEffects
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 Loader {
     anchors.bottom: (abilityItem.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
@@ -27,10 +27,10 @@ Loader {
 
     width: abilityItem.isVertical ?
                abilityItem.abilities.metrics.iconSize :
-               (isSeparatorInRealLength ? LatteCore.Environment.separatorLength+abilityItem.abilities.metrics.totals.lengthEdges: 2)
+               (isSeparatorInRealLength ? MochaCore.Environment.separatorLength+abilityItem.abilities.metrics.totals.lengthEdges: 2)
     height: abilityItem.isHorizontal ?
                 abilityItem.abilities.metrics.iconSize :
-                (isSeparatorInRealLength  ? LatteCore.Environment.separatorLength+abilityItem.abilities.metrics.totals.lengthEdges: 2)
+                (isSeparatorInRealLength  ? MochaCore.Environment.separatorLength+abilityItem.abilities.metrics.totals.lengthEdges: 2)
 
     opacity: 0.4
 

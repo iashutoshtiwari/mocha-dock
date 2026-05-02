@@ -10,7 +10,7 @@
 // local
 #include "modifiertracker.h"
 #include "shortcutstracker.h"
-#include "../lattecorona.h"
+#include "../mochacorona.h"
 #include "../layout/centrallayout.h"
 #include "../layouts/manager.h"
 #include "../layouts/synchronizer.h"
@@ -39,12 +39,12 @@
 #include <Plasma/Containment>
 
 
-namespace Latte {
+namespace Mocha {
 
 GlobalShortcuts::GlobalShortcuts(QObject *parent)
     : QObject(parent)
 {
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<Mocha::Corona *>(parent);
     m_modifierTracker = new ShortcutsPart::ModifierTracker(this);
     m_shortcutsTracker = new ShortcutsPart::ShortcutsTracker(this);
 
@@ -79,7 +79,7 @@ void GlobalShortcuts::init()
 
     //show-hide the main view in the primary screen
     QAction *showAction = generalActions->addAction(QStringLiteral("show latte view"));
-    showAction->setText(i18n("Show Latte Dock/Panel"));
+    showAction->setText(i18n("Show Mocha Dock/Panel"));
     showAction->setShortcut(QKeySequence(Qt::META | '`'));
     KGlobalAccel::setGlobalShortcut(showAction, QKeySequence(Qt::META | '`'));
     connect(showAction, &QAction::triggered, this, [this]() {
@@ -189,13 +189,13 @@ ShortcutsPart::ShortcutsTracker *GlobalShortcuts::shortcutsTracker() const
     return m_shortcutsTracker;
 }
 
-Latte::View *GlobalShortcuts::highestApplicationLauncherView(const QList<Latte::View *> &views) const
+Mocha::View *GlobalShortcuts::highestApplicationLauncherView(const QList<Mocha::View *> &views) const
 {
     if (views.isEmpty()) {
         return nullptr;
     }
 
-    Latte::View *highestPriorityView{nullptr};
+    Mocha::View *highestPriorityView{nullptr};
 
     for (const auto view : views) {
         if (view->extendedInterface()->applicationLauncherHasGlobalShortcut()) {
@@ -223,24 +223,24 @@ void GlobalShortcuts::activateLauncherMenu()
         return;
     }
 
-    QList<Latte::View *> sortedViews = m_corona->layoutsManager()->synchronizer()->sortedCurrentViews();
+    QList<Mocha::View *> sortedViews = m_corona->layoutsManager()->synchronizer()->sortedCurrentViews();
 
-    Latte::View *highestPriorityView = highestApplicationLauncherView(sortedViews);
+    Mocha::View *highestPriorityView = highestApplicationLauncherView(sortedViews);
 
     if (highestPriorityView) {
         if (!highestPriorityView->visibility()->isShownFully() && highestPriorityView->extendedInterface()->applicationLauncherInPopup()) {
             m_lastInvokedAction = m_singleMetaAction;
 
             //! wait for view to fully shown
-            connect(highestPriorityView->visibility(), &Latte::ViewPart::VisibilityManager::isShownFullyChanged, this, [&, highestPriorityView](){
+            connect(highestPriorityView->visibility(), &Mocha::ViewPart::VisibilityManager::isShownFullyChanged, this, [&, highestPriorityView](){
                 if (highestPriorityView->visibility()->isShownFully()) {
                     highestPriorityView->extendedInterface()->toggleAppletExpanded(highestPriorityView->extendedInterface()->applicationLauncherId());
                     //!remove that signal tracking
-                    disconnect(highestPriorityView->visibility(), &Latte::ViewPart::VisibilityManager::isShownFullyChanged, this, nullptr);
+                    disconnect(highestPriorityView->visibility(), &Mocha::ViewPart::VisibilityManager::isShownFullyChanged, this, nullptr);
                 }
             });
 
-            //! That signal is removed from Latte::View only when the popup is really shown!
+            //! That signal is removed from Mocha::View only when the popup is really shown!
             highestPriorityView->visibility()->addBlockHidingEvent(SHORTCUTBLOCKHIDINGTYPE);
 
         } else {
@@ -249,14 +249,14 @@ void GlobalShortcuts::activateLauncherMenu()
     }
 }
 
-bool GlobalShortcuts::activatePlasmaTaskManager(const Latte::View *view, int index, Qt::Key modifier, bool *delayedExecution)
+bool GlobalShortcuts::activatePlasmaTaskManager(const Mocha::View *view, int index, Qt::Key modifier, bool *delayedExecution)
 {
     bool activation{modifier == static_cast<Qt::Key>(Qt::META)};
     bool newInstance{!activation};
 
     if (!view->visibility()->isShownFully()) {
         //! wait for view to fully shown
-        connect(view->visibility(), &Latte::ViewPart::VisibilityManager::isShownFullyChanged, this, [&, view, index, activation](){
+        connect(view->visibility(), &Mocha::ViewPart::VisibilityManager::isShownFullyChanged, this, [&, view, index, activation](){
             if (view->visibility()->isShownFully()) {
                 if (activation) {
                     view->extendedInterface()->activatePlasmaTask(index);
@@ -264,7 +264,7 @@ bool GlobalShortcuts::activatePlasmaTaskManager(const Latte::View *view, int ind
                     view->extendedInterface()->newInstanceForPlasmaTask(index);
                 }
                 //!remove that signal tracking
-                disconnect(view->visibility(), &Latte::ViewPart::VisibilityManager::isShownFullyChanged, this, nullptr);
+                disconnect(view->visibility(), &Mocha::ViewPart::VisibilityManager::isShownFullyChanged, this, nullptr);
             }
         });
 
@@ -278,7 +278,7 @@ bool GlobalShortcuts::activatePlasmaTaskManager(const Latte::View *view, int ind
     }
 }
 
-bool GlobalShortcuts::activateLatteEntry(Latte::View *view, int index, Qt::Key modifier, bool *delayedExecution)
+bool GlobalShortcuts::activateLatteEntry(Mocha::View *view, int index, Qt::Key modifier, bool *delayedExecution)
 {
     bool activation{modifier == static_cast<Qt::Key>(Qt::META)};
     bool newInstance{!activation};
@@ -288,7 +288,7 @@ bool GlobalShortcuts::activateLatteEntry(Latte::View *view, int index, Qt::Key m
 
     if (!view->visibility()->isShownFully() && hasPopUp) {
         //! wait for view to fully shown
-        connect(view->visibility(), &Latte::ViewPart::VisibilityManager::isShownFullyChanged, this, [&, view, index, activation](){
+        connect(view->visibility(), &Mocha::ViewPart::VisibilityManager::isShownFullyChanged, this, [&, view, index, activation](){
             if (view->visibility()->isShownFully()) {
                 if (activation) {
                     view->extendedInterface()->activateEntry(index);
@@ -296,7 +296,7 @@ bool GlobalShortcuts::activateLatteEntry(Latte::View *view, int index, Qt::Key m
                     view->extendedInterface()->newInstanceForEntry(index);
                 }
                 //!remove that signal tracking
-                disconnect(view->visibility(), &Latte::ViewPart::VisibilityManager::isShownFullyChanged, this, nullptr);
+                disconnect(view->visibility(), &Mocha::ViewPart::VisibilityManager::isShownFullyChanged, this, nullptr);
             }
         });
 
@@ -310,7 +310,7 @@ bool GlobalShortcuts::activateLatteEntry(Latte::View *view, int index, Qt::Key m
     }
 }
 
-bool GlobalShortcuts::activateEntryForView(Latte::View *view, int index, Qt::Key modifier)
+bool GlobalShortcuts::activateEntryForView(Mocha::View *view, int index, Qt::Key modifier)
 {
     if (!view) {
         return false;
@@ -343,9 +343,9 @@ void GlobalShortcuts::activateEntry(int index, Qt::Key modifier)
 {
     m_lastInvokedAction = dynamic_cast<QAction *>(sender());
 
-    QList<Latte::View *> sortedViews = m_corona->layoutsManager()->synchronizer()->sortedCurrentViews();
+    QList<Mocha::View *> sortedViews = m_corona->layoutsManager()->synchronizer()->sortedCurrentViews();
 
-    Latte::View *highest{nullptr};
+    Mocha::View *highest{nullptr};
 
     for (const auto view : sortedViews) {
         if (view->isPreferredForShortcuts()) {
@@ -368,7 +368,7 @@ void GlobalShortcuts::activateEntry(int index, Qt::Key modifier)
 //! update badge for specific view item
 void GlobalShortcuts::updateViewItemBadge(QString identifier, QString value)
 {
-    QList<Latte::View *> views = m_corona->layoutsManager()->synchronizer()->currentViews();
+    QList<Mocha::View *> views = m_corona->layoutsManager()->synchronizer()->currentViews();
 
     // update badges in all Latte Tasks plasmoids
     for (const auto &view : views) {
@@ -384,10 +384,10 @@ void GlobalShortcuts::showViews()
         m_lastInvokedAction = m_singleMetaAction;
     }
 
-    QList<Latte::View *> sortedViews = m_corona->layoutsManager()->synchronizer()->sortedCurrentViews();
+    QList<Mocha::View *> sortedViews = m_corona->layoutsManager()->synchronizer()->sortedCurrentViews();
 
-    Latte::View *viewWithTasks{nullptr};
-    Latte::View *viewWithMeta{nullptr};
+    Mocha::View *viewWithTasks{nullptr};
+    Mocha::View *viewWithMeta{nullptr};
 
     bool hasPreferredForShortcutsView{false};
 
@@ -441,7 +441,7 @@ void GlobalShortcuts::showViews()
     }
 
     //! show all the rest views that contain plasma shortcuts
-    QList<Latte::View *> viewsWithShortcuts = m_corona->layoutsManager()->synchronizer()->currentViewsWithPlasmaShortcuts();
+    QList<Mocha::View *> viewsWithShortcuts = m_corona->layoutsManager()->synchronizer()->currentViewsWithPlasmaShortcuts();
 
     if (viewsWithShortcuts.count() > 0) {
         viewFound = true;
@@ -482,7 +482,7 @@ bool GlobalShortcuts::viewsToHideAreValid()
 
 void GlobalShortcuts::showSettings()
 {
-    QList<Latte::View *> sortedViews = m_corona->layoutsManager()->synchronizer()->sortedCurrentOriginalViews();
+    QList<Mocha::View *> sortedViews = m_corona->layoutsManager()->synchronizer()->sortedCurrentOriginalViews();
 
     //! find which is the next view to show its settings
     if (sortedViews.count() > 0) {

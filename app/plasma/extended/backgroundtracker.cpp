@@ -8,7 +8,7 @@
 // local
 #include "plasma/extended/backgroundcache.h"
 
-namespace Latte {
+namespace Mocha {
 
 BackgroundTracker::BackgroundTracker(QObject *parent)
     : QObject(parent)

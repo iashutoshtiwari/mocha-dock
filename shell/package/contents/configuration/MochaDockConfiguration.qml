@@ -1,0 +1,641 @@
+/*
+    SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
+    SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
+
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
+import QtQuick.Window
+
+import org.kde.ksvg as KSvg
+import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.extras as PlasmaExtras
+//! QtQuick.Controls.Styles.Plasma removed in Plasma 6
+
+import org.kde.kquickcontrolsaddons as KQuickControlAddons
+
+import org.kde.mocha.core as MochaCore
+import org.kde.mocha.components as MochaComponents
+
+import "pages" as Pages
+import "../controls" as MochaExtraControls
+
+Loader {
+    active: plasmoid && plasmoid.configuration && mochaView
+
+    sourceComponent: FocusScope {
+        id: dialog
+        width: appliedWidth
+        height: appliedHeight
+
+        readonly property bool basicLevel: !advancedLevel
+        readonly property bool advancedLevel: universalSettings.inAdvancedModeForEditSettings
+
+        readonly property bool inConfigureAppletsMode: universalSettings.inConfigureAppletsMode || !MochaCore.WindowSystem.compositingActive
+
+        readonly property bool kirigamiLibraryIsFound: MochaCore.Environment.frameworksVersion >= MochaCore.Environment.makeVersion(5,69,0)
+
+        //! max size based on screen resolution
+        //!    TODO: if we can access availableScreenGeometry.height this can be improved, currently
+        //!    we use 100px. or 50px. in order to give space for other views to be shown and to also
+        //!    have some space around the settings window
+        property int maxHeight: plasmoid.formFactor === PlasmaCore.Types.Horizontal ?
+                                    viewConfig.availableScreenGeometry.height - canvasHeadThickness - Kirigami.Units.largeSpacing :
+                                    viewConfig.availableScreenGeometry.height - 2 * Kirigami.Units.largeSpacing
+
+        property int maxWidth: 0.6 * mochaView.screenGeometry.width
+
+        property int canvasThickness: plasmoid.formFactor === PlasmaCore.Types.Vertical ? mochaView.positioner.canvasGeometry.width : mochaView.positioner.canvasGeometry.height
+        property int canvasHeadThickness: {
+            var edgeMargin = mochaView.behaveAsPlasmaPanel && mochaView.screenEdgeMarginEnabled ? mochaView.screenEdgeMargin : 0;
+            return Math.max(0,canvasThickness - mochaView.maxNormalThickness - Math.max(0,edgeMargin))
+        }
+
+        //! propose size based on font size
+        property int proposedWidth: 0.82 * proposedHeight + Kirigami.Units.smallSpacing * 2
+        property int proposedHeight: 36 * Kirigami.Units.gridUnit
+
+        //! chosen size to be applied, if the user has set or not a different scale for the settings window
+        property int chosenWidth: userScaleWidth !== 1 ? userScaleWidth * proposedWidth : proposedWidth
+        property int chosenHeight: userScaleHeight !== 1 ? userScaleHeight * heightLevel * proposedHeight : heightLevel * proposedHeight
+
+        readonly property int optionsWidth: appliedWidth - Kirigami.Units.smallSpacing * 10
+
+        //! user set scales based on its preference, e.g. 96% of the proposed size
+        property real userScaleWidth: 1
+        property real userScaleHeight: 1
+
+        readonly property real heightLevel: (dialog.advancedLevel ? 100 : 1) //in order to use all available space
+
+        onHeightChanged: viewConfig.syncGeometry();
+
+        //! applied size in order to not be out of boundaries
+        //! width can be between 200px - maxWidth
+        //! height can be between 400px - maxHeight
+        property int appliedWidth: Math.min(maxWidth, Math.max(200, chosenWidth))
+        property int appliedHeight: universalSettings.inAdvancedModeForEditSettings ? maxHeight : Math.min(maxHeight, Math.max(400, chosenHeight))
+
+        Layout.minimumWidth: width
+        Layout.minimumHeight: height
+        LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+        LayoutMirroring.childrenInherit: true
+
+        readonly property bool viewIsPanel: mochaView.type === MochaCore.Types.PanelView
+
+        property bool panelIsVertical: plasmoid.formFactor === PlasmaCore.Types.Vertical
+        property int subGroupSpacing: Kirigami.Units.largeSpacing + Kirigami.Units.smallSpacing * 1.5
+
+        property color bC: Kirigami.Theme.backgroundColor
+        property color tC: Kirigami.Theme.textColor
+        property color transparentBackgroundColor: Qt.rgba(bC.r, bC.g, bC.b, 0.7)
+        property color borderColor: Qt.rgba(tC.r, tC.g, tC.b, 0.12)
+
+        readonly property Item currentPage: pagesStackView.currentItem
+
+        onAdvancedLevelChanged: {
+            //! switch to appearancePage when effectsPage becomes hidden because
+            //! advancedLevel was disabled by the user
+            if (!advancedLevel && tabBar.currentIndex === 2 /*effects*/) {
+                tabBar.currentIndex = 1; /*appearance*/
+            }
+        }
+
+        Component.onCompleted: {
+            updateScales();
+        }
+
+        Connections {
+            target: mochaView.positioner
+            onCurrentScreenNameChanged: dialog.updateScales();
+        }
+
+        function updateScales() {
+            userScaleWidth = universalSettings.screenWidthScale(mochaView.positioner.currentScreenName);
+            userScaleHeight = universalSettings.screenHeightScale(mochaView.positioner.currentScreenName);
+        }
+
+        KSvg.FrameSvgItem{
+            id: backgroundFrameSvgItem
+            anchors.fill: parent
+            imagePath: "dialogs/background"
+            enabledBorders: viewConfig.enabledBorders
+
+            onEnabledBordersChanged: viewConfig.updateEffects()
+            Component.onCompleted: viewConfig.updateEffects()
+
+            MochaExtraControls.DragCorner {
+                id: dragCorner
+            }
+        }
+
+        PlasmaComponents.Label{
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: dialog.advancedLevel ?
+                      i18nc("view settings width scale","Width %1%",userScaleWidth * 100) :
+                      i18nc("view settings width scale","Width %1% / Height %2%", userScaleWidth * 100, userScaleHeight * 100)
+            visible: dragCorner.isActive
+        }
+
+        ColumnLayout {
+            id: content
+
+            Layout.minimumWidth: width
+            Layout.minimumHeight: calculatedHeight
+            Layout.preferredWidth: width
+            Layout.preferredHeight: calculatedHeight
+            width: (dialog.appliedWidth - Kirigami.Units.smallSpacing * 2)
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            spacing: Kirigami.Units.smallSpacing
+
+            property int calculatedHeight: header.height + headerSpacer.height+ tabBar.height + pagesBackground.height + actionButtons.height + spacing * 3
+
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Escape) {
+                    viewConfig.hideConfigWindow();
+                }
+            }
+
+            Component.onCompleted: forceActiveFocus();
+
+            RowLayout {
+                id: header
+                Layout.fillWidth: true
+
+                spacing: 0
+
+                Item {
+                    id: trademark
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    Layout.fillWidth: false
+                    Layout.topMargin: Kirigami.Units.smallSpacing
+                    Layout.preferredWidth: width
+                    Layout.preferredHeight: height
+
+                    width: mochaTrademark.width + Kirigami.Units.smallSpacing
+                    height: trademarkHeight
+
+                    readonly property int trademarkHeight: 48
+
+                    KSvg.SvgItem{
+                        id: mochaTrademark
+                        width: Qt.application.layoutDirection !== Qt.RightToLeft ? Math.ceil(1.70 * height) : height
+                        height: trademark.height
+
+                        svg: KSvg.Svg{
+                            imagePath: Qt.application.layoutDirection !== Qt.RightToLeft ? universalSettings.trademarkPath() : universalSettings.trademarkIconPath()
+                        }
+                    }
+                }
+
+                Item{
+                    id: headerSpacer
+                    Layout.minimumHeight: advancedSettings.height + 2*Kirigami.Units.smallSpacing
+                }
+
+                ColumnLayout {
+                    PlasmaComponents.ToolButton {
+                        id: pinButton
+                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        Layout.bottomMargin: Kirigami.Units.smallSpacing * 1.5
+                        Layout.topMargin: Kirigami.Units.smallSpacing * 3
+                        Layout.rightMargin: Kirigami.Units.smallSpacing * 2
+                        icon.name: "window-pin"
+                        checkable: true
+
+                        property bool inStartup: true
+
+                        onClicked: {
+                            plasmoid.configuration.configurationSticker = checked
+                            viewConfig.setSticker(checked)
+                        }
+
+                        Component.onCompleted: {
+                            checked = plasmoid.configuration.configurationSticker
+                            viewConfig.setSticker(plasmoid.configuration.configurationSticker)
+                        }
+                    }
+
+                    RowLayout {
+                        id: advancedSettings
+                        Layout.fillWidth: true
+                        Layout.rightMargin: Kirigami.Units.smallSpacing * 2
+                        Layout.alignment: Qt.AlignRight | Qt.AlignTop
+
+                        PlasmaComponents.Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignRight
+                        }
+
+                        PlasmaComponents.Label {
+                            id: advancedLbl
+                            Layout.alignment: Qt.AlignRight
+                            //  opacity: dialog.basicLevel ? basicOpacity : 1
+
+                            //! TODO: the term here is not accurate because the expert settings mode
+                            //! is used currently. In the future this term will be rethought if
+                            //! it must remain or be changed
+                            text: i18nc("advanced settings", "Advanced")
+
+                            readonly property real textColorBrightness: colorBrightness(Kirigami.Theme.textColor)
+                            readonly property real basicOpacity: textColorBrightness > 127 ? 0.7 : 0.3
+
+                            color: {
+                                if (dialog.basicLevel) {
+                                    return textColorBrightness > 127 ? Qt.darker(Kirigami.Theme.textColor, 1.4) : Qt.lighter(Kirigami.Theme.textColor, 2.8);
+                                }
+
+                                return Kirigami.Theme.textColor;
+                            }
+
+                            function colorBrightness(color) {
+                                return colorBrightnessFromRGB(color.r * 255, color.g * 255, color.b * 255);
+                            }
+
+                            // formula for brightness according to:
+                            // https://www.w3.org/TR/AERT/#color-contrast
+                            function colorBrightnessFromRGB(r, g, b) {
+                                return (r * 299 + g * 587 + b * 114) / 1000
+                            }
+
+                            MouseArea {
+                                id: advancedMouseArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onClicked: {
+                                    advancedSwitch.checked = !advancedSwitch.checked;
+                                }
+                            }
+                        }
+
+                        MochaComponents.Switch {
+                            id: advancedSwitch
+                            checked: universalSettings.inAdvancedModeForEditSettings && viewConfig.isReady
+
+                            onCheckedChanged: {
+                                if (viewConfig.isReady) {
+                                    universalSettings.inAdvancedModeForEditSettings = checked;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            TabBar {
+                id: tabBar
+                Layout.fillWidth: true
+                Layout.maximumWidth: (dialog.appliedWidth - Kirigami.Units.smallSpacing * 2)
+
+                readonly property int visibleStaticPages: dialog.advancedLevel ? 3 : 2
+
+                onCurrentIndexChanged: {
+                    var pages = [behaviorPage, appearancePage, effectsPage];
+                    var targetPage;
+                    if (currentIndex < pages.length) {
+                        targetPage = pages[currentIndex];
+                    } else {
+                        var tasksIdx = currentIndex - pages.length;
+                        targetPage = tasksRepeater.itemAt(tasksIdx);
+                    }
+                    if (targetPage && pagesStackView.currentItem !== targetPage) {
+                        pagesStackView.forwardSliding = (pagesStackView.currentItem && pagesStackView.currentItem.pageIndex > currentIndex);
+                        pagesStackView.replace(pagesStackView.currentItem, targetPage);
+                    }
+                }
+
+                TabButton {
+                    id: behaviorTabBtn
+                    text: i18n("Behavior")
+                }
+
+                TabButton {
+                    id: appearanceTabBtn
+                    text: i18n("Appearance")
+                }
+                TabButton {
+                    id: effectsTabBtn
+                    text: i18n("Effects")
+                    visible: dialog.advancedLevel
+                }
+
+                Repeater {
+                    id: tasksTabButtonRepeater
+                    model: mochaView.extendedInterface.mochaTasksModel
+
+                    TabButton {
+                        text: index >= 1 ? i18nc("tasks header and index","Tasks <%1>", index+1) : i18n("Tasks")
+                    }
+                }
+
+                Connections {
+                    target: viewConfig
+                    function onIsReadyChanged() {
+                        if (viewConfig.isReady) {
+                            tabBar.currentIndex = 0;
+                        }
+                    }
+                }
+            }
+
+            Item {
+                id: pagesBackground
+                Layout.fillWidth: true
+                Layout.fillHeight: false
+                Layout.minimumWidth: dialog.appliedWidth - Kirigami.Units.smallSpacing * 4
+                Layout.minimumHeight: height
+                Layout.maximumHeight: height
+
+                width: dialog.appliedWidth - Kirigami.Units.smallSpacing * 3
+                height: availableFreeHeight + Kirigami.Units.smallSpacing * 4
+
+                //fix the height binding loop when showing the configuration window
+                property int availableFreeHeight: dialog.appliedHeight - header.height - headerSpacer.height - tabBar.height - actionButtons.height - 2 * Kirigami.Units.smallSpacing
+
+                // Header
+                Rectangle {
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.topMargin: -Kirigami.Units.smallSpacing + 2
+                    anchors.leftMargin: -2*Kirigami.Units.smallSpacing
+                    anchors.rightMargin: -2*Kirigami.Units.smallSpacing
+
+                    height: parent.height // dialog.height - (header.height + tabBar.height + Kirigami.Units.smallSpacing * 1.5) + 2
+                    color: Kirigami.Theme.backgroundColor
+                    border.width: 1
+                    border.color: dialog.borderColor
+                }
+
+                PlasmaComponents.ScrollView {
+                    id: scrollArea
+
+                    anchors.fill: parent
+                    verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
+                    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+
+                    flickableItem.flickableDirection: Flickable.VerticalFlick
+
+                    StackView {
+                        id: pagesStackView
+                        width: currentItem.width
+                        height: currentItem.height
+
+                        property bool forwardSliding: true
+
+                        replaceEnter: Transition {
+                            ParallelAnimation {
+                                PropertyAnimation {
+                                    property: "x"
+                                    from: pagesStackView.forwardSliding ? -pagesBackground.width : pagesBackground.width
+                                    to: 0
+                                    duration: 350
+                                }
+
+                                PropertyAnimation {
+                                    property: "opacity"
+                                    from: 0
+                                    to: 1
+                                    duration: 350
+                                }
+                            }
+                        }
+
+                        replaceExit: Transition {
+                            ParallelAnimation {
+                                PropertyAnimation {
+                                    property: "x"
+                                    from: 0
+                                    to: pagesStackView.forwardSliding ? pagesBackground.width : -pagesBackground.width
+                                    duration: 350
+                                }
+
+                                PropertyAnimation {
+                                    property: "opacity"
+                                    from: 1
+                                    to: 0
+                                    duration: 350
+                                }
+                            }
+                        }
+
+                        onDepthChanged:  {
+                            if (depth === 0) {
+                                pagesStackView.forwardSliding = true;
+                                push(behaviorPage);
+                            }
+                        }
+                    }
+                }
+
+                Item {
+                    id:hiddenPages
+                    anchors.fill: parent
+                    visible: false
+
+                    Pages.BehaviorConfig {
+                        id: behaviorPage
+                        readonly property int pageIndex:0
+
+                        Component.onCompleted: {
+                            pagesStackView.push(behaviorPage);
+                        }
+                    }
+
+                    Pages.AppearanceConfig {
+                        id: appearancePage
+                        readonly property int pageIndex:1
+                    }
+
+                    Pages.EffectsConfig {
+                        id: effectsPage
+                        readonly property int pageIndex:2
+                    }
+
+                    Repeater {
+                        id: tasksRepeater
+                        model: plasmoid && plasmoid.configuration && mochaView ? mochaView.extendedInterface.mochaTasksModel : 0
+
+                        Pages.TasksConfig {
+                            readonly property int pageIndex: tabBar.visibleStaticPages+index
+                        }
+                    }
+                }
+            }
+
+            RowLayout {
+                id: actionButtons
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                spacing: Kirigami.Units.largeSpacing
+
+                MochaComponents.ComboBoxButton {
+                    id: actionsComboBtn
+                    Layout.fillWidth: true
+                    implicitWidth: removeView.implicitWidth
+                    implicitHeight: removeView.implicitHeight
+
+                    buttonEnabled: true
+                    buttonIsTriggeringMenu: true
+                    buttonText: i18n("Add...")
+                    buttonIconSource: "list-add"
+                    buttonToolTip: i18n("Add new docks and panels from various templates")
+
+                    comboBoxEnabled: true
+                    comboBoxBlankSpaceForEmptyIcons: true
+                    comboBoxPopUpAlignRight: Qt.application.layoutDirection === Qt.RightToLeft
+                    comboBoxEnabledRole: "enabled"
+                    comboBoxTextRole: "name"
+                    comboBoxIconRole: "icon"
+                    comboBoxIsSeparatorRole: "isSeparator"
+                    comboBoxMinimumPopUpWidth: actionsModel.count > 1 ? dialog.width / 2 : 150
+
+                    property var centralLayoutsNames: []
+
+                    Component.onCompleted: {
+                        comboBox.model = actionsModel;
+                    }
+
+                    ListModel {
+                        id: actionsModel
+                    }
+
+                    Connections{
+                        target: actionsComboBtn.comboBox
+
+                        Component.onCompleted:actionsComboBtn.updateModel();
+
+                        onActivated: {
+                            var item = actionsModel.get(index);
+
+                            if (item && item.actionId === "add:") {
+                                mochaView.newView(item.templateId);
+                            } else if (item && item.actionId === "duplicate:") {
+                                mochaView.duplicateView();
+                            }
+
+                            actionsComboBtn.comboBox.currentIndex = -1;
+                        }
+
+                        onEnabledChanged: {
+                            if (enabled) {
+                                actionsComboBtn.updateModel();
+                            } else {
+                                actionsComboBtn.emptyModel();
+                            }
+                        }
+                    }
+
+                    Connections{
+                        target: viewConfig
+                        onIsReadyChanged: {
+                            if (viewConfig.isReady) {
+                                actionsComboBtn.updateModel();
+                            }
+                        }
+                    }
+
+                    Connections{
+                        target: mochaView
+                        onTypeChanged: actionsComboBtn.updateDuplicateText();
+                    }
+
+                    Connections {
+                        target: layoutsManager
+                        onViewTemplatesChanged: actionsComboBtn.updateModel();
+                    }
+
+                    function updateModel() {
+                        actionsModel.clear();
+
+                        var duplicate = {actionId: 'duplicate:', enabled: true, name: '', icon: 'edit-copy'};
+                        actionsModel.append(duplicate);
+                        updateDuplicateText();
+
+                        var separator = {isSeparator: true};
+                        actionsModel.append(separator);
+
+                        var viewTemplateIds = layoutsManager.viewTemplateIds();
+                        var viewTemplateNames = layoutsManager.viewTemplateNames();
+
+                        for(var i=viewTemplateIds.length-1; i>=0; --i) {
+                            //! add view templates on reverse
+                            var viewtemplate = {
+                                actionId: 'add:',
+                                enabled: true,
+                                templateId: viewTemplateIds[i],
+                                name: viewTemplateNames[i],
+                                icon: 'list-add'
+                            };
+                            actionsModel.append(viewtemplate);
+                        }
+
+                        actionsComboBtn.comboBox.currentIndex = -1;
+                    }
+
+                    function emptyModel() {
+                        actionsModel.clear();
+                        actionsComboBtn.comboBox.currentIndex = -1;
+                    }
+
+                    function updateDuplicateText() {
+                        for (var i=0; i<actionsModel.count; ++i) {
+                            var item = actionsModel.get(i);
+                            if (item.actionId === "duplicate:") {
+                                var duplicateText = mochaView.type === MochaCore.Types.DockView ? i18n("Duplicate Dock") : i18n("Duplicate Panel")
+                                item.name = duplicateText;
+                                break;
+                            }
+                        }
+                    }
+
+                }
+
+                PlasmaComponents.Button {
+                    id: removeView
+                    Layout.fillWidth: true
+                    enabled: dialog.advancedLevel
+                    text: i18n("Remove")
+                    icon.name: "delete"
+                    opacity: enabled ? 1 : 0
+                    tooltip: i18n("Remove current dock")
+
+                    onClicked: mochaView.removeView()
+                }
+
+                PlasmaComponents.Button {
+                    id: closeButton
+                    Layout.fillWidth: true
+
+                    text: i18n("Close")
+                    icon.name: "dialog-close"
+                    tooltip: i18n("Close settings window")
+
+                    onClicked: viewConfig.hideConfigWindow();
+                }
+            }
+        }
+
+        /*PlasmaExtras.PlasmoidHeading {
+            id: plasmoidFooter
+            location: PlasmaExtras.PlasmoidHeading.Location.Footer
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+            }
+            height: actionButtons.height + Kirigami.Units.smallSpacing * 2.5
+            // So that it doesn't appear over the content view, which results in
+            // the footer controls being inaccessible
+            z: -9999
+        }*/
+    }
+}

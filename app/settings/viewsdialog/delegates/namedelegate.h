@@ -14,7 +14,7 @@ class QModelIndex;
 class QWidget;
 class QVariant;
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace View {
 namespace Delegate {

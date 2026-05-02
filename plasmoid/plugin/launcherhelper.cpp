@@ -1,5 +1,5 @@
 /*
-    SPDX-FileCopyrightText: 2024 Latte Dock Team
+    SPDX-FileCopyrightText: 2024 Mocha Dock Team
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
@@ -10,7 +10,7 @@
 #include <QProcessEnvironment>
 #include <QStandardPaths>
 
-namespace Latte {
+namespace Mocha {
 namespace Tasks {
 
 LauncherHelper::LauncherHelper(QObject *parent)
@@ -53,4 +53,4 @@ void LauncherHelper::launchDesktopFile(const QString &desktopFileName)
 }
 
 } // namespace Tasks
-} // namespace Latte
+} // namespace Mocha

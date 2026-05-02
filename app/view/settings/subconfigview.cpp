@@ -7,7 +7,7 @@
 
 //local
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../layouts/manager.h"
 #include "../../plasma/extended/theme.h"
 #include "../../settings/universalsettings.h"
@@ -25,14 +25,14 @@
 // Plasma
 #include <PlasmaQuick/AppletQuickItem>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-SubConfigView::SubConfigView(Latte::View *view, const QString &title, const bool &isNormalWindow)
+SubConfigView::SubConfigView(Mocha::View *view, const QString &title, const bool &isNormalWindow)
     : QQuickView(nullptr),
       m_isNormalWindow(isNormalWindow)
 {
-    m_corona = qobject_cast<Latte::Corona *>(view->containment()->corona());
+    m_corona = qobject_cast<Mocha::Corona *>(view->containment()->corona());
 
     connect(this, &QWindow::windowTitleChanged, this, &SubConfigView::updateWaylandId);
     connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &SubConfigView::updateWaylandId);
@@ -104,7 +104,7 @@ void SubConfigView::init()
     }
 
     KLocalizedContext *context = new KLocalizedContext(engine());
-    context->setTranslationDomain(QStringLiteral("latte-dock"));
+    context->setTranslationDomain(QStringLiteral("mocha-dock"));
     engine()->rootContext()->setContextObject(context);
 }
 
@@ -118,7 +118,7 @@ QString SubConfigView::validTitle() const
     return m_validTitle;
 }
 
-Latte::WindowSystem::WindowId SubConfigView::trackedWindowId()
+Mocha::WindowSystem::WindowId SubConfigView::trackedWindowId()
 {
     if (m_waylandWindowId.toInt() <= 0) {
         updateWaylandId();
@@ -127,17 +127,17 @@ Latte::WindowSystem::WindowId SubConfigView::trackedWindowId()
     return m_waylandWindowId;
 }
 
-Latte::Corona *SubConfigView::corona() const
+Mocha::Corona *SubConfigView::corona() const
 {
     return m_corona;
 }
 
-Latte::View *SubConfigView::parentView() const
+Mocha::View *SubConfigView::parentView() const
 {
     return m_latteView;
 }
 
-void SubConfigView::setParentView(Latte::View *view, const bool &immediate)
+void SubConfigView::setParentView(Mocha::View *view, const bool &immediate)
 {
     if (m_latteView == view) {
         return;
@@ -146,7 +146,7 @@ void SubConfigView::setParentView(Latte::View *view, const bool &immediate)
     initParentView(view);
 }
 
-void SubConfigView::initParentView(Latte::View *view)
+void SubConfigView::initParentView(Mocha::View *view)
 {
     for (const auto &var : viewconnections) {
         QObject::disconnect(var);
@@ -227,7 +227,7 @@ bool SubConfigView::event(QEvent *e)
 
 void SubConfigView::updateWaylandId()
 {
-    Latte::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("latte-dock", validTitle());
+    Mocha::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("mocha-dock", validTitle());
 
     if (m_waylandWindowId != newId) {
         if (!m_waylandWindowId.isNull()) {

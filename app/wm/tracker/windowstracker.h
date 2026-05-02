@@ -18,7 +18,7 @@
 #include <QTimer>
 
 
-namespace Latte {
+namespace Mocha {
 class View;
 namespace Layout {
 class GenericLayout;
@@ -34,7 +34,7 @@ class TrackedViewInfo;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -45,32 +45,32 @@ public:
     Windows(AbstractWindowInterface *parent);
     ~Windows() override;
 
-    void addView(Latte::View *view);
-    void removeView(Latte::View *view);
+    void addView(Mocha::View *view);
+    void removeView(Mocha::View *view);
 
     //! Views Tracking (current screen specific)
-    bool enabled(Latte::View *view);
-    void setEnabled(Latte::View *view, const bool enabled);
+    bool enabled(Mocha::View *view);
+    void setEnabled(Mocha::View *view, const bool enabled);
 
-    bool activeWindowMaximized(Latte::View *view) const;
-    bool activeWindowTouching(Latte::View *view) const;
-    bool activeWindowTouchingEdge(Latte::View *view) const;
-    bool existsWindowActive(Latte::View *view) const;
-    bool existsWindowMaximized(Latte::View *view) const;
-    bool existsWindowTouching(Latte::View *view) const;
-    bool existsWindowTouchingEdge(Latte::View *view) const;
-    bool isTouchingBusyVerticalView(Latte::View *view) const;
-    SchemeColors *activeWindowScheme(Latte::View *view) const;
-    SchemeColors *touchingWindowScheme(Latte::View *view) const;
-    LastActiveWindow *lastActiveWindow(Latte::View *view);
+    bool activeWindowMaximized(Mocha::View *view) const;
+    bool activeWindowTouching(Mocha::View *view) const;
+    bool activeWindowTouchingEdge(Mocha::View *view) const;
+    bool existsWindowActive(Mocha::View *view) const;
+    bool existsWindowMaximized(Mocha::View *view) const;
+    bool existsWindowTouching(Mocha::View *view) const;
+    bool existsWindowTouchingEdge(Mocha::View *view) const;
+    bool isTouchingBusyVerticalView(Mocha::View *view) const;
+    SchemeColors *activeWindowScheme(Mocha::View *view) const;
+    SchemeColors *touchingWindowScheme(Mocha::View *view) const;
+    LastActiveWindow *lastActiveWindow(Mocha::View *view);
 
     //! Layouts Tracking (all screens)
-    bool enabled(Latte::Layout::GenericLayout *layout);
-    bool activeWindowMaximized(Latte::Layout::GenericLayout *layout) const;
-    bool existsWindowActive(Latte::Layout::GenericLayout *layout) const;
-    bool existsWindowMaximized(Latte::Layout::GenericLayout *layout) const;
-    SchemeColors *activeWindowScheme(Latte::Layout::GenericLayout *layout) const;
-    LastActiveWindow *lastActiveWindow(Latte::Layout::GenericLayout *layout);
+    bool enabled(Mocha::Layout::GenericLayout *layout);
+    bool activeWindowMaximized(Mocha::Layout::GenericLayout *layout) const;
+    bool existsWindowActive(Mocha::Layout::GenericLayout *layout) const;
+    bool existsWindowMaximized(Mocha::Layout::GenericLayout *layout) const;
+    SchemeColors *activeWindowScheme(Mocha::Layout::GenericLayout *layout) const;
+    LastActiveWindow *lastActiveWindow(Mocha::Layout::GenericLayout *layout);
 
     //! Windows management
     bool isValidFor(const WindowId &wid) const;
@@ -82,26 +82,26 @@ public:
 
 signals:
     //! Views
-    void enabledChanged(const Latte::View *view);
-    void activeWindowMaximizedChanged(const Latte::View *view);
-    void activeWindowTouchingChanged(const Latte::View *view);
-    void activeWindowTouchingEdgeChanged(const Latte::View *view);
-    void existsWindowActiveChanged(const Latte::View *view);
-    void existsWindowMaximizedChanged(const Latte::View *view);
-    void existsWindowTouchingChanged(const Latte::View *view);
-    void existsWindowTouchingEdgeChanged(const Latte::View *view);
-    void isTouchingBusyVerticalViewChanged(const Latte::View *view);
-    void activeWindowSchemeChanged(const Latte::View *view);
-    void touchingWindowSchemeChanged(const Latte::View *view);
-    void informationAnnounced(const Latte::View *view);
+    void enabledChanged(const Mocha::View *view);
+    void activeWindowMaximizedChanged(const Mocha::View *view);
+    void activeWindowTouchingChanged(const Mocha::View *view);
+    void activeWindowTouchingEdgeChanged(const Mocha::View *view);
+    void existsWindowActiveChanged(const Mocha::View *view);
+    void existsWindowMaximizedChanged(const Mocha::View *view);
+    void existsWindowTouchingChanged(const Mocha::View *view);
+    void existsWindowTouchingEdgeChanged(const Mocha::View *view);
+    void isTouchingBusyVerticalViewChanged(const Mocha::View *view);
+    void activeWindowSchemeChanged(const Mocha::View *view);
+    void touchingWindowSchemeChanged(const Mocha::View *view);
+    void informationAnnounced(const Mocha::View *view);
 
     //! Layouts
-    void enabledChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void activeWindowMaximizedChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void existsWindowActiveChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void existsWindowMaximizedChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void activeWindowSchemeChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void informationAnnouncedForLayout(const Latte::Layout::GenericLayout *layout);
+    void enabledChangedForLayout(const Mocha::Layout::GenericLayout *layout);
+    void activeWindowMaximizedChangedForLayout(const Mocha::Layout::GenericLayout *layout);
+    void existsWindowActiveChangedForLayout(const Mocha::Layout::GenericLayout *layout);
+    void existsWindowMaximizedChangedForLayout(const Mocha::Layout::GenericLayout *layout);
+    void activeWindowSchemeChangedForLayout(const Mocha::Layout::GenericLayout *layout);
+    void informationAnnouncedForLayout(const Mocha::Layout::GenericLayout *layout);
 
     //! overloading WM signals in order to update first m_windows and afterwards
     //! inform consumers for window changes
@@ -114,7 +114,7 @@ signals:
 private slots:
     void updateScreenGeometries();
 
-    void addRelevantLayout(Latte::View *view);
+    void addRelevantLayout(Mocha::View *view);
 
     void updateApplicationData();
     void updateRelevantLayouts();
@@ -122,42 +122,42 @@ private slots:
 
 private:
     void init();
-    void initLayoutHints(Latte::Layout::GenericLayout *layout);
-    void initViewHints(Latte::View *view);
+    void initLayoutHints(Mocha::Layout::GenericLayout *layout);
+    void initViewHints(Mocha::View *view);
     void cleanupFaultyWindows();
 
     void updateAllHints();
     void updateAllHintsAfterTimer();
 
     //! Views
-    void updateHints(Latte::View *view);
-    void updateHints(Latte::Layout::GenericLayout *layout);
+    void updateHints(Mocha::View *view);
+    void updateHints(Mocha::Layout::GenericLayout *layout);
 
-    void setActiveWindowMaximized(Latte::View *view, bool activeMaximized);
-    void setActiveWindowTouching(Latte::View *view, bool activeTouching);
-    void setActiveWindowTouchingEdge(Latte::View *view, bool activeTouchingEdge);
-    void setExistsWindowActive(Latte::View *view, bool windowActive);
-    void setExistsWindowMaximized(Latte::View *view, bool windowMaximized);
-    void setExistsWindowTouching(Latte::View *view, bool windowTouching);
-    void setExistsWindowTouchingEdge(Latte::View *view, bool windowTouchingEdge);
-    void setIsTouchingBusyVerticalView(Latte::View *view, bool viewTouching);
-    void setActiveWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme);
-    void setTouchingWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme);
+    void setActiveWindowMaximized(Mocha::View *view, bool activeMaximized);
+    void setActiveWindowTouching(Mocha::View *view, bool activeTouching);
+    void setActiveWindowTouchingEdge(Mocha::View *view, bool activeTouchingEdge);
+    void setExistsWindowActive(Mocha::View *view, bool windowActive);
+    void setExistsWindowMaximized(Mocha::View *view, bool windowMaximized);
+    void setExistsWindowTouching(Mocha::View *view, bool windowTouching);
+    void setExistsWindowTouchingEdge(Mocha::View *view, bool windowTouchingEdge);
+    void setIsTouchingBusyVerticalView(Mocha::View *view, bool viewTouching);
+    void setActiveWindowScheme(Mocha::View *view, WindowSystem::SchemeColors *scheme);
+    void setTouchingWindowScheme(Mocha::View *view, WindowSystem::SchemeColors *scheme);
 
     //! Layouts
-    void setActiveWindowMaximized(Latte::Layout::GenericLayout *layout, bool activeMaximized);
-    void setExistsWindowActive(Latte::Layout::GenericLayout *layout, bool windowActive);
-    void setExistsWindowMaximized(Latte::Layout::GenericLayout *layout, bool windowMaximized);
-    void setActiveWindowScheme(Latte::Layout::GenericLayout *layout, WindowSystem::SchemeColors *scheme);
+    void setActiveWindowMaximized(Mocha::Layout::GenericLayout *layout, bool activeMaximized);
+    void setExistsWindowActive(Mocha::Layout::GenericLayout *layout, bool windowActive);
+    void setExistsWindowMaximized(Mocha::Layout::GenericLayout *layout, bool windowMaximized);
+    void setActiveWindowScheme(Mocha::Layout::GenericLayout *layout, WindowSystem::SchemeColors *scheme);
 
     //! Windows
-    bool intersects(Latte::View *view, const WindowInfoWrap &winfo);
+    bool intersects(Mocha::View *view, const WindowInfoWrap &winfo);
     bool isActive(const WindowInfoWrap &winfo);
-    bool isActiveInViewScreen(Latte::View *view, const WindowInfoWrap &winfo);
-    bool isMaximizedInViewScreen(Latte::View *view, const WindowInfoWrap &winfo);
-    bool isTouchingView(Latte::View *view, const WindowSystem::WindowInfoWrap &winfo);
-    bool isTouchingViewEdge(Latte::View *view, const WindowInfoWrap &winfo);
-    bool isTouchingViewEdge(Latte::View *view, const QRect &windowgeometry);
+    bool isActiveInViewScreen(Mocha::View *view, const WindowInfoWrap &winfo);
+    bool isMaximizedInViewScreen(Mocha::View *view, const WindowInfoWrap &winfo);
+    bool isTouchingView(Mocha::View *view, const WindowSystem::WindowInfoWrap &winfo);
+    bool isTouchingViewEdge(Mocha::View *view, const WindowInfoWrap &winfo);
+    bool isTouchingViewEdge(Mocha::View *view, const QRect &windowgeometry);
 
 private:
     //! a timer in order to not overload the views extra hints checking because it is not
@@ -165,20 +165,20 @@ private:
     QTimer m_extraViewHintsTimer;
 
     AbstractWindowInterface *m_wm;
-    QHash<Latte::View *, TrackedViewInfo *> m_views;
-    QHash<Latte::Layout::GenericLayout *, TrackedLayoutInfo *> m_layouts;
+    QHash<Mocha::View *, TrackedViewInfo *> m_views;
+    QHash<Mocha::Layout::GenericLayout *, TrackedLayoutInfo *> m_layouts;
 
     //! Accept only ALWAYSVISIBLE visibility mode
-    QList<Latte::Types::Visibility> m_ignoreModes{
-        Latte::Types::AutoHide,
-        Latte::Types::DodgeActive,
-        Latte::Types::DodgeMaximized,
-        Latte::Types::DodgeAllWindows,
-        Latte::Types::WindowsGoBelow,
-        Latte::Types::WindowsCanCover,
-        Latte::Types::WindowsAlwaysCover,
-        Latte::Types::SidebarOnDemand,
-        Latte::Types::SidebarAutoHide
+    QList<Mocha::Types::Visibility> m_ignoreModes{
+        Mocha::Types::AutoHide,
+        Mocha::Types::DodgeActive,
+        Mocha::Types::DodgeMaximized,
+        Mocha::Types::DodgeAllWindows,
+        Mocha::Types::WindowsGoBelow,
+        Mocha::Types::WindowsCanCover,
+        Mocha::Types::WindowsAlwaysCover,
+        Mocha::Types::SidebarOnDemand,
+        Mocha::Types::SidebarAutoHide
     };
 
     QHash<WindowId, WindowInfoWrap> m_windows;

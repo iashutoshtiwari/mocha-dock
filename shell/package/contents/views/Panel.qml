@@ -23,7 +23,7 @@ Item {
     }
 
     Component.onDestruction: {
-        console.log("latte view qml source deleting...");
+        console.log("mocha view qml source deleting...");
     }
 
     onContainmentChanged: {

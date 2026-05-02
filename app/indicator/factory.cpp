@@ -33,7 +33,7 @@
 // KNewStuff
 #include <KNSWidgets/Dialog>
 
-namespace Latte {
+namespace Mocha {
 namespace Indicator {
 
 Factory::Factory(QObject *parent)
@@ -41,7 +41,7 @@ Factory::Factory(QObject *parent)
 {
     m_parentWidget = new QWidget();
 
-    m_mainPaths = Latte::Layouts::Importer::standardPaths();
+    m_mainPaths = Mocha::Layouts::Importer::standardPaths();
 
     for(int i=0; i<m_mainPaths.count(); ++i) {
         m_mainPaths[i] = m_mainPaths[i] + "/latte/indicators";
@@ -279,7 +279,7 @@ QString Factory::metadataFileAbsolutePath(const QString &directoryPath)
     return QString();
 }
 
-Latte::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
+Mocha::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
 {
     auto showNotificationError = []() {
         auto notification = new KNotification("import-fail", KNotification::CloseOnTimeout);
@@ -309,7 +309,7 @@ Latte::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
         if (!tarArchive->isOpen()) {
             delete tarArchive;
             showNotificationError();
-            return Latte::ImportExport::FailedState;
+            return Mocha::ImportExport::FailedState;
         } else {
             archive = tarArchive;
         }
@@ -342,7 +342,7 @@ Latte::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
     KPluginMetaData metadata = KPluginMetaData(metadataFile);
 
     if (metadataAreValid(metadata)) {
-        QStringList standardPaths = Latte::Layouts::Importer::standardPaths();
+        QStringList standardPaths = Mocha::Layouts::Importer::standardPaths();
         QString installPath = standardPaths[0] + "/latte/indicators/" + metadata.pluginId();
 
         bool updated{QDir(installPath).exists()};
@@ -357,11 +357,11 @@ Latte::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
         QString output(process.readAllStandardOutput());
 
         showNotificationSucceed(metadata.name(), updated);
-        return Latte::ImportExport::InstalledState;
+        return Mocha::ImportExport::InstalledState;
     }
 
     showNotificationError();
-    return Latte::ImportExport::FailedState;
+    return Mocha::ImportExport::FailedState;
 }
 
 void Factory::removeIndicator(QString id)

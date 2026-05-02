@@ -8,11 +8,11 @@ import QtQuick
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
-import org.kde.latte.private.containment as LatteContainment
+import org.kde.mocha.private.containment as MochaContainment
 
-import org.kde.latte.abilities.items as AbilityItem
+import org.kde.mocha.abilities.items as AbilityItem
 
 import "loaders" as Loaders
 
@@ -22,9 +22,9 @@ Loader {
     width: root.isHorizontal ? length : localThickness
     height: root.isVertical ? length :  localThickness
 
-    property int alignment: LatteCore.Types.BottomEdgeCenterAlign
+    property int alignment: MochaCore.Types.BottomEdgeCenterAlign
 
-    readonly property bool useAllLayouts: root.myView.alignment === LatteCore.Types.Justify
+    readonly property bool useAllLayouts: root.myView.alignment === MochaCore.Types.Justify
 
     readonly property int localThickness: active ? metrics.totals.thickness + metrics.margin.screenEdge : 0
     readonly property int length: {
@@ -103,7 +103,7 @@ Loader {
                 return;
             }
 
-            if (root.scrollAction === LatteContainment.Types.ScrollNone) {
+            if (root.scrollAction === MochaContainment.Types.ScrollNone) {
                 root.emptyAreasWheel(wheel);
                 return;
             }
@@ -125,11 +125,11 @@ Loader {
 
             if (angle>10) {
                 //! upwards
-                if (root.scrollAction === LatteContainment.Types.ScrollDesktops) {
-                    latteView.windowsTracker.switchToPreviousVirtualDesktop();
-                } else if (root.scrollAction === LatteContainment.Types.ScrollActivities) {
-                    latteView.windowsTracker.switchToPreviousActivity();
-                } else if (root.scrollAction === LatteContainment.Types.ScrollToggleMinimized) {
+                if (root.scrollAction === MochaContainment.Types.ScrollDesktops) {
+                    mochaView.windowsTracker.switchToPreviousVirtualDesktop();
+                } else if (root.scrollAction === MochaContainment.Types.ScrollActivities) {
+                    mochaView.windowsTracker.switchToPreviousActivity();
+                } else if (root.scrollAction === MochaContainment.Types.ScrollToggleMinimized) {
                     if (!ctrlPressed) {
                         tasksLoader.item.activateNextPrevTask(true);
                     } else if (!selectedWindowsTracker.lastActiveWindow.isMaximized){
@@ -140,11 +140,11 @@ Loader {
                 }
             } else if (angle<-10) {
                 //! downwards
-                if (root.scrollAction === LatteContainment.Types.ScrollDesktops) {
-                    latteView.windowsTracker.switchToNextVirtualDesktop();
-                } else if (root.scrollAction === LatteContainment.Types.ScrollActivities) {
-                    latteView.windowsTracker.switchToNextActivity();
-                } else if (root.scrollAction === LatteContainment.Types.ScrollToggleMinimized) {
+                if (root.scrollAction === MochaContainment.Types.ScrollDesktops) {
+                    mochaView.windowsTracker.switchToNextVirtualDesktop();
+                } else if (root.scrollAction === MochaContainment.Types.ScrollActivities) {
+                    mochaView.windowsTracker.switchToNextActivity();
+                } else if (root.scrollAction === MochaContainment.Types.ScrollToggleMinimized) {
                     if (!ctrlPressed) {
                         if (selectedWindowsTracker.lastActiveWindow.isValid
                                 && !selectedWindowsTracker.lastActiveWindow.isMinimized
@@ -232,7 +232,7 @@ Loader {
     states:[
         State {
             name: "bottomCenter"
-            when: (alignment === LatteCore.Types.BottomEdgeCenterAlign)
+            when: (alignment === MochaCore.Types.BottomEdgeCenterAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -242,7 +242,7 @@ Loader {
         },
         State {
             name: "bottomLeft"
-            when: (alignment === LatteCore.Types.BottomEdgeLeftAlign)
+            when: (alignment === MochaCore.Types.BottomEdgeLeftAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -252,7 +252,7 @@ Loader {
         },
         State {
             name: "bottomRight"
-            when: (alignment === LatteCore.Types.BottomEdgeRightAlign)
+            when: (alignment === MochaCore.Types.BottomEdgeRightAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -262,7 +262,7 @@ Loader {
         },
         State {
             name: "topCenter"
-            when: (alignment === LatteCore.Types.TopEdgeCenterAlign)
+            when: (alignment === MochaCore.Types.TopEdgeCenterAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -272,7 +272,7 @@ Loader {
         },
         State {
             name: "topLeft"
-            when: (alignment === LatteCore.Types.TopEdgeLeftAlign)
+            when: (alignment === MochaCore.Types.TopEdgeLeftAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -282,7 +282,7 @@ Loader {
         },
         State {
             name: "topRight"
-            when: (alignment === LatteCore.Types.TopEdgeRightAlign)
+            when: (alignment === MochaCore.Types.TopEdgeRightAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -292,7 +292,7 @@ Loader {
         },
         State {
             name: "leftCenter"
-            when: (alignment === LatteCore.Types.LeftEdgeCenterAlign)
+            when: (alignment === MochaCore.Types.LeftEdgeCenterAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -302,7 +302,7 @@ Loader {
         },
         State {
             name: "leftTop"
-            when: (alignment === LatteCore.Types.LeftEdgeTopAlign)
+            when: (alignment === MochaCore.Types.LeftEdgeTopAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -312,7 +312,7 @@ Loader {
         },
         State {
             name: "leftBottom"
-            when: (alignment === LatteCore.Types.LeftEdgeBottomAlign)
+            when: (alignment === MochaCore.Types.LeftEdgeBottomAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -322,7 +322,7 @@ Loader {
         },
         State {
             name: "rightCenter"
-            when: (alignment === LatteCore.Types.RightEdgeCenterAlign)
+            when: (alignment === MochaCore.Types.RightEdgeCenterAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -332,7 +332,7 @@ Loader {
         },
         State {
             name: "rightTop"
-            when: (alignment === LatteCore.Types.RightEdgeTopAlign)
+            when: (alignment === MochaCore.Types.RightEdgeTopAlign)
 
             AnchorChanges {
                 target: environmentLoader
@@ -342,7 +342,7 @@ Loader {
         },
         State {
             name: "rightBottom"
-            when: (alignment === LatteCore.Types.RightEdgeBottomAlign)
+            when: (alignment === MochaCore.Types.RightEdgeBottomAlign)
 
             AnchorChanges {
                 target: environmentLoader

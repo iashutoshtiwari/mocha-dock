@@ -11,10 +11,10 @@
 // Qt
 #include <QMetaObject>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 
-Parabolic::Parabolic(Latte::View *parent)
+Parabolic::Parabolic(Mocha::View *parent)
     : QObject(parent),
       m_view(parent)
 {

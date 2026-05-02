@@ -18,7 +18,7 @@ namespace Ui {
 class DetailsDialog;
 }
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Controller {
 class Layouts;
@@ -29,7 +29,7 @@ class DetailsHandler;
 }
 }
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Dialog {
 
@@ -41,7 +41,7 @@ public:
     DetailsDialog(SettingsDialog *parent, Controller::Layouts *controller);
     ~DetailsDialog();
 
-    Latte::Corona *corona() const;
+    Mocha::Corona *corona() const;
 
     Ui::DetailsDialog *ui() const;
     Controller::Layouts *layoutsController() const;

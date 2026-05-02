@@ -8,14 +8,14 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 import "./privates" as Ability
 
 Ability.ParabolicEffectPrivate {
     isEnabled: factor.zoom>1 && !root.inConfigureAppletsMode
     factor.zoom: {
-        var storedZoom = LatteCore.WindowSystem.compositingActive && animations.active ? ( 1 + (plasmoid.configuration.zoomLevel / 20) ) : 1;
+        var storedZoom = MochaCore.WindowSystem.compositingActive && animations.active ? ( 1 + (plasmoid.configuration.zoomLevel / 20) ) : 1;
         var maxSize = storedZoom * metrics.iconSize;
         //! round to nearest odd number
         maxSize = 2 * Math.round(Math.round(maxSize) / 2);

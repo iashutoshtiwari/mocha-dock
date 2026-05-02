@@ -9,7 +9,7 @@
 // Qt
 #include <QHeaderView>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Layouts {
 

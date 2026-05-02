@@ -9,7 +9,7 @@
 // Qt
 #include <QObject>
 
-namespace Latte {
+namespace Mocha {
 namespace ViewPart {
 namespace IndicatorPart {
 

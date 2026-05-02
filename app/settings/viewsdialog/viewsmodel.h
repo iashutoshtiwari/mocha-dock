@@ -12,7 +12,7 @@
 #define VIEWSMODEL_H
 
 // local
-#include "../../lattecorona.h"
+#include "../../mochacorona.h"
 #include "../../data/genericbasictable.h"
 #include "../../data/screendata.h"
 #include "../../data/viewdata.h"
@@ -23,7 +23,7 @@
 #include <QAbstractTableModel>
 #include <QModelIndex>
 
-namespace Latte {
+namespace Mocha {
 namespace Settings {
 namespace Model {
 
@@ -67,7 +67,7 @@ public:
         HIGHESTPRIORITY = 10000
     };
 
-    explicit Views(QObject *parent, Latte::Corona *corona);
+    explicit Views(QObject *parent, Mocha::Corona *corona);
     ~Views();
 
     bool hasChangedData() const;
@@ -76,7 +76,7 @@ public:
     //! all original data will become also current
     void resetData();
 
-    void appendTemporaryView(const Latte::Data::View &view);
+    void appendTemporaryView(const Mocha::Data::View &view);
     void removeView(const QString &id);
 
     int rowCount() const;
@@ -94,22 +94,22 @@ public:
 
     QString viewForSubContainment(const QString &sid);
 
-    const Latte::Data::View &at(const int &row);
-    const Latte::Data::View currentData(const QString &id);
-    const Latte::Data::View originalData(const QString &id);
+    const Mocha::Data::View &at(const int &row);
+    const Mocha::Data::View currentData(const QString &id);
+    const Mocha::Data::View originalData(const QString &id);
 
-    const Latte::Data::ViewsTable &currentViewsData();
-    const Latte::Data::ViewsTable &originalViewsData();
+    const Mocha::Data::ViewsTable &currentViewsData();
+    const Mocha::Data::ViewsTable &originalViewsData();
 
-    void setOriginalData(Latte::Data::ViewsTable &data);
-    void setOriginalView(QString currentViewId, Latte::Data::View &view);
-    void updateCurrentView(QString currentViewId, Latte::Data::View &view);
+    void setOriginalData(Mocha::Data::ViewsTable &data);
+    void setOriginalView(QString currentViewId, Mocha::Data::View &view);
+    void updateCurrentView(QString currentViewId, Mocha::Data::View &view);
     void clearErrorsAndWarnings();
 
     void updateActiveStatesBasedOn(const CentralLayout *layout);
 
-    Latte::Data::ViewsTable alteredViews() const;
-    Latte::Data::ViewsTable newViews() const;
+    Mocha::Data::ViewsTable alteredViews() const;
+    Mocha::Data::ViewsTable newViews() const;
 
 signals:
     void rowsInserted();
@@ -138,18 +138,18 @@ private:
     //! based on priority a sortable text is returned
     QString sortableText(const int &priority, const QString &text) const;
 
-    Latte::Data::Screen screenData(const QString &viewId) const;
+    Mocha::Data::Screen screenData(const QString &viewId) const;
 
 private:
-    Latte::Data::ViewsTable m_viewsTable;
-    Latte::Data::ViewsTable o_viewsTable;
+    Mocha::Data::ViewsTable m_viewsTable;
+    Mocha::Data::ViewsTable o_viewsTable;
 
-    Latte::Corona *m_corona{nullptr};
+    Mocha::Corona *m_corona{nullptr};
 
     Data::ViewsTable s_edges;
     Data::ViewsTable s_horizontalAlignments;
     Data::ViewsTable s_verticalAlignments;
-    Latte::Data::ScreensTable s_screens;
+    Mocha::Data::ScreensTable s_screens;
 };
 
 }

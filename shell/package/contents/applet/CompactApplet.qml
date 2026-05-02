@@ -14,7 +14,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
 PlasmaCore.ToolTipArea {
     id: root
@@ -157,7 +157,7 @@ PlasmaCore.ToolTipArea {
         function onContextualActionsAboutToShow() { root.hideToolTip() }
     }
 
-    LatteCore.Dialog {
+    MochaCore.Dialog {
         id: popupWindow
         objectName: "popupWindow"
         flags: Qt.WindowStaysOnTopHint

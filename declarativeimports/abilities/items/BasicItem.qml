@@ -10,9 +10,9 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core as LatteCore
+import org.kde.mocha.core as MochaCore
 
-import org.kde.latte.abilities.items as AbilityItems
+import org.kde.mocha.abilities.items as AbilityItems
 
 import "./basicitem" as BasicItemParts
 
@@ -40,7 +40,7 @@ Item{
                 return abilityItem.abilities.metrics.totals.thickness + abilityItem.abilities.metrics.margin.screenEdge;
             } else {
                 if (isSeparatorInRealLength) {
-                    return LatteCore.Environment.separatorLength+2*abilityItem.abilities.metrics.margin.length;
+                    return MochaCore.Environment.separatorLength+2*abilityItem.abilities.metrics.margin.length;
                 }
             }
 
@@ -63,7 +63,7 @@ Item{
                 return abilityItem.abilities.metrics.totals.thickness + abilityItem.abilities.metrics.margin.screenEdge;
             } else {
                 if (isSeparatorInRealLength) {
-                    return LatteCore.Environment.separatorLength+2*abilityItem.abilities.metrics.margin.length;
+                    return MochaCore.Environment.separatorLength+2*abilityItem.abilities.metrics.margin.length;
                 }
             }
 

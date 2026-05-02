@@ -20,7 +20,7 @@
 #include <KWindowSystem>
 
 
-namespace Latte {
+namespace Mocha {
 
 const int ScreenPool::FIRSTSCREENID;
 
@@ -129,11 +129,11 @@ void ScreenPool::updateScreenGeometry(const int &screenId, const QRect &screenGe
     emit screenGeometryChanged();
 }
 
-Latte::Data::ScreensTable ScreenPool::screensTable() { return m_screensTable; }
+Mocha::Data::ScreensTable ScreenPool::screensTable() { return m_screensTable; }
 
 void ScreenPool::reload(QString path)
 {
-    QFile rcfile(QString(path + "/lattedockrc"));
+    QFile rcfile(QString(path + "/mochadockrc"));
 
     if (rcfile.exists()) {
         qDebug() << "load screen connectors from ::: " << rcfile.fileName();
@@ -143,7 +143,7 @@ void ScreenPool::reload(QString path)
     }
 }
 
-void ScreenPool::removeScreens(const Latte::Data::ScreensTable &obsoleteScreens)
+void ScreenPool::removeScreens(const Mocha::Data::ScreensTable &obsoleteScreens)
 {
     for (int i=0; i<obsoleteScreens.rowCount(); ++i) {
         if (!m_screensTable.containsId(obsoleteScreens[i].id)) {

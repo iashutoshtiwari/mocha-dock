@@ -27,25 +27,25 @@ Item {
     property bool needsMouseEventCoordinates: false
     //! indicator provides also foreground layer that should be drawn on top of the Items icons
     property bool providesFrontLayer: false
-    //! indicator provides its own hovering animations. Latte should not provide
+    //! indicator provides its own hovering animations. Mocha should not provide
     //! any hovering animation in that case
     property bool providesHoveredAnimation: false
-    //! indicator provides its own clicked animations. Latte should not provide
+    //! indicator provides its own clicked animations. Mocha should not provide
     //! any clicked animation in that case
     property bool providesClickedAnimation: false
-    //! indicator provides its own inattention animation. Latte should not provide
+    //! indicator provides its own inattention animation. Mocha should not provide
     //! any inattention animation in that case.
     //! [since v0.10.4]
     property bool providesInAttentionAnimation: false
-    //! indicator provides its own window added in group animation. Latte should not provide
+    //! indicator provides its own window added in group animation. Mocha should not provide
     //! any window added in group animation in that case.
     //! [since v0.10.4]
     property bool providesGroupedWindowAddedAnimation: false
-    //! indicator provides its own window removed from group animation. Latte should not provide
+    //! indicator provides its own window removed from group animation. Mocha should not provide
     //! any window removed from group animation in that case.
     //! [since v0.10.4]
     property bool providesGroupedWindowRemovedAnimation: false
-    //! indicator provides its own task launcher triggered animation. Latte should not provide
+    //! indicator provides its own task launcher triggered animation. Mocha should not provide
     //! any task launcher triggered animation in that case.
     //! [since v0.10.4]
     property bool providesTaskLauncherAnimation: false

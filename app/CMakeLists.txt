@@ -1,8 +1,8 @@
-set(lattedock-app_SRCS
+set(mochadock-app_SRCS
     alternativeshelper.cpp
     apptypes.cpp
     infoview.cpp
-    lattecorona.cpp
+    mochacorona.cpp
     screenpool.cpp
     primaryoutputwatcher.cpp
     main.cpp
@@ -40,24 +40,24 @@ add_subdirectory(view/windowstracker)
 add_subdirectory(wm)
 add_subdirectory(wm/tracker)
 
-set(latte_dbusXML dbus/org.kde.LatteDock.xml)
-qt_add_dbus_adaptor(lattedock-app_SRCS ${latte_dbusXML} lattecorona.h Latte::Corona lattedockadaptor)
+set(mocha_dbusXML dbus/org.kde.MochaDock.xml)
+qt_add_dbus_adaptor(mochadock-app_SRCS ${mocha_dbusXML} mochacorona.h Mocha::Corona mochadockadaptor)
 
-ki18n_wrap_ui(lattedock-app_SRCS settings/actionsdialog/actionsdialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/detailsdialog/detailsdialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/exporttemplatedialog/exporttemplatedialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/screensdialog/screensdialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/settingsdialog/settingsdialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/viewsdialog/viewsdialog.ui)
+ki18n_wrap_ui(mochadock-app_SRCS settings/actionsdialog/actionsdialog.ui)
+ki18n_wrap_ui(mochadock-app_SRCS settings/detailsdialog/detailsdialog.ui)
+ki18n_wrap_ui(mochadock-app_SRCS settings/exporttemplatedialog/exporttemplatedialog.ui)
+ki18n_wrap_ui(mochadock-app_SRCS settings/screensdialog/screensdialog.ui)
+ki18n_wrap_ui(mochadock-app_SRCS settings/settingsdialog/settingsdialog.ui)
+ki18n_wrap_ui(mochadock-app_SRCS settings/viewsdialog/viewsdialog.ui)
 
-add_executable(latte-dock ${lattedock-app_SRCS})
+add_executable(mocha-dock ${mochadock-app_SRCS})
 
 include(FakeTarget.cmake)
 
-qt6_generate_wayland_protocol_client_sources(latte-dock FILES
-    ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-primary-output-v1.xml)
+qt6_generate_wayland_protocol_client_sources(mocha-dock FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/protocols/kde-primary-output-v1.xml)
 
-target_link_libraries(latte-dock
+target_link_libraries(mocha-dock
     Qt::DBus
     Qt::Quick
     Qt::Qml
@@ -90,16 +90,16 @@ target_link_libraries(latte-dock
 
 
 
-configure_file(org.kde.latte-dock.desktop.cmake org.kde.latte-dock.desktop)
-configure_file(org.kde.latte-dock.appdata.xml.cmake org.kde.latte-dock.appdata.xml)
+configure_file(org.kde.mocha-dock.desktop.cmake org.kde.mocha-dock.desktop)
+configure_file(org.kde.mocha-dock.appdata.xml.cmake org.kde.mocha-dock.appdata.xml)
 
-install(TARGETS latte-dock ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.latte-dock.desktop DESTINATION ${KDE_INSTALL_APPDIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.latte-dock.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
-install(FILES dbus/org.kde.LatteDock.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
-install(FILES lattedock.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
-install(FILES latte-layouts.knsrc DESTINATION  ${KDE_INSTALL_KNSRCDIR})
-install(FILES latte-indicators.knsrc DESTINATION  ${KDE_INSTALL_KNSRCDIR})
+install(TARGETS mocha-dock ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.mocha-dock.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.mocha-dock.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+install(FILES dbus/org.kde.MochaDock.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
+install(FILES mochadock.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
+install(FILES mocha-layouts.knsrc DESTINATION  ${KDE_INSTALL_KNSRCDIR})
+install(FILES mocha-indicators.knsrc DESTINATION  ${KDE_INSTALL_KNSRCDIR})
 
 
 add_subdirectory(packageplugins)
