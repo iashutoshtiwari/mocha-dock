@@ -9,7 +9,7 @@
 
 //local
 #include "windowstracker.h"
-#include "../abstractwindowinterface.h"
+#include "../windowmanager.h"
 #include "../schemecolors.h"
 
 namespace Mocha {
@@ -24,7 +24,7 @@ TrackedGeneralInfo::TrackedGeneralInfo(Tracker::Windows *tracker)
 {
     m_lastActiveWindow = new LastActiveWindow(this);
 
-    connect(m_wm, &AbstractWindowInterface::currentActivityChanged, this, [&]() {
+    connect(m_wm, &WindowManager::currentActivityChanged, this, [&]() {
         updateTrackingCurrentActivity();
     });
 
@@ -132,7 +132,7 @@ void TrackedGeneralInfo::setActiveWindowScheme(SchemeColors *scheme)
     m_activeWindowScheme = scheme;
 }
 
-AbstractWindowInterface *TrackedGeneralInfo::wm()
+WindowManager *TrackedGeneralInfo::wm()
 {
     return m_wm;
 }

@@ -56,7 +56,7 @@ public:
     SchemeColors *activeWindowScheme() const;
     void setActiveWindowScheme(SchemeColors *scheme);
 
-    AbstractWindowInterface *wm();
+    WindowManager *wm();
 
     void setActiveWindow(const WindowId &wid);
 
@@ -75,7 +75,7 @@ protected:
     QStringList m_activities;
 
     LastActiveWindow *m_lastActiveWindow{nullptr};
-    AbstractWindowInterface *m_wm{nullptr};
+    WindowManager *m_wm{nullptr};
     Tracker::Windows *m_tracker{nullptr};
 
 private:

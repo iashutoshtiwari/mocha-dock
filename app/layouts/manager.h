@@ -14,7 +14,7 @@
 #include "../apptypes.h"
 #include "../data/layoutdata.h"
 #include "../data/layouticondata.h"
-#include "../settings/settingsdialog/settingsdialog.h"
+#include "../settings/settingswindow.h"
 
 // Qt
 #include <QAction>
@@ -96,7 +96,7 @@ public slots:
     void showAboutDialog();
 
     void hideMochaSettingsDialog();
-    Q_INVOKABLE void showMochaSettingsDialog(int firstPage = Settings::Dialog::LayoutPage, bool toggleCurrentPage = false);
+    Q_INVOKABLE void showMochaSettingsDialog(int firstPage = Settings::LayoutPage, bool toggleCurrentPage = false);
     Q_INVOKABLE QStringList centralLayoutsNames();
     Q_INVOKABLE QStringList viewTemplateNames() const;
     Q_INVOKABLE QStringList viewTemplateIds() const;
@@ -120,14 +120,14 @@ private:
     void setMenuLayouts(QStringList layouts);
 
 private:
-    QPointer<Mocha::Settings::Dialog::SettingsDialog> m_mochaSettingsDialog;
+    QPointer<Mocha::Settings::SettingsWindow> m_mochaSettingsWindow;
 
     Mocha::Corona *m_corona{nullptr};
     Importer *m_importer{nullptr};
     SyncedLaunchers *m_syncedLaunchers{nullptr};
     Synchronizer *m_synchronizer{nullptr};
 
-    friend class Mocha::Settings::Dialog::SettingsDialog;
+    friend class Mocha::Settings::SettingsWindow;
     friend class Synchronizer;
 };
 

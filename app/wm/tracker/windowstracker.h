@@ -24,7 +24,7 @@ namespace Layout {
 class GenericLayout;
 }
 namespace WindowSystem {
-class AbstractWindowInterface;
+class WindowManager;
 class SchemeColors;
 namespace Tracker {
 class LastActiveWindow;
@@ -42,7 +42,7 @@ class Windows : public QObject {
     Q_OBJECT
 
 public:
-    Windows(AbstractWindowInterface *parent);
+    Windows(WindowManager *parent);
     ~Windows() override;
 
     void addView(Mocha::View *view);
@@ -78,7 +78,7 @@ public:
     QString appNameFor(const WindowId &wid);
     WindowInfoWrap infoFor(const WindowId &wid) const;
 
-    AbstractWindowInterface *wm();
+    WindowManager *wm();
 
 signals:
     //! Views
@@ -164,7 +164,7 @@ private:
     //! really needed that often
     QTimer m_extraViewHintsTimer;
 
-    AbstractWindowInterface *m_wm;
+    WindowManager *m_wm;
     QHash<Mocha::View *, TrackedViewInfo *> m_views;
     QHash<Mocha::Layout::GenericLayout *, TrackedLayoutInfo *> m_layouts;
 

@@ -39,9 +39,8 @@
 #include "view/windowstracker/windowstracker.h"
 #include "view/windowstracker/allscreenstracker.h"
 #include "view/windowstracker/currentscreentracker.h"
-#include "wm/abstractwindowinterface.h"
+#include "wm/windowmanager.h"
 #include "wm/schemecolors.h"
-#include "wm/waylandinterface.h"
 #include "wm/tracker/lastactivewindow.h"
 #include "wm/tracker/schemes.h"
 #include "wm/tracker/windowstracker.h"
@@ -105,7 +104,7 @@ Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString
     connect(qApp, &QApplication::aboutToQuit, this, &Corona::onAboutToQuit);
 
     //! create the window manager (Wayland-only)
-    m_wm = new WindowSystem::WaylandInterface(this);
+    m_wm = new WindowSystem::WindowManager(this);
 
     setupWaylandIntegration();
 
@@ -322,14 +321,12 @@ void Corona::setupWaylandIntegration()
                      [this, registry](quint32 name, quint32 version) {
         KWayland::Client::PlasmaWindowManagement *pwm = registry->createPlasmaWindowManagement(name, version, this);
 
-        WindowSystem::WaylandInterface *wI = qobject_cast<WindowSystem::WaylandInterface *>(m_wm);
-
-        if (wI) {
-            wI->initWindowManagement(pwm);
+        if (m_wm) {
+            m_wm->initWindowManagement(pwm);
         }
     });
 
-    //! VirtualDesktopManagement is now handled internally by WaylandInterface
+    //! VirtualDesktopManagement is now handled internally by WindowManager
     //! via TaskManager::VirtualDesktopInfo — no KWayland registry binding needed.
 
     registry->setup();
@@ -437,7 +434,7 @@ ViewSettingsFactory *Corona::viewSettingsFactory() const
     return m_viewSettingsFactory;
 }
 
-WindowSystem::AbstractWindowInterface *Corona::wm() const
+WindowSystem::WindowManager *Corona::wm() const
 {
     return m_wm;
 }
@@ -1162,13 +1159,7 @@ void Corona::showSettingsWindow(int page)
         return;
     }
 
-    Settings::Dialog::ConfigurationPage p = Settings::Dialog::LayoutPage;
-
-    if (page >= Settings::Dialog::LayoutPage && page <= Settings::Dialog::PreferencesPage) {
-        p = static_cast<Settings::Dialog::ConfigurationPage>(page);
-    }
-
-    m_layoutsManager->showMochaSettingsDialog(p);
+    m_layoutsManager->showMochaSettingsDialog(page);
 }
 
 QStringList Corona::contextMenuData(const uint &containmentId)

@@ -388,20 +388,11 @@ void UniversalSettings::kwin_forwardMetaToMocha(bool forward)
         return;
     }
 
-    // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
-    // KWin::reconfigure() function blocks/freezes Mocha under wayland
-    return;
+    m_kwinMetaForwardedToMocha = forward;
 
     QString forwardStr = (forward ? KWINMETAFORWARDTOMOCHASTRING : KWINMETAFORWARDTOPLASMASTRING);
     m_kwinrcModifierOnlyShortcutsGroup.writeEntry("Meta", forwardStr);
     m_kwinrcModifierOnlyShortcutsGroup.sync();
-
-    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"),
-                                                          QStringLiteral("/KWin"),
-                                                          QStringLiteral("org.kde.KWin"),
-                                                          QStringLiteral("reconfigure"));
-
-    QDBusConnection::sessionBus().call(message, QDBus::NoBlock);
 }
 
 void UniversalSettings::kwin_setDisabledMaximizedBorders(bool disable)
@@ -410,28 +401,10 @@ void UniversalSettings::kwin_setDisabledMaximizedBorders(bool disable)
         return;
     }
 
-    // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
-    // KWin::reconfigure() function blocks/freezes Mocha under wayland
-    return;
+    m_kwinBorderlessMaximizedWindows = disable;
 
-    bool serviceavailable{false};
-
-    if (QDBusConnection::sessionBus().interface()) {
-        serviceavailable = QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.KWin").value();
-    }
-
-    if (serviceavailable) {
-        m_kwinrcWindowsGroup.writeEntry("BorderlessMaximizedWindows", disable);
-        m_kwinrcWindowsGroup.sync();
-
-        QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"),
-                                                              QStringLiteral("/KWin"),
-                                                              QStringLiteral("org.kde.KWin"),
-                                                              QStringLiteral("reconfigure"));
-
-        QDBusConnection::sessionBus().call(message, QDBus::NoBlock);
-        m_kwinBorderlessMaximizedWindows = disable;
-    }
+    m_kwinrcWindowsGroup.writeEntry("BorderlessMaximizedWindows", disable);
+    m_kwinrcWindowsGroup.sync();
 }
 
 void UniversalSettings::recoverKWinOptions()

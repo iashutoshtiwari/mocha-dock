@@ -13,7 +13,7 @@
 #include "../../settings/universalsettings.h"
 #include "../../shortcuts/globalshortcuts.h"
 #include "../../shortcuts/shortcutstracker.h"
-#include "../../wm/abstractwindowinterface.h"
+#include "../../wm/windowmanager.h"
 
 // Qt
 #include <QQmlEngine>
@@ -35,7 +35,7 @@ SubConfigView::SubConfigView(Mocha::View *view, const QString &title, const bool
     m_corona = qobject_cast<Mocha::Corona *>(view->containment()->corona());
 
     connect(this, &QWindow::windowTitleChanged, this, &SubConfigView::updateWaylandId);
-    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::mochaWindowAdded, this, &SubConfigView::updateWaylandId);
+    connect(m_corona->wm(), &WindowSystem::WindowManager::mochaWindowAdded, this, &SubConfigView::updateWaylandId);
 
     m_validTitle = title;
     setTitle(m_validTitle);
@@ -185,23 +185,23 @@ void SubConfigView::syncSlideEffect()
         return;
     }
 
-    auto slideLocation = WindowSystem::AbstractWindowInterface::Slide::None;
+    auto slideLocation = WindowSystem::WindowManager::Slide::None;
 
     switch (m_mochaView->containment()->location()) {
     case Plasma::Types::TopEdge:
-        slideLocation = WindowSystem::AbstractWindowInterface::Slide::Top;
+        slideLocation = WindowSystem::WindowManager::Slide::Top;
         break;
 
     case Plasma::Types::RightEdge:
-        slideLocation = WindowSystem::AbstractWindowInterface::Slide::Right;
+        slideLocation = WindowSystem::WindowManager::Slide::Right;
         break;
 
     case Plasma::Types::BottomEdge:
-        slideLocation = WindowSystem::AbstractWindowInterface::Slide::Bottom;
+        slideLocation = WindowSystem::WindowManager::Slide::Bottom;
         break;
 
     case Plasma::Types::LeftEdge:
-        slideLocation = WindowSystem::AbstractWindowInterface::Slide::Left;
+        slideLocation = WindowSystem::WindowManager::Slide::Left;
         break;
 
     default:

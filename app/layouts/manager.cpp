@@ -402,29 +402,20 @@ void Manager::clearUnloadedContainmentsFromLinkedFile(QStringList containmentsId
 
 void Manager::showMochaSettingsDialog(int firstPage, bool toggleCurrentPage)
 {
-    if (!m_mochaSettingsDialog) {
-        m_mochaSettingsDialog = new Mocha::Settings::Dialog::SettingsDialog(nullptr, m_corona);
-    }
-    m_mochaSettingsDialog->show();
+    Q_UNUSED(firstPage);
+    Q_UNUSED(toggleCurrentPage);
 
-    if (m_mochaSettingsDialog->isMinimized()) {
-        m_mochaSettingsDialog->showNormal();
+    if (!m_mochaSettingsWindow) {
+        m_mochaSettingsWindow = new Mocha::Settings::SettingsWindow(m_corona, this);
     }
-
-    if (toggleCurrentPage) {
-        m_mochaSettingsDialog->toggleCurrentPage();
-    } else {
-        m_mochaSettingsDialog->setCurrentPage(firstPage);
-    }
-
-    m_mochaSettingsDialog->activateWindow();
+    m_mochaSettingsWindow->show();
 }
 
 void Manager::hideMochaSettingsDialog()
 {
-    if (m_mochaSettingsDialog) {
-        m_mochaSettingsDialog->deleteLater();
-        m_mochaSettingsDialog = nullptr;
+    if (m_mochaSettingsWindow) {
+        m_mochaSettingsWindow->deleteLater();
+        m_mochaSettingsWindow = nullptr;
     }
 }
 

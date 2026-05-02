@@ -58,7 +58,7 @@ SubWindow::SubWindow(Mocha::View *view, QString debugType) :
         updateGeometry();
     });
 
-    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::mochaWindowAdded, this, &SubWindow::updateWaylandId);
+    connect(m_corona->wm(), &WindowSystem::WindowManager::mochaWindowAdded, this, &SubWindow::updateWaylandId);
 
     setScreen(m_mochaView->screen());
 

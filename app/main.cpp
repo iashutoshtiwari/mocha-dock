@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     //! It sets QT_WAYLAND_SHELL_INTEGRATION=layer-shell globally, causing ALL
     //! windows (including QDialogs, config windows, launched apps) to render
     //! without decorations. Instead, LayerShell is configured per-view in
-    //! waylandinterface.cpp via LayerShellQt::Window::get().
+    //! windowmanager.cpp via LayerShellQt::Window::get().
 
     QApplication app(argc, argv);
     qunsetenv("QT_WAYLAND_DISABLE_FIXED_POSITIONS");

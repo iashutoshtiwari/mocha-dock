@@ -43,6 +43,11 @@ Mocha Dock is a Wayland-only fork of Mocha Dock, modernized for Qt6, KDE Framewo
 - **Local Testing:** Introduced `run-mocha.sh`, which sets up a sandboxed environment to allow running the dock flawlessly from a local build.
 - **Packaging:** Added an official `PKGBUILD` for Arch Linux to facilitate easy local installation and testing.
 
+### 8. Startup & Package Fixes
+- **Segfault Resolution:** Fixed a critical early startup segfault caused by an inconsistent rebranding of `QUITLATTEACTION` to `QUITMOCHAACTION` in `menu.cpp`.
+- **Package Template Paths:** Corrected `Mocha::Package` to resolve layout and view templates from the correct `templates/` subdirectory within the shell package, fixing a silent failure where new docks could not be created.
+- **D-Bus Service Registration:** Ensured consistent service naming (`org.kde.mochadock`) between the executable registration and context menu callers.
+
 ## Challenges Faced & Solutions
 
 ### Missing Wayland Protocols
@@ -64,6 +69,20 @@ Mocha Dock is a Wayland-only fork of Mocha Dock, modernized for Qt6, KDE Framewo
 ### Legacy Rendering Dependencies
 **Challenge:** Deleting "unused" legacy files broke icon rendering.
 **Solution:** Identified that `ManagedTextureNode` was still a critical dependency for the custom `IconItem` implementation in Qt6; these files were restored and re-integrated.
+
+## Current Issues & Modernization Strategy
+
+### Missing Settings UI on Wayland
+**Current State:** The QWidget-based Settings Dialog fails to map to the screen on Wayland because it is unparented and lacks proper Wayland surface attributes.
+**Strategy:** Instead of patching the legacy QWidget UI, we are initiating a full rewrite of the Settings interface using **Kirigami and QML**. This ensures first-class compatibility with the Plasma 6 look-and-feel and Wayland windowing rules.
+
+### Legacy Window System Abstraction
+**Current State:** Successfully merged `AbstractWindowInterface` and `WaylandInterface` into a single, concrete `WindowManager`. Removed all legacy X11 abstractions and virtual overhead.
+**Strategy:** The codebase is now Wayland-native at its core, with a simplified window tracking architecture that uses `KWaylandClient` and `LayerShellQt` directly.
+
+### Transition to Kirigami Settings
+**Current State:** Initiated the full rewrite of the Settings interface. Replaced the problematic QWidget `SettingsDialog` with a new `SettingsWindow` class that loads native Kirigami/QML.
+**Strategy:** This move resolves the visibility issues on Wayland and ensures the application follows modern Plasma 6 HIG (Human Interface Guidelines).
 
 ## Final Result
 The project now builds a functional `mocha-dock` binary targeting the Plasma 6 desktop. It serves as a zero-debt, Wayland-native foundation for further development.

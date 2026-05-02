@@ -8,7 +8,7 @@
 
 //local
 #include <coretypes.h>
-#include "../wm/abstractwindowinterface.h"
+#include "../wm/windowmanager.h"
 #include "../wm/windowinfowrap.h"
 
 // Qt
@@ -159,7 +159,7 @@ private:
 
     QRect maximumNormalGeometry(QRect screenGeometry = QRect());
 
-    WindowSystem::AbstractWindowInterface::Slide slideLocation(Plasma::Types::Location location);
+    WindowSystem::WindowManager::Slide slideLocation(Plasma::Types::Location location);
 
 private:
     bool m_inDelete{false};

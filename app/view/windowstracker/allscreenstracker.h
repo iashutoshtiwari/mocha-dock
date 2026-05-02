@@ -7,7 +7,7 @@
 #define WINDOWSALLSCREENSTRACKER_H
 
 // local
-#include "../../wm/abstractwindowinterface.h"
+#include "../../wm/windowmanager.h"
 #include "../../wm/tracker/lastactivewindow.h"
 
 // Qt
@@ -21,7 +21,7 @@ class WindowsTracker;
 }
 
 namespace WindowSystem {
-class AbstractWindowInterface;
+class WindowManager;
 class SchemeColors;
 }
 }
@@ -72,7 +72,7 @@ private:
     Mocha::WindowSystem::Tracker::LastActiveWindow *m_currentLastActiveWindow{nullptr};
 
     Mocha::View *m_mochaView{nullptr};
-    WindowSystem::AbstractWindowInterface *m_wm{nullptr};
+    WindowSystem::WindowManager *m_wm{nullptr};
 };
 
 }

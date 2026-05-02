@@ -11,7 +11,7 @@
 #include "../panelshadows_p.h"
 #include "../view.h"
 #include "../../mochacorona.h"
-#include "../../wm/abstractwindowinterface.h"
+#include "../../wm/windowmanager.h"
 
 // Qt
 #include <QQuickItem>
@@ -207,7 +207,7 @@ void WidgetExplorerView::syncSlideEffect()
         return;
     }
 
-    auto slideLocation = WindowSystem::AbstractWindowInterface::Slide::Left;
+    auto slideLocation = WindowSystem::WindowManager::Slide::Left;
 
     m_corona->wm()->slideWindow(*this, slideLocation);
 }

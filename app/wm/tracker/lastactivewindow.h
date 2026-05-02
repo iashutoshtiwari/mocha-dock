@@ -8,7 +8,7 @@
 
 // local
 #include "../windowinfowrap.h"
-#include "../abstractwindowinterface.h"
+#include "../windowmanager.h"
 
 // Qt
 #include <QObject>
@@ -17,7 +17,7 @@
 namespace Mocha {
 class View;
 namespace WindowSystem {
-class AbstractWindowInterface;
+class WindowManager;
 namespace Tracker {
 class TrackedGeneralInfo;
 class Windows;
@@ -239,7 +239,7 @@ private:
     QList<WindowId> m_history;
 
     TrackedGeneralInfo *m_trackedInfo{nullptr};
-    AbstractWindowInterface *m_wm{nullptr};
+    WindowManager *m_wm{nullptr};
     Tracker::Windows *m_windowsTracker{nullptr};
 };
 

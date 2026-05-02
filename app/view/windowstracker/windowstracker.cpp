@@ -58,7 +58,7 @@ Mocha::View *WindowsTracker::view() const
     return m_mochaView;
 }
 
-WindowSystem::AbstractWindowInterface *WindowsTracker::wm() const
+WindowSystem::WindowManager *WindowsTracker::wm() const
 {
     return m_wm;
 }

@@ -18,7 +18,7 @@
 #include "../../layouts/manager.h"
 #include "../../layout/genericlayout.h"
 #include "../../settings/universalsettings.h"
-#include "../../wm/abstractwindowinterface.h"
+#include "../../wm/windowmanager.h"
 
 // Qt
 #include <QQuickItem>

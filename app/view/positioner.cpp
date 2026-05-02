@@ -17,7 +17,7 @@
 #include "../layout/centrallayout.h"
 #include "../layouts/manager.h"
 #include "../settings/universalsettings.h"
-#include "../wm/abstractwindowinterface.h"
+#include "../wm/windowmanager.h"
 
 // Qt
 #include <QDebug>
@@ -55,7 +55,7 @@ Positioner::Positioner(Mocha::View *parent)
 
     if (m_corona) {
         connect(m_view, &QWindow::windowTitleChanged, this, &Positioner::updateWaylandId);
-        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::mochaWindowAdded, this, &Positioner::updateWaylandId);
+        connect(m_corona->wm(), &WindowSystem::WindowManager::mochaWindowAdded, this, &Positioner::updateWaylandId);
 
         connect(m_corona->layoutsManager(), &Layouts::Manager::currentLayoutIsSwitching, this, &Positioner::onCurrentLayoutIsSwitching);
         /////
@@ -284,9 +284,9 @@ QString Positioner::currentScreenName() const
     return m_screenNameToFollow;
 }
 
-WindowSystem::AbstractWindowInterface::Slide Positioner::slideLocation(Plasma::Types::Location location)
+WindowSystem::WindowManager::Slide Positioner::slideLocation(Plasma::Types::Location location)
 {
-    auto slideedge = WindowSystem::AbstractWindowInterface::Slide::None;
+    auto slideedge = WindowSystem::WindowManager::Slide::None;
 
     if (location == Plasma::Types::Floating && m_view->containment()) {
         location = m_view->containment()->location();
@@ -294,19 +294,19 @@ WindowSystem::AbstractWindowInterface::Slide Positioner::slideLocation(Plasma::T
 
     switch (location) {
     case Plasma::Types::TopEdge:
-        slideedge = WindowSystem::AbstractWindowInterface::Slide::Top;
+        slideedge = WindowSystem::WindowManager::Slide::Top;
         break;
 
     case Plasma::Types::RightEdge:
-        slideedge = WindowSystem::AbstractWindowInterface::Slide::Right;
+        slideedge = WindowSystem::WindowManager::Slide::Right;
         break;
 
     case Plasma::Types::BottomEdge:
-        slideedge = WindowSystem::AbstractWindowInterface::Slide::Bottom;
+        slideedge = WindowSystem::WindowManager::Slide::Bottom;
         break;
 
     case Plasma::Types::LeftEdge:
-        slideedge = WindowSystem::AbstractWindowInterface::Slide::Left;
+        slideedge = WindowSystem::WindowManager::Slide::Left;
         break;
 
     default:

@@ -17,7 +17,7 @@
 #include "../mochacorona.h"
 #include "../screenpool.h"
 #include "../layouts/manager.h"
-#include "../wm/abstractwindowinterface.h"
+#include "../wm/windowmanager.h"
 
 // Qt
 #include <QDebug>
@@ -239,12 +239,12 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
     initViewFlags();
 
     if (mode != Types::AlwaysVisible && mode != Types::WindowsGoBelow) {
-        m_connections[0] = connect(m_wm, &WindowSystem::AbstractWindowInterface::currentDesktopChanged, this, [&] {
+        m_connections[0] = connect(m_wm, &WindowSystem::WindowManager::currentDesktopChanged, this, [&] {
             if (m_raiseOnDesktopChange) {
                 raiseViewTemporarily();
             }
         });
-        m_connections[1] = connect(m_wm, &WindowSystem::AbstractWindowInterface::currentActivityChanged, this, [&]() {
+        m_connections[1] = connect(m_wm, &WindowSystem::WindowManager::currentActivityChanged, this, [&]() {
             if (m_raiseOnActivityChange) {
                 raiseViewTemporarily();
             } else {
@@ -1067,7 +1067,7 @@ void VisibilityManager::createEdgeGhostWindow()
             }
         });
 
-        m_connectionsKWinEdges[0] = connect(m_wm, &WindowSystem::AbstractWindowInterface::currentActivityChanged,
+        m_connectionsKWinEdges[0] = connect(m_wm, &WindowSystem::WindowManager::currentActivityChanged,
                                             this, [&]() {
             bool inCurrentLayout = (m_corona->layoutsManager()->memoryUsage() == MemoryUsage::SingleLayout ||
                                     (m_corona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts

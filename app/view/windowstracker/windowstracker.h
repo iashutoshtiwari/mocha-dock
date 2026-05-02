@@ -7,7 +7,7 @@
 #define VIEWWINDOWSTRACKER_H
 
 // local
-#include "../../wm/abstractwindowinterface.h"
+#include "../../wm/windowmanager.h"
 
 // Qt
 #include <QObject>
@@ -23,7 +23,7 @@ class CurrentScreenTracker;
 }
 
 namespace WindowSystem {
-class AbstractWindowInterface;
+class WindowManager;
 }
 }
 
@@ -48,7 +48,7 @@ public:
     TrackerPart::CurrentScreenTracker *currentScreen() const;
 
     Mocha::View *view() const;
-    WindowSystem::AbstractWindowInterface *wm() const;
+    WindowSystem::WindowManager *wm() const;
 
 public slots:
     Q_INVOKABLE void switchToNextActivity();
@@ -63,7 +63,7 @@ signals:
 
 private:
     Mocha::View *m_mochaView{nullptr};
-    WindowSystem::AbstractWindowInterface *m_wm{nullptr};
+    WindowSystem::WindowManager *m_wm{nullptr};
 
     TrackerPart::AllScreensTracker *m_allScreensTracker{nullptr};
     TrackerPart::CurrentScreenTracker *m_currentScreenTracker{nullptr};

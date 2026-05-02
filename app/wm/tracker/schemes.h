@@ -15,7 +15,7 @@
 
 namespace Mocha {
 namespace WindowSystem {
-class AbstractWindowInterface;
+class WindowManager;
 class SchemeColors;
 }
 }
@@ -28,7 +28,7 @@ class Schemes : public QObject {
     Q_OBJECT
 
 public:
-    Schemes(AbstractWindowInterface *parent);
+    Schemes(WindowManager *parent);
     ~Schemes() override;
 
     SchemeColors *schemeForWindow(WindowId wId);
@@ -47,7 +47,7 @@ private:
     void init();
 
 private:
-     AbstractWindowInterface *m_wm;
+     WindowManager *m_wm;
 
      //! scheme file and its loaded colors
      QMap<QString, Mocha::WindowSystem::SchemeColors *> m_schemes;

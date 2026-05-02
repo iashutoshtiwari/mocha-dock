@@ -29,7 +29,7 @@ class FloatingGapWindow;
 class ScreenEdgeGhostWindow;
 }
 namespace WindowSystem {
-class AbstractWindowInterface;
+class WindowManager;
 }
 }
 
@@ -214,7 +214,7 @@ private:
     bool canSetStrut() const;
 
 private:
-    WindowSystem::AbstractWindowInterface *m_wm;
+    WindowSystem::WindowManager *m_wm;
     Types::Visibility m_mode{Types::None};
     std::array<QMetaObject::Connection, 6> m_connections;
 

@@ -10,7 +10,7 @@
 #include "schemes.h"
 #include "trackedlayoutinfo.h"
 #include "trackedviewinfo.h"
-#include "../abstractwindowinterface.h"
+#include "../windowmanager.h"
 #include "../schemecolors.h"
 #include "../../apptypes.h"
 #include "../../mochacorona.h"
@@ -26,7 +26,7 @@ namespace Mocha {
 namespace WindowSystem {
 namespace Tracker {
 
-Windows::Windows(AbstractWindowInterface *parent)
+Windows::Windows(WindowManager *parent)
     : QObject(parent)
 {
     m_wm = parent;
@@ -70,14 +70,14 @@ Windows::~Windows()
 
 void Windows::init()
 {
-    connect(m_wm, &AbstractWindowInterface::windowChanged, this, [&](WindowId wid) {
+    connect(m_wm, &WindowManager::windowChanged, this, [&](WindowId wid) {
         m_windows[wid] = m_wm->requestInfo(wid);
         updateAllHints();
 
         emit windowChanged(wid);
     });
 
-    connect(m_wm, &AbstractWindowInterface::windowRemoved, this, [&](WindowId wid) {
+    connect(m_wm, &WindowManager::windowRemoved, this, [&](WindowId wid) {
         m_windows.remove(wid);
 
         //! application data
@@ -89,14 +89,14 @@ void Windows::init()
         emit windowRemoved(wid);
     });
 
-    connect(m_wm, &AbstractWindowInterface::windowAdded, this, [&](WindowId wid) {
+    connect(m_wm, &WindowManager::windowAdded, this, [&](WindowId wid) {
         if (!m_windows.contains(wid)) {
             m_windows.insert(wid, m_wm->requestInfo(wid));
         }
         updateAllHints();
     });
 
-    connect(m_wm, &AbstractWindowInterface::activeWindowChanged, this, [&](WindowId wid) {
+    connect(m_wm, &WindowManager::activeWindowChanged, this, [&](WindowId wid) {
         //! for some reason this is needed in order to update properly activeness values
         //! when the active window changes the previous active windows should be also updated
         for (const auto view : m_views.keys()) {
@@ -112,9 +112,9 @@ void Windows::init()
         emit activeWindowChanged(wid);
     });
 
-    connect(m_wm, &AbstractWindowInterface::currentDesktopChanged, this, &Windows::updateAllHints);
-    connect(m_wm, &AbstractWindowInterface::currentActivityChanged,  this, &Windows::updateAllHints);    
-    connect(m_wm, &AbstractWindowInterface::isShowingDesktopChanged,  this, &Windows::updateAllHints);
+    connect(m_wm, &WindowManager::currentDesktopChanged, this, &Windows::updateAllHints);
+    connect(m_wm, &WindowManager::currentActivityChanged,  this, &Windows::updateAllHints);    
+    connect(m_wm, &WindowManager::isShowingDesktopChanged,  this, &Windows::updateAllHints);
 }
 
 void Windows::initLayoutHints(Mocha::Layout::GenericLayout *layout)
@@ -147,7 +147,7 @@ void Windows::initViewHints(Mocha::View *view)
     setTouchingWindowScheme(view, nullptr);
 }
 
-AbstractWindowInterface *Windows::wm()
+WindowManager *Windows::wm()
 {
     return m_wm;
 }

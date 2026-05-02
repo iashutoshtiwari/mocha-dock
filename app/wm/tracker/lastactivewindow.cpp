@@ -9,7 +9,7 @@
 #include "schemes.h"
 #include "trackedgeneralinfo.h"
 #include "windowstracker.h"
-#include "../abstractwindowinterface.h"
+#include "../windowmanager.h"
 #include "../../view/view.h"
 
 // Qt
@@ -44,8 +44,8 @@ LastActiveWindow::LastActiveWindow(TrackedGeneralInfo *trackedInfo)
     connect(m_windowsTracker, &Windows::windowChanged, this, &LastActiveWindow::windowChanged);
     connect(m_windowsTracker, &Windows::windowRemoved, this, &LastActiveWindow::windowRemoved);
 
-    connect(m_wm, &AbstractWindowInterface::currentActivityChanged, this, &LastActiveWindow::updateInformationFromHistory);
-    connect(m_wm, &AbstractWindowInterface::currentDesktopChanged, this, &LastActiveWindow::updateInformationFromHistory);
+    connect(m_wm, &WindowManager::currentActivityChanged, this, &LastActiveWindow::updateInformationFromHistory);
+    connect(m_wm, &WindowManager::currentDesktopChanged, this, &LastActiveWindow::updateInformationFromHistory);
 }
 
 LastActiveWindow::~LastActiveWindow()

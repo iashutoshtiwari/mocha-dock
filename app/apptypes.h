@@ -60,6 +60,13 @@ namespace Mocha {
 namespace Settings {
 Q_NAMESPACE
 
+enum Page {
+    LayoutPage = 0,
+    PreferencesPage,
+    AboutPage
+};
+Q_ENUM_NS(Page);
+
 enum MouseSensitivity
 {
     LowMouseSensitivity = 0,

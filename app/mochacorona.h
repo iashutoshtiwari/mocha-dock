@@ -5,8 +5,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef LATTECORONA_H
-#define LATTECORONA_H
+#ifndef MOCHACORONA_H
+#define MOCHACORONA_H
 
 // local
 #include <coretypes.h>
@@ -65,7 +65,7 @@ namespace Templates {
 class Manager;
 }
 namespace WindowSystem{
-class AbstractWindowInterface;
+class WindowManager;
 }
 }
 
@@ -124,7 +124,7 @@ public:
     PlasmaExtended::ScreenPool *plasmaScreenPool() const;
     PlasmaExtended::Theme *themeExtended() const;
 
-    WindowSystem::AbstractWindowInterface *wm() const;
+    WindowSystem::WindowManager *wm() const;
 
     PanelShadows *dialogShadows() const;
 
@@ -238,7 +238,7 @@ private:
     PlasmaExtended::ScreenPool *m_plasmaScreenPool{nullptr};
     PlasmaExtended::Theme *m_themeExtended{nullptr};
 
-    WindowSystem::AbstractWindowInterface *m_wm{nullptr};
+    WindowSystem::WindowManager *m_wm{nullptr};
 
     PanelShadows *m_dialogShadows{nullptr};
 

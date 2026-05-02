@@ -10,7 +10,7 @@
 #include "../panelshadows_p.h"
 #include "../view.h"
 #include "../../mochacorona.h"
-#include "../../wm/abstractwindowinterface.h"
+#include "../../wm/windowmanager.h"
 
 // Qt
 #include <QQuickItem>

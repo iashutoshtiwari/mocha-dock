@@ -6,7 +6,7 @@
 #include "schemes.h"
 
 // local
-#include "../abstractwindowinterface.h"
+#include "../windowmanager.h"
 #include "../../mochacorona.h"
 #include "../../tools/commontools.h"
 
@@ -22,7 +22,7 @@ namespace Mocha {
 namespace WindowSystem {
 namespace Tracker {
 
-Schemes::Schemes(AbstractWindowInterface *parent)
+Schemes::Schemes(WindowManager *parent)
     : QObject(parent)
 {
     m_wm = parent;
@@ -48,7 +48,7 @@ void Schemes::init()
         }
     });
 
-    connect(m_wm, &AbstractWindowInterface::windowRemoved, this, [&](WindowId wid) {
+    connect(m_wm, &WindowManager::windowRemoved, this, [&](WindowId wid) {
         m_windowScheme.remove(wid);
     });
 

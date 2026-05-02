@@ -45,19 +45,20 @@ void Package::initPackage(KPackage::Package *package)
     package->addFileDefinition("trademark", QStringLiteral("images/trademark.svgz"));
     package->addFileDefinition("trademarkicon", QStringLiteral("images/trademarkicon.svgz"));
     package->addFileDefinition("infoviewui", QStringLiteral("views/InfoView.qml"));
+    package->addFileDefinition("settingsui", QStringLiteral("settings/Main.qml"));
 
-    package->addFileDefinition("layout1", QStringLiteral("layouts/Default.mocharc"));
-    package->addFileDefinition("layout2", QStringLiteral("layouts/Plasma.mocharc"));
-    package->addFileDefinition("layout3", QStringLiteral("layouts/Unity.mocharc"));
-    package->addFileDefinition("layout4", QStringLiteral("layouts/Extended.mocharc"));
+    package->addFileDefinition("layout1", QStringLiteral("templates/Default.layout.mocha"));
+    package->addFileDefinition("layout2", QStringLiteral("templates/Plasma.layout.mocha"));
+    package->addFileDefinition("layout3", QStringLiteral("templates/Unity.layout.mocha"));
+    package->addFileDefinition("layout4", QStringLiteral("templates/Extended.layout.mocha"));
 
     package->addFileDefinition("templates", QStringLiteral("templates"));
 
-    package->addFileDefinition("preset1", QStringLiteral("presets/Default.layout.mocha"));
-    package->addFileDefinition("preset2", QStringLiteral("presets/Plasma.layout.mocha"));
-    package->addFileDefinition("preset3", QStringLiteral("presets/Unity.layout.mocha"));
-    package->addFileDefinition("preset4", QStringLiteral("presets/Extended.layout.mocha"));
-    package->addFileDefinition("preset10", QStringLiteral("presets/multiple-layouts_hidden.layout.mocha"));
+    package->addFileDefinition("preset1", QStringLiteral("templates/Default.layout.mocha"));
+    package->addFileDefinition("preset2", QStringLiteral("templates/Plasma.layout.mocha"));
+    package->addFileDefinition("preset3", QStringLiteral("templates/Unity.layout.mocha"));
+    package->addFileDefinition("preset4", QStringLiteral("templates/Extended.layout.mocha"));
+    package->addFileDefinition("preset10", QStringLiteral("templates/multiple-layouts_hidden.layout.mocha"));
 
     //! applets
     package->addFileDefinition("compactapplet", QStringLiteral("applet/CompactApplet.qml"));
