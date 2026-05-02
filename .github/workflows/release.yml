@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on tags like v0.1.0
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Generate Source Tarball (Arch Linux Docker)
+        run: |
+          # Use Arch Linux container to match PKGBUILD dependencies
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace archlinux:latest bash -c "
+            pacman -Syu --noconfirm
+            pacman -S --noconfirm git cmake extra-cmake-modules ninja gettext python \
+              qt6-base qt6-declarative qt6-wayland qt6-5compat \
+              kwindowsystem ki18n kconfig kcoreaddons kiconthemes \
+              ksvg kio kdbusaddons knotifications knewstuff \
+              kpackage kcmutils karchive kcrash kglobalaccel \
+              kguiaddons kxmlgui plasma-desktop plasma-workspace \
+              libplasma layer-shell-qt kwayland plasma-activities \
+              wayland plasma-wayland-protocols kirigami
+            
+            # Run the helper script to configure and package via CPack
+            ./package-source.sh
+            
+            # Ensure permissions are correct for the GitHub Actions runner
+            chmod -R 777 build/
+          "
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/mochadock-*-Source.tar.gz
+            PKGBUILD
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

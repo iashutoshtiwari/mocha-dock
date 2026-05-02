@@ -128,3 +128,28 @@ add_subdirectory(plasmoid)
 add_subdirectory(shell)
 
 ki18n_install(po)
+
+# --- Packaging Configuration (CPack) ---
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_VERSION "${VERSION}")
+set(CPACK_PACKAGE_VENDOR "${AUTHOR}")
+set(CPACK_PACKAGE_CONTACT "${EMAIL}")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A Wayland-only dock based on Plasma frameworks")
+
+# Define which archive formats to generate
+set(CPACK_GENERATOR "TGZ")          # Binary tar.gz
+set(CPACK_SOURCE_GENERATOR "TGZ")   # Source tar.gz for PKGBUILD/DEB/RPM
+
+# Ignore development files when packing the source tarball
+set(CPACK_SOURCE_IGNORE_FILES
+    "~$"
+    "\\\\.git/"
+    "build/"
+    "local_install/"
+    "pkg/"
+    "src/"
+    ".*\\\\.tar\\\\.gz"
+    ".*\\\\.tar\\\\.zst"
+)
+
+include(CPack)
