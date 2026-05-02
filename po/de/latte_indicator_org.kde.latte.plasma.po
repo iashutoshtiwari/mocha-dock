@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2023 Frederik Schwarzer <schwarzer@kde.org>
 msgid ""
 msgstr ""
-"Project-Id-Version: latte_indicator_org.kde.latte.plasma\n"
+"Project-Id-Version: latte_indicator_org.kde.mocha.plasma\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
 "PO-Revision-Date: 2023-04-26 21:23+0200\n"
@@ -17,34 +17,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 22.07.70\n"
 
-#: org.kde.latte.plasma/package/config/config.qml:21
+#: org.kde.mocha.plasma/package/config/config.qml:21
 #, kde-format
 msgid "Style"
 msgstr "Stil"
 
-#: org.kde.latte.plasma/package/config/config.qml:29
+#: org.kde.mocha.plasma/package/config/config.qml:29
 #, kde-format
 msgid "Padding"
 msgstr "Zwischenraum"
 
-#: org.kde.latte.plasma/package/config/config.qml:53
-#: org.kde.latte.plasma/package/config/config.qml:89
+#: org.kde.mocha.plasma/package/config/config.qml:53
+#: org.kde.mocha.plasma/package/config/config.qml:89
 #, kde-format
 msgctxt "number in percentage, e.g. 85 %"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: org.kde.latte.plasma/package/config/config.qml:67
+#: org.kde.mocha.plasma/package/config/config.qml:67
 #, kde-format
 msgid "Corner Margin"
 msgstr ""
 
-#: org.kde.latte.plasma/package/config/config.qml:99
+#: org.kde.mocha.plasma/package/config/config.qml:99
 #, kde-format
 msgid "Options"
 msgstr "Einstellungen"
 
-#: org.kde.latte.plasma/package/config/config.qml:117
+#: org.kde.mocha.plasma/package/config/config.qml:117
 #, kde-format
 msgid "Growing circle animation when clicked"
 msgstr ""

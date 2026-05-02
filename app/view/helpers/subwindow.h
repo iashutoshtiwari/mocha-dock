@@ -89,7 +89,7 @@ protected:
     //! Connections for the KWin visibility hack
     QList<QMetaObject::Connection> connectionsHack;
 
-    Mocha::View *m_latteView{nullptr};
+    Mocha::View *m_mochaView{nullptr};
 
     QPointer<Mocha::Corona> m_corona;
 

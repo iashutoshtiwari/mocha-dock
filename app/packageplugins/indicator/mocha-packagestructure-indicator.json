@@ -1,4 +1,4 @@
 {
-    "KPackageStructure": "Latte/Indicator",
-    "X-KDE-ParentApp": "org.kde.latte-dock"
+    "KPackageStructure": "Mocha/Indicator",
+    "X-KDE-ParentApp": "org.kde.mocha-dock"
 }

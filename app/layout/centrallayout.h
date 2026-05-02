@@ -56,7 +56,7 @@ public:
     void setActivities(QStringList activities);
 
     const QStringList appliedActivities() override;
-    Types::ViewType latteViewType(uint containmentId) const override;
+    Types::ViewType mochaViewType(uint containmentId) const override;
 
     Layout::Type type() const override;
     Data::Layout data() const;

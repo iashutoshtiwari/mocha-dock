@@ -77,7 +77,7 @@ private:
     QMetaMethod m_appletContainsMethod;
     QQuickItem *m_appletContainsMethodItem{nullptr};
 
-    Mocha::View *m_latteView{nullptr};
+    Mocha::View *m_mochaView{nullptr};
 
     friend class Mocha::View;
 };

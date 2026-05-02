@@ -21,7 +21,7 @@ Colors::Colors(QObject *parent, Mocha::Corona *corona)
       m_corona(corona)
 {
     //!find the available colors
-    m_colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+    m_colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.mocha.shell/contents/images/canvas/";
 
     init();
 }

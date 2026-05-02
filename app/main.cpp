@@ -103,7 +103,7 @@ int main(int argc, char **argv)
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addOptions({
-                          {{"r", "replace"}, i18nc("command line", "Replace the current Latte instance.")}
+                          {{"r", "replace"}, i18nc("command line", "Replace the current Mocha instance.")}
                           , {{"d", "debug"}, i18nc("command line", "Show the debugging messages on stdout.")}
                           , {{"cc", "clear-cache"}, i18nc("command line", "Clear qml cache. It can be useful after system upgrades.")}
                           , {"enable-autostart", i18nc("command line", "Enable autostart for this application")}
@@ -207,7 +207,7 @@ int main(int argc, char **argv)
         QStringList layouts = Mocha::Layouts::Importer::availableLayouts();
 
         if (layouts.count() > 0) {
-            qInfo() << i18n("Available layouts that can be used to start Latte:");
+            qInfo() << i18n("Available layouts that can be used to start Mocha:");
 
             for (const auto &layout : layouts) {
                 qInfo() << "     " << layout;

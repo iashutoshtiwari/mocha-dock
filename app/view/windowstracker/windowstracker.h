@@ -62,7 +62,7 @@ signals:
     void currentScreenChanged();
 
 private:
-    Mocha::View *m_latteView{nullptr};
+    Mocha::View *m_mochaView{nullptr};
     WindowSystem::AbstractWindowInterface *m_wm{nullptr};
 
     TrackerPart::AllScreensTracker *m_allScreensTracker{nullptr};

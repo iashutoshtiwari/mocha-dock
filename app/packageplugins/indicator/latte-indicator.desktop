@@ -1,52 +1,52 @@
 [Desktop Entry]
 Type=ServiceType
-X-KDE-ServiceType=Latte/Indicator
+X-KDE-ServiceType=Mocha/Indicator
 
-Comment=Latte indicator
+Comment=Mocha indicator
 Comment[ar]=مؤشرات لاتيه
-Comment[az]=Latte İndikatoru
-Comment[ca]=Indicador del Latte
-Comment[ca@valencia]=Indicador de Latte
-Comment[cs]=Ukazatel Latte
-Comment[el]=Δείκτης Latte
-Comment[en_GB]=Latte indicator
-Comment[eo]=Latte indikilo
-Comment[es]=Indicador Latte
-Comment[et]=Latte indikaator
-Comment[eu]=Latte adierazlea
-Comment[fi]=Latte-ilmaisin
-Comment[fr]=Indicateur de Latte
-Comment[gl]=Indicador de Latte.
+Comment[az]=Mocha İndikatoru
+Comment[ca]=Indicador del Mocha
+Comment[ca@valencia]=Indicador de Mocha
+Comment[cs]=Ukazatel Mocha
+Comment[el]=Δείκτης Mocha
+Comment[en_GB]=Mocha indicator
+Comment[eo]=Mocha indikilo
+Comment[es]=Indicador Mocha
+Comment[et]=Mocha indikaator
+Comment[eu]=Mocha adierazlea
+Comment[fi]=Mocha-ilmaisin
+Comment[fr]=Indicateur de Mocha
+Comment[gl]=Indicador de Mocha.
 Comment[he]=מחוון לאטה
-Comment[hsb]=Latte pokazowak
-Comment[id]=Indikator latte
-Comment[it]=Indicatore Latte
-Comment[ja]=Latte インジケータ
-Comment[ko]=Latte 표시기
-Comment[lt]=Latte indikatorius
-Comment[nl]=Indicator van Latte
-Comment[nn]=Latte-markør
-Comment[pl]=Wskaźnik Latte
-Comment[pt]=Indicador do Latte
-Comment[pt_BR]=Indicador do Latte
-Comment[ru]=Индикатор Latte
-Comment[sk]=Latte indicator
-Comment[sl]=Kazalnik Latte
-Comment[sv]=Latte indikator
-Comment[tr]=Latte göstergesi
+Comment[hsb]=Mocha pokazowak
+Comment[id]=Indikator mocha
+Comment[it]=Indicatore Mocha
+Comment[ja]=Mocha インジケータ
+Comment[ko]=Mocha 표시기
+Comment[lt]=Mocha indikatorius
+Comment[nl]=Indicator van Mocha
+Comment[nn]=Mocha-markør
+Comment[pl]=Wskaźnik Mocha
+Comment[pt]=Indicador do Mocha
+Comment[pt_BR]=Indicador do Mocha
+Comment[ru]=Индикатор Mocha
+Comment[sk]=Mocha indicator
+Comment[sl]=Kazalnik Mocha
+Comment[sv]=Mocha indikator
+Comment[tr]=Mocha göstergesi
 Comment[uk]=Індикатор Латте
-Comment[zh_CN]=Latte 任务指示器
-Comment[zh_TW]=Latte 指示器
+Comment[zh_CN]=Mocha 任务指示器
+Comment[zh_TW]=Mocha 指示器
 
-[PropertyDef::X-Latte-API]
+[PropertyDef::X-Mocha-API]
 Type=QString
 
-[PropertyDef::X-Latte-MainScript]
+[PropertyDef::X-Mocha-MainScript]
 Type=QString
 
-[PropertyDef::X-Latte-ConfigUi]
+[PropertyDef::X-Mocha-ConfigUi]
 Type=QString
 
-[PropertyDef::X-Latte-ConfigXml]
+[PropertyDef::X-Mocha-ConfigXml]
 Type=QString
 

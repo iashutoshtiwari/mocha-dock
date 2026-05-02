@@ -65,13 +65,13 @@ public:
     void hideAllViews();
     void pauseLayout(QString layoutName);
     void syncActiveLayoutsToOriginalFiles();
-    void syncLatteViewsToScreens();
+    void syncMochaViewsToScreens();
     void syncMultipleLayoutsToActivities(QStringList preloadedLayouts = QStringList());
 
     //! In that case single layout file must be removed after loading the new layout
     void setIsSingleLayoutInDeprecatedRenaming(const bool &enabled);
 
-    bool latteViewExists(Mocha::View *view) const;
+    bool mochaViewExists(Mocha::View *view) const;
     bool layoutExists(QString layoutName) const;
     //! switch to specified layout, default previousMemoryUsage means that it didn't change
     bool switchToLayout(QString layoutName,  MemoryUsage::LayoutsMemory newMemoryUsage = MemoryUsage::Current);

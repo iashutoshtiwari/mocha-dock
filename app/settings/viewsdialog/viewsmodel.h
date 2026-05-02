@@ -2,7 +2,7 @@
 /*
  * SPDX-FileCopyrightText: 2021 Michail Vourlakos <mvourlakos@gmail.com>
  *
- * This file is part of Latte-Dock
+ * This file is part of Mocha-Dock
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
  *

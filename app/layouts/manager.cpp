@@ -60,7 +60,7 @@ Manager::~Manager()
     m_importer->deleteLater();
     m_syncedLaunchers->deleteLater();
 
-    //! no needed because Latte:Corona is calling it at better place
+    //! no needed because Mocha:Corona is calling it at better place
     // unload();
 
     m_synchronizer->deleteLater();
@@ -80,7 +80,7 @@ void Manager::init()
 
         //startup create what is necessary....
         if (!layoutsDir.exists()) {
-            QDir(Mocha::configPath()).mkdir("latte");
+            QDir(Mocha::configPath()).mkdir("mocha");
         }
 
         QString defpath = m_corona->templatesManager()->newLayout(i18n("My Layout"), i18n(Templates::DEFAULTLAYOUTTEMPLATENAME));
@@ -92,7 +92,7 @@ void Manager::init()
 
         bool isOlderVersion = m_importer->updateOldConfiguration();
         if (isOlderVersion) {
-            qDebug() << "Latte is updating its older configuration...";
+            qDebug() << "Mocha is updating its older configuration...";
             m_corona->templatesManager()->importSystemLayouts();
         } else {
             m_corona->universalSettings()->setSingleModeLayoutName(i18n("My Layout"));
@@ -103,7 +103,7 @@ void Manager::init()
     QDir localTemplatesDir(Mocha::configPath() + "/mocha/templates");
 
     if (!localTemplatesDir.exists()) {
-        QDir(Mocha::configPath() + "/latte").mkdir("templates");
+        QDir(Mocha::configPath() + "/mocha").mkdir("templates");
     }
 
     //! Check if the multiple-layouts hidden file is present, add it if it isnt
@@ -111,7 +111,7 @@ void Manager::init()
         m_corona->templatesManager()->newLayout("", Layout::MULTIPLELAYOUTSHIDDENNAME);
     }
 
-    qDebug() << "Latte is loading  its layouts...";
+    qDebug() << "Mocha is loading  its layouts...";
 
     m_synchronizer->initLayouts();
 }
@@ -206,7 +206,7 @@ Mocha::Data::LayoutIcon Manager::iconForLayout(const Data::Layout &layout) const
 
     //! fallback icon: background image
     if (_icon.isEmpty()) {
-        QString colorPath = m_corona->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+        QString colorPath = m_corona->kPackage().path() + "../../shells/org.kde.mocha.shell/contents/images/canvas/";
 
         if (layout.backgroundStyle == Layout::PatternBackgroundStyle && layout.background.isEmpty()) {
             colorPath += "defaultcustomprint.jpg";
@@ -238,7 +238,7 @@ void Manager::loadLayoutOnStartup(QString layoutName)
 {
  /*   QStringList layouts = m_importer->checkRepairMultipleLayoutsLinkedFile();
 
-    //! Latte didn't close correctly, maybe a crash
+    //! Mocha didn't close correctly, maybe a crash
     if (layouts.size() > 0) {
         QDialog* dialog = new QDialog(nullptr);
         dialog->setWindowTitle(i18n("Multiple Layouts Startup Warning"));
@@ -296,7 +296,7 @@ void Manager::moveView(QString originLayoutName, uint originViewId, QString dest
     }
 }
 
-void Manager::loadLatteLayout(QString layoutPath)
+void Manager::loadMochaLayout(QString layoutPath)
 {
     qDebug() << " -------------------------------------------------------------------- ";
     qDebug() << " -------------------------------------------------------------------- ";
@@ -400,31 +400,31 @@ void Manager::clearUnloadedContainmentsFromLinkedFile(QStringList containmentsId
     containments.sync();
 }
 
-void Manager::showLatteSettingsDialog(int firstPage, bool toggleCurrentPage)
+void Manager::showMochaSettingsDialog(int firstPage, bool toggleCurrentPage)
 {
-    if (!m_latteSettingsDialog) {
-        m_latteSettingsDialog = new Mocha::Settings::Dialog::SettingsDialog(nullptr, m_corona);
+    if (!m_mochaSettingsDialog) {
+        m_mochaSettingsDialog = new Mocha::Settings::Dialog::SettingsDialog(nullptr, m_corona);
     }
-    m_latteSettingsDialog->show();
+    m_mochaSettingsDialog->show();
 
-    if (m_latteSettingsDialog->isMinimized()) {
-        m_latteSettingsDialog->showNormal();
+    if (m_mochaSettingsDialog->isMinimized()) {
+        m_mochaSettingsDialog->showNormal();
     }
 
     if (toggleCurrentPage) {
-        m_latteSettingsDialog->toggleCurrentPage();
+        m_mochaSettingsDialog->toggleCurrentPage();
     } else {
-        m_latteSettingsDialog->setCurrentPage(firstPage);
+        m_mochaSettingsDialog->setCurrentPage(firstPage);
     }
 
-    m_latteSettingsDialog->activateWindow();
+    m_mochaSettingsDialog->activateWindow();
 }
 
-void Manager::hideLatteSettingsDialog()
+void Manager::hideMochaSettingsDialog()
 {
-    if (m_latteSettingsDialog) {
-        m_latteSettingsDialog->deleteLater();
-        m_latteSettingsDialog = nullptr;
+    if (m_mochaSettingsDialog) {
+        m_mochaSettingsDialog->deleteLater();
+        m_mochaSettingsDialog = nullptr;
     }
 }
 

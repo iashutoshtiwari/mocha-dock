@@ -142,7 +142,7 @@ void ExportTemplateHandler::loadApplets(const QString &file)
 void ExportTemplateHandler::chooseFileDialog()
 {
     QFileInfo currentFile(c_filepath);
-    bool inLayoutState = c_filepath.endsWith("layout.latte");
+    bool inLayoutState = c_filepath.endsWith("layout.mocha");
 
     QFileDialog *chooseFileDlg = new QFileDialog(m_dialog,
                                                  inLayoutState ? i18n("Choose Layout Template file") : i18n("Choose View Template file"),
@@ -153,9 +153,9 @@ void ExportTemplateHandler::chooseFileDialog()
     chooseFileDlg->setFileMode(QFileDialog::AnyFile);
     chooseFileDlg->setAcceptMode(QFileDialog::AcceptSave);
     if (inLayoutState) {
-        chooseFileDlg->setDefaultSuffix("layout.latte");
+        chooseFileDlg->setDefaultSuffix("layout.mocha");
     } else {
-        chooseFileDlg->setDefaultSuffix("view.latte");
+        chooseFileDlg->setDefaultSuffix("view.mocha");
     }
 
     QStringList filters;

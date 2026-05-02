@@ -50,8 +50,8 @@ public:
     static const int IDBASE;
 
     bool isWritable(const Layout::GenericLayout *layout) const;
-    bool isLatteContainment(const Plasma::Containment *containment) const;
-    bool isLatteContainment(const KConfigGroup &group) const;
+    bool isMochaContainment(const Plasma::Containment *containment) const;
+    bool isMochaContainment(const KConfigGroup &group) const;
     bool isSubContainment(const Plasma::Corona *corona, const Plasma::Applet *applet) const;
 
     bool hasContainment(const Layout::GenericLayout *layout, const int &id);
@@ -87,7 +87,7 @@ public:
 
     int expectedViewScreenId(const Mocha::Corona *corona, const Data::View &view) const;
     int expectedViewScreenId(const Mocha::Corona *corona, const KConfigGroup &containmentGroup) const;
-    int expectedViewScreenId(const Layout::GenericLayout *layout, const Plasma::Containment *lattecontainment) const;
+    int expectedViewScreenId(const Layout::GenericLayout *layout, const Plasma::Containment *mochacontainment) const;
 
     /// STATIC
     //! Check if an applet config group is valid or belongs to removed applet
@@ -100,9 +100,9 @@ public:
     Data::AppletsTable plugins(const QString &layoutfile, const int containmentid = IDNULL);
 
     Data::GenericTable<Data::Generic> subcontainments(const KConfigGroup &containmentGroup);
-    Data::GenericTable<Data::Generic> subcontainments(const Layout::GenericLayout *layout, const Plasma::Containment *lattecontainment) const;
+    Data::GenericTable<Data::Generic> subcontainments(const Layout::GenericLayout *layout, const Plasma::Containment *mochacontainment) const;
     Data::View view(const KConfigGroup &containmentGroup);
-    Data::View view(const Layout::GenericLayout *layout, const Plasma::Containment *lattecontainment);
+    Data::View view(const Layout::GenericLayout *layout, const Plasma::Containment *mochacontainment);
     Data::ViewsTable views(const QString &file);
     Data::ViewsTable views(const Layout::GenericLayout *layout);
 

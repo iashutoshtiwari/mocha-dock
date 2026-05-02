@@ -145,7 +145,7 @@ signals:
 
     void isShowingDesktopChanged();
 
-    void latteWindowAdded();
+    void mochaWindowAdded();
 
 protected:
     QString m_currentDesktop;

@@ -1,4 +1,4 @@
-# translation of plasma_applet_org.kde.latte.containment.pot to esperanto
+# translation of plasma_applet_org.kde.mocha.containment.pot to esperanto
 # Copyright (C) 2022 Free Software Foundation, Inc.
 # This file is distributed under the same license as the latte-dock package.
 # Oliver Kellogg <okellogg@users.sourceforge.net, 2023.

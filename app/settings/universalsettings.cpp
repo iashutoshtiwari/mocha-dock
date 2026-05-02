@@ -26,10 +26,10 @@
 #include <KPackage/Package>
 #include <KWindowSystem>
 
-#define KWINMETAFORWARDTOLATTESTRING "org.kde.mochadock,/Latte,org.kde.MochaDock,activateLauncherMenu"
+#define KWINMETAFORWARDTOMOCHASTRING "org.kde.mochadock,/Mocha,org.kde.MochaDock,activateLauncherMenu"
 #define KWINMETAFORWARDTOPLASMASTRING "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu"
 
-#define KWINCOLORSSCRIPT "kwin/scripts/lattewindowcolors"
+#define KWINCOLORSSCRIPT "kwin/scripts/mochawindowcolors"
 #define KWINRC "kwinrc"
 
 #define KWINRCTRACKERINTERVAL 2500
@@ -356,7 +356,7 @@ void UniversalSettings::setColorsScriptIsPresent(bool present)
 
 void UniversalSettings::updateColorsScriptIsPresent()
 {
-    qDebug() << "Updating Latte Colors Script presence...";
+    qDebug() << "Updating Mocha Colors Script presence...";
 
     setColorsScriptIsPresent(!Layouts::Importer::standardPath(KWINCOLORSSCRIPT).isEmpty());
 }
@@ -372,9 +372,9 @@ void UniversalSettings::trackedFileChanged(const QString &file)
     }
 }
 
-bool UniversalSettings::kwin_metaForwardedToLatte() const
+bool UniversalSettings::kwin_metaForwardedToMocha() const
 {
-    return m_kwinMetaForwardedToLatte;
+    return m_kwinMetaForwardedToMocha;
 }
 
 bool UniversalSettings::kwin_borderlessMaximizedWindowsEnabled() const
@@ -382,17 +382,17 @@ bool UniversalSettings::kwin_borderlessMaximizedWindowsEnabled() const
     return m_kwinBorderlessMaximizedWindows;
 }
 
-void UniversalSettings::kwin_forwardMetaToLatte(bool forward)
+void UniversalSettings::kwin_forwardMetaToMocha(bool forward)
 {
-    if (m_kwinMetaForwardedToLatte == forward) {
+    if (m_kwinMetaForwardedToMocha == forward) {
         return;
     }
 
     // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
-    // KWin::reconfigure() function blocks/freezes Latte under wayland
+    // KWin::reconfigure() function blocks/freezes Mocha under wayland
     return;
 
-    QString forwardStr = (forward ? KWINMETAFORWARDTOLATTESTRING : KWINMETAFORWARDTOPLASMASTRING);
+    QString forwardStr = (forward ? KWINMETAFORWARDTOMOCHASTRING : KWINMETAFORWARDTOPLASMASTRING);
     m_kwinrcModifierOnlyShortcutsGroup.writeEntry("Meta", forwardStr);
     m_kwinrcModifierOnlyShortcutsGroup.sync();
 
@@ -411,7 +411,7 @@ void UniversalSettings::kwin_setDisabledMaximizedBorders(bool disable)
     }
 
     // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
-    // KWin::reconfigure() function blocks/freezes Latte under wayland
+    // KWin::reconfigure() function blocks/freezes Mocha under wayland
     return;
 
     bool serviceavailable{false};
@@ -438,9 +438,9 @@ void UniversalSettings::recoverKWinOptions()
 {
     qDebug() << "kwinrc: recovering values...";
 
-    //! Meta forwarded to Latte option
+    //! Meta forwarded to Mocha option
     QString metaforwardedstr = m_kwinrcModifierOnlyShortcutsGroup.readEntry("Meta", KWINMETAFORWARDTOPLASMASTRING);
-    m_kwinMetaForwardedToLatte = (metaforwardedstr == KWINMETAFORWARDTOLATTESTRING);
+    m_kwinMetaForwardedToMocha = (metaforwardedstr == KWINMETAFORWARDTOMOCHASTRING);
 
     //! BorderlessMaximizedWindows option
     m_kwinBorderlessMaximizedWindows = m_kwinrcWindowsGroup.readEntry("BorderlessMaximizedWindows", false);

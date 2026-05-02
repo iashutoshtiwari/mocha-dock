@@ -39,7 +39,7 @@ Indicator::Indicator(Mocha::View *parent)
     connect(this, &Indicator::enabledChanged, this, &Indicator::saveConfig);
     connect(this, &Indicator::pluginChanged, this, &Indicator::saveConfig);
 
-    connect(m_view->extendedInterface(), &ContainmentInterface::hasLatteTasksChanged, this, &Indicator::latteTasksArePresentChanged);
+    connect(m_view->extendedInterface(), &ContainmentInterface::hasMochaTasksChanged, this, &Indicator::mochaTasksArePresentChanged);
 
     connect(m_view, &Mocha::View::indicatorPluginChanged, [this](const QString &indicatorId) {
         if (m_corona && m_corona->indicatorFactory()->isCustomType(indicatorId)) {
@@ -49,7 +49,7 @@ Indicator::Indicator(Mocha::View *parent)
 
     connect(m_view, &Mocha::View::indicatorPluginRemoved, [this](const QString &indicatorId) {
         if (m_corona && m_type == indicatorId && !m_corona->indicatorFactory()->pluginExists(indicatorId)) {
-            setType("org.kde.latte.default");
+            setType("org.kde.mocha.default");
         }
 
         if (m_corona && m_corona->indicatorFactory()->isCustomType(indicatorId)) {
@@ -118,9 +118,9 @@ bool Indicator::isCustomIndicator() const
     return m_corona->indicatorFactory()->isCustomType(type());
 }
 
-bool Indicator::latteTasksArePresent()
+bool Indicator::mochaTasksArePresent()
 {
-    return m_view->extendedInterface()->hasLatteTasks();
+    return m_view->extendedInterface()->hasMochaTasks();
 }
 
 bool Indicator::pluginIsReady()
@@ -140,11 +140,11 @@ void Indicator::setPluginIsReady(bool ready)
 
 int Indicator::index(const QString &type)
 {
-    if (type == QLatin1String("org.kde.latte.default")) {
+    if (type == QLatin1String("org.kde.mocha.default")) {
         return 0;
-    } else if (type == QLatin1String("org.kde.latte.plasma")) {
+    } else if (type == QLatin1String("org.kde.mocha.plasma")) {
         return 1;
-    } else if (type == QLatin1String("org.kde.latte.plasmatabstyle")) {
+    } else if (type == QLatin1String("org.kde.mocha.plasmatabstyle")) {
         return 2;
     } else if (customPluginIds().contains(type)){
         return 3 + customPluginIds().indexOf(type);
@@ -256,9 +256,9 @@ void Indicator::load(QString type)
 
         //! create all indicators with the new type
         setPluginIsReady(true);
-    } else if (type!="org.kde.latte.default") {
+    } else if (type!="org.kde.mocha.default") {
         qDebug() << " Indicator metadata are not valid : " << type;
-        setType("org.kde.latte.default");
+        setType("org.kde.mocha.default");
     }
 }
 
@@ -266,7 +266,7 @@ void Indicator::updateComponent()
 {
     auto prevComponent = m_component;
 
-    QString uiPath = m_metadata.value("X-Latte-MainScript");
+    QString uiPath = m_metadata.value("X-Mocha-MainScript");
 
     if (!uiPath.isEmpty()) {
         uiPath = m_pluginPath + "/package/" + uiPath;
@@ -282,8 +282,8 @@ void Indicator::loadPlasmaComponent()
 {
     auto prevComponent = m_plasmaComponent;
 
-    KPluginMetaData metadata = m_corona->indicatorFactory()->metadata("org.kde.latte.plasmatabstyle");
-    QString uiPath = metadata.value("X-Latte-MainScript");
+    KPluginMetaData metadata = m_corona->indicatorFactory()->metadata("org.kde.mocha.plasmatabstyle");
+    QString uiPath = metadata.value("X-Mocha-MainScript");
 
     if (!uiPath.isEmpty()) {
         uiPath = QFileInfo(metadata.fileName()).absolutePath() + "/package/" + uiPath;
@@ -307,7 +307,7 @@ void Indicator::updateScheme()
     auto prevConfigLoader = m_configLoader;
     auto prevConfiguration = m_configuration;
 
-    QString xmlPath = m_metadata.value("X-Latte-ConfigXml");
+    QString xmlPath = m_metadata.value("X-Mocha-ConfigXml");
 
     if (!xmlPath.isEmpty()) {
         QFile file(m_pluginPath + "/package/" + xmlPath);
@@ -334,7 +334,7 @@ void Indicator::loadConfig()
     auto config = m_view->containment()->config().group("Indicator");
     m_customType = config.readEntry("customType", QString());
     m_enabled = config.readEntry("enabled", true);
-    m_type = config.readEntry("type", "org.kde.latte.default");
+    m_type = config.readEntry("type", "org.kde.mocha.default");
 }
 
 void Indicator::saveConfig()

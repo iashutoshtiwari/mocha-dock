@@ -31,7 +31,7 @@ class Importer : public QObject
     Q_OBJECT
 
 public:
-    enum LatteFileVersion
+    enum MochaFileVersion
     {
         UnknownFileType = -1,
         LayoutVersion1 = 0,
@@ -39,7 +39,7 @@ public:
         LayoutVersion2 = 2,
         ConfigVersion2 = 3
     };
-    Q_ENUM(LatteFileVersion);
+    Q_ENUM(MochaFileVersion);
 
     Importer(QObject *parent = nullptr);
     ~Importer() override;
@@ -55,7 +55,7 @@ public:
     bool importOldLayout(QString oldAppletsPath, QString newName, bool alternative = false, QString exportDirectory = QString());
 
     //! imports and old configuration file (tar archive) that contains
-    //! both an applets file and a latterc file with the screens
+    //! both an applets file and a mocharc file with the screens
     //!     newName: if it is empty the name is extracted from the old config file name
     bool importOldConfiguration(QString oldConfigPath, QString newName = QString());
 
@@ -70,7 +70,7 @@ public:
     static void disableAutostart();
     static bool isAutostartEnabled();
 
-    static Importer::LatteFileVersion fileVersion(QString file);
+    static Importer::MochaFileVersion fileVersion(QString file);
 
     static bool importHelper(QString fileName);
 
@@ -82,7 +82,7 @@ public:
     static QStringList standardPaths(bool localfirst = true);
     static QStringList standardPathsFor(QString subPath, bool localfirst = true);   
 
-    //! check if this layout exists already in the latte directory
+    //! check if this layout exists already in the mocha directory
     static bool layoutExists(QString layoutName);
     //! imports the specific layout and return the new layout name.
     //! if the function didn't succeed returns an empty string
@@ -92,7 +92,7 @@ public:
     static QString layoutUserFilePath(QString layoutName);
     //! returns the layouts user directory
     static QString layoutUserDir();
-    //! returns the system path for latte shell data
+    //! returns the system path for mocha shell data
     static QString systemShellDataPath();
 
     static QString nameOfConfigFile(const QString &fileName);

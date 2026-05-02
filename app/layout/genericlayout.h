@@ -75,7 +75,7 @@ public:
 
     QStringList unloadedContainmentsIds();
 
-    virtual Types::ViewType latteViewType(uint containmentId) const;
+    virtual Types::ViewType mochaViewType(uint containmentId) const;
     const QList<Plasma::Containment *> *containments() const;
 
     bool contains(Plasma::Containment *containment) const;
@@ -90,21 +90,21 @@ public:
 
     static bool viewAtLowerScreenPriority(Mocha::View *test, Mocha::View *base, QScreen *primaryScreen);
     static bool viewAtLowerEdgePriority(Mocha::View *test, Mocha::View *base);
-    static QList<Mocha::View *> sortedLatteViews(QList<Mocha::View *> views, QScreen *primaryScreen);
+    static QList<Mocha::View *> sortedMochaViews(QList<Mocha::View *> views, QScreen *primaryScreen);
 
-    QList<Mocha::View *> sortedLatteViews();
+    QList<Mocha::View *> sortedMochaViews();
     virtual QList<Mocha::View *> viewsWithPlasmaShortcuts();
-    virtual QList<Mocha::View *> latteViews();
+    virtual QList<Mocha::View *> mochaViews();
     virtual QList<Mocha::View *> onlyOriginalViews();
     ViewsMap validViewsMap();
-    virtual void syncLatteViewsToScreens();
+    virtual void syncMochaViewsToScreens();
 
     void syncToLayoutFile(bool removeLayoutId = false);
 
     void lock(); //! make it only read-only
     void renameLayout(QString newName);
     virtual void unloadContainments();
-    void unloadLatteViews();
+    void unloadMochaViews();
     void unlock(); //! make it writable which it should be the default
 
     virtual void setLastConfigViewFor(Mocha::View *view);
@@ -113,7 +113,7 @@ public:
     //! this function needs the layout to have first set the corona through setCorona() function
     virtual void addView(Plasma::Containment *containment);
     void recreateView(Plasma::Containment *containment, bool delayed = true);
-    bool hasLatteView(Plasma::Containment *containment);
+    bool hasMochaView(Plasma::Containment *containment);
 
     bool newView(const QString &templateName);
     Data::View newView(const Mocha::Data::View &nextViewData);
@@ -128,13 +128,13 @@ public:
     virtual QList<Plasma::Types::Location> freeEdges(QScreen *scr) const;
     virtual QList<Plasma::Types::Location> freeEdges(int screen) const;
 
-    //! Bind this latteView and its relevant containments(including subcontainments)
+    //! Bind this mochaView and its relevant containments(including subcontainments)
     //! to this layout. It is used for moving a Mocha::View from layout to layout)
-    void assignToLayout(Mocha::View *latteView, QList<Plasma::Containment *> containments);
-    //! Unassign that latteView from this layout (this is used for moving a latteView
+    void assignToLayout(Mocha::View *mochaView, QList<Plasma::Containment *> containments);
+    //! Unassign that mochaView from this layout (this is used for moving a mochaView
     //! from layout to layout) and returns all the containments relevant to
-    //! that latteView
-    QList<Plasma::Containment *> unassignFromLayout(Plasma::Containment *latteContainment);
+    //! that mochaView
+    QList<Plasma::Containment *> unassignFromLayout(Plasma::Containment *mochaContainment);
 
     QList<int> viewsExplicitScreens();
 
@@ -158,7 +158,7 @@ signals:
     //! used from ConfigView(s) in order to be informed which is one should be shown
     void lastConfigViewForChanged(Mocha::View *view);
 
-    //! used from LatteView(s) in order to exist only one each time that has the highest priority
+    //! used from MochaView(s) in order to exist only one each time that has the highest priority
     //! to use the global shortcuts activations
     void preferredViewForShortcutsChanged(Mocha::View *view);
 
@@ -170,8 +170,8 @@ protected:
 
     QList<Plasma::Containment *> m_containments;
 
-    QHash<const Plasma::Containment *, Mocha::View *> m_latteViews;
-    QHash<const Plasma::Containment *, Mocha::View *> m_waitingLatteViews;
+    QHash<const Plasma::Containment *, Mocha::View *> m_mochaViews;
+    QHash<const Plasma::Containment *, Mocha::View *> m_waitingMochaViews;
 
 private slots:
     void addContainment(Plasma::Containment *containment);
@@ -181,10 +181,10 @@ private slots:
     void onLastConfigViewChangedFrom(Mocha::View *view);
 
 private:
-    //! It can be used in order for LatteViews to not be created automatically when
+    //! It can be used in order for MochaViews to not be created automatically when
     //! their corresponding containments are created e.g. copyView functionality
-    bool blockAutomaticLatteViewCreation() const;
-    void setBlockAutomaticLatteViewCreation(bool block);
+    bool blockAutomaticMochaViewCreation() const;
+    void setBlockAutomaticMochaViewCreation(bool block);
 
     bool explicitDockOccupyEdge(int screen, Plasma::Types::Location location) const;
     bool primaryDockOccupyEdge(Plasma::Types::Location location) const;
@@ -203,7 +203,7 @@ private:
     void destroyContainment(Plasma::Containment *containment);
 
 private:
-    bool m_blockAutomaticLatteViewCreation{false};
+    bool m_blockAutomaticMochaViewCreation{false};
     bool m_hasInitializedContainments{false};
     QPointer<Mocha::View> m_lastConfigViewFor;
 

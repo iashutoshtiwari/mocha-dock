@@ -37,7 +37,7 @@ ContainmentInterface::ContainmentInterface(Mocha::View *parent)
 {
     m_corona = qobject_cast<Mocha::Corona *>(m_view->corona());
 
-    m_latteTasksModel = new TasksModel(this);
+    m_mochaTasksModel = new TasksModel(this);
     m_plasmaTasksModel = new TasksModel(this);
 
     m_appletsExpandedConnectionsTimer.setInterval(2000);
@@ -57,7 +57,7 @@ ContainmentInterface::ContainmentInterface(Mocha::View *parent)
         }
     });
 
-    connect(m_latteTasksModel, &TasksModel::countChanged, this, &ContainmentInterface::onLatteTasksCountChanged);
+    connect(m_mochaTasksModel, &TasksModel::countChanged, this, &ContainmentInterface::onMochaTasksCountChanged);
     connect(m_plasmaTasksModel, &TasksModel::countChanged, this, &ContainmentInterface::onPlasmaTasksCountChanged);
 }
 
@@ -149,7 +149,7 @@ bool ContainmentInterface::isCapableToShowShortcutBadges()
 {
     identifyShortcutsHost();
 
-    if (!hasLatteTasks() && hasPlasmaTasks()) {
+    if (!hasMochaTasks() && hasPlasmaTasks()) {
         return false;
     }
 
@@ -193,9 +193,9 @@ int ContainmentInterface::applicationLauncherId() const
     return launcherId;
 }
 
-bool ContainmentInterface::updateBadgeForLatteTask(const QString identifier, const QString value)
+bool ContainmentInterface::updateBadgeForMochaTask(const QString identifier, const QString value)
 {
-    if (!hasLatteTasks()) {
+    if (!hasMochaTasks()) {
         return false;
     }
 
@@ -204,7 +204,7 @@ bool ContainmentInterface::updateBadgeForLatteTask(const QString identifier, con
     for (auto *applet : applets) {
         KPluginMetaData meta = applet->pluginMetaData();
 
-        if (meta.pluginId() == QLatin1String("org.kde.latte.plasmoid")) {
+        if (meta.pluginId() == QLatin1String("org.kde.mocha.plasmoid")) {
 
             if (QQuickItem *appletInterface = PlasmaQuick::AppletQuickItem::itemForApplet(const_cast<Plasma::Applet *>(applet))) {
                 const auto &childItems = appletInterface->childItems();
@@ -242,7 +242,7 @@ bool ContainmentInterface::updateBadgeForLatteTask(const QString identifier, con
 
 bool ContainmentInterface::activatePlasmaTask(const int index)
 {
-    bool containsPlasmaTaskManager{hasPlasmaTasks() && !hasLatteTasks()};
+    bool containsPlasmaTaskManager{hasPlasmaTasks() && !hasMochaTasks()};
 
     if (!containsPlasmaTaskManager) {
         return false;
@@ -290,7 +290,7 @@ bool ContainmentInterface::activatePlasmaTask(const int index)
 
 bool ContainmentInterface::newInstanceForPlasmaTask(const int index)
 {
-    bool containsPlasmaTaskManager{hasPlasmaTasks() && !hasLatteTasks()};
+    bool containsPlasmaTaskManager{hasPlasmaTasks() && !hasMochaTasks()};
 
     if (!containsPlasmaTaskManager) {
         return false;
@@ -371,14 +371,14 @@ bool ContainmentInterface::hideShortcutBadges()
 
 bool ContainmentInterface::showOnlyMeta()
 {
-    if (!m_corona->universalSettings()->kwin_metaForwardedToLatte()) {
+    if (!m_corona->universalSettings()->kwin_metaForwardedToMocha()) {
         return false;
     }
 
     return showShortcutBadges(false, true);
 }
 
-bool ContainmentInterface::showShortcutBadges(const bool showLatteShortcuts, const bool showMeta)
+bool ContainmentInterface::showShortcutBadges(const bool showMochaShortcuts, const bool showMeta)
 {
     identifyShortcutsHost();
 
@@ -386,9 +386,9 @@ bool ContainmentInterface::showShortcutBadges(const bool showLatteShortcuts, con
         return false;
     }
 
-    int appLauncherId = m_corona->universalSettings()->kwin_metaForwardedToLatte() && showMeta ? applicationLauncherId() : -1;
+    int appLauncherId = m_corona->universalSettings()->kwin_metaForwardedToMocha() && showMeta ? applicationLauncherId() : -1;
 
-    return m_showShortcutsMethod.invoke(m_shortcutsHost, Q_ARG(QVariant, showLatteShortcuts), Q_ARG(QVariant, true), Q_ARG(QVariant, showMeta), Q_ARG(QVariant, appLauncherId));
+    return m_showShortcutsMethod.invoke(m_shortcutsHost, Q_ARG(QVariant, showMochaShortcuts), Q_ARG(QVariant, true), Q_ARG(QVariant, showMeta), Q_ARG(QVariant, appLauncherId));
 }
 
 int ContainmentInterface::appletIdForVisualIndex(const int index)
@@ -484,9 +484,9 @@ bool ContainmentInterface::hasExpandedApplet() const
     return m_expandedAppletIds.count() > 0;
 }
 
-bool ContainmentInterface::hasLatteTasks() const
+bool ContainmentInterface::hasMochaTasks() const
 {
-    return (m_latteTasksModel->count() > 0);
+    return (m_mochaTasksModel->count() > 0);
 }
 
 bool ContainmentInterface::hasPlasmaTasks() const
@@ -670,9 +670,9 @@ void ContainmentInterface::removeExpandedApplet(PlasmaQuick::AppletQuickItem *ap
     emit expandedAppletStateChanged();
 }
 
-QAbstractListModel *ContainmentInterface::latteTasksModel() const
+QAbstractListModel *ContainmentInterface::mochaTasksModel() const
 {
-    return m_latteTasksModel;
+    return m_mochaTasksModel;
 }
 
 QAbstractListModel *ContainmentInterface::plasmaTasksModel() const
@@ -766,15 +766,15 @@ void ContainmentInterface::updateAppletsDisabledColoring()
     emit appletsDisabledColoringChanged(appletsdisabledcoloring);
 }
 
-void ContainmentInterface::onLatteTasksCountChanged()
+void ContainmentInterface::onMochaTasksCountChanged()
 {
-    if ((m_hasLatteTasks && m_latteTasksModel->count()>0)
-            || (!m_hasLatteTasks && m_latteTasksModel->count() == 0)) {
+    if ((m_hasMochaTasks && m_mochaTasksModel->count()>0)
+            || (!m_hasMochaTasks && m_mochaTasksModel->count() == 0)) {
         return;
     }
 
-    m_hasLatteTasks = (m_latteTasksModel->count() > 0);
-    emit hasLatteTasksChanged();
+    m_hasMochaTasks = (m_mochaTasksModel->count() > 0);
+    emit hasMochaTasksChanged();
 }
 
 void ContainmentInterface::onPlasmaTasksCountChanged()
@@ -997,9 +997,9 @@ void ContainmentInterface::onAppletAdded(Plasma::Applet *applet)
         KPluginMetaData meta = applet->pluginMetaData();
         const QStringList& provides = meta.value(QStringLiteral("X-Plasma-Provides"), QStringList{});
 
-        if (meta.pluginId() == QLatin1String("org.kde.latte.plasmoid")) {
-            //! populate latte tasks applet
-            m_latteTasksModel->addTask(ai);
+        if (meta.pluginId() == QLatin1String("org.kde.mocha.plasmoid")) {
+            //! populate mocha tasks applet
+            m_mochaTasksModel->addTask(ai);
         } else if (provides.contains(QLatin1String("org.kde.plasma.multitasking"))) {
             //! populate plasma tasks applet
             m_plasmaTasksModel->addTask(ai);

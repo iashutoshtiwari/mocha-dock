@@ -213,9 +213,9 @@ const QStringList CentralLayout::appliedActivities()
     }
 }
 
-Types::ViewType CentralLayout::latteViewType(uint containmentId) const
+Types::ViewType CentralLayout::mochaViewType(uint containmentId) const
 {
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         if (view->containment() && view->containment()->id() == (uint)containmentId) {
             return view->type();
         }

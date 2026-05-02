@@ -41,7 +41,7 @@ void CanvasConfigView::init()
 
     updateEnabledBorders();
 
-    auto source = QUrl::fromLocalFile(m_latteView->containment()->corona()->kPackage().filePath(tempFilePath));
+    auto source = QUrl::fromLocalFile(m_mochaView->containment()->corona()->kPackage().filePath(tempFilePath));
     setSource(source);
     syncGeometry();
 
@@ -67,13 +67,13 @@ void CanvasConfigView::initParentView(Mocha::View *view)
 
 void CanvasConfigView::syncGeometry()
 {
-    if (!m_latteView || !m_latteView->layout() || !m_latteView->containment() || !m_parent || !rootObject()) {
+    if (!m_mochaView || !m_mochaView->layout() || !m_mochaView->containment() || !m_parent || !rootObject()) {
         return;
     }
 
     updateEnabledBorders();
 
-    auto geometry = m_latteView->positioner()->canvasGeometry();
+    auto geometry = m_mochaView->positioner()->canvasGeometry();
 
     if (m_geometryWhenVisible == geometry) {
         return;
@@ -117,7 +117,7 @@ void CanvasConfigView::showEvent(QShowEvent *ev)
 {
     SubConfigView::showEvent(ev);
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
@@ -144,7 +144,7 @@ void CanvasConfigView::focusOutEvent(QFocusEvent *ev)
 {
     Q_UNUSED(ev);
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
@@ -176,7 +176,7 @@ void CanvasConfigView::updateEnabledBorders()
 
     KSvg::FrameSvg::EnabledBorders borders = KSvg::FrameSvg::TopBorder;
 
-    switch (m_latteView->location()) {
+    switch (m_mochaView->location()) {
     case Plasma::Types::TopEdge:
         borders = KSvg::FrameSvg::BottomBorder;
         break;

@@ -84,10 +84,10 @@ KActivities::Controller *Synchronizer::activitiesController() const
     return m_activitiesController;
 }
 
-bool Synchronizer::latteViewExists(Mocha::View *view) const
+bool Synchronizer::mochaViewExists(Mocha::View *view) const
 {
     for (const auto layout : m_centralLayouts) {
-        for (const auto &v : layout->latteViews()) {
+        for (const auto &v : layout->mochaViews()) {
             if (v == view) {
                 return true;
             }
@@ -353,7 +353,7 @@ QList<Mocha::View *> Synchronizer::currentViews() const
     QList<Mocha::View *> views;
 
     for(auto layout : currentLayouts()) {
-        views << layout->latteViews();
+        views << layout->mochaViews();
     }
 
     return views;
@@ -383,12 +383,12 @@ QList<Mocha::View *> Synchronizer::currentViewsWithPlasmaShortcuts() const
 
 QList<Mocha::View *> Synchronizer::sortedCurrentViews() const
 {
-    return Layout::GenericLayout::sortedLatteViews(currentViews(), m_manager->corona()->screenPool()->primaryScreen());
+    return Layout::GenericLayout::sortedMochaViews(currentViews(), m_manager->corona()->screenPool()->primaryScreen());
 }
 
 QList<Mocha::View *> Synchronizer::sortedCurrentOriginalViews() const
 {
-    return Layout::GenericLayout::sortedLatteViews(currentOriginalViews(), m_manager->corona()->screenPool()->primaryScreen());
+    return Layout::GenericLayout::sortedMochaViews(currentOriginalViews(), m_manager->corona()->screenPool()->primaryScreen());
 }
 
 QList<Mocha::View *> Synchronizer::viewsBasedOnActivityId(const QString &id) const
@@ -397,7 +397,7 @@ QList<Mocha::View *> Synchronizer::viewsBasedOnActivityId(const QString &id) con
 
     for(auto layout : centralLayoutsForActivity(id)) {
         if (m_centralLayouts.contains(layout)) {
-            views << layout->latteViews();
+            views << layout->mochaViews();
         }
     }
 
@@ -538,10 +538,10 @@ void Synchronizer::syncActiveLayoutsToOriginalFiles()
     }
 }
 
-void Synchronizer::syncLatteViewsToScreens()
+void Synchronizer::syncMochaViewsToScreens()
 {
     for (const auto layout : m_centralLayouts) {
-        layout->syncLatteViewsToScreens();
+        layout->syncMochaViewsToScreens();
     }
 }
 
@@ -556,7 +556,7 @@ void Synchronizer::unloadCentralLayout(CentralLayout *layout)
             central->syncToLayoutFile(true);
         }
 
-        central->unloadLatteViews();
+        central->unloadMochaViews();
         central->unloadContainments();
 
         if (m_multipleModeInitialized && !m_manager->corona()->inQuit()) {
@@ -685,7 +685,7 @@ bool Synchronizer::initSingleMode(QString layoutName)
         //! Step4: layout is added in manager and is accessible for others to find
         //! Step5: layout is attaching its initial containmens and is now considered ACTIVE
         newLayout->setCorona(m_manager->corona()); //step1
-        m_manager->loadLatteLayout(layoutpath);    //step2
+        m_manager->loadMochaLayout(layoutpath);    //step2
         newLayout->initCorona();                   //step3
         addLayout(newLayout);                      //step4
         newLayout->initContainments();             //step5
@@ -730,7 +730,7 @@ bool Synchronizer::initMultipleMode(QString layoutName)
         QStringList layoutsinmultiplestorage = Layouts::Storage::self()->storedLayoutsInMultipleFile();
         qDebug() << "Preloaded Multiple Layouts in Storage :: " << layoutsinmultiplestorage;
 
-        m_manager->loadLatteLayout(layoutPath(QString(Layout::MULTIPLELAYOUTSHIDDENNAME)));
+        m_manager->loadMochaLayout(layoutPath(QString(Layout::MULTIPLELAYOUTSHIDDENNAME)));
 
         m_multipleModeInitialized = true;
 
@@ -1049,7 +1049,7 @@ void Synchronizer::unloadLayouts(const QStringList &layoutNames, const QStringLi
             }
 
             layout->unloadContainments();
-            layout->unloadLatteViews();
+            layout->unloadMochaViews();
             if (!m_manager->corona()->inQuit()) {
                 m_manager->clearUnloadedContainmentsFromLinkedFile(layout->unloadedContainmentsIds());
             }
@@ -1066,7 +1066,7 @@ void Synchronizer::unloadLayouts(const QStringList &layoutNames, const QStringLi
 void Synchronizer::updateKWinDisabledBorders()
 {
     // BUG: https://bugs.kde.org/show_bug.cgi?id=428202
-    // KWin::reconfigure() function blocks/freezes Latte under wayland
+    // KWin::reconfigure() function blocks/freezes Mocha under wayland
     return;
 
     if (!m_manager->corona()->universalSettings()->canDisableBorders()) {

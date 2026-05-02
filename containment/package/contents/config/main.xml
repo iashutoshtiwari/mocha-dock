@@ -43,7 +43,7 @@
     
     <entry name="appletShadowsEnabled" type="Bool">
       <default>true</default>
-      <label>enable latte drawn applet shadows</label>
+      <label>enable mocha drawn applet shadows</label>
     </entry>
 
     <!-- this is percentage -->
@@ -258,7 +258,7 @@
     </entry>
     <entry name="tasksUpgraded" type="Bool">
       <default>false</default>
-      <label>flag to check if Tasks properties were moved to Tasks plasmoid configuration. Since Latte v0.10 we can have multiple Tasks applets in the same dock</label>
+      <label>flag to check if Tasks properties were moved to Tasks plasmoid configuration. Since Mocha v0.10 we can have multiple Tasks applets in the same dock</label>
     </entry>
     
 <!-- Deprecated Section Containment -->

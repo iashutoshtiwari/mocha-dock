@@ -54,7 +54,7 @@ void WidgetExplorerView::init()
 
     updateEnabledBorders();
 
-    auto source = QUrl::fromLocalFile(m_latteView->containment()->corona()->kPackage().filePath(tempFilePath));
+    auto source = QUrl::fromLocalFile(m_mochaView->containment()->corona()->kPackage().filePath(tempFilePath));
     setSource(source);
     syncGeometry();
 }
@@ -88,8 +88,8 @@ void WidgetExplorerView::initParentView(Mocha::View *view)
 {
     SubConfigView::initParentView(view);
 
-    rootContext()->setContextProperty(QStringLiteral("containmentFromView"), m_latteView->containment());
-    rootContext()->setContextProperty(QStringLiteral("latteView"), m_latteView);
+    rootContext()->setContextProperty(QStringLiteral("containmentFromView"), m_mochaView->containment());
+    rootContext()->setContextProperty(QStringLiteral("mochaView"), m_mochaView);
 
     updateEnabledBorders();
     syncGeometry();
@@ -97,29 +97,29 @@ void WidgetExplorerView::initParentView(Mocha::View *view)
 
 QRect WidgetExplorerView::availableScreenGeometry() const
 {
-    int currentScrId = m_latteView->positioner()->currentScreenId();
+    int currentScrId = m_mochaView->positioner()->currentScreenId();
 
     QList<Mocha::Types::Visibility> ignoreModes{Mocha::Types::SidebarOnDemand,Mocha::Types::SidebarAutoHide};
 
-    if (m_latteView->visibility() && m_latteView->visibility()->isSidebar()) {
+    if (m_mochaView->visibility() && m_mochaView->visibility()->isSidebar()) {
         ignoreModes.removeAll(Mocha::Types::SidebarOnDemand);
         ignoreModes.removeAll(Mocha::Types::SidebarAutoHide);
     }
 
-    QString activityid = m_latteView->layout()->lastUsedActivity();
+    QString activityid = m_mochaView->layout()->lastUsedActivity();
 
     return m_corona->availableScreenRectWithCriteria(currentScrId, activityid, ignoreModes, {}, false, true);
 }
 
 void WidgetExplorerView::syncGeometry()
 {
-    if (!m_latteView || !m_latteView->layout() || !m_latteView->containment() || !rootObject()) {
+    if (!m_mochaView || !m_mochaView->layout() || !m_mochaView->containment() || !rootObject()) {
         return;
     }
     const QSize size(rootObject()->width(), rootObject()->height());
     auto availGeometry = availableScreenGeometry();
 
-    int margin = availGeometry.height() == m_latteView->screenGeometry().height() ? 100 : 0;
+    int margin = availGeometry.height() == m_mochaView->screenGeometry().height() ? 100 : 0;
     auto geometry = QRect(availGeometry.x(), availGeometry.y(), size.width(), availGeometry.height()-margin);
 
     updateEnabledBorders();
@@ -141,7 +141,7 @@ void WidgetExplorerView::showEvent(QShowEvent *ev)
 {
     SubConfigView::showEvent(ev);
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
@@ -159,7 +159,7 @@ void WidgetExplorerView::focusOutEvent(QFocusEvent *ev)
 {
     Q_UNUSED(ev);
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
@@ -203,7 +203,7 @@ void WidgetExplorerView::hideConfigWindow()
 
 void WidgetExplorerView::syncSlideEffect()
 {
-    if (!m_latteView || !m_latteView->containment()) {
+    if (!m_mochaView || !m_mochaView->containment()) {
         return;
     }
 
@@ -222,15 +222,15 @@ void WidgetExplorerView::updateEnabledBorders()
     KSvg::FrameSvg::EnabledBorders borders = KSvg::FrameSvg::AllBorders;
 
     if (!m_geometryWhenVisible.isEmpty()) {
-        if (m_geometryWhenVisible.x() == m_latteView->screenGeometry().x()) {
+        if (m_geometryWhenVisible.x() == m_mochaView->screenGeometry().x()) {
             borders &= ~KSvg::FrameSvg::LeftBorder;
         }
 
-        if (m_geometryWhenVisible.y() == m_latteView->screenGeometry().y()) {
+        if (m_geometryWhenVisible.y() == m_mochaView->screenGeometry().y()) {
             borders &= ~KSvg::FrameSvg::TopBorder;
         }
 
-        if (m_geometryWhenVisible.height() == m_latteView->screenGeometry().height()) {
+        if (m_geometryWhenVisible.height() == m_mochaView->screenGeometry().height()) {
             borders &= ~KSvg::FrameSvg::BottomBorder;
         }
     }

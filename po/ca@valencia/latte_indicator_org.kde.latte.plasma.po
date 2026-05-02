@@ -1,4 +1,4 @@
-# Translation of latte_indicator_org.kde.latte.plasma.po to Catalan (Valencian)
+# Translation of latte_indicator_org.kde.mocha.plasma.po to Catalan (Valencian)
 # Copyright (C) 2019-2021 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
@@ -21,34 +21,34 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Generator: Lokalize 20.12.0\n"
 
-#: org.kde.latte.plasma/package/config/config.qml:21
+#: org.kde.mocha.plasma/package/config/config.qml:21
 #, kde-format
 msgid "Style"
 msgstr "Estil"
 
-#: org.kde.latte.plasma/package/config/config.qml:29
+#: org.kde.mocha.plasma/package/config/config.qml:29
 #, kde-format
 msgid "Padding"
 msgstr "Farciment"
 
-#: org.kde.latte.plasma/package/config/config.qml:53
-#: org.kde.latte.plasma/package/config/config.qml:89
+#: org.kde.mocha.plasma/package/config/config.qml:53
+#: org.kde.mocha.plasma/package/config/config.qml:89
 #, kde-format
 msgctxt "number in percentage, e.g. 85 %"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: org.kde.latte.plasma/package/config/config.qml:67
+#: org.kde.mocha.plasma/package/config/config.qml:67
 #, kde-format
 msgid "Corner Margin"
 msgstr "Marge dels cantons"
 
-#: org.kde.latte.plasma/package/config/config.qml:99
+#: org.kde.mocha.plasma/package/config/config.qml:99
 #, kde-format
 msgid "Options"
 msgstr "Opcions"
 
-#: org.kde.latte.plasma/package/config/config.qml:117
+#: org.kde.mocha.plasma/package/config/config.qml:117
 #, kde-format
 msgid "Growing circle animation when clicked"
 msgstr "Animació de cercle creixent quan es clique"

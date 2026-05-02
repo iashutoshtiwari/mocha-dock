@@ -405,10 +405,10 @@ void LayoutManager::restore()
         }
     }
 
-    qDebug() << "org.kde.latte ::: applets found :: " << applets.count() << " : " << appletIdsOrder << " :: " << splitterPosition << " : " << splitterPosition2 << " | " << alignment;
-    qDebug() << "org.kde.latte ::: applets orphaned added in the end:: " << orphanedIds;
-    qDebug() << "org.kde.latte ::: applets recorded order :: " << appletIdsOrder;
-    qDebug() << "org.kde.latte ::: applets produced order ?? " << validateAppletsOrder;
+    qDebug() << "org.kde.mocha ::: applets found :: " << applets.count() << " : " << appletIdsOrder << " :: " << splitterPosition << " : " << splitterPosition2 << " | " << alignment;
+    qDebug() << "org.kde.mocha ::: applets orphaned added in the end:: " << orphanedIds;
+    qDebug() << "org.kde.mocha ::: applets recorded order :: " << appletIdsOrder;
+    qDebug() << "org.kde.mocha ::: applets produced order ?? " << validateAppletsOrder;
 
     if (alignment != Mocha::Types::Justify) {
         for (int i=0; i<orderedApplets.count(); ++i) {

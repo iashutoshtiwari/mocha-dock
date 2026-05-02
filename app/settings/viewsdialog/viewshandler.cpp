@@ -339,12 +339,12 @@ void ViewsHandler::exportViewForBackup()
 
     QString temporiginfile = storedView(views[0].id);
 
-    QFileDialog *exportFileDialog = new QFileDialog(m_dialog, i18n("Export Dock/Panel For Backup"), QDir::homePath(), QStringLiteral("view.latte"));
+    QFileDialog *exportFileDialog = new QFileDialog(m_dialog, i18n("Export Dock/Panel For Backup"), QDir::homePath(), QStringLiteral("view.mocha"));
 
     exportFileDialog->setLabelText(QFileDialog::Accept, i18nc("export view","Export"));
     exportFileDialog->setFileMode(QFileDialog::AnyFile);
     exportFileDialog->setAcceptMode(QFileDialog::AcceptSave);
-    exportFileDialog->setDefaultSuffix("view.latte");
+    exportFileDialog->setDefaultSuffix("view.mocha");
 
     QStringList filters;
     QString filter1(i18nc("export view", "Mocha Dock/Panel file v0.2") + "(*.view.mocha)");
@@ -428,13 +428,13 @@ void ViewsHandler::importView()
 {
     qDebug() << Q_FUNC_INFO;
 
-    QFileDialog *importFileDialog = new QFileDialog(m_dialog, i18nc("import dock/panel", "Import Dock/Panel"), QDir::homePath(), QStringLiteral("view.latte"));
+    QFileDialog *importFileDialog = new QFileDialog(m_dialog, i18nc("import dock/panel", "Import Dock/Panel"), QDir::homePath(), QStringLiteral("view.mocha"));
 
     importFileDialog->setWindowIcon(QIcon::fromTheme("document-import"));
     importFileDialog->setLabelText(QFileDialog::Accept, i18n("Import"));
     importFileDialog->setFileMode(QFileDialog::AnyFile);
     importFileDialog->setAcceptMode(QFileDialog::AcceptOpen);
-    importFileDialog->setDefaultSuffix("view.latte");
+    importFileDialog->setDefaultSuffix("view.mocha");
 
     QStringList filters;
     filters << QString(i18nc("import dock panel", "Mocha Dock or Panel file v0.2") + "(*.view.mocha)");

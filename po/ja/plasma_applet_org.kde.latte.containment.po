@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: plasma_applet_org.kde.latte.containment\n"
+"Project-Id-Version: plasma_applet_org.kde.mocha.containment\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
 "PO-Revision-Date: 2017-09-09 19:34-0700\n"

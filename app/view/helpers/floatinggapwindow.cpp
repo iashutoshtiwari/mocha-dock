@@ -65,35 +65,35 @@ QString FloatingGapWindow::validTitlePrefix() const
 
 void FloatingGapWindow::updateGeometry()
 {
-    if (m_latteView->positioner()->slideOffset() != 0) {
+    if (m_mochaView->positioner()->slideOffset() != 0) {
         return;
     }
 
     QRect newGeometry;
 
-    m_thickness = m_latteView->screenEdgeMargin();
+    m_thickness = m_mochaView->screenEdgeMargin();
 
-    int length = m_latteView->formFactor() == Plasma::Types::Horizontal ? m_latteView->absoluteGeometry().width() : m_latteView->absoluteGeometry().height();
+    int length = m_mochaView->formFactor() == Plasma::Types::Horizontal ? m_mochaView->absoluteGeometry().width() : m_mochaView->absoluteGeometry().height();
 
-    if (m_latteView->location() == Plasma::Types::BottomEdge) {
-        int xF = qMax(m_latteView->screenGeometry().left(), m_latteView->absoluteGeometry().left());
+    if (m_mochaView->location() == Plasma::Types::BottomEdge) {
+        int xF = qMax(m_mochaView->screenGeometry().left(), m_mochaView->absoluteGeometry().left());
         newGeometry.moveLeft(xF);
-        newGeometry.moveTop(m_latteView->screenGeometry().bottom() - m_thickness);
-    } else if (m_latteView->location() == Plasma::Types::TopEdge) {
-        int xF = qMax(m_latteView->screenGeometry().left(), m_latteView->absoluteGeometry().left());
+        newGeometry.moveTop(m_mochaView->screenGeometry().bottom() - m_thickness);
+    } else if (m_mochaView->location() == Plasma::Types::TopEdge) {
+        int xF = qMax(m_mochaView->screenGeometry().left(), m_mochaView->absoluteGeometry().left());
         newGeometry.moveLeft(xF);
-        newGeometry.moveTop(m_latteView->screenGeometry().top());
-    } else if (m_latteView->location() == Plasma::Types::LeftEdge) {
-        int yF = qMax(m_latteView->screenGeometry().top(), m_latteView->absoluteGeometry().top());
-        newGeometry.moveLeft(m_latteView->screenGeometry().left());
+        newGeometry.moveTop(m_mochaView->screenGeometry().top());
+    } else if (m_mochaView->location() == Plasma::Types::LeftEdge) {
+        int yF = qMax(m_mochaView->screenGeometry().top(), m_mochaView->absoluteGeometry().top());
+        newGeometry.moveLeft(m_mochaView->screenGeometry().left());
         newGeometry.moveTop(yF);
-    } else if (m_latteView->location() == Plasma::Types::RightEdge) {
-        int yF = qMax(m_latteView->screenGeometry().top(), m_latteView->absoluteGeometry().top());
-        newGeometry.moveLeft(m_latteView->screenGeometry().right() - m_thickness);
+    } else if (m_mochaView->location() == Plasma::Types::RightEdge) {
+        int yF = qMax(m_mochaView->screenGeometry().top(), m_mochaView->absoluteGeometry().top());
+        newGeometry.moveLeft(m_mochaView->screenGeometry().right() - m_thickness);
         newGeometry.moveTop(yF);
     }
 
-    if (m_latteView->formFactor() == Plasma::Types::Horizontal) {
+    if (m_mochaView->formFactor() == Plasma::Types::Horizontal) {
         newGeometry.setWidth(length);
         newGeometry.setHeight(m_thickness + 1);
     } else {

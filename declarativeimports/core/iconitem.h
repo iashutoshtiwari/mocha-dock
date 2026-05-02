@@ -4,7 +4,7 @@
     SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
     SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
 
-    This file is part of Latte-Dock and is a Fork of PlasmaCore::IconItem
+    This file is part of Mocha-Dock and is a Fork of PlasmaCore::IconItem
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */

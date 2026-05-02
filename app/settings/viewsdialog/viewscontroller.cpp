@@ -45,7 +45,7 @@ Views::Views(Settings::Handler::ViewsHandler *parent)
       m_model(new Model::Views(this, m_handler->corona())),
       m_proxyModel(new QSortFilterProxyModel(this)),
       m_view(m_handler->ui()->viewsTable),
-      m_storage(KConfigGroup(KSharedConfig::openConfig(),"LatteSettingsDialog").group("ViewsDialog"))
+      m_storage(KConfigGroup(KSharedConfig::openConfig(),"MochaSettingsDialog").group("ViewsDialog"))
 {
     loadConfig();
     m_proxyModel->setSourceModel(m_model);
@@ -676,7 +676,7 @@ void Views::messageForErrorAppletsWithSameId(const Data::Error &error)
 
     message += "<br/>";
     message += i18n("<b>Possible Solutions:</b><br/>");
-    message += i18n("&nbsp;&nbsp;1. Activate this layout and restart Latte<br/>");
+    message += i18n("&nbsp;&nbsp;1. Activate this layout and restart Mocha<br/>");
     message += i18n("&nbsp;&nbsp;2. Remove the mentioned applets from your layout<br/>");
     message += i18n("&nbsp;&nbsp;3. Update manually the applets id when the layout is <b>not active</b><br/>");
     message += i18n("&nbsp;&nbsp;4. Remove this layout totally<br/>");
@@ -873,7 +873,7 @@ void Views::save()
     QHash<QString, Data::View> cuttedpastedactiveviews;
 
     m_debugSaveCall++;
-    qDebug() << "org.kde.latte ViewsDialog::save() call: " << m_debugSaveCall << "-------- ";
+    qDebug() << "org.kde.mocha ViewsDialog::save() call: " << m_debugSaveCall << "-------- ";
 
     //! add new views that are accepted
     for(int i=0; i<newViews.rowCount(); ++i){
@@ -905,7 +905,7 @@ void Views::save()
     //! update altered views
     for (int i=0; i<alteredViews.rowCount(); ++i) {
         if (alteredViews[i].state() == Data::View::IsCreated && !alteredViews[i].isMoveOrigin) {
-            qDebug() << "org.kde.latte ViewsDialog::save() updating altered view :: " << alteredViews[i];
+            qDebug() << "org.kde.mocha ViewsDialog::save() updating altered view :: " << alteredViews[i];
             central->updateView(alteredViews[i]);
         }
     }
@@ -914,7 +914,7 @@ void Views::save()
     Mocha::Data::ViewsTable removedViews = originalViews.subtracted(currentViews);
 
     for (int i=0; i<removedViews.rowCount(); ++i) {
-        qDebug() << "org.kde.latte ViewsDialog::save() real removing view :: " << removedViews[i];
+        qDebug() << "org.kde.mocha ViewsDialog::save() real removing view :: " << removedViews[i];
         central->removeView(removedViews[i]);
     }
 
@@ -929,7 +929,7 @@ void Views::save()
             continue;
         }
 
-        qDebug() << "org.kde.latte ViewsDialog::save() removing cut-pasted view :: " << cuttedpastedviews[vid];
+        qDebug() << "org.kde.mocha ViewsDialog::save() removing cut-pasted view :: " << cuttedpastedviews[vid];
 
         //! Be Careful: Remove deprecated views from Cut->Paste Action
         QString origincurrentid = cuttedpastedviews[vid].originLayout();
@@ -956,7 +956,7 @@ void Views::save()
         QString tempviewid = pastedactiveview.id;
         pastedactiveview.id = QString::number(originviewid);
 
-        qDebug() << "org.kde.latte ViewsDialog::save() move to another layout cutted-pasted active view :: " << pastedactiveview;
+        qDebug() << "org.kde.mocha ViewsDialog::save() move to another layout cutted-pasted active view :: " << pastedactiveview;
 
         if (view) {
             //! onscreen_view->onscreen_view

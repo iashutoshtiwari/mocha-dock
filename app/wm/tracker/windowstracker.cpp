@@ -1002,7 +1002,7 @@ void Windows::updateHints(Mocha::View *view)
     //! effects triggering and disable the touch flags.
     //! BUG: 404483
     //! Disabled because it has fault identifications, e.g. when a window is maximized and
-    //! Latte or Plasma are showing their View settings
+    //! Mocha or Plasma are showing their View settings
     //foundMaximizedInCurScreen = foundMaximizedInCurScreen && foundActive;
     //foundTouchInCurScreen = foundTouchInCurScreen && foundActive;
 
@@ -1106,7 +1106,7 @@ void Windows::updateHints(Mocha::Layout::GenericLayout *layout) {
     //! effects triggering and disable the touch flags.
     //! BUG: 404483
     //! Disabled because it has fault identifications, e.g. when a window is maximized and
-    //! Latte or Plasma are showing their View settings
+    //! Mocha or Plasma are showing their View settings
     //foundMaximizedInCurScreen = foundMaximizedInCurScreen && foundActive;
     //foundTouchInCurScreen = foundTouchInCurScreen && foundActive;
 

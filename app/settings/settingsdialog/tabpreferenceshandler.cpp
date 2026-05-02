@@ -125,7 +125,7 @@ void TabPreferences::initSettings()
     o_preferences.contextMenuAlwaysActions = m_corona->universalSettings()->contextMenuActionsAlwaysShown();
     o_preferences.isAvailableGeometryBroadcastedToPlasma = m_corona->universalSettings()->isAvailableGeometryBroadcastedToPlasma();
     o_preferences.layoutsInformationWindow = m_corona->universalSettings()->showInfoWindow();
-    o_preferences.metaPressForAppLauncher = m_corona->universalSettings()->kwin_metaForwardedToLatte();
+    o_preferences.metaPressForAppLauncher = m_corona->universalSettings()->kwin_metaForwardedToMocha();
     o_preferences.metaHoldForBadges = m_corona->universalSettings()->metaPressAndHoldEnabled();
     o_preferences.borderlessMaximized = m_corona->universalSettings()->canDisableBorders();
     o_preferences.parabolicSpread = m_corona->universalSettings()->parabolicSpread();
@@ -216,7 +216,7 @@ void TabPreferences::save()
     m_corona->universalSettings()->setAutostart(m_preferences.autostart);
     m_corona->universalSettings()->setBadges3DStyle(m_preferences.badgeStyle3D);
     m_corona->universalSettings()->setContextMenuActionsAlwaysShown(m_preferences.contextMenuAlwaysActions);
-    m_corona->universalSettings()->kwin_forwardMetaToLatte(m_preferences.metaPressForAppLauncher);
+    m_corona->universalSettings()->kwin_forwardMetaToMocha(m_preferences.metaPressForAppLauncher);
     m_corona->universalSettings()->setIsAvailableGeometryBroadcastedToPlasma(m_preferences.isAvailableGeometryBroadcastedToPlasma);
     m_corona->universalSettings()->setMetaPressAndHoldEnabled(m_preferences.metaHoldForBadges);
     m_corona->universalSettings()->setShowInfoWindow(m_preferences.layoutsInformationWindow);

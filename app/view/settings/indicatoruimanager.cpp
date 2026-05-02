@@ -116,7 +116,7 @@ void IndicatorUiManager::ui(const QString &type, Mocha::View *view)
     KPluginMetaData metadata = m_primary->corona()->indicatorFactory()->metadata(type);
 
     if (metadata.isValid()) {
-        QString uiPath = metadata.value("X-Latte-ConfigUi");
+        QString uiPath = metadata.value("X-Mocha-ConfigUi");
 
         if (!uiPath.isEmpty()) {
             IndicatorUiData uidata;
@@ -126,7 +126,7 @@ void IndicatorUiManager::ui(const QString &type, Mocha::View *view)
             uidata.type = type;
             uidata.view = view;
 
-            uidata.ui->setTranslationDomain(QLatin1String("latte_indicator_") + metadata.pluginId());
+            uidata.ui->setTranslationDomain(QLatin1String("mocha_indicator_") + metadata.pluginId());
             uidata.ui->setInitializationDelayed(true);
             uiPath = uidata.pluginPath + "/package/" + uiPath;
             uidata.ui->setSource(QUrl::fromLocalFile(uiPath));
@@ -166,14 +166,14 @@ void IndicatorUiManager::addIndicator()
     QFileDialog *fileDialog = new QFileDialog(nullptr
                                               , i18nc("add indicator", "Add Indicator")
                                               , QDir::homePath()
-                                              , QStringLiteral("indicator.latte"));
+                                              , QStringLiteral("indicator.mocha"));
 
     fileDialog->setFileMode(QFileDialog::AnyFile);
     fileDialog->setAcceptMode(QFileDialog::AcceptOpen);
-    fileDialog->setDefaultSuffix("indicator.latte");
+    fileDialog->setDefaultSuffix("indicator.mocha");
 
     QStringList filters;
-    filters << QString(i18nc("add indicator file", "Latte Indicator") + "(*.indicator.latte)");
+    filters << QString(i18nc("add indicator file", "Mocha Indicator") + "(*.indicator.mocha)");
     fileDialog->setNameFilters(filters);
 
     connect(fileDialog, &QFileDialog::finished, fileDialog, &QFileDialog::deleteLater);

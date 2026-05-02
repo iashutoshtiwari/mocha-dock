@@ -269,7 +269,7 @@ void AbstractWindowInterface::onVirtualDesktopNavigationWrappingAroundChanged(bo
     m_isVirtualDesktopNavigationWrappingAround = navigationWrappingAround;
 }
 
-//! Register Latte Ignored Windows in order to NOT be tracked
+//! Register Mocha Ignored Windows in order to NOT be tracked
 void AbstractWindowInterface::registerIgnoredWindow(WindowId wid)
 {
     if (!wid.isNull() && !m_ignoredWindows.contains(wid)) {

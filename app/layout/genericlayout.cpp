@@ -61,14 +61,14 @@ void GenericLayout::unloadContainments()
 
     qDebug() << "Layout - " + name() + " : [unloadContainments]"
              << "containments ::: " << m_containments.size()
-             << " ,latteViews in memory ::: " << m_latteViews.size()
-             << " ,hidden latteViews in memory :::  " << m_waitingLatteViews.size();
+             << " ,mochaViews in memory ::: " << m_mochaViews.size()
+             << " ,hidden mochaViews in memory :::  " << m_waitingMochaViews.size();
 
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         view->disconnectSensitiveSignals();
     }
 
-    for (const auto view : m_waitingLatteViews) {
+    for (const auto view : m_waitingMochaViews) {
         view->disconnectSensitiveSignals();
     }
 
@@ -99,16 +99,16 @@ void GenericLayout::unloadContainments()
     }
 }
 
-void GenericLayout::unloadLatteViews()
+void GenericLayout::unloadMochaViews()
 {
     if (!m_corona) {
         return;
     }
 
-    qDebug() << "Layout - " + name() + " : [unloadLatteViews]"
+    qDebug() << "Layout - " + name() + " : [unloadMochaViews]"
              << "containments ::: " << m_containments.size()
-             << " ,latteViews in memory ::: " << m_latteViews.size()
-             << " ,hidden latteViews in memory :::  " << m_waitingLatteViews.size();
+             << " ,mochaViews in memory ::: " << m_mochaViews.size()
+             << " ,hidden mochaViews in memory :::  " << m_waitingMochaViews.size();
 
     //!disconnect signals in order to avoid crashes when the layout is unloading
     disconnect(this, &GenericLayout::viewsCountChanged, m_corona, &Plasma::Corona::availableScreenRectChanged);
@@ -116,32 +116,32 @@ void GenericLayout::unloadLatteViews()
     disconnect(this, &GenericLayout::activitiesChanged, this, &GenericLayout::updateLastUsedActivity);
     disconnect(m_corona->activitiesConsumer(), &KActivities::Consumer::currentActivityChanged, this, &GenericLayout::updateLastUsedActivity);
 
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         view->disconnectSensitiveSignals();
     }
 
-    for (const auto view : m_waitingLatteViews) {
+    for (const auto view : m_waitingMochaViews) {
         view->disconnectSensitiveSignals();
     }
 
-    qDeleteAll(m_latteViews);
-    qDeleteAll(m_waitingLatteViews);
-    m_latteViews.clear();
-    m_waitingLatteViews.clear();
+    qDeleteAll(m_mochaViews);
+    qDeleteAll(m_waitingMochaViews);
+    m_mochaViews.clear();
+    m_waitingMochaViews.clear();
 }
 
-bool GenericLayout::blockAutomaticLatteViewCreation() const
+bool GenericLayout::blockAutomaticMochaViewCreation() const
 {
-    return m_blockAutomaticLatteViewCreation;
+    return m_blockAutomaticMochaViewCreation;
 }
 
-void GenericLayout::setBlockAutomaticLatteViewCreation(bool block)
+void GenericLayout::setBlockAutomaticMochaViewCreation(bool block)
 {
-    if (m_blockAutomaticLatteViewCreation == block) {
+    if (m_blockAutomaticMochaViewCreation == block) {
         return;
     }
 
-    m_blockAutomaticLatteViewCreation = block;
+    m_blockAutomaticMochaViewCreation = block;
 }
 
 bool GenericLayout::isActive() const
@@ -170,7 +170,7 @@ void GenericLayout::setCorona(Mocha::Corona *corona)
 
 QString GenericLayout::background() const
 {
-    QString colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+    QString colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.mocha.shell/contents/images/canvas/";
 
     if (backgroundStyle() == Layout::PatternBackgroundStyle) {
         if (customBackground().isEmpty()) {
@@ -203,7 +203,7 @@ int GenericLayout::viewsCount(int screen) const
 
     int views{0};
 
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         if (view && view->screen() == scr && !view->containment()->destroyed()) {
             ++views;
         }
@@ -220,7 +220,7 @@ int GenericLayout::viewsCount(QScreen *screen) const
 
     int views{0};
 
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         if (view && view->screen() == screen && !view->containment()->destroyed()) {
             ++views;
         }
@@ -237,7 +237,7 @@ int GenericLayout::viewsCount() const
 
     int views{0};
 
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         if (view && view->containment() && !view->containment()->destroyed()) {
             ++views;
         }
@@ -273,7 +273,7 @@ QList<Plasma::Types::Location> GenericLayout::freeEdges(QScreen *scr) const
         return edges;
     }
 
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         if (view && view->positioner()->currentScreenName() == scr->name()) {
             edges.removeOne(view->location());
         }
@@ -294,7 +294,7 @@ QList<Plasma::Types::Location> GenericLayout::freeEdges(int screen) const
 
     QScreen *scr = m_corona->screenPool()->screenForId(screen);
 
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         if (view && scr && view->positioner()->currentScreenName() == scr->name()) {
             edges.removeOne(view->location());
         }
@@ -311,8 +311,8 @@ int GenericLayout::viewsWithTasks() const
 
     int result = 0;
 
-    for (const auto view : m_latteViews) {
-        if (view->extendedInterface()->hasLatteTasks() || view->extendedInterface()->hasPlasmaTasks()) {
+    for (const auto view : m_mochaViews) {
+        if (view->extendedInterface()->hasMochaTasks() || view->extendedInterface()->hasPlasmaTasks()) {
             result++;
         }
     }
@@ -330,9 +330,9 @@ Mocha::Corona *GenericLayout::corona() const
     return m_corona;
 }
 
-Types::ViewType GenericLayout::latteViewType(uint containmentId) const
+Types::ViewType GenericLayout::mochaViewType(uint containmentId) const
 {
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         if (view->containment() && view->containment()->id() == containmentId) {
             return view->type();
         }
@@ -343,7 +343,7 @@ Types::ViewType GenericLayout::latteViewType(uint containmentId) const
 
 Mocha::View *GenericLayout::highestPriorityView()
 {
-    QList<Mocha::View *> views = sortedLatteViews();
+    QList<Mocha::View *> views = sortedMochaViews();
 
     return (views.count() > 0 ? views[0] : nullptr);
 }
@@ -368,20 +368,20 @@ void GenericLayout::setLastConfigViewFor(Mocha::View *view)
 
 void GenericLayout::onLastConfigViewChangedFrom(Mocha::View *view)
 {
-    if (!m_latteViews.values().contains(view)) {
+    if (!m_mochaViews.values().contains(view)) {
         setLastConfigViewFor(nullptr);
     }
 }
 
 Mocha::View *GenericLayout::viewForContainment(uint id) const
 {
-    for(auto view : m_latteViews) {
+    for(auto view : m_mochaViews) {
         if (view && view->containment()->id() == id) {
             return view;
         }
     }
 
-    for(auto view : m_waitingLatteViews) {
+    for(auto view : m_waitingMochaViews) {
         if (view && view->containment()->id() == id) {
             return view;
         }
@@ -425,10 +425,10 @@ int GenericLayout::screenForContainment(Plasma::Containment *containment)
     //! there is a view present
     Mocha::View *view{nullptr};
 
-    if (m_latteViews.contains(containment)) {
-        view = m_latteViews[containment];
-    } else if (m_waitingLatteViews.contains(containment)) {
-        view = m_waitingLatteViews[containment];
+    if (m_mochaViews.contains(containment)) {
+        view = m_mochaViews[containment];
+    } else if (m_waitingMochaViews.contains(containment)) {
+        view = m_waitingMochaViews[containment];
     }
 
     if (view && view->screen()) {
@@ -446,7 +446,7 @@ bool GenericLayout::containsView(const int &containmentId) const
     }
 
     for(auto containment : m_containments) {
-        if ((int)containment->id() == containmentId && Layouts::Storage::self()->isLatteContainment(containment)) {
+        if ((int)containment->id() == containmentId && Layouts::Storage::self()->isMochaContainment(containment)) {
             return true;
         }
     }
@@ -456,23 +456,23 @@ bool GenericLayout::containsView(const int &containmentId) const
 
 Mocha::View *GenericLayout::viewForContainment(Plasma::Containment *containment) const
 {
-    if (m_containments.contains(containment) && m_latteViews.contains(containment)) {
-        return m_latteViews[containment];
+    if (m_containments.contains(containment) && m_mochaViews.contains(containment)) {
+        return m_mochaViews[containment];
     }
 
     return nullptr;
 }
 
-QList<Mocha::View *> GenericLayout::latteViews()
+QList<Mocha::View *> GenericLayout::mochaViews()
 {
-    return m_latteViews.values();
+    return m_mochaViews.values();
 }
 
 QList<Mocha::View *> GenericLayout::onlyOriginalViews()
 {
     QList<Mocha::View *> viewslist;
 
-    for (const auto v : m_latteViews) {
+    for (const auto v : m_mochaViews) {
         if (v->isOriginal()) {
             viewslist << v;
         }
@@ -481,13 +481,13 @@ QList<Mocha::View *> GenericLayout::onlyOriginalViews()
     return viewslist;
 }
 
-QList<Mocha::View *> GenericLayout::sortedLatteViews()
+QList<Mocha::View *> GenericLayout::sortedMochaViews()
 {
     QScreen *primaryScreen = (m_corona ? m_corona->screenPool()->primaryScreen() : nullptr);
-    return sortedLatteViews(latteViews(), primaryScreen);
+    return sortedMochaViews(mochaViews(), primaryScreen);
 }
 
-QList<Mocha::View *> GenericLayout::sortedLatteViews(QList<Mocha::View *> views, QScreen *primaryScreen)
+QList<Mocha::View *> GenericLayout::sortedMochaViews(QList<Mocha::View *> views, QScreen *primaryScreen)
 {
     QList<Mocha::View *> sortedViews = views;
 
@@ -695,7 +695,7 @@ QList<Mocha::View *> GenericLayout::viewsWithPlasmaShortcuts()
     QList<uint> appletsWithShortcuts = m_corona->globalShortcuts()->shortcutsTracker()->appletsWithPlasmaShortcuts();
 
     for (const auto &appletId : appletsWithShortcuts) {
-        for (const auto view : m_latteViews) {
+        for (const auto view : m_mochaViews) {
             bool found{false};
             for (const auto applet : view->containment()->applets()) {
                 if (appletId == applet->id()) {
@@ -739,10 +739,10 @@ void GenericLayout::addContainment(Plasma::Containment *containment)
     }
 
     if (containmentInLayout) {
-        if (!blockAutomaticLatteViewCreation()) {
+        if (!blockAutomaticMochaViewCreation()) {
             addView(containment);
         } else {
-            qDebug() << "delaying LatteView creation for containment :: " << containment->id();
+            qDebug() << "delaying MochaView creation for containment :: " << containment->id();
         }
 
         connect(containment, &QObject::destroyed, this, &GenericLayout::containmentDestroyed);
@@ -786,10 +786,10 @@ void GenericLayout::containmentDestroyed(QObject *cont)
         }
 
         qDebug() << "Layout " << name() << " :: containment destroyed!!!!";
-        auto view = m_latteViews.take(containment);
+        auto view = m_mochaViews.take(containment);
 
         if (!view) {
-            view = m_waitingLatteViews.take(containment);
+            view = m_waitingMochaViews.take(containment);
         }
 
         if (view) {
@@ -820,11 +820,11 @@ void GenericLayout::destroyedChanged(bool destroyed)
     Mocha::View *view;
 
     if (destroyed) {
-        view = m_latteViews.take(static_cast<Plasma::Containment *>(sender));
-        m_waitingLatteViews[sender] = view;
+        view = m_mochaViews.take(static_cast<Plasma::Containment *>(sender));
+        m_waitingMochaViews[sender] = view;
     } else {
-        view = m_waitingLatteViews.take(static_cast<Plasma::Containment *>(sender));
-        m_latteViews[sender] =view;
+        view = m_waitingMochaViews.take(static_cast<Plasma::Containment *>(sender));
+        m_mochaViews[sender] =view;
     }
 
     if (view) {
@@ -865,13 +865,13 @@ void GenericLayout::addView(Plasma::Containment *containment)
 
     qDebug() << "Adding View:" << containment->id() << "- Step 1...";
 
-    if (!Layouts::Storage::self()->isLatteContainment(containment)) {
+    if (!Layouts::Storage::self()->isMochaContainment(containment)) {
         return;
     }
 
     qDebug() << "Adding View:" << containment->id() << "- Step 2...";
 
-    if (hasLatteView(containment)) {
+    if (hasMochaView(containment)) {
         return;
     }
 
@@ -918,10 +918,10 @@ void GenericLayout::addView(Plasma::Containment *containment)
         byPassWM = containment->config().readEntry("byPassWM", false);
     }
 
-    Mocha::View *latteView;
+    Mocha::View *mochaView;
 
     if (!viewdata.isCloned()) {
-        latteView = new Mocha::OriginalView(m_corona, nextScreen, byPassWM);
+        mochaView = new Mocha::OriginalView(m_corona, nextScreen, byPassWM);
     } else {
         auto view = viewForContainment((uint)viewdata.isClonedFrom);
 
@@ -931,24 +931,24 @@ void GenericLayout::addView(Plasma::Containment *containment)
         }
 
         auto originalview = qobject_cast<Mocha::OriginalView *>(view);
-        latteView = new Mocha::ClonedView(m_corona, originalview, nextScreen, byPassWM);
+        mochaView = new Mocha::ClonedView(m_corona, originalview, nextScreen, byPassWM);
     }
 
     qDebug().noquote() << "Adding View:" << viewdata.id << "- Passed ALL checks !!!";
-    m_latteViews[containment] = latteView;
+    m_mochaViews[containment] = mochaView;
 
-    latteView->init(containment);
-    latteView->setContainment(containment);
-    latteView->setLayout(this);
+    mochaView->init(containment);
+    mochaView->setContainment(containment);
+    mochaView->setLayout(this);
 
     //! Qt 5.9 creates a crash for this in wayland, that is why the check is used
     //! but on the other hand we need this for copy to work correctly and show
     //! the copied dock under X11
     //if (!KWindowSystem::isPlatformWayland()) {
-    latteView->show();
+    mochaView->show();
     //}
 
-    emit viewsCountChanged(latteView->positioner()->currentScreenId());
+    emit viewsCountChanged(mochaView->positioner()->currentScreenId());
 }
 
 void GenericLayout::toggleHiddenState(QString viewName, QString screenName, Plasma::Types::Location edge)
@@ -964,7 +964,7 @@ void GenericLayout::toggleHiddenState(QString viewName, QString screenName, Plas
 
     int viewsOnEdge{0};
 
-    for(const auto view : latteViews()) {
+    for(const auto view : mochaViews()) {
         if ((viewName.isEmpty() || (!viewName.isEmpty() && viewName == view->name()))
                 && view->positioner()->currentScreenName() == validScreenName
                 && (edge == Plasma::Types::Floating || ((edge != Plasma::Types::Floating) && view->location() == edge))) {
@@ -973,7 +973,7 @@ void GenericLayout::toggleHiddenState(QString viewName, QString screenName, Plas
     }
 
     if (viewsOnEdge >= 1) {
-        for(const auto view : latteViews()) {
+        for(const auto view : mochaViews()) {
             if ((viewName.isEmpty() || (!viewName.isEmpty() && viewName == view->name()))
                     && view->positioner()->currentScreenName() == validScreenName
                     && (edge == Plasma::Types::Floating || ((edge != Plasma::Types::Floating) && view->location() == edge))) {
@@ -1022,8 +1022,8 @@ bool GenericLayout::initContainments()
             //! in second pass we load main dock and panel containments
             //! this way subcontainments will be always available to find when the layout is activating
             //! for example during startup that clones must be created and subcontainments should be taken into account
-            if ((pass==1 && Layouts::Storage::self()->isLatteContainment(containment)
-                 || (pass==2 && !Layouts::Storage::self()->isLatteContainment(containment)))) {
+            if ((pass==1 && Layouts::Storage::self()->isMochaContainment(containment)
+                 || (pass==2 && !Layouts::Storage::self()->isMochaContainment(containment)))) {
                 continue;
             }
 
@@ -1061,14 +1061,14 @@ void GenericLayout::updateLastUsedActivity()
     }
 }
 
-void GenericLayout::assignToLayout(Mocha::View *latteView, QList<Plasma::Containment *> containments)
+void GenericLayout::assignToLayout(Mocha::View *mochaView, QList<Plasma::Containment *> containments)
 {
     if (!m_corona || containments.isEmpty()) {
         return;
     }
 
-    if (latteView) {
-        m_latteViews[latteView->containment()] = latteView;
+    if (mochaView) {
+        m_mochaViews[mochaView->containment()] = mochaView;
     }
 
     m_containments << containments;
@@ -1076,7 +1076,7 @@ void GenericLayout::assignToLayout(Mocha::View *latteView, QList<Plasma::Contain
     for (const auto containment : containments) {
         containment->config().writeEntry("layoutId", name());
 
-        if (!latteView || (latteView && latteView->containment() != containment)) {
+        if (!mochaView || (mochaView && mochaView->containment() != containment)) {
             //! assign signals only to subcontainments
             //! the View::setLayout() is responsible for the View::Containment signals
             connect(containment, &QObject::destroyed, this, &GenericLayout::containmentDestroyed);
@@ -1085,9 +1085,9 @@ void GenericLayout::assignToLayout(Mocha::View *latteView, QList<Plasma::Contain
         }
     }
 
-    if (latteView) {
-        latteView->setLayout(this);
-        emit viewsCountChanged(latteView->positioner()->currentScreenId());
+    if (mochaView) {
+        mochaView->setLayout(this);
+        emit viewsCountChanged(mochaView->positioner()->currentScreenId());
     }
 
 
@@ -1097,21 +1097,21 @@ void GenericLayout::assignToLayout(Mocha::View *latteView, QList<Plasma::Contain
     }
 }
 
-QList<Plasma::Containment *> GenericLayout::unassignFromLayout(Plasma::Containment *latteContainment)
+QList<Plasma::Containment *> GenericLayout::unassignFromLayout(Plasma::Containment *mochaContainment)
 {
     QList<Plasma::Containment *> containments;
 
-    if (!m_corona || !latteContainment || !contains(latteContainment)) {
+    if (!m_corona || !mochaContainment || !contains(mochaContainment)) {
         return containments;
     }
 
-    containments << latteContainment;
+    containments << mochaContainment;
 
     for (const auto containment : m_containments) {
         Plasma::Applet *parentApplet = qobject_cast<Plasma::Applet *>(containment->parent());
 
-        //! add subcontainments from that latteView
-        if (parentApplet && parentApplet->containment() && parentApplet->containment() == latteContainment) {
+        //! add subcontainments from that mochaView
+        if (parentApplet && parentApplet->containment() && parentApplet->containment() == mochaContainment) {
             containments << containment;
             //! unassign signals only to subcontainments
             //! the View::setLayout() is responsible for the View::Containment signals
@@ -1126,7 +1126,7 @@ QList<Plasma::Containment *> GenericLayout::unassignFromLayout(Plasma::Containme
     }
 
     if (containments.size() > 0) {
-        m_latteViews.remove(latteContainment);
+        m_mochaViews.remove(mochaContainment);
     }
 
     //! sync the original layout file for integrity
@@ -1139,7 +1139,7 @@ QList<Plasma::Containment *> GenericLayout::unassignFromLayout(Plasma::Containme
 
 void GenericLayout::recreateView(Plasma::Containment *containment, bool delayed)
 {
-    if (!m_corona || m_viewsToRecreate.contains(containment) || !containment || !m_latteViews.contains(containment)) {
+    if (!m_corona || m_viewsToRecreate.contains(containment) || !containment || !m_mochaViews.contains(containment)) {
         return;
     }
 
@@ -1147,16 +1147,16 @@ void GenericLayout::recreateView(Plasma::Containment *containment, bool delayed)
     m_viewsToRecreate << containment;
 
     //! give the time to config window to close itself first and then recreate the dock
-    //! step:1 remove the latteview
+    //! step:1 remove the mochaview
     QTimer::singleShot(delay, [this, containment]() {
-        auto view = m_latteViews[containment];
+        auto view = m_mochaViews[containment];
         view->disconnectSensitiveSignals();
 
-        //! step:2 add the new latteview
+        //! step:2 add the new mochaview
         connect(view, &QObject::destroyed, this, [this, containment]() {
-            auto view = m_latteViews.take(containment);
+            auto view = m_mochaViews.take(containment);
             QTimer::singleShot(250, this, [this, containment]() {
-                if (!m_latteViews.contains(containment)) {
+                if (!m_mochaViews.contains(containment)) {
                     qDebug() << "recreate - step 2: adding dock for containment:" << containment->id();
                     addView(containment);
                     m_viewsToRecreate.removeAll(containment);
@@ -1169,13 +1169,13 @@ void GenericLayout::recreateView(Plasma::Containment *containment, bool delayed)
 }
 
 
-bool GenericLayout::hasLatteView(Plasma::Containment *containment)
+bool GenericLayout::hasMochaView(Plasma::Containment *containment)
 {
     if (!m_corona) {
         return false;
     }
 
-    return m_latteViews.keys().contains(containment);
+    return m_mochaViews.keys().contains(containment);
 }
 
 QList<Plasma::Types::Location> GenericLayout::availableEdgesForView(QScreen *scr, Mocha::View *forView) const
@@ -1188,7 +1188,7 @@ QList<Plasma::Types::Location> GenericLayout::availableEdgesForView(QScreen *scr
         return edges;
     }
 
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         //! make sure that available edges takes into account only views that should be excluded,
         //! this is why the forView should not be excluded
         if (view && view != forView && view->positioner()->currentScreenName() == scr->name()) {
@@ -1206,7 +1206,7 @@ bool GenericLayout::explicitDockOccupyEdge(int screen, Plasma::Types::Location l
     }
 
     for (const auto containment : m_containments) {
-        if (Layouts::Storage::self()->isLatteContainment(containment)) {
+        if (Layouts::Storage::self()->isMochaContainment(containment)) {
             bool onPrimary = containment->config().readEntry("onPrimary", true);
             int id = containment->lastScreen();
             Plasma::Types::Location contLocation = containment->location();
@@ -1227,11 +1227,11 @@ bool GenericLayout::primaryDockOccupyEdge(Plasma::Types::Location location) cons
     }
 
     for (const auto containment : m_containments) {
-        if (Layouts::Storage::self()->isLatteContainment(containment)) {
+        if (Layouts::Storage::self()->isMochaContainment(containment)) {
             bool onPrimary{false};
 
-            if (m_latteViews.contains(containment)) {
-                onPrimary = m_latteViews[containment]->onPrimary();
+            if (m_mochaViews.contains(containment)) {
+                onPrimary = m_mochaViews[containment]->onPrimary();
             } else {
                 onPrimary = containment->config().readEntry("onPrimary", true);
             }
@@ -1285,9 +1285,9 @@ Layout::ViewsMap GenericLayout::validViewsMap()
     QString prmScreenName = m_corona->screenPool()->primaryScreen()->name();
 
     for (const auto containment : m_containments) {
-        if (Layouts::Storage::self()->isLatteContainment(containment)
+        if (Layouts::Storage::self()->isMochaContainment(containment)
                 && !Layouts::Storage::self()->isClonedView(containment)) {
-            Data::View view = hasLatteView(containment) ? m_latteViews[containment]->data() : Mocha::Layouts::Storage::self()->view(this, containment);
+            Data::View view = hasMochaView(containment) ? m_mochaViews[containment]->data() : Mocha::Layouts::Storage::self()->view(this, containment);
             view.screen = Layouts::Storage::self()->expectedViewScreenId(m_corona, view);
 
             if (view.onPrimary) {
@@ -1306,15 +1306,15 @@ Layout::ViewsMap GenericLayout::validViewsMap()
 }
 
 
-//! the central functions that updates loading/unloading latteviews
+//! the central functions that updates loading/unloading mochaviews
 //! concerning screen changed (for multi-screen setups mainly)
-void GenericLayout::syncLatteViewsToScreens()
+void GenericLayout::syncMochaViewsToScreens()
 {
     if (!m_corona) {
         return;
     }
 
-    qDebug() << "START of SyncLatteViewsToScreens ....";
+    qDebug() << "START of SyncMochaViewsToScreens ....";
     qDebug() << "LAYOUT ::: " << name();
     qDebug() << "screen count changed -+-+ " << qGuiApp->screens().size();
 
@@ -1351,8 +1351,8 @@ void GenericLayout::syncLatteViewsToScreens()
 
     //! add views
     for (const auto containment : m_containments) {
-        if (!hasLatteView(containment) && mapContainsId(&viewsMap, containment->id())) {
-            qDebug() << "syncLatteViewsToScreens: view must be added... for containment:" << containment->id() << " at screen:" << mapScreenName(&viewsMap, containment->id());
+        if (!hasMochaView(containment) && mapContainsId(&viewsMap, containment->id())) {
+            qDebug() << "syncMochaViewsToScreens: view must be added... for containment:" << containment->id() << " at screen:" << mapScreenName(&viewsMap, containment->id());
             addView(containment);
         }
     }
@@ -1360,7 +1360,7 @@ void GenericLayout::syncLatteViewsToScreens()
     //! remove views
     QList<Plasma::Containment *> viewsToDelete;
 
-    for (auto view : m_latteViews) {
+    for (auto view : m_mochaViews) {
         auto containment = view->containment();
         if (containment && view->isOriginal() && !mapContainsId(&viewsMap, containment->id())) {
             viewsToDelete << containment;
@@ -1369,23 +1369,23 @@ void GenericLayout::syncLatteViewsToScreens()
 
     while(!viewsToDelete.isEmpty()) {
         auto containment = viewsToDelete.takeFirst();
-        auto view = m_latteViews.take(containment);
-        qDebug() << "syncLatteViewsToScreens: view must be deleted... for containment:" << containment->id() << " at screen:" << view->positioner()->currentScreenName();
+        auto view = m_mochaViews.take(containment);
+        qDebug() << "syncMochaViewsToScreens: view must be deleted... for containment:" << containment->id() << " at screen:" << view->positioner()->currentScreenName();
         view->disconnectSensitiveSignals();
         view->deleteLater();
     }
 
     //! reconsider views
-    for (const auto view : m_latteViews) {
+    for (const auto view : m_mochaViews) {
         if (view->containment() && view->isOriginal() && mapContainsId(&viewsMap, view->containment()->id())) {
             //! if the dock will not be deleted its a very good point to reconsider
             //! if the screen in which is running is the correct one
-            qDebug() << "syncLatteViewsToScreens: view must consider its screen... for containment:" << view->containment()->id() << " at screen:" << view->positioner()->currentScreenName();
+            qDebug() << "syncMochaViewsToScreens: view must consider its screen... for containment:" << view->containment()->id() << " at screen:" << view->positioner()->currentScreenName();
             view->reconsiderScreen();
         }
     }
 
-    qDebug() << "end of, syncLatteViewsToScreens ....";
+    qDebug() << "end of, syncMochaViewsToScreens ....";
 }
 
 QList<Plasma::Containment *> GenericLayout::subContainmentsOf(uint id) const
@@ -1394,7 +1394,7 @@ QList<Plasma::Containment *> GenericLayout::subContainmentsOf(uint id) const
 
     auto containment = containmentForId(id);
 
-    if (!containment || !Layouts::Storage::self()->isLatteContainment(containment)) {
+    if (!containment || !Layouts::Storage::self()->isMochaContainment(containment)) {
         return subs;
     }
 
@@ -1419,7 +1419,7 @@ QList<int> GenericLayout::subContainmentsOf(Plasma::Containment *containment) co
 {
     QList<int> subs;
 
-    if (Layouts::Storage::self()->isLatteContainment(containment)) {
+    if (Layouts::Storage::self()->isMochaContainment(containment)) {
         auto applets = containment->config().group("Applets");
 
         for (const auto &applet : applets.groupList()) {
@@ -1543,7 +1543,7 @@ void GenericLayout::updateView(const Mocha::Data::View &viewData)
             return;
         } else {
             //! viewMustBeDeleted
-            m_latteViews.remove(view->containment());
+            m_mochaViews.remove(view->containment());
             view->disconnectSensitiveSignals();
             delete view;
         }
@@ -1576,7 +1576,7 @@ void GenericLayout::updateView(const Mocha::Data::View &viewData)
         emit viewsCountChanged(screenId);
     }
 
-    syncLatteViewsToScreens();
+    syncMochaViewsToScreens();
 }
 
 void GenericLayout::removeView(const Mocha::Data::View &viewData)

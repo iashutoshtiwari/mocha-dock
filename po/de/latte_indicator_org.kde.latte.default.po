@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2019, 2021 Burkhard Lück <lueck@hube-lueck.de>
 msgid ""
 msgstr ""
-"Project-Id-Version: latte_indicator_org.kde.latte.default\n"
+"Project-Id-Version: latte_indicator_org.kde.mocha.default\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
 "PO-Revision-Date: 2021-05-05 11:54+0200\n"

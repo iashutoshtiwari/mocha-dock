@@ -1,4 +1,4 @@
-# translation of plasma_applet_org.kde.latte.plasmoid.pot to Esperanto
+# translation of plasma_applet_org.kde.mocha.plasmoid.pot to Esperanto
 # Copyright (C) 2024 Free Software Foundation, Inc.
 # This file is distributed under the same license as the latte-dock package.
 # Oliver Kellogg <olivermkellogg@gmail.com>, 2024.

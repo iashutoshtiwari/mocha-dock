@@ -95,8 +95,8 @@ public:
 public slots:
     void showAboutDialog();
 
-    void hideLatteSettingsDialog();
-    Q_INVOKABLE void showLatteSettingsDialog(int firstPage = Settings::Dialog::LayoutPage, bool toggleCurrentPage = false);
+    void hideMochaSettingsDialog();
+    Q_INVOKABLE void showMochaSettingsDialog(int firstPage = Settings::Dialog::LayoutPage, bool toggleCurrentPage = false);
     Q_INVOKABLE QStringList centralLayoutsNames();
     Q_INVOKABLE QStringList viewTemplateNames() const;
     Q_INVOKABLE QStringList viewTemplateIds() const;
@@ -115,12 +115,12 @@ private:
     void cleanupOnStartup(QString path); //!remove deprecated or oldstyle config options
     void clearUnloadedContainmentsFromLinkedFile(QStringList containmentsIds, bool bypassChecks = false);
 
-    void loadLatteLayout(QString layoutPath);
+    void loadMochaLayout(QString layoutPath);
 
     void setMenuLayouts(QStringList layouts);
 
 private:
-    QPointer<Mocha::Settings::Dialog::SettingsDialog> m_latteSettingsDialog;
+    QPointer<Mocha::Settings::Dialog::SettingsDialog> m_mochaSettingsDialog;
 
     Mocha::Corona *m_corona{nullptr};
     Importer *m_importer{nullptr};

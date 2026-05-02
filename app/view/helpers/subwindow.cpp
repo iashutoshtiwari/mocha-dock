@@ -20,7 +20,7 @@ namespace Mocha {
 namespace ViewPart {
 
 SubWindow::SubWindow(Mocha::View *view, QString debugType) :
-    m_latteView(view)
+    m_mochaView(view)
 {
     m_corona = qobject_cast<Mocha::Corona *>(view->corona());
 
@@ -50,17 +50,17 @@ SubWindow::SubWindow(Mocha::View *view, QString debugType) :
 
     connect(this, &SubWindow::calculatedGeometryChanged, this, &SubWindow::fixGeometry);
 
-    connect(m_latteView, &Mocha::View::absoluteGeometryChanged, this, &SubWindow::updateGeometry);
-    connect(m_latteView, &Mocha::View::screenGeometryChanged, this, &SubWindow::updateGeometry);
-    connect(m_latteView, &Mocha::View::locationChanged, this, &SubWindow::updateGeometry);
-    connect(m_latteView, &QQuickView::screenChanged, this, [this]() {
-        setScreen(m_latteView->screen());
+    connect(m_mochaView, &Mocha::View::absoluteGeometryChanged, this, &SubWindow::updateGeometry);
+    connect(m_mochaView, &Mocha::View::screenGeometryChanged, this, &SubWindow::updateGeometry);
+    connect(m_mochaView, &Mocha::View::locationChanged, this, &SubWindow::updateGeometry);
+    connect(m_mochaView, &QQuickView::screenChanged, this, [this]() {
+        setScreen(m_mochaView->screen());
         updateGeometry();
     });
 
-    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &SubWindow::updateWaylandId);
+    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::mochaWindowAdded, this, &SubWindow::updateWaylandId);
 
-    setScreen(m_latteView->screen());
+    setScreen(m_mochaView->screen());
 
     //! Set up LayerShellQt before the first show() to avoid
     //! "already has a shell integration" warning on subsequent shows
@@ -76,7 +76,7 @@ SubWindow::~SubWindow()
 
     m_corona->wm()->unregisterIgnoredWindow(m_trackedWindowId);
 
-    m_latteView = nullptr;
+    m_mochaView = nullptr;
 
     // clear mode
     m_visibleHackTimer1.stop();
@@ -88,7 +88,7 @@ SubWindow::~SubWindow()
 
 int SubWindow::location()
 {
-    return (int)m_latteView->location();
+    return (int)m_mochaView->location();
 }
 
 int SubWindow::thickness() const
@@ -103,12 +103,12 @@ QString SubWindow::validTitlePrefix() const
 
 QString SubWindow::validTitle() const
 {
-    return QString(validTitlePrefix() + QString::number(m_latteView->containment()->id()));
+    return QString(validTitlePrefix() + QString::number(m_mochaView->containment()->id()));
 }
 
 Mocha::View *SubWindow::parentView()
 {
-    return m_latteView;
+    return m_mochaView;
 }
 
 Mocha::WindowSystem::WindowId SubWindow::trackedWindowId()

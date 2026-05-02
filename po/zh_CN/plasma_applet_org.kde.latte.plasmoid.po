@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-trunk/messages/latte-dock/plasma_applet_org.kde.latte."
+"X-Crowdin-File: /kf5-trunk/messages/latte-dock/plasma_applet_org.kde.mocha."
 "plasmoid.pot\n"
 "X-Crowdin-File-ID: 6514\n"
 

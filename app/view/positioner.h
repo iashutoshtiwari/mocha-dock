@@ -139,7 +139,7 @@ private slots:
 
     void validateDockGeometry();
     void updateInRelocationAnimation();
-    void syncLatteViews();
+    void syncMochaViews();
     void updateContainmentScreen();
 
 private:

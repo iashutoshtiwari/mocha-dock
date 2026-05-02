@@ -43,7 +43,7 @@ class LastActiveWindow : public QObject {
     Q_PROPERTY(bool hasSkipTaskbar READ hasSkipTaskbar NOTIFY hasSkipTaskbarChanged)
 
     //! BEGIN: Window Abitilities
-    /*since Latte v0.9.8*/
+    /*since Mocha v0.9.8*/
     Q_PROPERTY(bool isClosable READ isClosable NOTIFY isClosableChanged)
     Q_PROPERTY(bool isFullScreenable READ isFullScreenable NOTIFY isFullScreenableChanged)
     Q_PROPERTY(bool isGroupable READ isGroupable NOTIFY isGroupableChanged)
@@ -55,7 +55,7 @@ class LastActiveWindow : public QObject {
     Q_PROPERTY(bool isVirtualDesktopChangeable READ isVirtualDesktopChangeable NOTIFY isVirtualDesktopChangeableChanged)
     //! END: Window Abitilities
 
-    /*since Latte v0.9.4*/
+    /*since Mocha v0.9.4*/
     Q_PROPERTY(QString colorScheme READ colorScheme NOTIFY colorSchemeChanged)
 
     Q_PROPERTY(QString appName READ appName NOTIFY appNameChanged)
@@ -81,7 +81,7 @@ public:
     bool hasSkipTaskbar() const;
 
     //! BEGIN: Window Abitilities
-    /*since Latte v0.9.8*/
+    /*since Mocha v0.9.8*/
     bool isClosable() const;
     bool isFullScreenable() const;
     bool isGroupable() const;
@@ -141,7 +141,7 @@ signals:
     void hasSkipTaskbarChanged();
 
     //! BEGIN: Window Abitilities
-    /*since Latte v0.9.8*/
+    /*since Mocha v0.9.8*/
     void isClosableChanged();
     void isFullScreenableChanged();
     void isGroupableChanged();
@@ -174,7 +174,7 @@ private:
     void setHasSkipTaskbar(bool skip);
 
     //! BEGIN: Window Abitilities
-    /*since Latte v0.9.8*/
+    /*since Mocha v0.9.8*/
     void setIsClosable(bool closable);
     void setIsFullScreenable(bool fullscreenable);
     void setIsGroupable(bool groupable);
@@ -214,7 +214,7 @@ private:
     bool m_hasSkipTaskbar{false};
 
     //! BEGIN: Window Abitilities
-    /*since Latte v0.9.8*/
+    /*since Mocha v0.9.8*/
     bool m_isClosable{true};
     bool m_isFullScreenable{true};
     bool m_isGroupable{true};

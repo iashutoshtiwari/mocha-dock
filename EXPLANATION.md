@@ -1,15 +1,15 @@
 # Mocha Dock: Plasma 6 Porting Explanation
 
-This document outlines the technical journey of reviving and porting the abandoned Latte Dock project to KDE Plasma 6 under the new name **Mocha Dock**.
+This document outlines the technical journey of reviving and porting the abandoned Mocha Dock project to KDE Plasma 6 under the new name **Mocha Dock**.
 
 ## Project Overview
-Mocha Dock is a Wayland-only fork of Latte Dock, modernized for Qt6, KDE Frameworks 6 (KF6), and Plasma 6. This porting process focused on stripping legacy X11 dependencies, rebranding the application, and ensuring compatibility with the new Plasma 6 architecture.
+Mocha Dock is a Wayland-only fork of Mocha Dock, modernized for Qt6, KDE Frameworks 6 (KF6), and Plasma 6. This porting process focused on stripping legacy X11 dependencies, rebranding the application, and ensuring compatibility with the new Plasma 6 architecture.
 
 ## Phases of Execution
 
 ### 1. Repository Sanitization & Rebranding
 - **Salvaging Work:** We merged porting attempts from the `work/plasma6` branch and external community forks to establish a modern baseline.
-- **Global Rebranding:** A surgical renaming of all `Latte` namespaces, classes, and variables to `Mocha` was performed to establish a new identity.
+- **Global Rebranding:** A surgical renaming of all `Mocha` namespaces, classes, and variables to `Mocha` was performed to establish a new identity.
 - **X11 Removal:** Aggressively purged all `X11`, `XCB`, and `XLib` dependencies. Mocha Dock now targets Wayland exclusively, simplifying the window management logic.
 
 ### 2. Build System Migration (CMake)

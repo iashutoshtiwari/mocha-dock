@@ -62,7 +62,7 @@ private:
     void showViews();
     void showSettings();
 
-    bool activateLatteEntry(Mocha::View *view, int index, Qt::Key modifier, bool *delayedExecution);
+    bool activateMochaEntry(Mocha::View *view, int index, Qt::Key modifier, bool *delayedExecution);
     bool activatePlasmaTaskManager(const Mocha::View *view, int index, Qt::Key modifier, bool *delayedExecution);
     bool activateEntryForView(Mocha::View *view, int index, Qt::Key modifier);
     bool viewAtLowerEdgePriority(Mocha::View *test, Mocha::View *base);
@@ -82,7 +82,7 @@ private:
     //! it is used for code compatibility reasons in order to replicate a single Meta action
     QAction *m_singleMetaAction;
 
-    //! delayer for hiding the shown latte views
+    //! delayer for hiding the shown mocha views
     QTimer m_hideViewsTimer;
     QList<Mocha::View *> m_hideViews;
 

@@ -158,7 +158,7 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
             /*connect(m_visibility, &ViewPart::VisibilityManager::frameExtentsCleared, this, [&]() {
                 if (behaveAsPlasmaPanel()) {
                     //! recreate view because otherwise compositor frame extents implementation
-                    //! is triggering a crazy behavior of moving/hiding the view and freezing Latte
+                    //! is triggering a crazy behavior of moving/hiding the view and freezing Mocha
                     //! in some cases.
                     //reloadSource();
                 }
@@ -184,15 +184,15 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
         qDebug() << "containmentChanged: containmentGraphicItem =" << containmentGraphicItem;
 
         if (containmentGraphicItem) {
-            containmentGraphicItem->setProperty("_latte_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
-            containmentGraphicItem->setProperty("_latte_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
-            containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
-            containmentGraphicItem->setProperty("_latte_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
-            containmentGraphicItem->setProperty("_latte_view_object", QVariant::fromValue(this));
+            containmentGraphicItem->setProperty("_mocha_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
+            containmentGraphicItem->setProperty("_mocha_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
+            containmentGraphicItem->setProperty("_mocha_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
+            containmentGraphicItem->setProperty("_mocha_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
+            containmentGraphicItem->setProperty("_mocha_view_object", QVariant::fromValue(this));
 
-            //! Try to find the Interfaces QML object directly since _latte_view_interfacesobject
-            //! may not be set yet (Component.onCompleted ran before we set _latte_view_object)
-            Mocha::Interfaces *ifacesGraphicObject = qobject_cast<Mocha::Interfaces *>(containmentGraphicItem->property("_latte_view_interfacesobject").value<QObject *>());
+            //! Try to find the Interfaces QML object directly since _mocha_view_interfacesobject
+            //! may not be set yet (Component.onCompleted ran before we set _mocha_view_object)
+            Mocha::Interfaces *ifacesGraphicObject = qobject_cast<Mocha::Interfaces *>(containmentGraphicItem->property("_mocha_view_interfacesobject").value<QObject *>());
 
             if (!ifacesGraphicObject) {
                 //! Search for it as a child of the containment graphic item
@@ -262,7 +262,7 @@ View::~View()
     qDebug() << "dock view deleting...";
 
     //! this disconnect does not free up connections correctly when
-    //! latteView is deleted. A crash for this example is the following:
+    //! mochaView is deleted. A crash for this example is the following:
     //! switch to Alternative Session and disable compositing,
     //! the signal creating the crash was probably from deleted
     //! windows.
@@ -1236,9 +1236,9 @@ void View::setLayout(Layout::GenericLayout *layout)
 
         connectionsLayout << connect(m_layout, &Layout::GenericLayout::preferredViewForShortcutsChanged, this, &View::preferredViewForShortcutsChangedSlot);
 
-        Mocha::Corona *latteCorona = qobject_cast<Mocha::Corona *>(this->corona());
+        Mocha::Corona *mochaCorona = qobject_cast<Mocha::Corona *>(this->corona());
 
-        connectionsLayout << connect(latteCorona->activitiesConsumer(), &KActivities::Consumer::currentActivityChanged, this, [&]() {
+        connectionsLayout << connect(mochaCorona->activitiesConsumer(), &KActivities::Consumer::currentActivityChanged, this, [&]() {
             if (m_layout && m_visibility) {
                 setActivities(m_layout->appliedActivities());
                 //! update activities in case KWin did its magic and assigned windows to faulty activities
@@ -1248,8 +1248,8 @@ void View::setLayout(Layout::GenericLayout *layout)
             }
         });
 
-        if (latteCorona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts) {
-            connectionsLayout << connect(latteCorona->activitiesConsumer(), &KActivities::Consumer::activitiesChanged, this, [&]() {
+        if (mochaCorona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts) {
+            connectionsLayout << connect(mochaCorona->activitiesConsumer(), &KActivities::Consumer::activitiesChanged, this, [&]() {
                 if (m_layout && m_visibility) {
                     setActivities(m_layout->appliedActivities());
                     qDebug() << "DOCK VIEW FROM LAYOUT (runningActivitiesChanged) ::: " << m_layout->name()
@@ -1263,7 +1263,7 @@ void View::setLayout(Layout::GenericLayout *layout)
                 }
             });
 
-            connectionsLayout << connect(latteCorona->layoutsManager()->synchronizer(), &Layouts::Synchronizer::layoutsChanged, this, [&]() {
+            connectionsLayout << connect(mochaCorona->layoutsManager()->synchronizer(), &Layouts::Synchronizer::layoutsChanged, this, [&]() {
                 if (m_layout) {
                     setActivities(m_layout->appliedActivities());
                 }
@@ -1447,7 +1447,7 @@ void View::setInterfacesGraphicObj(Mocha::Interfaces *ifaces)
         QQuickItem *containmentGraphicItem = PlasmaQuick::AppletQuickItem::itemForApplet(containment());
 
         if (containmentGraphicItem) {
-            containmentGraphicItem->setProperty("_latte_view_interfacesobject", QVariant::fromValue(m_interfacesGraphicObj));
+            containmentGraphicItem->setProperty("_mocha_view_interfacesobject", QVariant::fromValue(m_interfacesGraphicObj));
         }
     }
 

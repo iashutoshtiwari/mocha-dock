@@ -49,7 +49,7 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view)
 {
     qDebug() << "VisibilityManager creating...";
 
-    m_latteView = qobject_cast<Mocha::View *>(view);
+    m_mochaView = qobject_cast<Mocha::View *>(view);
     m_corona = qobject_cast<Mocha::Corona *>(view->corona());
     m_wm = m_corona->wm();
 
@@ -65,37 +65,37 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view)
     connect(this, &VisibilityManager::isFloatingGapWindowEnabledChanged, this, &VisibilityManager::onIsFloatingGapWindowEnabledChanged);
 
     connect(this, &VisibilityManager::mustBeShown, this, [&]() {
-        if (m_latteView && !m_latteView->isVisible()) {
-            m_latteView->setVisible(true);
+        if (m_mochaView && !m_mochaView->isVisible()) {
+            m_mochaView->setVisible(true);
         }
     });
 
-    if (m_latteView) {
-        connect(m_latteView, &Mocha::View::eventTriggered, this, &VisibilityManager::viewEventManager);
-        connect(m_latteView, &Mocha::View::behaveAsPlasmaPanelChanged , this, &VisibilityManager::updateKWinEdgesSupport);
-        connect(m_latteView, &Mocha::View::byPassWMChanged, this, &VisibilityManager::updateKWinEdgesSupport);
+    if (m_mochaView) {
+        connect(m_mochaView, &Mocha::View::eventTriggered, this, &VisibilityManager::viewEventManager);
+        connect(m_mochaView, &Mocha::View::behaveAsPlasmaPanelChanged , this, &VisibilityManager::updateKWinEdgesSupport);
+        connect(m_mochaView, &Mocha::View::byPassWMChanged, this, &VisibilityManager::updateKWinEdgesSupport);
 
-        connect(m_latteView, &Mocha::View::inEditModeChanged, this, &VisibilityManager::initViewFlags);
+        connect(m_mochaView, &Mocha::View::inEditModeChanged, this, &VisibilityManager::initViewFlags);
 
         //! Frame Extents
-        connect(m_latteView, &Mocha::View::headThicknessGapChanged, this, &VisibilityManager::onHeadThicknessChanged);
-        connect(m_latteView, &Mocha::View::locationChanged, this, [&]() {
-            if (!m_latteView->behaveAsPlasmaPanel()) {
+        connect(m_mochaView, &Mocha::View::headThicknessGapChanged, this, &VisibilityManager::onHeadThicknessChanged);
+        connect(m_mochaView, &Mocha::View::locationChanged, this, [&]() {
+            if (!m_mochaView->behaveAsPlasmaPanel()) {
                 //! Resend frame extents because their geometry has changed
                 const bool forceUpdate{true};
                 publishFrameExtents(forceUpdate);
             }
         });
 
-        connect(m_latteView, &Mocha::View::typeChanged, this, [&]() {
-            if (m_latteView->inEditMode()) {
+        connect(m_mochaView, &Mocha::View::typeChanged, this, [&]() {
+            if (m_mochaView->inEditMode()) {
                 //! Resend frame extents because type has changed
                 const bool forceUpdate{true};
                 publishFrameExtents(forceUpdate);
             }
         });
 
-        connect(m_latteView, &Mocha::View::forcedShown, this, [&]() {
+        connect(m_mochaView, &Mocha::View::forcedShown, this, [&]() {
             //! Resend frame extents to compositor otherwise because compositor cleared
             //! them with no reason when the user is closing an activity
             const bool forceUpdate{true};
@@ -103,7 +103,7 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view)
         });
 
         connect(this, &VisibilityManager::modeChanged, this, [&]() {
-            emit m_latteView->availableScreenRectChangedFrom(m_latteView);
+            emit m_mochaView->availableScreenRectChangedFrom(m_mochaView);
         });
 
         //! Send frame extents on startup, this is really necessary when recreating a view.
@@ -155,7 +155,7 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view)
 VisibilityManager::~VisibilityManager()
 {
     qDebug() << "VisibilityManager deleting...";
-    m_wm->removeViewStruts(m_latteView);
+    m_wm->removeViewStruts(m_mochaView);
 
     if (m_edgeGhostWindow) {
         m_edgeGhostWindow->deleteLater();
@@ -189,7 +189,7 @@ Types::Visibility VisibilityManager::mode() const
 
 void VisibilityManager::initViewFlags()
 {
-    if ((m_mode == Types::WindowsCanCover || m_mode == Types::WindowsAlwaysCover) && (!m_latteView->inEditMode())) {
+    if ((m_mode == Types::WindowsCanCover || m_mode == Types::WindowsAlwaysCover) && (!m_mochaView->inEditMode())) {
         setViewOnBackLayer();
     } else {
         setViewOnFrontLayer();
@@ -198,13 +198,13 @@ void VisibilityManager::initViewFlags()
 
 void VisibilityManager::setViewOnBackLayer()
 {
-    m_wm->setViewExtraFlags(m_latteView, false, Types::WindowsAlwaysCover);
+    m_wm->setViewExtraFlags(m_mochaView, false, Types::WindowsAlwaysCover);
     setIsBelowLayer(true);
 }
 
 void VisibilityManager::setViewOnFrontLayer()
 {
-    m_wm->setViewExtraFlags(m_latteView, true);
+    m_wm->setViewExtraFlags(m_mochaView, true);
     setIsBelowLayer(false);
 }
 
@@ -229,7 +229,7 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
 
     if (m_mode == Types::AlwaysVisible) {
         //! remove struts for old always visible mode
-        m_wm->removeViewStruts(m_latteView);
+        m_wm->removeViewStruts(m_mochaView);
     }
 
     m_timerShow.stop();
@@ -257,7 +257,7 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
 
     switch (m_mode) {
     case Types::AlwaysVisible: {
-        if (m_latteView->containment() && m_latteView->screen()) {
+        if (m_mochaView->containment() && m_mochaView->screen()) {
             updateStrutsBasedOnLayoutsAndActivities();
         }
 
@@ -266,7 +266,7 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
         // disabling this call because it was creating too many struts calls and   ???
         // could create reduced responsiveness for DynamicStruts Scenario(for example ??
         // when dragging active window from a floating dock/panel) ???
-        m_connections[base+1] = connect(m_latteView, &Mocha::View::absoluteGeometryChanged, this, &VisibilityManager::updateStrutsAfterTimer);
+        m_connections[base+1] = connect(m_mochaView, &Mocha::View::absoluteGeometryChanged, this, &VisibilityManager::updateStrutsAfterTimer);
 
         m_connections[base+2] = connect(m_corona->activitiesConsumer(), &KActivities::Consumer::currentActivityChanged, this, [&]() {
             if (m_corona && m_corona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts) {
@@ -277,7 +277,7 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
         //! respect canSetStrut that must be disabled under x11 when an alwaysvisible screen edge is common between two or more screens
         m_connections[base+3] = connect(m_corona->screenPool(), &Mocha::ScreenPool::screenGeometryChanged, this, &VisibilityManager::updateStrutsAfterTimer);
 
-        m_connections[base+4] = connect(m_latteView, &Mocha::View::activitiesChanged, this, [&]() {
+        m_connections[base+4] = connect(m_mochaView, &Mocha::View::activitiesChanged, this, [&]() {
             updateStrutsBasedOnLayoutsAndActivities(true);
         });
 
@@ -297,7 +297,7 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
     case Types::DodgeActive: {
         m_connections[base] = connect(this, &VisibilityManager::containsMouseChanged
                                       , this, &VisibilityManager::dodgeActive);
-        m_connections[base+1] = connect(m_latteView->windowsTracker()->currentScreen(), &TrackerPart::CurrentScreenTracker::activeWindowTouchingChanged
+        m_connections[base+1] = connect(m_mochaView->windowsTracker()->currentScreen(), &TrackerPart::CurrentScreenTracker::activeWindowTouchingChanged
                                         , this, &VisibilityManager::dodgeActive);
 
         dodgeActive();
@@ -307,7 +307,7 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
     case Types::DodgeMaximized: {
         m_connections[base] = connect(this, &VisibilityManager::containsMouseChanged
                                       , this, &VisibilityManager::dodgeMaximized);
-        m_connections[base+1] = connect(m_latteView->windowsTracker()->currentScreen(), &TrackerPart::CurrentScreenTracker::activeWindowMaximizedChanged
+        m_connections[base+1] = connect(m_mochaView->windowsTracker()->currentScreen(), &TrackerPart::CurrentScreenTracker::activeWindowMaximizedChanged
                                         , this, &VisibilityManager::dodgeMaximized);
 
         dodgeMaximized();
@@ -318,7 +318,7 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
         m_connections[base] = connect(this, &VisibilityManager::containsMouseChanged
                                       , this, &VisibilityManager::dodgeAllWindows);
 
-        m_connections[base+1] = connect(m_latteView->windowsTracker()->currentScreen(), &TrackerPart::CurrentScreenTracker::existsWindowTouchingChanged
+        m_connections[base+1] = connect(m_mochaView->windowsTracker()->currentScreen(), &TrackerPart::CurrentScreenTracker::existsWindowTouchingChanged
                                         , this, &VisibilityManager::dodgeAllWindows);
 
         dodgeAllWindows();
@@ -340,8 +340,8 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
         break;
 
     case Types::SidebarOnDemand:
-        m_connections[base] = connect(m_latteView, &Mocha::View::inEditModeChanged, this, [&]() {
-            if (!m_latteView->inEditMode()) {
+        m_connections[base] = connect(m_mochaView, &Mocha::View::inEditModeChanged, this, [&]() {
+            if (!m_mochaView->inEditMode()) {
                 m_isRequestedShownSidebarOnDemand = false;
                 updateHiddenState();
             }
@@ -353,13 +353,13 @@ void VisibilityManager::setMode(Mocha::Types::Visibility mode)
 
     case Types::SidebarAutoHide:
         m_connections[base] = connect(this, &VisibilityManager::containsMouseChanged, this, [&]() {
-            if (!m_latteView->inEditMode()) {
+            if (!m_mochaView->inEditMode()) {
                 updateHiddenState();
             }
         });
         
-        m_connections[base+1] = connect(m_latteView, &Mocha::View::inEditModeChanged, this, [&]() {
-            if (m_latteView->inEditMode() && !m_isHidden) {
+        m_connections[base+1] = connect(m_mochaView, &Mocha::View::inEditModeChanged, this, [&]() {
+            if (m_mochaView->inEditMode() && !m_isHidden) {
                 updateHiddenState();
             }
         });
@@ -402,8 +402,8 @@ void VisibilityManager::updateSidebarState()
 void VisibilityManager::updateStrutsBasedOnLayoutsAndActivities(bool forceUpdate)
 {
     bool inMultipleLayoutsAndCurrent = (m_corona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts
-                                        && m_latteView->layout() && !m_latteView->positioner()->inRelocationAnimation()
-                                        && m_latteView->layout()->isCurrent());
+                                        && m_mochaView->layout() && !m_mochaView->positioner()->inRelocationAnimation()
+                                        && m_mochaView->layout()->isCurrent());
 
     if (m_strutsThickness>0 && canSetStrut() && (m_corona->layoutsManager()->memoryUsage() == MemoryUsage::SingleLayout || inMultipleLayoutsAndCurrent)) {
         QRect computedStruts = acceptableStruts();
@@ -414,17 +414,17 @@ void VisibilityManager::updateStrutsBasedOnLayoutsAndActivities(bool forceUpdate
             //! though they should not. In such case setting struts when the windows are hidden
             //! the struts do not take any effect
             m_publishedStruts = computedStruts;
-            m_wm->setViewStruts(m_latteView, m_publishedStruts, m_latteView->location());
+            m_wm->setViewStruts(m_mochaView, m_publishedStruts, m_mochaView->location());
         }
     } else {
         m_publishedStruts = QRect();
-        m_wm->removeViewStruts(m_latteView);
+        m_wm->removeViewStruts(m_mochaView);
     }
 }
 
 bool VisibilityManager::canSetStrut() const
 {
-    if (m_latteView->positioner()->isOffScreen()) {
+    if (m_mochaView->positioner()->isOffScreen()) {
         return false;
     }
 
@@ -436,26 +436,26 @@ QRect VisibilityManager::acceptableStruts()
 {
     QRect calcs;
 
-    switch (m_latteView->location()) {
+    switch (m_mochaView->location()) {
     case Plasma::Types::TopEdge: {
-        calcs = QRect(m_latteView->x(), m_latteView->screenGeometry().top(), m_latteView->width(), m_strutsThickness);
+        calcs = QRect(m_mochaView->x(), m_mochaView->screenGeometry().top(), m_mochaView->width(), m_strutsThickness);
         break;
     }
 
     case Plasma::Types::BottomEdge: {
-        int y = m_latteView->screenGeometry().bottom() - m_strutsThickness + 1 /* +1, is needed in order to not leave a gap at screen_edge*/;
-        calcs = QRect(m_latteView->x(), y, m_latteView->width(), m_strutsThickness);
+        int y = m_mochaView->screenGeometry().bottom() - m_strutsThickness + 1 /* +1, is needed in order to not leave a gap at screen_edge*/;
+        calcs = QRect(m_mochaView->x(), y, m_mochaView->width(), m_strutsThickness);
         break;
     }
 
     case Plasma::Types::LeftEdge: {
-        calcs = QRect(m_latteView->screenGeometry().left(), m_latteView->y(), m_strutsThickness, m_latteView->height());
+        calcs = QRect(m_mochaView->screenGeometry().left(), m_mochaView->y(), m_strutsThickness, m_mochaView->height());
         break;
     }
 
     case Plasma::Types::RightEdge: {
-        int x = m_latteView->screenGeometry().right() - m_strutsThickness + 1 /* +1, is needed in order to not leave a gap at screen_edge*/;
-        calcs = QRect(x, m_latteView->y(), m_strutsThickness, m_latteView->height());
+        int x = m_mochaView->screenGeometry().right() - m_strutsThickness + 1 /* +1, is needed in order to not leave a gap at screen_edge*/;
+        calcs = QRect(x, m_mochaView->y(), m_strutsThickness, m_mochaView->height());
         break;
     }
     default: break;
@@ -587,7 +587,7 @@ void VisibilityManager::removeBlockHidingEvent(const QString &type)
     if (!m_blockHidingEvents.contains(type) || type.isEmpty()) {
         return;
     }
-    //qDebug() << " org.kde.latte {{ ---- remove block hiding event :: " << type;
+    //qDebug() << " org.kde.mocha {{ ---- remove block hiding event :: " << type;
 
     bool prevHidingIsBlocked = hidingIsBlocked();
 
@@ -617,20 +617,20 @@ void VisibilityManager::onHeadThicknessChanged()
 
 void VisibilityManager::publishFrameExtents(bool forceUpdate)
 {   
-    if (m_frameExtentsHeadThicknessGap != m_latteView->headThicknessGap()
-            || m_frameExtentsLocation != m_latteView->location()
+    if (m_frameExtentsHeadThicknessGap != m_mochaView->headThicknessGap()
+            || m_frameExtentsLocation != m_mochaView->location()
             || forceUpdate) {
 
-        m_frameExtentsLocation = m_latteView->location();
-        m_frameExtentsHeadThicknessGap = m_latteView->headThicknessGap();
+        m_frameExtentsLocation = m_mochaView->location();
+        m_frameExtentsHeadThicknessGap = m_mochaView->headThicknessGap();
 
         QMargins frameExtents(0, 0, 0, 0);
 
-        if (m_latteView->location() == Plasma::Types::LeftEdge) {
+        if (m_mochaView->location() == Plasma::Types::LeftEdge) {
             frameExtents.setRight(m_frameExtentsHeadThicknessGap);
-        } else if (m_latteView->location() == Plasma::Types::TopEdge) {
+        } else if (m_mochaView->location() == Plasma::Types::TopEdge) {
             frameExtents.setBottom(m_frameExtentsHeadThicknessGap);
-        } else if (m_latteView->location() == Plasma::Types::RightEdge) {
+        } else if (m_mochaView->location() == Plasma::Types::RightEdge) {
             frameExtents.setLeft(m_frameExtentsHeadThicknessGap);
         } else {
             frameExtents.setTop(m_frameExtentsHeadThicknessGap);
@@ -640,14 +640,14 @@ void VisibilityManager::publishFrameExtents(bool forceUpdate)
 
         qDebug() << " -> Frame Extents :: " << m_frameExtentsLocation << " __ " << " extents :: " << frameExtents << " bypasswm :: " << bypasswm;
 
-        if (!frameExtents.isNull() && !m_latteView->behaveAsPlasmaPanel() && !bypasswm) {
+        if (!frameExtents.isNull() && !m_mochaView->behaveAsPlasmaPanel() && !bypasswm) {
             //! When a view returns its frame extents to zero then that triggers a compositor
-            //! strange behavior that moves/hides the view totally and freezes entire Latte
+            //! strange behavior that moves/hides the view totally and freezes entire Mocha
             //! this is why we have blocked that setting
-            m_wm->setFrameExtents(m_latteView, frameExtents);
-        } else if (m_latteView->behaveAsPlasmaPanel() || bypasswm) {
+            m_wm->setFrameExtents(m_mochaView, frameExtents);
+        } else if (m_mochaView->behaveAsPlasmaPanel() || bypasswm) {
             QMargins panelExtents(0, 0, 0, 0);
-            m_wm->setFrameExtents(m_latteView, panelExtents);
+            m_wm->setFrameExtents(m_mochaView, panelExtents);
             emit frameExtentsCleared();
         }
     }
@@ -701,8 +701,8 @@ void VisibilityManager::updateGhostWindowState()
     if (supportsKWinEdges()) {
         bool inCurrentLayout = (m_corona->layoutsManager()->memoryUsage() == MemoryUsage::SingleLayout ||
                                 (m_corona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts
-                                 && m_latteView->layout() && !m_latteView->positioner()->inRelocationAnimation()
-                                 && m_latteView->layout()->isCurrent()));
+                                 && m_mochaView->layout() && !m_mochaView->positioner()->inRelocationAnimation()
+                                 && m_mochaView->layout()->isCurrent()));
 
         if (inCurrentLayout) {
             if (m_mode == Mocha::Types::WindowsCanCover) {
@@ -728,7 +728,7 @@ void VisibilityManager::show()
 
 void VisibilityManager::toggleHiddenState()
 {
-    if (!m_latteView->inEditMode()) {
+    if (!m_mochaView->inEditMode()) {
         if (isSidebar()) {
             // if (m_blockHidingEvents.contains(Q_FUNC_INFO)) {
             //    removeBlockHidingEvent(Q_FUNC_INFO);
@@ -783,7 +783,7 @@ void VisibilityManager::updateHiddenState()
         break;
 
     case Types::SidebarAutoHide:
-        raiseView(m_latteView->inEditMode() || (m_containsMouse && !m_isHidden));
+        raiseView(m_mochaView->inEditMode() || (m_containsMouse && !m_isHidden));
         break;
 
     default:
@@ -877,7 +877,7 @@ void VisibilityManager::dodgeActive()
         return;
     }
 
-    raiseView(!m_latteView->windowsTracker()->currentScreen()->activeWindowTouching());
+    raiseView(!m_mochaView->windowsTracker()->currentScreen()->activeWindowTouching());
 }
 
 void VisibilityManager::dodgeMaximized()
@@ -891,7 +891,7 @@ void VisibilityManager::dodgeMaximized()
         return;
     }
 
-    raiseView(!m_latteView->windowsTracker()->currentScreen()->activeWindowMaximized());
+    raiseView(!m_mochaView->windowsTracker()->currentScreen()->activeWindowMaximized());
 }
 
 void VisibilityManager::dodgeAllWindows()
@@ -904,18 +904,18 @@ void VisibilityManager::dodgeAllWindows()
         return;
     }
 
-    bool windowIntersects{m_latteView->windowsTracker()->currentScreen()->activeWindowTouching() || m_latteView->windowsTracker()->currentScreen()->existsWindowTouching()};
+    bool windowIntersects{m_mochaView->windowsTracker()->currentScreen()->activeWindowTouching() || m_mochaView->windowsTracker()->currentScreen()->existsWindowTouching()};
 
     raiseView(!windowIntersects);
 }
 
 void VisibilityManager::saveConfig()
 {
-    if (!m_latteView->containment()) {
+    if (!m_mochaView->containment()) {
         return;
     }
 
-    auto config = m_latteView->containment()->config();
+    auto config = m_mochaView->containment()->config();
 
     config.writeEntry("enableKWinEdges", m_enableKWinEdgesFromUser);
     config.writeEntry("timerShow", m_timerShow.interval());
@@ -928,7 +928,7 @@ void VisibilityManager::saveConfig()
 
 void VisibilityManager::restoreConfig()
 {
-    auto config = m_latteView->containment()->config();
+    auto config = m_mochaView->containment()->config();
     setTimerHide(qMax(HIDEMINIMUMINTERVAL, config.readEntry("timerHide", 700)));
     setTimerShow(config.readEntry("timerShow", 0));
     setEnableKWinEdges(config.readEntry("enableKWinEdges", true));
@@ -1024,9 +1024,9 @@ void VisibilityManager::updateKWinEdgesSupport()
          || m_mode == Types::DodgeActive
          || m_mode == Types::DodgeAllWindows
          || m_mode == Types::DodgeMaximized)
-            && !m_latteView->byPassWM()) {
+            && !m_mochaView->byPassWM()) {
 
-        if (m_enableKWinEdgesFromUser || m_latteView->behaveAsPlasmaPanel()) {
+        if (m_enableKWinEdgesFromUser || m_mochaView->behaveAsPlasmaPanel()) {
             createEdgeGhostWindow();
         } else if (!m_enableKWinEdgesFromUser) {
             deleteEdgeGhostWindow();
@@ -1050,7 +1050,7 @@ void VisibilityManager::onIsFloatingGapWindowEnabledChanged()
 void VisibilityManager::createEdgeGhostWindow()
 {
     if (!m_edgeGhostWindow) {
-        m_edgeGhostWindow = new ScreenEdgeGhostWindow(m_latteView);
+        m_edgeGhostWindow = new ScreenEdgeGhostWindow(m_mochaView);
 
         connect(m_edgeGhostWindow, &ScreenEdgeGhostWindow::containsMouseChanged, this, [ = ](bool contains) {
             if (contains) {
@@ -1071,8 +1071,8 @@ void VisibilityManager::createEdgeGhostWindow()
                                             this, [&]() {
             bool inCurrentLayout = (m_corona->layoutsManager()->memoryUsage() == MemoryUsage::SingleLayout ||
                                     (m_corona->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts
-                                     && m_latteView->layout() && !m_latteView->positioner()->inRelocationAnimation()
-                                     && m_latteView->layout()->isCurrent()));
+                                     && m_mochaView->layout() && !m_mochaView->positioner()->inRelocationAnimation()
+                                     && m_mochaView->layout()->isCurrent()));
 
             if (m_edgeGhostWindow) {
                 if (inCurrentLayout) {
@@ -1104,7 +1104,7 @@ void VisibilityManager::deleteEdgeGhostWindow()
 void VisibilityManager::createFloatingGapWindow()
 {
     if (!m_floatingGapWindow) {
-        m_floatingGapWindow = new FloatingGapWindow(m_latteView);
+        m_floatingGapWindow = new FloatingGapWindow(m_mochaView);
 
         connect(m_floatingGapWindow, &FloatingGapWindow::asyncContainsMouseChanged, this, [ = ](bool contains) {
             if (contains) {

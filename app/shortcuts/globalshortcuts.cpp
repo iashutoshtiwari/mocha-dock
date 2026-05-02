@@ -78,7 +78,7 @@ void GlobalShortcuts::init()
     KActionCollection *generalActions = new KActionCollection(m_corona);
 
     //show-hide the main view in the primary screen
-    QAction *showAction = generalActions->addAction(QStringLiteral("show latte view"));
+    QAction *showAction = generalActions->addAction(QStringLiteral("show mocha view"));
     showAction->setText(i18n("Show Mocha Dock/Panel"));
     showAction->setShortcut(QKeySequence(Qt::META | '`'));
     KGlobalAccel::setGlobalShortcut(showAction, QKeySequence(Qt::META | '`'));
@@ -86,7 +86,7 @@ void GlobalShortcuts::init()
         showViews();
     });
 
-    //show-cycle between Latte settings windows
+    //show-cycle between Mocha settings windows
     QAction *settingsAction = generalActions->addAction(QStringLiteral("show view settings"));
     settingsAction->setText(i18n("Cycle Through Dock/Panel Settings Windows"));
     KGlobalAccel::setGlobalShortcut(settingsAction, QKeySequence(Qt::META | Qt::Key_A));
@@ -96,13 +96,13 @@ void GlobalShortcuts::init()
     });
 
     //show the layouts editor
-    QAction *layoutsAction = generalActions->addAction(QStringLiteral("show latte global settings"));
-    layoutsAction->setText(i18n("Show Latte Global Settings"));
+    QAction *layoutsAction = generalActions->addAction(QStringLiteral("show mocha global settings"));
+    layoutsAction->setText(i18n("Show Mocha Global Settings"));
     layoutsAction->setShortcut(QKeySequence());
     KGlobalAccel::setGlobalShortcut(layoutsAction, QKeySequence());
     connect(layoutsAction, &QAction::triggered, this, [this]() {
         m_modifierTracker->cancelMetaPressed();
-        m_corona->layoutsManager()->showLatteSettingsDialog(Settings::Dialog::PreferencesPage, true);
+        m_corona->layoutsManager()->showMochaSettingsDialog(Settings::Dialog::PreferencesPage, true);
     });
 
     KActionCollection *taskbarActions = new KActionCollection(m_corona);
@@ -278,7 +278,7 @@ bool GlobalShortcuts::activatePlasmaTaskManager(const Mocha::View *view, int ind
     }
 }
 
-bool GlobalShortcuts::activateLatteEntry(Mocha::View *view, int index, Qt::Key modifier, bool *delayedExecution)
+bool GlobalShortcuts::activateMochaEntry(Mocha::View *view, int index, Qt::Key modifier, bool *delayedExecution)
 {
     bool activation{modifier == static_cast<Qt::Key>(Qt::META)};
     bool newInstance{!activation};
@@ -318,9 +318,9 @@ bool GlobalShortcuts::activateEntryForView(Mocha::View *view, int index, Qt::Key
 
     bool delayed{false};
 
-    bool executed = ((!view->extendedInterface()->hasLatteTasks() && view->extendedInterface()->hasPlasmaTasks()
+    bool executed = ((!view->extendedInterface()->hasMochaTasks() && view->extendedInterface()->hasPlasmaTasks()
                       && activatePlasmaTaskManager(view, index, modifier, &delayed))
-                     || activateLatteEntry(view, index, modifier, &delayed));
+                     || activateMochaEntry(view, index, modifier, &delayed));
 
     if (executed) {
         if (!m_hideViews.contains(view)) {
@@ -370,9 +370,9 @@ void GlobalShortcuts::updateViewItemBadge(QString identifier, QString value)
 {
     QList<Mocha::View *> views = m_corona->layoutsManager()->synchronizer()->currentViews();
 
-    // update badges in all Latte Tasks plasmoids
+    // update badges in all Mocha Tasks plasmoids
     for (const auto &view : views) {
-        view->extendedInterface()->updateBadgeForLatteTask(identifier, value);
+        view->extendedInterface()->updateBadgeForMochaTask(identifier, value);
     }
 }
 
@@ -406,7 +406,7 @@ void GlobalShortcuts::showViews()
         }
     }
 
-    if (m_corona->universalSettings()->kwin_metaForwardedToLatte()) {
+    if (m_corona->universalSettings()->kwin_metaForwardedToMocha()) {
         viewWithMeta = highestApplicationLauncherView(sortedViews);
     }
 
@@ -471,7 +471,7 @@ void GlobalShortcuts::showViews()
 bool GlobalShortcuts::viewsToHideAreValid()
 {
     for(const auto view : m_hideViews) {
-        if (!m_corona->layoutsManager()->synchronizer()->latteViewExists(view)) {
+        if (!m_corona->layoutsManager()->synchronizer()->mochaViewExists(view)) {
             return false;
         }
 
@@ -527,12 +527,12 @@ void GlobalShortcuts::hideViewsTimerSlot()
         m_lastInvokedAction = Q_NULLPTR;
 
         if (viewsToHideAreValid()) {
-            for(const auto latteView : m_hideViews) {
-                latteView->visibility()->removeBlockHidingEvent(SHORTCUTBLOCKHIDINGTYPE);
-                latteView->extendedInterface()->hideShortcutBadges();
+            for(const auto mochaView : m_hideViews) {
+                mochaView->visibility()->removeBlockHidingEvent(SHORTCUTBLOCKHIDINGTYPE);
+                mochaView->extendedInterface()->hideShortcutBadges();
 
-                if (latteView->visibility()->isSidebar() && !latteView->visibility()->isHidden()) {
-                    latteView->visibility()->toggleHiddenState();
+                if (mochaView->visibility()->isSidebar() && !mochaView->visibility()->isHidden()) {
+                    mochaView->visibility()->toggleHiddenState();
                 }
             }
         }

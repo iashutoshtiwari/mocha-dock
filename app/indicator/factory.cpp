@@ -70,7 +70,7 @@ Factory::Factory(QObject *parent)
         }
     });
 
-    qDebug() << m_plugins["org.kde.latte.default"].name();
+    qDebug() << m_plugins["org.kde.mocha.default"].name();
 }
 
 Factory::~Factory()
@@ -124,7 +124,7 @@ void Factory::reload(const QString &indicatorPath)
 
             if (metadataAreValid(metadata)) {
                 pluginChangedId = metadata.pluginId();
-                QString uiFile = indicatorPath + "/package/" + metadata.value("X-Latte-MainScript");
+                QString uiFile = indicatorPath + "/package/" + metadata.value("X-Mocha-MainScript");
 
                 if (!m_plugins.contains(metadata.pluginId())) {
                     m_plugins[metadata.pluginId()] = metadata;
@@ -134,9 +134,9 @@ void Factory::reload(const QString &indicatorPath)
                     m_pluginUiPaths[metadata.pluginId()] = QFileInfo(uiFile).absolutePath();
                 }
 
-                if ((metadata.pluginId() != "org.kde.latte.default")
-                        && (metadata.pluginId() != "org.kde.latte.plasma")
-                        && (metadata.pluginId() != "org.kde.latte.plasmatabstyle")) {
+                if ((metadata.pluginId() != "org.kde.mocha.default")
+                        && (metadata.pluginId() != "org.kde.mocha.plasma")
+                        && (metadata.pluginId() != "org.kde.mocha.plasmatabstyle")) {
 
                     //! find correct alphabetical position
                     int newPos = -1;
@@ -176,9 +176,9 @@ void Factory::reload(const QString &indicatorPath)
 
             /*qDebug() << " Indicator value ::: " << metadata.pluginId();
                             qDebug() << " Indicator value ::: " << metadata.fileName();
-                            qDebug() << " Indicator value ::: " << metadata.value("X-Latte-MainScript");
-                            qDebug() << " Indicator value ::: " << metadata.value("X-Latte-ConfigUi");
-                            qDebug() << " Indicator value ::: " << metadata.value("X-Latte-ConfigXml");*/
+                            qDebug() << " Indicator value ::: " << metadata.value("X-Mocha-MainScript");
+                            qDebug() << " Indicator value ::: " << metadata.value("X-Mocha-ConfigUi");
+                            qDebug() << " Indicator value ::: " << metadata.value("X-Mocha-ConfigXml");*/
         }
     }
 
@@ -233,14 +233,14 @@ void Factory::removeIndicatorRecords(const QString &path)
 
 bool Factory::isCustomType(const QString &id) const
 {
-    return ((id != "org.kde.latte.default") && (id != "org.kde.latte.plasma") && (id != "org.kde.latte.plasmatabstyle"));
+    return ((id != "org.kde.mocha.default") && (id != "org.kde.mocha.plasma") && (id != "org.kde.mocha.plasmatabstyle"));
 }
 
 bool Factory::metadataAreValid(KPluginMetaData &metadata)
 {
     return metadata.isValid()
-            && metadata.category() == QLatin1String("Latte Indicator")
-            && !metadata.value("X-Latte-MainScript").isEmpty();
+            && metadata.category() == QLatin1String("Mocha Indicator")
+            && !metadata.value("X-Mocha-MainScript").isEmpty();
 }
 
 bool Factory::metadataAreValid(QString &file)
@@ -395,7 +395,7 @@ void Factory::removeIndicator(QString id)
 
             qDebug() << "Trying to remove indicator :: " << id;
             QProcess process;
-            process.start(QString("kpackagetool6 -r " +id + " -t Latte/Indicator"));
+            process.start(QString("kpackagetool6 -r " +id + " -t Mocha/Indicator"));
             process.waitForFinished();
             showRemovedSucceed(pluginName);
         });
@@ -406,7 +406,7 @@ void Factory::removeIndicator(QString id)
 
 void Factory::downloadIndicator()
 {
-    KNSWidgets::Dialog dialog(QStringLiteral("latte-indicators.knsrc"), m_parentWidget);
+    KNSWidgets::Dialog dialog(QStringLiteral("mocha-indicators.knsrc"), m_parentWidget);
     dialog.exec();
 }
 

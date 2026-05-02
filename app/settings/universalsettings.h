@@ -88,8 +88,8 @@ public:
     bool isAvailableGeometryBroadcastedToPlasma() const;
     void setIsAvailableGeometryBroadcastedToPlasma(const bool &isBroadcasted);
 
-    bool kwin_metaForwardedToLatte() const;
-    void kwin_forwardMetaToLatte(bool forward);
+    bool kwin_metaForwardedToMocha() const;
+    void kwin_forwardMetaToMocha(bool forward);
 
     bool kwin_borderlessMaximizedWindowsEnabled() const;
     void kwin_setDisabledMaximizedBorders(bool disable);
@@ -194,7 +194,7 @@ private:
     bool m_showInfoWindow{true};
 
     //!kwinrc tracking
-    bool m_kwinMetaForwardedToLatte{false};
+    bool m_kwinMetaForwardedToMocha{false};
     bool m_kwinBorderlessMaximizedWindows{false};
 
     //when there isnt a version it is an old universal file

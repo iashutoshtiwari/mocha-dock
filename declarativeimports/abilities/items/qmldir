@@ -1,4 +1,4 @@
-module org.kde.latte.abilities.items
+module org.kde.mocha.abilities.items
 
 BasicItem 0.1 BasicItem.qml
 IndicatorLevel 0.1 IndicatorLevel.qml

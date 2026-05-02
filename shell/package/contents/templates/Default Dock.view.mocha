@@ -26,7 +26,7 @@ plugin=org.kde.mocha.plasmoid
 PreloadWeight=42
 
 [Containments][1][Applets][2][Configuration][General]
-isInLatteDock=true
+isInMochaDock=true
 launchers59=applications:firefox.desktop,applications:org.kde.dolphin.desktop
 
 [Containments][1][Applets][3]

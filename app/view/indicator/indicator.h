@@ -40,7 +40,7 @@ class Indicator: public QObject
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool enabledForApplets READ enabledForApplets WRITE setEnabledForApplets NOTIFY enabledForAppletsChanged)
-    Q_PROPERTY(bool latteTasksArePresent READ latteTasksArePresent NOTIFY latteTasksArePresentChanged)
+    Q_PROPERTY(bool mochaTasksArePresent READ mochaTasksArePresent NOTIFY mochaTasksArePresentChanged)
     Q_PROPERTY(bool pluginIsReady READ pluginIsReady NOTIFY pluginIsReadyChanged)
 
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY pluginChanged)
@@ -83,7 +83,7 @@ public:
 
     bool isCustomIndicator() const;
 
-    bool latteTasksArePresent();
+    bool mochaTasksArePresent();
 
     bool pluginIsReady();
 
@@ -118,7 +118,7 @@ signals:
     void configurationChanged();
     void customPluginChanged();
     void infoChanged();
-    void latteTasksArePresentChanged();
+    void mochaTasksArePresentChanged();
     void plasmaComponentChanged();
     void pluginChanged();
     void pluginIsReadyChanged();
@@ -142,7 +142,7 @@ private:
     bool m_pluginIsReady{false};
 
     QString m_pluginPath;
-    QString m_type{"org.kde.latte.default"};
+    QString m_type{"org.kde.mocha.default"};
     QString m_customType;
 
     QPointer<QQmlComponent> m_component;

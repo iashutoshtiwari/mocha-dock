@@ -1,4 +1,4 @@
-# Translation of latte_indicador_org.kde.latte.default.po to Brazilian Portuguese
+# Translation of latte_indicador_org.kde.mocha.default.po to Brazilian Portuguese
 # Copyright (C) 2019-2020 This file is copyright:
 # This file is distributed under the same license as the latte-dock package.
 #

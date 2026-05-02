@@ -35,7 +35,7 @@ SubConfigView::SubConfigView(Mocha::View *view, const QString &title, const bool
     m_corona = qobject_cast<Mocha::Corona *>(view->containment()->corona());
 
     connect(this, &QWindow::windowTitleChanged, this, &SubConfigView::updateWaylandId);
-    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &SubConfigView::updateWaylandId);
+    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::mochaWindowAdded, this, &SubConfigView::updateWaylandId);
 
     m_validTitle = title;
     setTitle(m_validTitle);
@@ -52,11 +52,11 @@ SubConfigView::SubConfigView(Mocha::View *view, const QString &title, const bool
     m_screenSyncTimer.setInterval(100);
 
     connections << connect(&m_screenSyncTimer, &QTimer::timeout, this, [this]() {
-        if (!m_latteView) {
+        if (!m_mochaView) {
             return;
         }
 
-        setScreen(m_latteView->screen());
+        setScreen(m_mochaView->screen());
 
         syncGeometry();
     });
@@ -134,12 +134,12 @@ Mocha::Corona *SubConfigView::corona() const
 
 Mocha::View *SubConfigView::parentView() const
 {
-    return m_latteView;
+    return m_mochaView;
 }
 
 void SubConfigView::setParentView(Mocha::View *view, const bool &immediate)
 {
-    if (m_latteView == view) {
+    if (m_mochaView == view) {
         return;
     }
 
@@ -152,14 +152,14 @@ void SubConfigView::initParentView(Mocha::View *view)
         QObject::disconnect(var);
     }
 
-    m_latteView = view;
+    m_mochaView = view;
 
-    viewconnections << connect(m_latteView->positioner(), &ViewPart::Positioner::canvasGeometryChanged, this, &SubConfigView::syncGeometry);
+    viewconnections << connect(m_mochaView->positioner(), &ViewPart::Positioner::canvasGeometryChanged, this, &SubConfigView::syncGeometry);
 
     //! Assign app interfaces in be accessible through containment graphic item
-    QQuickItem *containmentGraphicItem = PlasmaQuick::AppletQuickItem::itemForApplet(m_latteView->containment());
+    QQuickItem *containmentGraphicItem = PlasmaQuick::AppletQuickItem::itemForApplet(m_mochaView->containment());
     rootContext()->setContextProperty(QStringLiteral("plasmoid"), containmentGraphicItem);
-    rootContext()->setContextProperty(QStringLiteral("latteView"), m_latteView);
+    rootContext()->setContextProperty(QStringLiteral("mochaView"), m_mochaView);
 }
 
 void SubConfigView::requestActivate()
@@ -181,13 +181,13 @@ void SubConfigView::showAfter(int msecs)
 
 void SubConfigView::syncSlideEffect()
 {
-    if (!m_latteView || !m_latteView->containment()) {
+    if (!m_mochaView || !m_mochaView->containment()) {
         return;
     }
 
     auto slideLocation = WindowSystem::AbstractWindowInterface::Slide::None;
 
-    switch (m_latteView->containment()->location()) {
+    switch (m_mochaView->containment()->location()) {
     case Plasma::Types::TopEdge:
         slideLocation = WindowSystem::AbstractWindowInterface::Slide::Top;
         break;

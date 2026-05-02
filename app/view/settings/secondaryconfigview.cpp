@@ -54,7 +54,7 @@ void SecondaryConfigView::init()
 
     updateEnabledBorders();
 
-    auto source = QUrl::fromLocalFile(m_latteView->containment()->corona()->kPackage().filePath(tempFilePath));
+    auto source = QUrl::fromLocalFile(m_mochaView->containment()->corona()->kPackage().filePath(tempFilePath));
     setSource(source);
     syncGeometry();
 
@@ -77,26 +77,26 @@ void SecondaryConfigView::initParentView(Mocha::View *view)
 
 void SecondaryConfigView::syncGeometry()
 {
-    if (!m_latteView || !m_latteView->layout() || !m_latteView->containment() || !m_parent || !rootObject()) {
+    if (!m_mochaView || !m_mochaView->layout() || !m_mochaView->containment() || !m_parent || !rootObject()) {
         return;
     }
 
     const QSize size(rootObject()->width(), rootObject()->height());
-    const auto location = m_latteView->containment()->location();
-    const auto scrGeometry = m_latteView->screenGeometry();
+    const auto location = m_mochaView->containment()->location();
+    const auto scrGeometry = m_mochaView->screenGeometry();
     const auto availGeometry = m_parent->availableScreenGeometry();
-    const auto canvasGeometry = m_latteView->positioner()->canvasGeometry();
+    const auto canvasGeometry = m_mochaView->positioner()->canvasGeometry();
 
-    int canvasThickness = m_latteView->formFactor() == Plasma::Types::Vertical ? canvasGeometry.width() : canvasGeometry.height();
+    int canvasThickness = m_mochaView->formFactor() == Plasma::Types::Vertical ? canvasGeometry.width() : canvasGeometry.height();
 
-    int secondaryConfigSpacing = 2 * m_latteView->fontPixelSize();
+    int secondaryConfigSpacing = 2 * m_mochaView->fontPixelSize();
 
     QPoint position{0, 0};
 
     int xPos{0};
     int yPos{0};
 
-    switch (m_latteView->containment()->formFactor()) {
+    switch (m_mochaView->containment()->formFactor()) {
     case Plasma::Types::Horizontal: {
         if (qApp->isLeftToRight()) {
             xPos = availGeometry.x() + secondaryConfigSpacing;
@@ -152,7 +152,7 @@ void SecondaryConfigView::showEvent(QShowEvent *ev)
 {
     SubConfigView::showEvent(ev);
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
@@ -171,7 +171,7 @@ void SecondaryConfigView::focusOutEvent(QFocusEvent *ev)
 {
     Q_UNUSED(ev);
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
@@ -229,7 +229,7 @@ void SecondaryConfigView::updateEnabledBorders()
 
     KSvg::FrameSvg::EnabledBorders borders = KSvg::FrameSvg::AllBorders;
 
-    switch (m_latteView->location()) {
+    switch (m_mochaView->location()) {
     case Plasma::Types::TopEdge:
         borders &= ~KSvg::FrameSvg::TopBorder;
         break;

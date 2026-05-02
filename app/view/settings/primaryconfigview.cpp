@@ -102,7 +102,7 @@ void PrimaryConfigView::init()
 
     QByteArray tempFilePath = "mochadockconfigurationui";
 
-    auto source = QUrl::fromLocalFile(m_latteView->containment()->corona()->kPackage().filePath(tempFilePath));
+    auto source = QUrl::fromLocalFile(m_mochaView->containment()->corona()->kPackage().filePath(tempFilePath));
     setSource(source);
     syncGeometry();
 }
@@ -127,8 +127,8 @@ void PrimaryConfigView::setOnActivities(QStringList activities)
 
 void PrimaryConfigView::requestActivate()
 {
-    if (m_latteView && m_latteView->visibility()) {
-        m_corona->wm()->requestActivate(m_latteView->positioner()->trackedWindowId());
+    if (m_mochaView && m_mochaView->visibility()) {
+        m_corona->wm()->requestActivate(m_mochaView->positioner()->trackedWindowId());
     }
 
     if (m_secConfigView) {
@@ -144,8 +144,8 @@ void PrimaryConfigView::showConfigWindow()
         return;
     }
 
-    if (m_latteView && m_latteView->containment()) {
-        m_latteView->containment()->setUserConfiguring(true);
+    if (m_mochaView && m_mochaView->containment()) {
+        m_mochaView->containment()->setUserConfiguring(true);
     }
 
     showAfter(PRIMARYWINDOWINTERVAL);
@@ -164,7 +164,7 @@ void PrimaryConfigView::hideConfigWindow()
 void PrimaryConfigView::showCanvasWindow()
 {
     if (!m_canvasConfigView) {
-        m_canvasConfigView = new CanvasConfigView(m_latteView, this);
+        m_canvasConfigView = new CanvasConfigView(m_mochaView, this);
     }
 
     if (m_canvasConfigView && !m_canvasConfigView->isVisible()){
@@ -181,14 +181,14 @@ void PrimaryConfigView::hideCanvasWindow()
 
 void PrimaryConfigView::showSecondaryWindow()
 {
-    bool isValidShowing{m_latteView->formFactor() == Plasma::Types::Horizontal && inAdvancedMode()};
+    bool isValidShowing{m_mochaView->formFactor() == Plasma::Types::Horizontal && inAdvancedMode()};
 
     if (!isValidShowing) {
         return;
     }
 
     if (!m_secConfigView) {
-        m_secConfigView = new SecondaryConfigView(m_latteView, this);
+        m_secConfigView = new SecondaryConfigView(m_mochaView, this);
     }
 
     if (m_secConfigView && !m_secConfigView->isVisible()){
@@ -205,11 +205,11 @@ void PrimaryConfigView::hideSecondaryWindow()
 
 void PrimaryConfigView::setParentView(Mocha::View *view, const bool &immediate)
 {
-    if (m_latteView == view) {
+    if (m_mochaView == view) {
         return;
     }
 
-    if (m_latteView && !immediate) {
+    if (m_mochaView && !immediate) {
         hideConfigWindow();
 
         //!slide-out delay
@@ -229,33 +229,33 @@ void PrimaryConfigView::initParentView(Mocha::View *view)
 
     SubConfigView::initParentView(view);
 
-    viewconnections << connect(m_latteView, &Mocha::View::layoutChanged, this, [this]() {
-        if (m_latteView->layout()) {
+    viewconnections << connect(m_mochaView, &Mocha::View::layoutChanged, this, [this]() {
+        if (m_mochaView->layout()) {
             updateAvailableScreenGeometry();
         }
     });
 
-    viewconnections << connect(m_latteView, &Mocha::View::editThicknessChanged, this, [this]() {
+    viewconnections << connect(m_mochaView, &Mocha::View::editThicknessChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_latteView, &Mocha::View::maxNormalThicknessChanged, this, [this]() {
+    viewconnections << connect(m_mochaView, &Mocha::View::maxNormalThicknessChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_latteView, &Mocha::View::locationChanged, this, [this]() {
+    viewconnections << connect(m_mochaView, &Mocha::View::locationChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_latteView->positioner(), &Mocha::ViewPart::Positioner::currentScreenChanged, this, [this]() {
+    viewconnections << connect(m_mochaView->positioner(), &Mocha::ViewPart::Positioner::currentScreenChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_corona->universalSettings(), &Mocha::UniversalSettings::inAdvancedModeForEditSettingsChanged, m_latteView, &Mocha::View::inSettingsAdvancedModeChanged);
-    viewconnections << connect(m_latteView->containment(), &Plasma::Containment::immutabilityChanged, this, &PrimaryConfigView::immutabilityChanged);   
+    viewconnections << connect(m_corona->universalSettings(), &Mocha::UniversalSettings::inAdvancedModeForEditSettingsChanged, m_mochaView, &Mocha::View::inSettingsAdvancedModeChanged);
+    viewconnections << connect(m_mochaView->containment(), &Plasma::Containment::immutabilityChanged, this, &PrimaryConfigView::immutabilityChanged);   
 
-    m_originalByPassWM = m_latteView->byPassWM();
-    m_originalMode = m_latteView->visibility()->mode();
+    m_originalByPassWM = m_mochaView->byPassWM();
+    m_originalMode = m_mochaView->visibility()->mode();
 
     updateEnabledBorders();
     updateAvailableScreenGeometry();
@@ -272,25 +272,25 @@ void PrimaryConfigView::initParentView(Mocha::View *view)
     }
 
     //! inform view about the current settings level
-    emit m_latteView->inSettingsAdvancedModeChanged();
+    emit m_mochaView->inSettingsAdvancedModeChanged();
 }
 
 void PrimaryConfigView::instantUpdateAvailableScreenGeometry()
 {
-    if (!m_latteView || !m_latteView->positioner()) {
+    if (!m_mochaView || !m_mochaView->positioner()) {
         return;
     }
 
-    int currentScrId = m_latteView->positioner()->currentScreenId();
+    int currentScrId = m_mochaView->positioner()->currentScreenId();
 
     QList<Mocha::Types::Visibility> ignoreModes{Mocha::Types::SidebarOnDemand,Mocha::Types::SidebarAutoHide};
 
-    if (m_latteView->visibility() && m_latteView->visibility()->isSidebar()) {
+    if (m_mochaView->visibility() && m_mochaView->visibility()->isSidebar()) {
         ignoreModes.removeAll(Mocha::Types::SidebarOnDemand);
         ignoreModes.removeAll(Mocha::Types::SidebarAutoHide);
     }
 
-    QString activityid = m_latteView->layout()->lastUsedActivity();
+    QString activityid = m_mochaView->layout()->lastUsedActivity();
 
     m_availableScreenGeometry = m_corona->availableScreenRectWithCriteria(currentScrId, activityid, ignoreModes, {}, false, true);
     emit availableScreenGeometryChanged();
@@ -298,7 +298,7 @@ void PrimaryConfigView::instantUpdateAvailableScreenGeometry()
 
 void PrimaryConfigView::updateAvailableScreenGeometry(View *origin)
 {    
-    if (!m_latteView || !m_latteView->layout() || m_latteView == origin) {
+    if (!m_mochaView || !m_mochaView->layout() || m_mochaView == origin) {
         return;
     }
 
@@ -319,24 +319,24 @@ QRect PrimaryConfigView::geometryWhenVisible() const
 
 void PrimaryConfigView::syncGeometry()
 {
-    if (!m_latteView || !m_latteView->layout() || !m_latteView->containment() || !rootObject()) {
+    if (!m_mochaView || !m_mochaView->layout() || !m_mochaView->containment() || !rootObject()) {
         return;
     }
 
     const QSize size(rootObject()->width(), rootObject()->height());
-    const auto location = m_latteView->containment()->location();
-    const auto scrGeometry = m_latteView->screenGeometry();
+    const auto location = m_mochaView->containment()->location();
+    const auto scrGeometry = m_mochaView->screenGeometry();
     const auto availGeometry = m_availableScreenGeometry;
-    const auto canvasGeometry = m_latteView->positioner()->canvasGeometry();
+    const auto canvasGeometry = m_mochaView->positioner()->canvasGeometry();
 
-    int canvasThickness = m_latteView->formFactor() == Plasma::Types::Vertical ? canvasGeometry.width() : canvasGeometry.height();
+    int canvasThickness = m_mochaView->formFactor() == Plasma::Types::Vertical ? canvasGeometry.width() : canvasGeometry.height();
 
     QPoint position{0, 0};
 
     int xPos{0};
     int yPos{0};
 
-    switch (m_latteView->formFactor()) {
+    switch (m_mochaView->formFactor()) {
     case Plasma::Types::Horizontal: {
         if (inAdvancedMode()) {
             if (qApp->isLeftToRight()) {
@@ -392,7 +392,7 @@ void PrimaryConfigView::syncGeometry()
     setMinimumSize(size);
     resize(size);
 
-    emit m_latteView->configWindowGeometryChanged();
+    emit m_mochaView->configWindowGeometryChanged();
 }
 
 void PrimaryConfigView::showEvent(QShowEvent *ev)
@@ -401,7 +401,7 @@ void PrimaryConfigView::showEvent(QShowEvent *ev)
 
     SubConfigView::showEvent(ev);
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
@@ -419,32 +419,32 @@ void PrimaryConfigView::showEvent(QShowEvent *ev)
 
     emit showSignal();
 
-    if (m_latteView && m_latteView->layout()) {
-        m_latteView->layout()->setLastConfigViewFor(m_latteView);
+    if (m_mochaView && m_mochaView->layout()) {
+        m_mochaView->layout()->setLastConfigViewFor(m_mochaView);
     }
 }
 
 void PrimaryConfigView::hideEvent(QHideEvent *ev)
 {
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
-    if (m_latteView->containment()) {
-        m_latteView->containment()->setUserConfiguring(false);
+    if (m_mochaView->containment()) {
+        m_mochaView->containment()->setUserConfiguring(false);
     }
 
-    const auto mode = m_latteView->visibility()->mode();
+    const auto mode = m_mochaView->visibility()->mode();
 
     if ((mode == Types::AlwaysVisible || mode == Types::WindowsGoBelow)
             && !(m_originalMode == Types::AlwaysVisible || m_originalMode == Types::WindowsGoBelow)) {
         //! mode changed to AlwaysVisible OR WindowsGoBelow FROM Dodge mode
         if (m_originalByPassWM) {
             //! if original by pass is active
-            m_latteView->layout()->recreateView(m_latteView->containment());
+            m_mochaView->layout()->recreateView(m_mochaView->containment());
         }
-    } else if (m_latteView->byPassWM() != m_originalByPassWM) {
-        m_latteView->layout()->recreateView(m_latteView->containment());
+    } else if (m_mochaView->byPassWM() != m_originalByPassWM) {
+        m_mochaView->layout()->recreateView(m_mochaView->containment());
     }
 
     setVisible(false);
@@ -455,7 +455,7 @@ bool PrimaryConfigView::hasFocus() const
     bool primaryHasHocus{isActive()};
     bool secHasFocus{m_secConfigView && m_secConfigView->isActive()};
     bool canvasHasFocus{m_canvasConfigView && m_canvasConfigView->isActive()};
-    bool viewHasFocus{m_latteView && (m_latteView->containsMouse() || m_latteView->alternativesIsShown())};
+    bool viewHasFocus{m_mochaView && (m_mochaView->containsMouse() || m_mochaView->alternativesIsShown())};
 
     return (m_blockFocusLost || viewHasFocus || primaryHasHocus || secHasFocus || canvasHasFocus);
 }
@@ -464,7 +464,7 @@ void PrimaryConfigView::focusOutEvent(QFocusEvent *ev)
 {
     Q_UNUSED(ev);
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
@@ -532,14 +532,14 @@ void PrimaryConfigView::setShowInlineProperties(bool show)
 
 void PrimaryConfigView::updateShowInlineProperties()
 {
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
     bool showSecWindow{false};
     bool advancedApprovedSecWindow{false};
 
-    if (inAdvancedMode() && m_latteView->formFactor() != Plasma::Types::Vertical) {
+    if (inAdvancedMode() && m_mochaView->formFactor() != Plasma::Types::Vertical) {
         showSecWindow = true;
         advancedApprovedSecWindow = true;
     }
@@ -580,7 +580,7 @@ void PrimaryConfigView::updateEnabledBorders()
 
     KSvg::FrameSvg::EnabledBorders borders = KSvg::FrameSvg::AllBorders;
 
-    switch (m_latteView->location()) {
+    switch (m_mochaView->location()) {
     case Plasma::Types::TopEdge:
         borders &= m_inReverse ? ~KSvg::FrameSvg::BottomBorder : ~KSvg::FrameSvg::TopBorder;
         break;

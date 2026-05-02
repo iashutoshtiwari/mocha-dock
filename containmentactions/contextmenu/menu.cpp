@@ -41,7 +41,7 @@ enum LayoutsMemoryUsage
     MultipleLayouts
 };
 
-enum LatteConfigPage
+enum MochaConfigPage
 {
     LayoutPage = 0,
     PreferencesPage
@@ -78,7 +78,7 @@ void Menu::restore(const KConfigGroup &config)
 
     m_actions[Mocha::Data::ContextMenu::SECTIONACTION] = new QAction(this);
     m_actions[Mocha::Data::ContextMenu::SECTIONACTION]->setSeparator(true);
-    m_actions[Mocha::Data::ContextMenu::SECTIONACTION]->setText("Latte");
+    m_actions[Mocha::Data::ContextMenu::SECTIONACTION]->setText("Mocha");
 
     m_actions[Mocha::Data::ContextMenu::SEPARATOR1ACTION] = new QAction(this);
     m_actions[Mocha::Data::ContextMenu::SEPARATOR1ACTION]->setSeparator(true);
@@ -110,7 +110,7 @@ void Menu::restore(const KConfigGroup &config)
 
 
     //! Quit Application
-    m_actions[Mocha::Data::ContextMenu::QUITLATTEACTION] = new QAction(QIcon::fromTheme("application-exit"), i18nc("quit application", "Quit &Latte"));
+    m_actions[Mocha::Data::ContextMenu::QUITLATTEACTION] = new QAction(QIcon::fromTheme("application-exit"), i18nc("quit application", "Quit &Mocha"));
     connect(m_actions[Mocha::Data::ContextMenu::QUITLATTEACTION], &QAction::triggered, this, &Menu::quitApplication);
     this->containment()->setInternalAction(Mocha::Data::ContextMenu::QUITLATTEACTION, m_actions[Mocha::Data::ContextMenu::QUITLATTEACTION]);
 
@@ -147,11 +147,11 @@ void Menu::restore(const KConfigGroup &config)
     connect(m_moveToLayoutMenu, &QMenu::aboutToShow, this, &Menu::populateMoveToLayouts);
     connect(m_moveToLayoutMenu, &QMenu::triggered, this, &Menu::moveToLayout);
 
-    //! Configure Latte
-    m_actions[Mocha::Data::ContextMenu::PREFERENCESACTION] = new QAction(QIcon::fromTheme("configure"), i18nc("global settings window", "&Configure Latte..."), this);
+    //! Configure Mocha
+    m_actions[Mocha::Data::ContextMenu::PREFERENCESACTION] = new QAction(QIcon::fromTheme("configure"), i18nc("global settings window", "&Configure Mocha..."), this);
     this->containment()->setInternalAction(Mocha::Data::ContextMenu::PREFERENCESACTION, m_actions[Mocha::Data::ContextMenu::PREFERENCESACTION]);
     connect(m_actions[Mocha::Data::ContextMenu::PREFERENCESACTION], &QAction::triggered, [=](){
-        QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+        QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("showSettingsWindow", (int)PreferencesPage);
@@ -161,7 +161,7 @@ void Menu::restore(const KConfigGroup &config)
     //! Duplicate Action
     m_actions[Mocha::Data::ContextMenu::DUPLICATEVIEWACTION] = new QAction(QIcon::fromTheme("edit-copy"), "Duplicate Dock as Template", this);
     connect(m_actions[Mocha::Data::ContextMenu::DUPLICATEVIEWACTION], &QAction::triggered, [=](){
-        QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+        QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("duplicateView", containment()->id());
@@ -172,7 +172,7 @@ void Menu::restore(const KConfigGroup &config)
     //! Export View Template Action
     m_actions[Mocha::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION] = new QAction(QIcon::fromTheme("document-export"), "Export as Template...", this);
     connect(m_actions[Mocha::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION], &QAction::triggered, [=](){
-        QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+        QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("exportViewTemplate", containment()->id());
@@ -183,7 +183,7 @@ void Menu::restore(const KConfigGroup &config)
     //! Remove Action
     m_actions[Mocha::Data::ContextMenu::REMOVEVIEWACTION] = new QAction(QIcon::fromTheme("delete"), "Remove Dock", this);
     connect(m_actions[Mocha::Data::ContextMenu::REMOVEVIEWACTION], &QAction::triggered, [=](){
-        QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+        QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("removeView", containment()->id());
@@ -224,7 +224,7 @@ QList<QAction *> Menu::contextualActions()
 
     m_data.clear();
     m_viewTemplates.clear();
-    QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+    QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
     if (iface.isValid()) {
         QDBusReply<QStringList> contextData = iface.call("contextMenuData", containment()->id());
@@ -364,7 +364,7 @@ void Menu::populateLayouts()
     QWidgetAction *editaction = new QWidgetAction(m_switchLayoutsMenu);
     editaction->setText(i18n("Edit &Layouts..."));
     editaction->setCheckable(false);
-    editaction->setData(QStringLiteral(" _show_latte_settings_dialog_"));
+    editaction->setData(QStringLiteral(" _show_mocha_settings_dialog_"));
     editaction->setVisible(false);
 
     LayoutMenuItemWidget *editmenuitem = new LayoutMenuItemWidget(editaction, m_switchLayoutsMenu);
@@ -452,7 +452,7 @@ void Menu::addView(QAction *action)
     const QString templateId = action->data().toString();
 
     QTimer::singleShot(400, [this, templateId]() {
-        QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+        QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("addView", containment()->id(), templateId);
@@ -465,7 +465,7 @@ void Menu::moveToLayout(QAction *action)
     const QString layoutName = action->data().toString();
 
     QTimer::singleShot(400, [this, layoutName]() {
-        QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+        QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("moveViewToLayout", containment()->id(), layoutName);
@@ -477,9 +477,9 @@ void Menu::switchToLayout(QAction *action)
 {
     const QString layout = action->data().toString();
 
-    if (layout == QLatin1String(" _show_latte_settings_dialog_")) {
+    if (layout == QLatin1String(" _show_mocha_settings_dialog_")) {
         QTimer::singleShot(400, [this]() {
-            QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+            QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
             if (iface.isValid()) {
                 iface.call("showSettingsWindow", (int)LayoutPage);
@@ -487,7 +487,7 @@ void Menu::switchToLayout(QAction *action)
         });
     } else {
         QTimer::singleShot(400, [this, layout]() {
-            QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+            QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
             if (iface.isValid()) {
                 iface.call("switchToLayout", layout);
@@ -498,7 +498,7 @@ void Menu::switchToLayout(QAction *action)
 
 void Menu::quitApplication()
 {
-    QDBusInterface iface("org.kde.mochadock", "/Latte", "", QDBusConnection::sessionBus());
+    QDBusInterface iface("org.kde.mochadock", "/Mocha", "", QDBusConnection::sessionBus());
 
     if (iface.isValid()) {
         iface.call("quitApplication");

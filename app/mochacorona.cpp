@@ -137,7 +137,7 @@ Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString
 
     m_viewsScreenSyncTimer.setSingleShot(true);
     m_viewsScreenSyncTimer.setInterval(m_universalSettings->screenTrackerInterval());
-    connect(&m_viewsScreenSyncTimer, &QTimer::timeout, this, &Corona::syncLatteViewsToScreens);
+    connect(&m_viewsScreenSyncTimer, &QTimer::timeout, this, &Corona::syncMochaViewsToScreens);
     connect(m_universalSettings, &UniversalSettings::screenTrackerIntervalChanged, this, [this]() {
         m_viewsScreenSyncTimer.setInterval(m_universalSettings->screenTrackerInterval());
     });
@@ -162,7 +162,7 @@ Corona::~Corona()
         cleanConfig();
     }
 
-    qDebug() << "Latte Corona - unload: containments ...";
+    qDebug() << "Mocha Corona - unload: containments ...";
     m_layoutsManager->unload();*/
 
     m_plasmaGeometries->deleteLater();
@@ -179,10 +179,10 @@ Corona::~Corona()
     disconnect(m_activitiesConsumer, &KActivities::Consumer::serviceStatusChanged, this, &Corona::load);
     delete m_activitiesConsumer;
 
-    qDebug() << "Latte Corona - deleted...";
+    qDebug() << "Mocha Corona - deleted...";
 
     if (!m_importFullConfigurationFile.isEmpty()) {
-        //!NOTE: Restart latte to import the new configuration
+        //!NOTE: Restart mocha to import the new configuration
         QString importCommand = "mocha-dock --import-full \"" + m_importFullConfigurationFile + "\"";
         qDebug() << "Executing Import Full Configuration command : " << importCommand;
 
@@ -208,7 +208,7 @@ void Corona::onAboutToQuit()
         m_layoutsManager->importer()->setMultipleLayoutsStatus(Mocha::MultipleLayouts::Paused);
     }
 
-    qDebug() << "Latte Corona - unload: containments ...";
+    qDebug() << "Mocha Corona - unload: containments ...";
     m_layoutsManager->unload();
 }
 
@@ -631,7 +631,7 @@ QRegion Corona::availableScreenRegionWithCriteria(int id,
             }
 
             // Usually availableScreenRect is used by the desktop,
-            // but Latte don't have desktop, then here just
+            // but Mocha don't have desktop, then here just
             // need calculate available space for top and bottom location,
             // because the left and right are those who dodge others views
             switch (view->location()) {
@@ -783,7 +783,7 @@ QRect Corona::availableScreenRectWithCriteria(int id,
             int appliedThickness = view->behaveAsPlasmaPanel() ? view->screenEdgeMargin() + view->normalThickness() : view->normalThickness();
 
             // Usually availableScreenRect is used by the desktop,
-            // but Latte don't have desktop, then here just
+            // but Mocha don't have desktop, then here just
             // need calculate available space for top and bottom location,
             // because the left and right are those who dodge others docks
             switch (view->location()) {
@@ -896,11 +896,11 @@ void Corona::onAvailableScreenRectChangedFrom(Mocha::View *view)
     corona->availableScreenRectChanged(screenId);
 }
 
-//! the central functions that updates loading/unloading latteviews
+//! the central functions that updates loading/unloading mochaviews
 //! concerning screen changed (for multi-screen setups mainly)
-void Corona::syncLatteViewsToScreens()
+void Corona::syncMochaViewsToScreens()
 {
-    m_layoutsManager->synchronizer()->syncLatteViewsToScreens();
+    m_layoutsManager->synchronizer()->syncMochaViewsToScreens();
 }
 
 int Corona::primaryScreenId() const
@@ -915,7 +915,7 @@ void Corona::quitApplication()
     //! this code must be called asynchronously because it is called
     //! also from qml (Settings window).
     QTimer::singleShot(300, [this]() {
-        m_layoutsManager->hideLatteSettingsDialog();
+        m_layoutsManager->hideMochaSettingsDialog();
         m_layoutsManager->synchronizer()->hideAllViews();
     });
 
@@ -950,7 +950,7 @@ int Corona::screenForContainment(const Plasma::Containment *containment) const
     //FIXME: indexOf is not a proper way to support multi-screen
     // as for environment to environment the indexes change
     // also there is the following issue triggered
-    // from latteView adaptToScreen()
+    // from mochaView adaptToScreen()
     //
     // in a multi-screen environment that
     // primary screen is not set to 0 it was
@@ -985,13 +985,13 @@ void Corona::showAlternativesForApplet(Plasma::Applet *applet)
         return;
     }
 
-    Mocha::View *latteView =  m_layoutsManager->synchronizer()->viewForContainment(applet->containment());
+    Mocha::View *mochaView =  m_layoutsManager->synchronizer()->viewForContainment(applet->containment());
 
     PlasmaQuick::SharedQmlEngine *qmlObj{nullptr};
 
-    if (latteView) {
-        latteView->setAlternativesIsShown(true);
-        qmlObj = new PlasmaQuick::SharedQmlEngine(latteView);
+    if (mochaView) {
+        mochaView->setAlternativesIsShown(true);
+        qmlObj = new PlasmaQuick::SharedQmlEngine(mochaView);
     } else {
         qmlObj = new PlasmaQuick::SharedQmlEngine(this);
     }
@@ -1006,8 +1006,8 @@ void Corona::showAlternativesForApplet(Plasma::Applet *applet)
     qmlObj->completeInitialization();
 
     //! Alternative dialog signals
-    connect(helper, &QObject::destroyed, this, [latteView]() {
-        latteView->setAlternativesIsShown(false);
+    connect(helper, &QObject::destroyed, this, [mochaView]() {
+        mochaView->setAlternativesIsShown(false);
     });
 
     connect(qmlObj->rootObject(), SIGNAL(visibleChanged(bool)),
@@ -1130,7 +1130,7 @@ void Corona::importLayoutFile(const QString &filepath, const QString &suggestedL
 
     //! Import and load runtime a layout through dbus interface
     //! It can be used from external programs that want to update runtime
-    //! the Latte shown layout
+    //! the Mocha shown layout
     QString layoutPath = filepath;
 
     //! cleanup layout path
@@ -1168,7 +1168,7 @@ void Corona::showSettingsWindow(int page)
         p = static_cast<Settings::Dialog::ConfigurationPage>(page);
     }
 
-    m_layoutsManager->showLatteSettingsDialog(p);
+    m_layoutsManager->showMochaSettingsDialog(p);
 }
 
 QStringList Corona::contextMenuData(const uint &containmentId)
@@ -1329,14 +1329,14 @@ void Corona::importFullConfiguration(const QString &file)
 inline void Corona::qmlRegisterTypes() const
 {   
     qmlRegisterUncreatableMetaObject(Mocha::Settings::staticMetaObject,
-                                     "org.kde.latte.private.app",          // import statement
+                                     "org.kde.mocha.private.app",          // import statement
                                      0, 1,                                 // major and minor version of the import
                                      "Settings",                           // name in QML
-                                     "Error: only enums of latte app settings");
+                                     "Error: only enums of mocha app settings");
 
-    qmlRegisterType<Mocha::BackgroundTracker>("org.kde.latte.private.app", 0, 1, "BackgroundTracker");
-    qmlRegisterType<Mocha::Interfaces>("org.kde.latte.private.app", 0, 1, "Interfaces");
-    qmlRegisterType<Mocha::ContextMenuLayerQuickItem>("org.kde.latte.private.app", 0, 1, "ContextMenuLayer");
+    qmlRegisterType<Mocha::BackgroundTracker>("org.kde.mocha.private.app", 0, 1, "BackgroundTracker");
+    qmlRegisterType<Mocha::Interfaces>("org.kde.mocha.private.app", 0, 1, "Interfaces");
+    qmlRegisterType<Mocha::ContextMenuLayerQuickItem>("org.kde.mocha.private.app", 0, 1, "ContextMenuLayer");
     qmlRegisterAnonymousType<QScreen>("mocha-dock", 1);
     qmlRegisterAnonymousType<Mocha::View>("mocha-dock", 1);
     qmlRegisterAnonymousType<Mocha::ViewPart::WindowsTracker>("mocha-dock", 1);

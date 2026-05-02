@@ -109,7 +109,7 @@ set(CORETYPESHEADER "LIBCORETYPES_H")
 configure_file(declarativeimports/coretypes.h.in declarativeimports/core/types.h)
 set(CORETYPESHEADER "APPCORETYPES_H")
 configure_file(declarativeimports/coretypes.h.in app/coretypes.h)
-set(CORETYPESHEADER "LATTEGENERALCONTAINMENTTYPES_H")
+set(CORETYPESHEADER "MOCHAGENERALCONTAINMENTTYPES_H")
 configure_file(declarativeimports/coretypes.h.in containment/plugin/mochatypes.h)
 
 # Share App::Settings::GenericTools to containment actions

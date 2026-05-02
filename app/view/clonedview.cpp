@@ -241,7 +241,7 @@ void ClonedView::showConfigurationInterface(Plasma::Applet *applet)
 {
     Plasma::Containment *c = qobject_cast<Plasma::Containment *>(applet);
 
-    if (Layouts::Storage::self()->isLatteContainment(c)) {
+    if (Layouts::Storage::self()->isMochaContainment(c)) {
         m_originalView->showSettingsWindow();
     } else {
         View::showConfigurationInterface(applet);

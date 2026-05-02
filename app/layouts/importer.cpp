@@ -99,7 +99,7 @@ bool Importer::importOldLayout(QString oldAppletsPath, QString newName, bool alt
 
     bool atLeastOneContainmentWasFound{false};
 
-    //! first copy the latte containments that correspond to the correct session
+    //! first copy the mocha containments that correspond to the correct session
     //! and find also the systrays that should be copied also
     for(const auto &containmentId : containments.groupList()) {
         KConfigGroup containmentGroup = containments.group(containmentId);
@@ -109,15 +109,15 @@ bool Importer::importOldLayout(QString oldAppletsPath, QString newName, bool alt
 
         bool shouldImport = false;
 
-        if (plugin == QLatin1String("org.kde.latte.containment") && session == DefaultSession && !alternative) {
+        if (plugin == QLatin1String("org.kde.mocha.containment") && session == DefaultSession && !alternative) {
             qDebug() << containmentId << " - " << plugin << " - " << session;
             shouldImport = true;
-        } else if (plugin == QLatin1String("org.kde.latte.containment") && session == AlternativeSession && alternative) {
+        } else if (plugin == QLatin1String("org.kde.mocha.containment") && session == AlternativeSession && alternative) {
             qDebug() << containmentId << " - " << plugin << " - " << session;
             shouldImport = true;
         }
 
-        // this latte containment should be imported
+        // this mocha containment should be imported
         if (shouldImport) {
             auto applets = containments.group(containmentId).group("Applets");
 
@@ -139,7 +139,7 @@ bool Importer::importOldLayout(QString oldAppletsPath, QString newName, bool alt
         }
     }
 
-    //! not even one latte containment was found for that layout so we must break
+    //! not even one mocha containment was found for that layout so we must break
     //! the code here
     if (!atLeastOneContainmentWasFound) {
         return false;
@@ -259,7 +259,7 @@ QString Importer::layoutCanBeImported(QString oldAppletsPath, QString newName, Q
     QDir layoutDir(exportDirectory.isNull() ? layoutUserDir() : exportDirectory);
 
     if (!layoutDir.exists() && exportDirectory.isNull()) {
-        QDir(Mocha::configPath()).mkdir("latte");
+        QDir(Mocha::configPath()).mkdir("mocha");
     }
 
     //! set up the new layout name
@@ -393,7 +393,7 @@ bool Importer::exportFullConfiguration(QString file)
     archive.addLocalFile(QString(Mocha::configPath() + "/mochadockrc"), QStringLiteral("mochadockrc"));
 
     for(const auto &layoutName : availableLayouts()) {
-        archive.addLocalFile(layoutUserFilePath(layoutName), QString("latte/" + layoutName + ".layout.mocha"));
+        archive.addLocalFile(layoutUserFilePath(layoutName), QString("mocha/" + layoutName + ".layout.mocha"));
     }
 
     //! custom templates
@@ -404,7 +404,7 @@ bool Importer::exportFullConfiguration(QString file)
 
     for (int i=0; i<templates.count(); ++i) {
         QString templatePath = templatesDir.path() + "/" + templates[i];
-        archive.addLocalFile(templatePath, QString("latte/templates/" + templates[i]));
+        archive.addLocalFile(templatePath, QString("mocha/templates/" + templates[i]));
     }
 
     filters.clear();
@@ -413,7 +413,7 @@ bool Importer::exportFullConfiguration(QString file)
 
     for (int i=0; i<templates.count(); ++i) {
         QString templatePath = templatesDir.path() + "/" + templates[i];
-        archive.addLocalFile(templatePath, QString("latte/templates/" + templates[i]));
+        archive.addLocalFile(templatePath, QString("mocha/templates/" + templates[i]));
     }
 
     archive.close();
@@ -421,7 +421,7 @@ bool Importer::exportFullConfiguration(QString file)
     return true;
 }
 
-Importer::LatteFileVersion Importer::fileVersion(QString file)
+Importer::MochaFileVersion Importer::fileVersion(QString file)
 {
     if (!QFile::exists(file))
         return UnknownFileType;
@@ -455,7 +455,7 @@ Importer::LatteFileVersion Importer::fileVersion(QString file)
     bool version1applets = false;
 
     bool version2rc = false;
-    bool version2LatteDir = false;
+    bool version2MochaDir = false;
     bool version2layout = false;
 
     archive.directory()->copyTo(archiveTempDir.path());
@@ -491,16 +491,16 @@ Importer::LatteFileVersion Importer::fileVersion(QString file)
         }
     }
 
-    //latte directory
-    QString latteDir(archiveTempDir.path() + "/latte");
+    //mocha directory
+    QString mochaDir(archiveTempDir.path() + "/mocha");
 
-    if (QDir(latteDir).exists()) {
-        version2LatteDir = true;
+    if (QDir(mochaDir).exists()) {
+        version2MochaDir = true;
     }
 
     if (version1applets) {
         return ConfigVersion1;
-    } else if (version2rc && version2LatteDir) {
+    } else if (version2rc && version2MochaDir) {
         return ConfigVersion2;
     }
 
@@ -509,7 +509,7 @@ Importer::LatteFileVersion Importer::fileVersion(QString file)
 
 bool Importer::importHelper(QString fileName)
 {
-    LatteFileVersion version = fileVersion(fileName);
+    MochaFileVersion version = fileVersion(fileName);
 
     if ((version != ConfigVersion1) && (version != ConfigVersion2)) {
         return false;
@@ -522,10 +522,10 @@ bool Importer::importHelper(QString fileName)
         return false;
     }
 
-    QDir latteDir(layoutUserDir());
+    QDir mochaDir(layoutUserDir());
 
-    if (latteDir.exists()) {
-        latteDir.removeRecursively();
+    if (mochaDir.exists()) {
+        mochaDir.removeRecursively();
     }
 
     archive.directory()->copyTo(Mocha::configPath());
@@ -603,7 +603,7 @@ QString Importer::importLayout(const QString &fileName, const QString &suggested
 
 QString Importer::importLayoutHelper(const QString &fileName, const QString &suggestedLayoutName)
 {
-    LatteFileVersion version = fileVersion(fileName);
+    MochaFileVersion version = fileVersion(fileName);
 
     if (version != LayoutVersion2) {
         return QString();
@@ -617,7 +617,7 @@ QString Importer::importLayoutHelper(const QString &fileName, const QString &sug
     QDir localLayoutsDir(layoutUserDir());
 
     if (!localLayoutsDir.exists()) {
-        QDir(Mocha::configPath()).mkdir("latte");
+        QDir(Mocha::configPath()).mkdir("mocha");
     }
 
     QFile(fileName).copy(newPath);
@@ -719,7 +719,7 @@ bool Importer::layoutExists(QString layoutName)
 
 QString Importer::layoutUserDir()
 {
-    return QString(Mocha::configPath() + "/latte");
+    return QString(Mocha::configPath() + "/mocha");
 }
 
 QString Importer::layoutUserFilePath(QString layoutName)
@@ -731,7 +731,7 @@ QString Importer::systemShellDataPath()
 {
     QStringList paths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
     QString rootpath = paths.count() > 0 ? paths[paths.count()-1] : "/usr/share";
-    return  rootpath + "/plasma/shells/org.kde.latte.shell";
+    return  rootpath + "/plasma/shells/org.kde.mocha.shell";
 }
 
 QString Importer::layoutTemplateSystemFilePath(const QString &name)

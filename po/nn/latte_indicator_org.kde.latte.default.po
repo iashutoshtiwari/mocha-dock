@@ -1,4 +1,4 @@
-# Translation of latte_indicator_org.kde.latte.default to Norwegian Nynorsk
+# Translation of latte_indicator_org.kde.mocha.default to Norwegian Nynorsk
 #
 # Karl Ove Hufthammer <karl@huftis.org>, 2018, 2019, 2020, 2023.
 msgid ""

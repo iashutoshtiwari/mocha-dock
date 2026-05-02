@@ -111,17 +111,17 @@ QString ShortcutsTracker::shortcutToBadge(QStringList shortcutRecords)
 
 void ShortcutsTracker::parseGlobalShortcuts()
 {
-    KConfigGroup latteGroup = KConfigGroup(m_shortcutsConfigPtr, "mochadock");
+    KConfigGroup mochaGroup = KConfigGroup(m_shortcutsConfigPtr, "mochadock");
 
-    if (latteGroup.exists()) {
+    if (mochaGroup.exists()) {
         m_badgesForActivate.clear();
         m_appletShortcuts.clear();
 
         for (int i = 1; i <= 19; ++i) {
             QString entry = "activate entry " + QString::number(i);
 
-            if (latteGroup.hasKey(entry)) {
-                QStringList records = latteGroup.readEntry(entry, QStringList());
+            if (mochaGroup.hasKey(entry)) {
+                QStringList records = mochaGroup.readEntry(entry, QStringList());
                 if (records.count() > 0) {
                     records[0] = records[0].split("\t")[0];
                 }
@@ -133,9 +133,9 @@ void ShortcutsTracker::parseGlobalShortcuts()
 
         m_basedOnPositionEnabled = (!m_badgesForActivate[0].isEmpty() && !m_badgesForActivate[1].isEmpty());
 
-        for(auto &key : latteGroup.keyList()) {
+        for(auto &key : mochaGroup.keyList()) {
             if (key.startsWith(APPLETSHORTCUTKEY)) {
-                QStringList records = latteGroup.readEntry(key, QStringList());
+                QStringList records = mochaGroup.readEntry(key, QStringList());
                 int appletId = key.remove(APPLETSHORTCUTKEY).toInt();
 
                 m_appletShortcuts[appletId] = shortcutToBadge(records);
@@ -151,9 +151,9 @@ void ShortcutsTracker::parseGlobalShortcuts()
 
 void ShortcutsTracker::clearAllAppletShortcuts()
 {
-    KConfigGroup latteGroup = KConfigGroup(m_shortcutsConfigPtr, "mochadock");
+    KConfigGroup mochaGroup = KConfigGroup(m_shortcutsConfigPtr, "mochadock");
 
-    for(const auto &key : latteGroup.keyList()) {
+    for(const auto &key : mochaGroup.keyList()) {
         if (key.startsWith(APPLETSHORTCUTKEY)) {
             QAction *appletAction = new QAction(this);
 

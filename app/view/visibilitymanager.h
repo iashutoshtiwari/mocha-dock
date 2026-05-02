@@ -263,7 +263,7 @@ private:
     FloatingGapWindow *m_floatingGapWindow{nullptr};
 
     Mocha::Corona *m_corona{nullptr};
-    Mocha::View *m_latteView{nullptr};
+    Mocha::View *m_mochaView{nullptr};
 
 };
 

@@ -1,2 +1,2 @@
 #! /usr/bin/env bash
-$XGETTEXT *.cpp -o $podir/plasma_containmentactions_lattecontextmenu.pot
+$XGETTEXT *.cpp -o $podir/plasma_containmentactions_mochacontextmenu.pot

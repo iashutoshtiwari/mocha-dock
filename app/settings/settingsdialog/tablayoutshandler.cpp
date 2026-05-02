@@ -50,7 +50,7 @@ TabLayouts::TabLayouts(Settings::Dialog::SettingsDialog *parent)
       m_parentDialog(parent),
       m_corona(m_parentDialog->corona()),
       m_ui(m_parentDialog->ui()),
-      m_storage(KConfigGroup(KSharedConfig::openConfig(),"LatteSettingsDialog").group("TabLayouts"))
+      m_storage(KConfigGroup(KSharedConfig::openConfig(),"MochaSettingsDialog").group("TabLayouts"))
 {
     //! load first the layouts view column widths
     loadConfig();
@@ -468,7 +468,7 @@ void TabLayouts::downloadLayout()
         return;
     }
 
-    KNSWidgets::Dialog dialog(QStringLiteral("latte-layouts.knsrc"), m_parentDialog);
+    KNSWidgets::Dialog dialog(QStringLiteral("mocha-layouts.knsrc"), m_parentDialog);
     dialog.resize(m_parentDialog->downloadWindowSize());
     dialog.exec();
 
@@ -477,7 +477,7 @@ void TabLayouts::downloadLayout()
         // FIXME: Check if this actually works lol
         for (const KNSCore::Entry &entry : dialog.changedEntries()) {
             for (const auto &entryFile : entry.installedFiles()) {
-                Mocha::Layouts::Importer::LatteFileVersion version = Mocha::Layouts::Importer::fileVersion(entryFile);
+                Mocha::Layouts::Importer::MochaFileVersion version = Mocha::Layouts::Importer::fileVersion(entryFile);
 
                 if (version == Mocha::Layouts::Importer::LayoutVersion2) {
                     Mocha::Data::Layout downloaded = m_layoutsController->addLayoutForFile(entryFile);
@@ -542,23 +542,23 @@ void TabLayouts::importLayout()
         return;
     }
 
-    QFileDialog *importFileDialog = new QFileDialog(m_parentDialog, i18nc("import layout", "Import Layout"), QDir::homePath(), QStringLiteral("layout.latte"));
+    QFileDialog *importFileDialog = new QFileDialog(m_parentDialog, i18nc("import layout", "Import Layout"), QDir::homePath(), QStringLiteral("layout.mocha"));
 
     importFileDialog->setWindowIcon(QIcon::fromTheme("document-import"));
     importFileDialog->setLabelText(QFileDialog::Accept, i18nc("import layout","Import"));
     importFileDialog->setFileMode(QFileDialog::AnyFile);
     importFileDialog->setAcceptMode(QFileDialog::AcceptOpen);
-    importFileDialog->setDefaultSuffix("layout.latte");
+    importFileDialog->setDefaultSuffix("layout.mocha");
 
     QStringList filters;
-    filters << QString(i18nc("import latte layout", "Mocha Dock Layout file v0.2") + "(*.layout.mocha)")
-            << QString(i18nc("import older latte layout", "Mocha Dock Layout file v0.1") + "(*.mocharc)");
+    filters << QString(i18nc("import mocha layout", "Mocha Dock Layout file v0.2") + "(*.layout.mocha)")
+            << QString(i18nc("import older mocha layout", "Mocha Dock Layout file v0.1") + "(*.mocharc)");
     importFileDialog->setNameFilters(filters);
 
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
 
     connect(importFileDialog, &QFileDialog::fileSelected, this, [&](const QString & file) {
-        Mocha::Layouts::Importer::LatteFileVersion version = Mocha::Layouts::Importer::fileVersion(file);
+        Mocha::Layouts::Importer::MochaFileVersion version = Mocha::Layouts::Importer::fileVersion(file);
         qDebug() << "VERSION :::: " << version;
 
         if (version == Mocha::Layouts::Importer::LayoutVersion2) {
@@ -623,12 +623,12 @@ void TabLayouts::exportLayoutForBackup()
     m_corona->layoutsManager()->synchronizer()->syncActiveLayoutsToOriginalFiles();
     m_corona->universalSettings()->syncSettings();
 
-    QFileDialog *exportFileDialog = new QFileDialog(m_parentDialog, i18n("Export Layout For Backup"), QDir::homePath(), QStringLiteral("layout.latte"));
+    QFileDialog *exportFileDialog = new QFileDialog(m_parentDialog, i18n("Export Layout For Backup"), QDir::homePath(), QStringLiteral("layout.mocha"));
 
     exportFileDialog->setLabelText(QFileDialog::Accept, i18nc("export layout","Export"));
     exportFileDialog->setFileMode(QFileDialog::AnyFile);
     exportFileDialog->setAcceptMode(QFileDialog::AcceptSave);
-    exportFileDialog->setDefaultSuffix("layout.latte");
+    exportFileDialog->setDefaultSuffix("layout.mocha");
 
     QStringList filters;
     QString filter1(i18nc("export layout", "Mocha Dock Layout file v0.2") + "(*.layout.mocha)");

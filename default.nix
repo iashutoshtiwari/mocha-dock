@@ -4,7 +4,7 @@ let
   inherit (pkgs) stdenv kdePackages qt6 xorg;
 in
 stdenv.mkDerivation {
-  pname = "latte-dock";
+  pname = "mocha-dock";
   version = "unstable-9999";
 
   src = ./.;
@@ -27,7 +27,7 @@ stdenv.mkDerivation {
 
   postInstall = ''
     mkdir -p $out/etc/xdg/autostart
-    cp $out/share/applications/org.kde.latte-dock.desktop $out/etc/xdg/autostart
+    cp $out/share/applications/org.kde.mocha-dock.desktop $out/etc/xdg/autostart
   '';
 
   shellHook = ''
@@ -36,7 +36,7 @@ stdenv.mkDerivation {
 
   meta = with pkgs.lib; {
     description = "Dock-style app launcher based on Plasma frameworks";
-    homepage = "https://invent.kde.org/plasma/latte-dock";
+    homepage = "https://invent.kde.org/plasma/mocha-dock";
     license = licenses.gpl2;
     platforms = platforms.unix;
     maintainers = [ ];

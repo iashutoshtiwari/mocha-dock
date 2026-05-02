@@ -20,7 +20,7 @@ IndicatorPackage::IndicatorPackage(QObject *parent, const QVariantList &args)
 
 void IndicatorPackage::initPackage(KPackage::Package *package)
 {
-    package->setDefaultPackageRoot(QStringLiteral("latte/indicators"));
+    package->setDefaultPackageRoot(QStringLiteral("mocha/indicators"));
 
     package->addDirectoryDefinition("config", QStringLiteral("config"));
     package->addDirectoryDefinition("ui", QStringLiteral("ui"));

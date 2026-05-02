@@ -44,7 +44,7 @@ InfoView::InfoView(Mocha::Corona *corona, QString message, QScreen *screen, QWin
     setScreen(screen);
     setFlags(wFlags());
 
-    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &InfoView::updateWaylandId);
+    connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::mochaWindowAdded, this, &InfoView::updateWaylandId);
 
     init();
 }

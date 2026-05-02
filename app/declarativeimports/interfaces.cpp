@@ -115,7 +115,7 @@ void Interfaces::setupInterfaces(QObject *view, QObject *globalShortcuts, QObjec
 void Interfaces::updateView()
 {
     if (m_plasmoid) {
-        setView(m_plasmoid->property("_latte_view_object").value<QObject *>());
+        setView(m_plasmoid->property("_mocha_view_object").value<QObject *>());
     }
 }
 
@@ -153,11 +153,11 @@ void Interfaces::setPlasmoidInterface(QObject *interface)
     if (plasmoid && m_plasmoid != plasmoid) {
         m_plasmoid = plasmoid;
 
-        setGlobalShortcuts(plasmoid->property("_latte_globalShortcuts_object").value<QObject *>());
-        setLayoutsManager(plasmoid->property("_latte_layoutsManager_object").value<QObject *>());
-        setThemeExtended(plasmoid->property("_latte_themeExtended_object").value<QObject *>());
-        setUniversalSettings(plasmoid->property("_latte_universalSettings_object").value<QObject *>());
-        setView(plasmoid->property("_latte_view_object").value<QObject *>());
+        setGlobalShortcuts(plasmoid->property("_mocha_globalShortcuts_object").value<QObject *>());
+        setLayoutsManager(plasmoid->property("_mocha_layoutsManager_object").value<QObject *>());
+        setThemeExtended(plasmoid->property("_mocha_themeExtended_object").value<QObject *>());
+        setUniversalSettings(plasmoid->property("_mocha_universalSettings_object").value<QObject *>());
+        setView(plasmoid->property("_mocha_view_object").value<QObject *>());
 
         emit interfaceChanged();
     }

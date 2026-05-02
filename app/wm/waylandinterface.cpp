@@ -89,7 +89,7 @@ void WaylandInterface::setCurrentDesktop(QString desktop)
     emit currentDesktopChanged();
 }
 
-//! Register Latte Ignored Windows in order to NOT be tracked
+//! Register Mocha Ignored Windows in order to NOT be tracked
 void WaylandInterface::registerIgnoredWindow(WindowId wid)
 {
     if (!wid.isNull() && !m_ignoredWindows.contains(wid)) {
@@ -848,7 +848,7 @@ void WaylandInterface::windowCreatedProxy(KWayland::Client::PlasmaWindow *w)
     emit windowAdded(w->uuid());
 
     if (w->appId() == QLatin1String("mocha-dock")) {
-        emit latteWindowAdded();
+        emit mochaWindowAdded();
     }
 }
 

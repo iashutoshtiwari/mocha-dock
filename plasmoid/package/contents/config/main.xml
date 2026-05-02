@@ -64,7 +64,7 @@
     <entry name="transparentPanel" type="Bool">
       <default>false</default>
     </entry>
-    <entry name="isInLatteDock" type="Bool">
+    <entry name="isInMochaDock" type="Bool">
       <default>false</default>
     </entry>
     <entry name="durationTime" type="Int">
@@ -76,7 +76,7 @@
     </entry>
     <entry name="forceMonochromaticIcons" type="Bool">
       <default>false</default>
-      <label>When "true" Latte color palette is used in order to provide monochromatic icons at all times. It is not needed in general and can be used only with specific icon themes</label>
+      <label>When "true" Mocha color palette is used in order to provide monochromatic icons at all times. It is not needed in general and can be used only with specific icon themes</label>
     </entry>
     <entry name="previewWindowAsPopup" type="Bool">
       <default>false</default>

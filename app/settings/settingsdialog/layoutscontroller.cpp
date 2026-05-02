@@ -51,7 +51,7 @@ Layouts::Layouts(Settings::Handler::TabLayouts *parent)
       m_proxyModel(new QSortFilterProxyModel(this)),
       m_view(m_handler->ui()->layoutsView),
       m_headerView(new Settings::Layouts::HeaderView(Qt::Horizontal, m_handler->dialog())),
-      m_storage(KConfigGroup(KSharedConfig::openConfig(),"LatteSettingsDialog").group("TabLayouts"))
+      m_storage(KConfigGroup(KSharedConfig::openConfig(),"MochaSettingsDialog").group("TabLayouts"))
 {   
     m_templatesKeeper = new Settings::Part::TemplatesKeeper(this, m_handler->corona());
 
@@ -131,7 +131,7 @@ void Layouts::initView()
     m_view->sortByColumn(m_viewSortColumn, m_viewSortOrder);
 
     //!find the available colors
-    m_iconsPath = m_handler->corona()->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+    m_iconsPath = m_handler->corona()->kPackage().path() + "../../shells/org.kde.mocha.shell/contents/images/canvas/";
 
     QDir layoutDir(m_iconsPath);
     QStringList filter;
@@ -348,7 +348,7 @@ const Mocha::Data::ScreensTable Layouts::screensData()
     //! Print no-removable screens
     /*for (int i=0; i<scrtable.rowCount(); ++i) {
         if (!scrtable[i].isRemovable) {
-            qDebug() <<"org.kde.latte NO REMOVABLE EXP SCREEN ::: " << scrtable[i].id;
+            qDebug() <<"org.kde.mocha NO REMOVABLE EXP SCREEN ::: " << scrtable[i].id;
         }
     }*/
 

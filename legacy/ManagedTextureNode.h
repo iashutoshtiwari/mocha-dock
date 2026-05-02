@@ -13,7 +13,7 @@
 #include <qglobal.h>
 
 // XXX:
-// This file was copied from KDeclarative and is only needed to make Latte build.
+// This file was copied from KDeclarative and is only needed to make Mocha build.
 // I promise I will get rid of it.
 // - L.B.
 

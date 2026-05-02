@@ -71,7 +71,7 @@ private:
 private:
     Mocha::WindowSystem::Tracker::LastActiveWindow *m_currentLastActiveWindow{nullptr};
 
-    Mocha::View *m_latteView{nullptr};
+    Mocha::View *m_mochaView{nullptr};
     WindowSystem::AbstractWindowInterface *m_wm{nullptr};
 };
 

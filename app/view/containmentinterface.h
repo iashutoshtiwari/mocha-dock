@@ -51,12 +51,12 @@ class ContainmentInterface: public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool hasExpandedApplet READ hasExpandedApplet NOTIFY hasExpandedAppletChanged)
-    Q_PROPERTY(bool hasLatteTasks READ hasLatteTasks NOTIFY hasLatteTasksChanged)
+    Q_PROPERTY(bool hasMochaTasks READ hasMochaTasks NOTIFY hasMochaTasksChanged)
     Q_PROPERTY(bool hasPlasmaTasks READ hasPlasmaTasks NOTIFY hasPlasmaTasksChanged)
 
     Q_PROPERTY(QObject *plasmoid READ plasmoid() WRITE setPlasmoid NOTIFY plasmoidChanged)
 
-    Q_PROPERTY(QAbstractListModel *latteTasksModel READ latteTasksModel() NOTIFY latteTasksModelChanged)
+    Q_PROPERTY(QAbstractListModel *mochaTasksModel READ mochaTasksModel() NOTIFY mochaTasksModelChanged)
     Q_PROPERTY(QAbstractListModel *plasmaTasksModel READ plasmaTasksModel() NOTIFY plasmaTasksModelChanged)
 
     //! specified from containment qml side
@@ -67,7 +67,7 @@ public:
     virtual ~ContainmentInterface();
 
     bool hasExpandedApplet() const;
-    bool hasLatteTasks() const;
+    bool hasMochaTasks() const;
     bool hasPlasmaTasks() const;
 
     bool applicationLauncherInPopup() const;
@@ -83,10 +83,10 @@ public:
 
     bool hideShortcutBadges();
     bool showOnlyMeta();
-    bool showShortcutBadges(const bool showLatteShortcuts, const bool showMeta);
+    bool showShortcutBadges(const bool showMochaShortcuts, const bool showMeta);
 
     //! this is updated from external apps e.g. a thunderbird plugin
-    bool updateBadgeForLatteTask(const QString identifier, const QString value);
+    bool updateBadgeForMochaTask(const QString identifier, const QString value);
 
     int applicationLauncherId() const;
     int appletIdForVisualIndex(const int index);
@@ -102,7 +102,7 @@ public:
     QObject *layoutManager() const;
     void setLayoutManager(QObject *manager);
 
-    QAbstractListModel *latteTasksModel() const;
+    QAbstractListModel *mochaTasksModel() const;
     QAbstractListModel *plasmaTasksModel() const;
 
 public slots:
@@ -128,10 +128,10 @@ public slots:
 signals:
     void expandedAppletStateChanged();
     void hasExpandedAppletChanged();
-    void hasLatteTasksChanged();
+    void hasMochaTasksChanged();
     void hasPlasmaTasksChanged();
     void initializationCompleted();
-    void latteTasksModelChanged();
+    void mochaTasksModelChanged();
     void layoutManagerChanged();
     void plasmaTasksModelChanged();
     void plasmoidChanged();
@@ -163,7 +163,7 @@ private slots:
 
     void onAppletAdded(Plasma::Applet *applet);
     void onAppletExpandedChanged();
-    void onLatteTasksCountChanged();
+    void onMochaTasksCountChanged();
     void onPlasmaTasksCountChanged();
 
 private:
@@ -178,7 +178,7 @@ private:
     QList<int> toIntList(const QVariantList &list);
 
 private:
-    bool m_hasLatteTasks{false};
+    bool m_hasMochaTasks{false};
     bool m_hasPlasmaTasks{false};
 
     QMetaMethod m_activateEntryMethod;
@@ -194,7 +194,7 @@ private:
     //! applets tracking
     QTimer m_appletsExpandedConnectionsTimer;
 
-    TasksModel *m_latteTasksModel;
+    TasksModel *m_mochaTasksModel;
     TasksModel *m_plasmaTasksModel;
 
     //!follow containment plasmoid

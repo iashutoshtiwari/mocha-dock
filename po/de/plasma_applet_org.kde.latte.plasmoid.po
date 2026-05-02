@@ -6,7 +6,7 @@
 # SPDX-FileCopyrightText: 2017 Jan Neumann <neum dot ja at gmail dot com>
 msgid ""
 msgstr ""
-"Project-Id-Version: plasma_applet_org.kde.latte.plasmoid\n"
+"Project-Id-Version: plasma_applet_org.kde.mocha.plasmoid\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
 "PO-Revision-Date: 2022-07-23 23:19+0200\n"

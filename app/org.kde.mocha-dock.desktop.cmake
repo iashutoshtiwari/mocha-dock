@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Mocha Dock
-Name[ar]=رصيف لاتيه
+Name[ar]=رصيف Mocha
 Name[az]=Mocha Dok Paneli
 Name[ca]=Acoblador Mocha
 Name[ca@valencia]=Acoblador Mocha
@@ -32,7 +32,7 @@ Name[sk]=Dok Mocha
 Name[sl]=Mocha Dock
 Name[sv]=Mocha dockningsfönster
 Name[tr]=Mocha Rıhtım
-Name[uk]=Панель Латте
+Name[uk]=Панель Mocha
 Name[zh_CN]=Mocha 停靠栏
 Name[zh_TW]=Mocha Dock
 Comment=Dock for the masses

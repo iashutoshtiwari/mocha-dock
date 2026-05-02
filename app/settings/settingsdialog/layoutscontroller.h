@@ -101,7 +101,7 @@ public:
 
     const Mocha::Data::ScreensTable screensData();
 
-    //! import layouts from Latte versions <= v0.7.x
+    //! import layouts from Mocha versions <= v0.7.x
     bool importLayoutsFromV1ConfigFile(QString file);
 
 signals:

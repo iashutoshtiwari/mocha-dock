@@ -72,7 +72,7 @@ protected:
     bool m_isNormalWindow{true};
     QTimer m_screenSyncTimer;
 
-    QPointer<Mocha::View> m_latteView;
+    QPointer<Mocha::View> m_mochaView;
 
     QList<QMetaObject::Connection> connections;
     QList<QMetaObject::Connection> viewconnections;

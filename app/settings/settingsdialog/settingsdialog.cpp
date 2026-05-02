@@ -44,7 +44,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, Mocha::Corona *corona)
     : GenericDialog(parent),
       m_ui(new Ui::SettingsDialog),
       m_corona(corona),
-      m_storage(KConfigGroup(KSharedConfig::openConfig(),"LatteSettingsDialog"))
+      m_storage(KConfigGroup(KSharedConfig::openConfig(),"MochaSettingsDialog"))
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
     setAcceptDrops(true);
@@ -147,7 +147,7 @@ void SettingsDialog::initFileMenu()
     screensAction->setToolTip(i18n("Examine your screens and remove deprecated references"));
     connect(screensAction, &QAction::triggered, this, &SettingsDialog::showScreensDialog);
 
-    QAction *quitAction = m_fileMenu->addAction(i18n("&Quit Latte"));
+    QAction *quitAction = m_fileMenu->addAction(i18n("&Quit Mocha"));
     quitAction->setIcon(QIcon::fromTheme("application-exit"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
 
@@ -257,13 +257,13 @@ void SettingsDialog::importFullConfiguration()
 
     QFileDialog *importFileDialog = new QFileDialog(this, i18nc("import full configuration", "Import Full Configuration")
                                                     , QDir::homePath()
-                                                    , QStringLiteral("latterc"));
+                                                    , QStringLiteral("mocharc"));
 
     importFileDialog->setWindowIcon(QIcon::fromTheme("document-import"));
     importFileDialog->setLabelText(QFileDialog::Accept, i18nc("import full configuration","Import"));
     importFileDialog->setFileMode(QFileDialog::AnyFile);
     importFileDialog->setAcceptMode(QFileDialog::AcceptOpen);
-    importFileDialog->setDefaultSuffix("latterc");
+    importFileDialog->setDefaultSuffix("mocharc");
 
     QStringList filters;
     filters << QString(i18nc("import full configuration", "Mocha Dock Full Configuration file") + "(*.mocharc)");
@@ -272,7 +272,7 @@ void SettingsDialog::importFullConfiguration()
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
 
     connect(importFileDialog, &QFileDialog::fileSelected, this, [&](const QString & file) {
-        Mocha::Layouts::Importer::LatteFileVersion version = Mocha::Layouts::Importer::fileVersion(file);
+        Mocha::Layouts::Importer::MochaFileVersion version = Mocha::Layouts::Importer::fileVersion(file);
         qDebug() << "VERSION :::: " << version;
 
         if (version == Mocha::Layouts::Importer::ConfigVersion2
@@ -323,12 +323,12 @@ void SettingsDialog::exportFullConfiguration()
 
     QFileDialog *exportFileDialog = new QFileDialog(this, i18n("Export Full Configuration"),
                                                     QDir::homePath(),
-                                                    QStringLiteral("latterc"));
+                                                    QStringLiteral("mocharc"));
 
     exportFileDialog->setLabelText(QFileDialog::Accept, i18nc("export full configuration","Export"));
     exportFileDialog->setFileMode(QFileDialog::AnyFile);
     exportFileDialog->setAcceptMode(QFileDialog::AcceptSave);
-    exportFileDialog->setDefaultSuffix("latterc");
+    exportFileDialog->setDefaultSuffix("mocharc");
 
     QStringList filters;
     QString filter2(i18nc("export full configuration", "Mocha Dock Full Configuration file v0.2") + "(*.mocharc)");
@@ -461,7 +461,7 @@ void SettingsDialog::updateApplyButtonsState()
     } else if (m_ui->tabWidget->currentIndex() == PreferencesPage) {
         m_ui->buttonBox->button(QDialogButtonBox::RestoreDefaults)->setVisible(true);
 
-        //! Defaults for general Latte settings
+        //! Defaults for general Mocha settings
         if (m_tabPreferencesHandler->inDefaultValues() ) {
             m_ui->buttonBox->button(QDialogButtonBox::RestoreDefaults)->setEnabled(false);
         } else {

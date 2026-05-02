@@ -55,7 +55,7 @@ Positioner::Positioner(Mocha::View *parent)
 
     if (m_corona) {
         connect(m_view, &QWindow::windowTitleChanged, this, &Positioner::updateWaylandId);
-        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &Positioner::updateWaylandId);
+        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::mochaWindowAdded, this, &Positioner::updateWaylandId);
 
         connect(m_corona->layoutsManager(), &Layouts::Manager::currentLayoutIsSwitching, this, &Positioner::onCurrentLayoutIsSwitching);
         /////
@@ -94,10 +94,10 @@ void Positioner::init()
 
     connect(this, &Positioner::hidingForRelocationStarted, this, &Positioner::updateInRelocationAnimation);
     connect(this, &Positioner::showingAfterRelocationFinished, this, &Positioner::updateInRelocationAnimation);
-    connect(this, &Positioner::showingAfterRelocationFinished, this, &Positioner::syncLatteViews);
+    connect(this, &Positioner::showingAfterRelocationFinished, this, &Positioner::syncMochaViews);
     connect(this, &Positioner::startupFinished, this, &Positioner::onStartupFinished);
 
-    connect(m_view, &Mocha::View::onPrimaryChanged, this, &Positioner::syncLatteViews);
+    connect(m_view, &Mocha::View::onPrimaryChanged, this, &Positioner::syncMochaViews);
 
     connect(this, &Positioner::inSlideAnimationChanged, this, [&]() {
         if (!inSlideAnimation()) {
@@ -261,10 +261,10 @@ bool Positioner::isOffScreen() const
 
 int Positioner::currentScreenId() const
 {
-    auto *latteCorona = qobject_cast<Mocha::Corona *>(m_view->corona());
+    auto *mochaCorona = qobject_cast<Mocha::Corona *>(m_view->corona());
 
-    if (latteCorona) {
-        return latteCorona->screenPool()->id(m_screenNameToFollow);
+    if (mochaCorona) {
+        return mochaCorona->screenPool()->id(m_screenNameToFollow);
     }
 
     return -1;
@@ -354,12 +354,12 @@ void Positioner::setWindowOnActivities(const Mocha::WindowSystem::WindowId &wid,
     m_corona->wm()->setWindowOnActivities(wid, activities);
 }
 
-void Positioner::syncLatteViews()
+void Positioner::syncMochaViews()
 {
     if (m_view->layout()) {
         //! This is needed in case the edge there are views that must be deleted
         //! after screen edges changes
-        m_view->layout()->syncLatteViewsToScreens();
+        m_view->layout()->syncMochaViewsToScreens();
     }
 }
 
@@ -522,8 +522,8 @@ void Positioner::immediateSyncGeometry()
 
         if (m_view->formFactor() == Plasma::Types::Vertical) {
             QString layoutName = m_view->layout() ? m_view->layout()->name() : QString();
-            auto latteCorona = qobject_cast<Mocha::Corona *>(m_view->corona());
-            int fixedScreen = m_view->onPrimary() ? latteCorona->screenPool()->primaryScreenId() : m_view->containment()->screen();
+            auto mochaCorona = qobject_cast<Mocha::Corona *>(m_view->corona());
+            int fixedScreen = m_view->onPrimary() ? mochaCorona->screenPool()->primaryScreenId() : m_view->containment()->screen();
 
             QList<Types::Visibility> ignoreModes({Mocha::Types::AutoHide,
                                                   Mocha::Types::SidebarOnDemand,
@@ -551,7 +551,7 @@ void Positioner::immediateSyncGeometry()
                 //! paint out-of-screen
                 freeRegion = availableScreenRect;
             } else {
-                freeRegion = latteCorona->availableScreenRegionWithCriteria(fixedScreen, activityid, ignoreModes, ignoreEdges);
+                freeRegion = mochaCorona->availableScreenRegionWithCriteria(fixedScreen, activityid, ignoreModes, ignoreEdges);
             }
 
             //! On startup when offscreen use offscreen screen geometry.

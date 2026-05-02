@@ -1,4 +1,4 @@
-# Spanish translations for latte_indicator_org.kde.latte.plasma.po package.
+# Spanish translations for latte_indicator_org.kde.mocha.plasma.po package.
 # Copyright (C) 2019-2025 This file is copyright:
 # This file is distributed under the same license as the latte-dock package.
 # Automatically generated, 2019.
@@ -6,7 +6,7 @@
 # SPDX-FileCopyrightText: 2019, 2020, 2021, 2025 Víctor Rodrigo Córdoba <vrcordoba@gmail.com>
 msgid ""
 msgstr ""
-"Project-Id-Version: latte_indicator_org.kde.latte.plasma\n"
+"Project-Id-Version: latte_indicator_org.kde.mocha.plasma\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
 "PO-Revision-Date: 2025-06-09 02:41+0100\n"
@@ -19,34 +19,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 20.04.2\n"
 
-#: org.kde.latte.plasma/package/config/config.qml:21
+#: org.kde.mocha.plasma/package/config/config.qml:21
 #, kde-format
 msgid "Style"
 msgstr "Estilo"
 
-#: org.kde.latte.plasma/package/config/config.qml:29
+#: org.kde.mocha.plasma/package/config/config.qml:29
 #, kde-format
 msgid "Padding"
 msgstr "Relleno"
 
-#: org.kde.latte.plasma/package/config/config.qml:53
-#: org.kde.latte.plasma/package/config/config.qml:89
+#: org.kde.mocha.plasma/package/config/config.qml:53
+#: org.kde.mocha.plasma/package/config/config.qml:89
 #, kde-format
 msgctxt "number in percentage, e.g. 85 %"
 msgid "%1 %"
 msgstr "%1 %"
 
-#: org.kde.latte.plasma/package/config/config.qml:67
+#: org.kde.mocha.plasma/package/config/config.qml:67
 #, kde-format
 msgid "Corner Margin"
 msgstr "Margen en las esquinas"
 
-#: org.kde.latte.plasma/package/config/config.qml:99
+#: org.kde.mocha.plasma/package/config/config.qml:99
 #, kde-format
 msgid "Options"
 msgstr "Opciones"
 
-#: org.kde.latte.plasma/package/config/config.qml:117
+#: org.kde.mocha.plasma/package/config/config.qml:117
 #, kde-format
 msgid "Growing circle animation when clicked"
 msgstr "Animación de crecimiento del círculo cuando se pulsa"

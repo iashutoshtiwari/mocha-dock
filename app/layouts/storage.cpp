@@ -81,23 +81,23 @@ bool Storage::isWritable(const Layout::GenericLayout *layout) const
     }
 }
 
-bool Storage::isLatteContainment(const Plasma::Containment *containment) const
+bool Storage::isMochaContainment(const Plasma::Containment *containment) const
 {
     if (!containment) {
         return false;
     }
 
-    if (containment->pluginMetaData().pluginId() == QLatin1String("org.kde.latte.containment")) {
+    if (containment->pluginMetaData().pluginId() == QLatin1String("org.kde.mocha.containment")) {
         return true;
     }
 
     return false;
 }
 
-bool Storage::isLatteContainment(const KConfigGroup &group) const
+bool Storage::isMochaContainment(const KConfigGroup &group) const
 {
     QString pluginId = group.readEntry("plugin", "");
-    return pluginId == QLatin1String("org.kde.latte.containment");
+    return pluginId == QLatin1String("org.kde.mocha.containment");
 }
 
 bool Storage::isSubContainment(const Plasma::Corona *corona, const Plasma::Applet *applet) const
@@ -613,7 +613,7 @@ QList<Plasma::Containment *> Storage::importLayoutFile(const Layout::GenericLayo
     QList<Plasma::Containment *> importedViews;
 
     for (const auto containment : newContainments) {
-        if (isLatteContainment(containment)) {
+        if (isMochaContainment(containment)) {
             importedViews << containment;
         }
     }
@@ -674,7 +674,7 @@ Data::View Storage::newView(const Layout::GenericLayout *destinationLayout, cons
         KConfigGroup containments = KConfigGroup(lFile, "Containments");
 
         for (const auto cId : containments.groupList()) {
-            if (Layouts::Storage::self()->isLatteContainment(containments.group(cId))) {
+            if (Layouts::Storage::self()->isMochaContainment(containments.group(cId))) {
                 //! first view we will find, we update its value
                 updateView(containments.group(cId), nextViewData);
                 break;
@@ -739,7 +739,7 @@ bool Storage::exportTemplate(const QString &originFile, const QString &destinati
     for (const auto &cId : containments.groupList()) {
         //! clear properties
         containments.group(cId).writeEntry("layoutId", QString());
-        if (isLatteContainment(containments.group(cId))) {
+        if (isMochaContainment(containments.group(cId))) {
             containments.group(cId).writeEntry("isPreferredForShortcuts", false);
         }
 
@@ -836,7 +836,7 @@ bool Storage::exportTemplate(const Layout::GenericLayout *layout, Plasma::Contai
     for (const auto &cId : copied_conts.groupList()) {
         //! clear properties
         copied_conts.group(cId).writeEntry("layoutId", QString());
-        if (isLatteContainment(copied_conts.group(cId))) {
+        if (isMochaContainment(copied_conts.group(cId))) {
             copied_conts.group(cId).writeEntry("isPreferredForShortcuts", false);
         }
 
@@ -1180,8 +1180,8 @@ bool Storage::hasOrphanedSubContainments(const Layout::GenericLayout *layout, Da
             Plasma::Applet *parentApplet = qobject_cast<Plasma::Applet *>(containment->parent());
             Plasma::Containment *parentContainment = parentApplet ? qobject_cast<Plasma::Containment *>(parentApplet->parent()) : nullptr;
 
-            if (isLatteContainment(containment) || (parentApplet && parentContainment && layout->contains(parentContainment))) {
-                //! is latte containment or is subcontainment that belongs to latte containment
+            if (isMochaContainment(containment) || (parentApplet && parentContainment && layout->contains(parentContainment))) {
+                //! is mocha containment or is subcontainment that belongs to mocha containment
                 continue;
             }
 
@@ -1438,7 +1438,7 @@ bool Storage::containsView(const QString &filepath, const int &viewId)
     KSharedConfigPtr lFile = KSharedConfig::openConfig(filepath);
     KConfigGroup containmentGroups = KConfigGroup(lFile, "Containments");
     KConfigGroup viewGroup = containmentGroups.group(QString::number(viewId));
-    return viewGroup.exists() && isLatteContainment(viewGroup);
+    return viewGroup.exists() && isMochaContainment(viewGroup);
 }
 
 bool Storage::hasContainment(const Layout::GenericLayout *layout, const int &id)
@@ -1479,7 +1479,7 @@ bool Storage::isClonedView(const Plasma::Containment *containment) const
 
 bool Storage::isClonedView(const KConfigGroup &containmentGroup) const
 {
-    if (!isLatteContainment(containmentGroup)) {
+    if (!isMochaContainment(containmentGroup)) {
         return false;
     }
 
@@ -1514,23 +1514,23 @@ void Storage::removeAllClonedViews(const QString &filepath)
     }
 }
 
-Data::GenericTable<Data::Generic> Storage::subcontainments(const Layout::GenericLayout *layout, const Plasma::Containment *lattecontainment) const
+Data::GenericTable<Data::Generic> Storage::subcontainments(const Layout::GenericLayout *layout, const Plasma::Containment *mochacontainment) const
 {
     Data::GenericTable<Data::Generic> subs;
 
-    if (!layout || !Layouts::Storage::self()->isLatteContainment(lattecontainment)) {
+    if (!layout || !Layouts::Storage::self()->isMochaContainment(mochacontainment)) {
         return subs;
     }
 
     for (const auto containment : (*layout->containments())) {
-        if (containment == lattecontainment) {
+        if (containment == mochacontainment) {
             continue;
         }
 
         Plasma::Applet *parentApplet = qobject_cast<Plasma::Applet *>(containment->parent());
 
-        //! add subcontainments for that lattecontainment
-        if (parentApplet && parentApplet->containment() && parentApplet->containment() == lattecontainment) {
+        //! add subcontainments for that mochacontainment
+        if (parentApplet && parentApplet->containment() && parentApplet->containment() == mochacontainment) {
             Data::Generic subdata;
             subdata.id = QString::number(containment->id());
             subs << subdata;
@@ -1544,7 +1544,7 @@ Data::GenericTable<Data::Generic> Storage::subcontainments(const KConfigGroup &c
 {
     Data::GenericTable<Data::Generic> subs;
 
-    if (!Layouts::Storage::self()->isLatteContainment(containmentGroup)) {
+    if (!Layouts::Storage::self()->isMochaContainment(containmentGroup)) {
         return subs;
     }
 
@@ -1561,22 +1561,22 @@ Data::GenericTable<Data::Generic> Storage::subcontainments(const KConfigGroup &c
     return subs;
 }
 
-Data::View Storage::view(const Layout::GenericLayout *layout, const Plasma::Containment *lattecontainment)
+Data::View Storage::view(const Layout::GenericLayout *layout, const Plasma::Containment *mochacontainment)
 {
     Data::View vdata;
 
-    if (!layout || !Layouts::Storage::self()->isLatteContainment(lattecontainment)) {
+    if (!layout || !Layouts::Storage::self()->isMochaContainment(mochacontainment)) {
         return vdata;
     }
 
-    vdata = view(lattecontainment->config());
+    vdata = view(mochacontainment->config());
 
-    vdata.screen = lattecontainment->screen();
+    vdata.screen = mochacontainment->screen();
     if (!isValid(vdata.screen)) {
-        vdata.screen = lattecontainment->lastScreen();
+        vdata.screen = mochacontainment->lastScreen();
     }
 
-    vdata.subcontainments = subcontainments(layout, lattecontainment);
+    vdata.subcontainments = subcontainments(layout, mochacontainment);
 
     return vdata;
 }
@@ -1585,7 +1585,7 @@ Data::View Storage::view(const KConfigGroup &containmentGroup)
 {
     Data::View vdata;
 
-    if (!Layouts::Storage::self()->isLatteContainment(containmentGroup)) {
+    if (!Layouts::Storage::self()->isMochaContainment(containmentGroup)) {
         return vdata;
     }
 
@@ -1614,7 +1614,7 @@ Data::View Storage::view(const KConfigGroup &containmentGroup)
 
 void Storage::updateView(KConfigGroup viewGroup, const Data::View &viewData)
 {
-    if (!Layouts::Storage::self()->isLatteContainment(viewGroup)) {
+    if (!Layouts::Storage::self()->isMochaContainment(viewGroup)) {
         return;
     }
 
@@ -1657,7 +1657,7 @@ void Storage::updateView(const Layout::GenericLayout *layout, const Data::View &
         KConfigGroup containmentGroups = KConfigGroup(lFile, "Containments");
         KConfigGroup viewContainment = containmentGroups.group(viewData.id);
 
-        if (viewContainment.exists() && Layouts::Storage::self()->isLatteContainment(viewContainment)) {
+        if (viewContainment.exists() && Layouts::Storage::self()->isMochaContainment(viewContainment)) {
             updateView(viewContainment, viewData);
         }
     }
@@ -1726,7 +1726,7 @@ QString Storage::storedView(const Layout::GenericLayout *layout, const int &cont
 
     if (layout->isActive()) {
         auto containment = layout->containmentForId((uint)containmentId);
-        if (!containment || !isLatteContainment(containment)) {
+        if (!containment || !isMochaContainment(containment)) {
             return QString();
         }
     } else {
@@ -1797,13 +1797,13 @@ int Storage::expectedViewScreenId(const Mocha::Corona *corona, const KConfigGrou
     return expectedViewScreenId(corona, self()->view(containmentGroup));
 }
 
-int Storage::expectedViewScreenId(const Layout::GenericLayout *layout, const Plasma::Containment *lattecontainment) const
+int Storage::expectedViewScreenId(const Layout::GenericLayout *layout, const Plasma::Containment *mochacontainment) const
 {
     if (!layout || !layout->corona()) {
         return Mocha::ScreenPool::NOSCREENID;
     }
 
-    return expectedViewScreenId(layout->corona(), self()->view(layout, lattecontainment));
+    return expectedViewScreenId(layout->corona(), self()->view(layout, mochacontainment));
 }
 
 int Storage::expectedViewScreenId(const Mocha::Corona *corona, const Data::View &view) const
@@ -1835,7 +1835,7 @@ Data::ViewsTable Storage::views(const Layout::GenericLayout *layout)
     }
 
     for (const auto containment : (*layout->containments())) {
-        if (!isLatteContainment(containment)) {
+        if (!isMochaContainment(containment)) {
             continue;
         }
 
@@ -1859,7 +1859,7 @@ Data::ViewsTable Storage::views(const QString &file)
     KConfigGroup containmentGroups = KConfigGroup(lFile, "Containments");
 
     for (const auto &cId : containmentGroups.groupList()) {
-        if (Layouts::Storage::self()->isLatteContainment(containmentGroups.group(cId))) {
+        if (Layouts::Storage::self()->isMochaContainment(containmentGroups.group(cId))) {
             vtable << view(containmentGroups.group(cId));
         }
     }

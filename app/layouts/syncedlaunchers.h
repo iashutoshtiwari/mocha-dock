@@ -28,7 +28,7 @@ namespace Mocha {
 namespace Layouts {
 
 //! in order to support property the launcher groups Layout and Global
-//! the latte plasmoids must communicate between them with signals when
+//! the mocha plasmoids must communicate between them with signals when
 //! there are changes in their models. This way we are trying to avoid
 //! crashes that occur by setting the launcherList of the tasksModel so
 //! often. The plasma devs of libtaskmanager have designed the launchers

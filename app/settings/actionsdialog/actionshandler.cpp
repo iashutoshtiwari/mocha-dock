@@ -65,14 +65,14 @@ void ActionsHandler::initItems()
     itemid = Mocha::Data::ContextMenu::PREFERENCESACTION;
     itemindex = Mocha::Data::ContextMenu::ACTIONSEDITORDER.indexOf(itemid);
     m_items[itemid] = new ActionsDialog::ActionListWidgetItem(QIcon::fromTheme("configure"),
-                                                              i18nc("global settings window", "Configure Latte..."),
+                                                              i18nc("global settings window", "Configure Mocha..."),
                                                               itemindex,
                                                               itemid);
 
-    itemid = Mocha::Data::ContextMenu::QUITLATTEACTION;
+    itemid = Mocha::Data::ContextMenu::QUITMOCHAACTION;
     itemindex = Mocha::Data::ContextMenu::ACTIONSEDITORDER.indexOf(itemid);
     m_items[itemid] = new ActionsDialog::ActionListWidgetItem(QIcon::fromTheme("application-exit"),
-                                                              i18nc("quit application", "Quit Latte"),
+                                                              i18nc("quit application", "Quit Mocha"),
                                                               itemindex,
                                                               itemid);
 

@@ -47,26 +47,26 @@ bool ContextMenuLayerQuickItem::menuIsShown() const
 
 QObject *ContextMenuLayerQuickItem::view() const
 {
-    return m_latteView;
+    return m_mochaView;
 }
 
 void ContextMenuLayerQuickItem::setView(QObject *view)
 {
-    if (m_latteView == view) {
+    if (m_mochaView == view) {
         return;
     }
 
-    m_latteView = qobject_cast<Mocha::View *>(view);
+    m_mochaView = qobject_cast<Mocha::View *>(view);
     emit viewChanged();
 }
 
 void ContextMenuLayerQuickItem::onMenuAboutToHide()
 {
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
-    m_latteView->containment()->setStatus(m_lastContainmentStatus);
+    m_mochaView->containment()->setStatus(m_lastContainmentStatus);
     m_contextMenu = nullptr;
     emit menuChanged();
 }
@@ -75,20 +75,20 @@ QPoint ContextMenuLayerQuickItem::popUpRelevantToParent(const QRect &parentItem,
 {
     QPoint resultPoint;
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return resultPoint;
     }
 
-    if (m_latteView->location() == Plasma::Types::TopEdge) {
+    if (m_mochaView->location() == Plasma::Types::TopEdge) {
         resultPoint.setX(parentItem.left());
         resultPoint.setY(parentItem.bottom());
-    } else if (m_latteView->location() == Plasma::Types::BottomEdge) {
+    } else if (m_mochaView->location() == Plasma::Types::BottomEdge) {
         resultPoint.setX(parentItem.left());
         resultPoint.setY(parentItem.top() - popUpRect.height() - 1);
-    } else if (m_latteView->location() == Plasma::Types::LeftEdge) {
+    } else if (m_mochaView->location() == Plasma::Types::LeftEdge) {
         resultPoint.setX(parentItem.right());
         resultPoint.setY(parentItem.top());
-    } else if (m_latteView->location() == Plasma::Types::RightEdge) {
+    } else if (m_mochaView->location() == Plasma::Types::RightEdge) {
         resultPoint.setX(parentItem.left() - popUpRect.width());
         resultPoint.setY(parentItem.top());
     }
@@ -100,20 +100,20 @@ QPoint ContextMenuLayerQuickItem::popUpRelevantToGlobalPoint(const QRect &parent
 {
     QPoint resultPoint;
 
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return resultPoint;
     }
 
-    if (m_latteView->location() == Plasma::Types::TopEdge) {
+    if (m_mochaView->location() == Plasma::Types::TopEdge) {
         resultPoint.setX(popUpRect.x());
         resultPoint.setY(popUpRect.y() + 1);
-    } else if (m_latteView->location() == Plasma::Types::BottomEdge) {
+    } else if (m_mochaView->location() == Plasma::Types::BottomEdge) {
         resultPoint.setX(popUpRect.x());
         resultPoint.setY(popUpRect.y() - popUpRect.height() - 1);
-    } else if (m_latteView->location() == Plasma::Types::LeftEdge) {
+    } else if (m_mochaView->location() == Plasma::Types::LeftEdge) {
         resultPoint.setX(popUpRect.x() + 1);
         resultPoint.setY(popUpRect.y());
-    } else if (m_latteView->location() == Plasma::Types::RightEdge) {
+    } else if (m_mochaView->location() == Plasma::Types::RightEdge) {
         resultPoint.setX(popUpRect.x() - popUpRect.width() - 1);
         resultPoint.setY(popUpRect.y());
     }
@@ -125,19 +125,19 @@ QPoint ContextMenuLayerQuickItem::popUpTopLeft(Plasma::Applet *applet, const QRe
 {
     PlasmaQuick::AppletQuickItem *ai = PlasmaQuick::AppletQuickItem::itemForApplet(applet);
 
-    QRect globalItemRect = m_latteView->absoluteGeometry();
+    QRect globalItemRect = m_mochaView->absoluteGeometry();
 
-    if (ai && applet != m_latteView->containment()) {
+    if (ai && applet != m_mochaView->containment()) {
         QPointF appletGlobalTopLeft = ai->mapToGlobal(QPointF(ai->x(), ai->y()));
         globalItemRect = QRect(appletGlobalTopLeft.x(), appletGlobalTopLeft.y(), ai->width(), ai->height());
     }
 
-    int itemLength = (m_latteView->formFactor() == Plasma::Types::Horizontal ? globalItemRect.width() : globalItemRect.height());
-    int menuLength = (m_latteView->formFactor() == Plasma::Types::Horizontal ? popUpRect.width() : popUpRect.height());
+    int itemLength = (m_mochaView->formFactor() == Plasma::Types::Horizontal ? globalItemRect.width() : globalItemRect.height());
+    int menuLength = (m_mochaView->formFactor() == Plasma::Types::Horizontal ? popUpRect.width() : popUpRect.height());
 
     if ((itemLength > menuLength)
-            || (applet == m_latteView->containment())
-            || (m_latteView && Layouts::Storage::self()->isSubContainment(m_latteView->corona(), applet)) ) {
+            || (applet == m_mochaView->containment())
+            || (m_mochaView && Layouts::Storage::self()->isSubContainment(m_mochaView->corona(), applet)) ) {
         return popUpRelevantToGlobalPoint(globalItemRect, popUpRect);
     } else {
         return popUpRelevantToParent(globalItemRect, popUpRect);
@@ -147,11 +147,11 @@ QPoint ContextMenuLayerQuickItem::popUpTopLeft(Plasma::Applet *applet, const QRe
 
 void ContextMenuLayerQuickItem::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (!event || !m_latteView) {
+    if (!event || !m_mochaView) {
         return;
     }
 
-    event->setAccepted(m_latteView->containment()->containmentActions().contains(Plasma::ContainmentActions::eventToString(event)));
+    event->setAccepted(m_mochaView->containment()->containmentActions().contains(Plasma::ContainmentActions::eventToString(event)));
     emit menuChanged();
 }
 
@@ -159,7 +159,7 @@ void ContextMenuLayerQuickItem::mousePressEvent(QMouseEvent *event)
 {
     //qDebug() << "Step -1 ...";
 
-    if (!event || !m_latteView || !m_latteView->containment()) {
+    if (!event || !m_mochaView || !m_mochaView->containment()) {
         return;
     }
 
@@ -176,7 +176,7 @@ void ContextMenuLayerQuickItem::mousePressEvent(QMouseEvent *event)
 
     //qDebug() << "1 ...";
     const QString trigger = Plasma::ContainmentActions::eventToString(event);
-    Plasma::ContainmentActions *plugin = m_latteView->containment()->containmentActions().value(trigger);
+    Plasma::ContainmentActions *plugin = m_mochaView->containment()->containmentActions().value(trigger);
 
     if (!plugin || plugin->contextualActions().isEmpty()) {
         event->setAccepted(false);
@@ -213,7 +213,7 @@ void ContextMenuLayerQuickItem::mousePressEvent(QMouseEvent *event)
         updateAppletContainsMethod();
     }
 
-    for (const Plasma::Applet *appletTemp : m_latteView->containment()->applets()) {
+    for (const Plasma::Applet *appletTemp : m_mochaView->containment()->applets()) {
         PlasmaQuick::AppletQuickItem *ai = PlasmaQuick::AppletQuickItem::itemForApplet(const_cast<Plasma::Applet *>(appletTemp));
 
         bool appletContainsMouse = false;
@@ -234,7 +234,7 @@ void ContextMenuLayerQuickItem::mousePressEvent(QMouseEvent *event)
     }
 
     if (!applet) {
-        applet = m_latteView->containment();
+        applet = m_mochaView->containment();
     }
 
     //qDebug() << "3 ...";
@@ -259,9 +259,9 @@ void ContextMenuLayerQuickItem::mousePressEvent(QMouseEvent *event)
 
     //qDebug() << "5 ...";
 
-    emit m_latteView->containment()->contextualActionsAboutToShow();
+    emit m_mochaView->containment()->contextualActionsAboutToShow();
 
-    if (applet && applet != m_latteView->containment()) {
+    if (applet && applet != m_mochaView->containment()) {
         //qDebug() << "5.3 ...";
         emit applet->contextualActionsAboutToShow();
         addAppletActions(desktopMenu, applet, event);
@@ -313,8 +313,8 @@ void ContextMenuLayerQuickItem::mousePressEvent(QMouseEvent *event)
     }
 
     // Bug 344205 keep panel visible while menu is open
-    m_lastContainmentStatus = m_latteView->containment()->status();
-    m_latteView->containment()->setStatus(Plasma::Types::RequiresAttentionStatus);
+    m_lastContainmentStatus = m_mochaView->containment()->status();
+    m_mochaView->containment()->setStatus(Plasma::Types::RequiresAttentionStatus);
 
     connect(desktopMenu, SIGNAL(aboutToHide()), this, SLOT(onMenuAboutToHide()));
 
@@ -339,11 +339,11 @@ void ContextMenuLayerQuickItem::mousePressEvent(QMouseEvent *event)
 //! update the appletContainsPos method from Panel view
 void ContextMenuLayerQuickItem::updateAppletContainsMethod()
 {
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return;
     }
 
-    for (QQuickItem *item : m_latteView->contentItem()->childItems()) {
+    for (QQuickItem *item : m_mochaView->contentItem()->childItems()) {
         if (auto *metaObject = item->metaObject()) {
             // not using QMetaObject::invokeMethod to avoid warnings when calling
             // this on applets that don't have it or other child items since this
@@ -364,7 +364,7 @@ void ContextMenuLayerQuickItem::updateAppletContainsMethod()
 
 void ContextMenuLayerQuickItem::addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, QEvent *event)
 {
-    if (!m_latteView || !m_latteView->containment()) {
+    if (!m_mochaView || !m_mochaView->containment()) {
         return;
     }
 
@@ -391,13 +391,13 @@ void ContextMenuLayerQuickItem::addAppletActions(QMenu *desktopMenu, Plasma::App
 
         QAction *appletAlternatives = applet->internalAction(QStringLiteral("alternatives"));
 
-        if (appletAlternatives && appletAlternatives->isEnabled() && m_latteView->containment()->isUserConfiguring()) {
+        if (appletAlternatives && appletAlternatives->isEnabled() && m_mochaView->containment()->isUserConfiguring()) {
             desktopMenu->addAction(appletAlternatives);
         }
     }
 
     QAction *containmentAction = desktopMenu->menuAction();
-    containmentAction->setText(i18nc("%1 is the name of the containment", "%1 Options", m_latteView->containment()->title()));
+    containmentAction->setText(i18nc("%1 is the name of the containment", "%1 Options", m_mochaView->containment()->title()));
 
     if (desktopMenu->actions().count()>1) { /*take into account the Applet Name Section*/
         addContainmentActions(containmentAction->menu(), event);
@@ -433,8 +433,8 @@ void ContextMenuLayerQuickItem::addAppletActions(QMenu *desktopMenu, Plasma::App
         }
     }
 
-    if (m_latteView->containment()->immutability() == Plasma::Types::Mutable &&
-            (m_latteView->containment()->containmentType() != Plasma::Containment::Type::Panel || m_latteView->containment()->isUserConfiguring())) {
+    if (m_mochaView->containment()->immutability() == Plasma::Types::Mutable &&
+            (m_mochaView->containment()->containmentType() != Plasma::Containment::Type::Panel || m_mochaView->containment()->isUserConfiguring())) {
         QAction *closeApplet = applet->internalAction(QStringLiteral("remove"));
 
         //qDebug() << "checking for removal" << closeApplet;
@@ -451,11 +451,11 @@ void ContextMenuLayerQuickItem::addAppletActions(QMenu *desktopMenu, Plasma::App
 
 void ContextMenuLayerQuickItem::addContainmentActions(QMenu *desktopMenu, QEvent *event)
 {
-    if (!m_latteView || !m_latteView->containment()) {
+    if (!m_mochaView || !m_mochaView->containment()) {
         return;
     }
 
-    if (m_latteView->containment()->corona()->immutability() != Plasma::Types::Mutable &&
+    if (m_mochaView->containment()->corona()->immutability() != Plasma::Types::Mutable &&
             !KAuthorized::authorizeAction(QStringLiteral("plasma/containment_actions"))) {
         //qDebug() << "immutability";
         return;
@@ -464,17 +464,17 @@ void ContextMenuLayerQuickItem::addContainmentActions(QMenu *desktopMenu, QEvent
     //this is what ContainmentPrivate::prepareContainmentActions was
     const QString trigger = Plasma::ContainmentActions::eventToString(event);
     //"RightButton;NoModifier"
-    Plasma::ContainmentActions *plugin = m_latteView->containment()->containmentActions().value(trigger);
+    Plasma::ContainmentActions *plugin = m_mochaView->containment()->containmentActions().value(trigger);
 
     if (!plugin) {
         return;
     }
 
-    if (plugin->containment() != m_latteView->containment()) {
-        plugin->setContainment(m_latteView->containment());
+    if (plugin->containment() != m_mochaView->containment()) {
+        plugin->setContainment(m_mochaView->containment());
         // now configure it
-        KConfigGroup cfg(m_latteView->containment()->corona()->config(), "ActionPlugins");
-        cfg = KConfigGroup(&cfg, QString::number(m_latteView->containment()->containmentType()));
+        KConfigGroup cfg(m_mochaView->containment()->corona()->config(), "ActionPlugins");
+        cfg = KConfigGroup(&cfg, QString::number(m_mochaView->containment()->containmentType()));
         KConfigGroup pluginConfig = KConfigGroup(&cfg, trigger);
         plugin->restore(pluginConfig);
     }
@@ -489,7 +489,7 @@ void ContextMenuLayerQuickItem::addContainmentActions(QMenu *desktopMenu, QEvent
             //end workaround
 
             if (act->menu()->winId()) {
-                act->menu()->windowHandle()->setTransientParent(m_latteView);
+                act->menu()->windowHandle()->setTransientParent(m_mochaView);
             }
         }
     }*/
@@ -499,11 +499,11 @@ void ContextMenuLayerQuickItem::addContainmentActions(QMenu *desktopMenu, QEvent
 
 Plasma::Containment *ContextMenuLayerQuickItem::containmentById(uint id)
 {
-    if (!m_latteView) {
+    if (!m_mochaView) {
         return nullptr;
     }
 
-    for (const auto containment : m_latteView->corona()->containments()) {
+    for (const auto containment : m_mochaView->corona()->containments()) {
         if (id == containment->id()) {
             return containment;
         }

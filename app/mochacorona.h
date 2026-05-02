@@ -185,7 +185,7 @@ private slots:
     void onScreenGeometryChanged(const QRect &geometry);
     void onAvailableScreenRegionChangedFrom(Mocha::View *view);
     void onAvailableScreenRectChangedFrom(Mocha::View *view);
-    void syncLatteViewsToScreens();
+    void syncMochaViewsToScreens();
 
 private:
     void cleanConfig();
