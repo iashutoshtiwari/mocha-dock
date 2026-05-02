@@ -26,6 +26,31 @@ PlasmaComponents.Menu {
     property bool changingLayout: false
     property Item visualParent
 
+    //! Dynamic items tracking for cleanup
+    property var _dynamicItems: []
+
+    //! QQC2 compatibility: addMenuItem shim
+    function addMenuItem(item, beforeItem) {
+        _dynamicItems.push(item);
+        if (beforeItem !== undefined) {
+            for (var i = 0; i < count; i++) {
+                if (itemAt(i) === beforeItem) {
+                    insertItem(i, item);
+                    return;
+                }
+            }
+        }
+        addItem(item);
+    }
+
+    function _cleanupDynamicItems() {
+        for (var i = _dynamicItems.length - 1; i >= 0; i--) {
+            removeItem(_dynamicItems[i]);
+            _dynamicItems[i].destroy();
+        }
+        _dynamicItems = [];
+    }
+
     property QtObject mpris2Source
     property QtObject backend
 
@@ -63,10 +88,11 @@ PlasmaComponents.Menu {
     }
 
     function show() {
+        _cleanupDynamicItems();
         loadDynamicLaunchActions(visualParent.m.LauncherUrlWithoutIcon);
         loadMyViewActions();
         // backend.ungrabMouse(visualParent);
-        openRelative();
+        popup(visualParent, 0, visualParent.height);
 
         if (MochaCore.WindowSystem.isPlatformWayland){
             //!Hiding previews under wayland it needs a delay otherwise it creates crashes
@@ -85,7 +111,7 @@ PlasmaComponents.Menu {
 
     function newSeparator(parent) {
         return Qt.createQmlObject(
-                    "import org.kde.plasma.components as PlasmaComponents;" +
+                    "import QtQuick; import org.kde.plasma.components as PlasmaComponents;" +
                     "PlasmaComponents.MenuSeparator {}",
                     parent);
     }
@@ -131,35 +157,26 @@ PlasmaComponents.Menu {
                         ) {
                     var sectionHeader = newMenuItem(menu);
                     sectionHeader.text = section["title"];
-                    sectionHeader.section = true;
+                    sectionHeader.enabled = false;
                     menu.addMenuItem(sectionHeader, startNewInstanceItem);
                 }
             }
 
             for (var i = 0; i < section["actions"].length; ++i) {
                 var item = newMenuItem(menu);
-                item.action = section["actions"][i];
+                var qaction = section["actions"][i];
 
-                // Crude way of manually eliding...
-                var elided = false;
-                textMetrics.text = Qt.binding(function() {
-                    return item.action.text;
-                });
-
-                while (textMetrics.width > maximumWidth) {
-                    item.action.text = item.action.text.slice(0, -1);
-                    elided = true;
-                }
-
-                if (elided) {
-                    item.action.text += "…";
-                }
+                //! QQC2 compatibility: manually bind QAction properties
+                item.text = qaction.text || "";
+                item.enabled = Qt.binding((function(a) { return function() { return a.enabled; }; })(qaction));
+                item.triggered.connect((function(a) { return function() { a.trigger(); }; })(qaction));
 
                 menu.addMenuItem(item, startNewInstanceItem);
             }
         });
 
         // Add Media Player control actions
+        if (!mpris2Source) return;
         var sourceName = mpris2Source.sourceNameForLauncherUrl(launcherUrl, get(atm.AppPid));
 
         var winIdList = atm.WinIdList;
@@ -177,6 +194,7 @@ PlasmaComponents.Menu {
                 menuItem.triggered.connect(function() {
                     mpris2Source.goPrevious(sourceName);
                 });
+                _dynamicItems.push(menuItem);
                 menu.addMenuItem(menuItem, virtualDesktopsMenuItem);
 
                 menuItem = menu.newMenuItem(menu);
@@ -262,7 +280,7 @@ PlasmaComponents.Menu {
             muteItem.checked = Qt.binding(function() {
                 return menu.visualParent && menu.visualParent.muted;
             });
-            muteItem.clicked.connect(function() {
+            muteItem.triggered.connect(function() {
                 menu.visualParent.toggleMuted();
             });
             muteItem.text = i18n("Mute");
@@ -281,11 +299,15 @@ PlasmaComponents.Menu {
         var actionsCount = appletAbilities.myView.containmentActions.length;
 
         for (var i=0; i<actionsCount; ++i) {
+            var qaction = appletAbilities.myView.containmentActions[i];
             var item = newMenuItem(menu);
-            item.action = appletAbilities.myView.containmentActions[i];
-            item.visible = Qt.binding(function() {
-                return this.action.visible;
-            });
+
+            //! QQC2 compatibility: manually bind QAction properties
+            item.text = Qt.binding((function(a) { return function() { return a.text || ""; }; })(qaction));
+            item.visible = Qt.binding((function(a) { return function() { return a.visible !== undefined ? a.visible : true; }; })(qaction));
+            item.enabled = Qt.binding((function(a) { return function() { return a.enabled !== undefined ? a.enabled : true; }; })(qaction));
+            item.triggered.connect((function(a) { return function() { a.trigger(); }; })(qaction));
+
             menu.addMenuItem(item, myViewActions);
         }
     }
@@ -354,6 +376,14 @@ PlasmaComponents.Menu {
         PlasmaComponents.Menu {
             id: virtualDesktopsMenu
 
+            property var _dynItems: []
+            function clearMenuItems() {
+                for (var i = _dynItems.length - 1; i >= 0; i--) {
+                    removeItem(_dynItems[i]);
+                    _dynItems[i].destroy();
+                }
+                _dynItems = [];
+            }
 
             function refresh() {
                 clearMenuItems();
@@ -371,6 +401,8 @@ PlasmaComponents.Menu {
                 menuItem.triggered.connect(function() {
                     tasksModel.requestVirtualDesktops(menu.modelIndex, [virtualDesktopInfo.currentDesktop]);
                 });
+                virtualDesktopsMenu._dynItems.push(menuItem);
+                virtualDesktopsMenu.addItem(menuItem);
 
                 menuItem = menu.newMenuItem(virtualDesktopsMenu);
                 menuItem.text = i18n("&All Desktops");
@@ -381,9 +413,12 @@ PlasmaComponents.Menu {
                 menuItem.triggered.connect(function() {
                     tasksModel.requestVirtualDesktops(menu.modelIndex, []);
                 });
-                backend.setActionGroup(menuItem.action);
+                virtualDesktopsMenu._dynItems.push(menuItem);
+                virtualDesktopsMenu.addItem(menuItem);
 
-                menu.newSeparator(virtualDesktopsMenu);
+                var sep1 = menu.newSeparator(virtualDesktopsMenu);
+                virtualDesktopsMenu._dynItems.push(sep1);
+                virtualDesktopsMenu.addItem(sep1);
 
                 for (var i = 0; i < virtualDesktopInfo.desktopNames.length; ++i) {
                     menuItem = menu.newMenuItem(virtualDesktopsMenu);
@@ -400,16 +435,21 @@ PlasmaComponents.Menu {
                             return tasksModel.requestVirtualDesktops(menu.modelIndex, [virtualDesktopInfo.desktopIds[i]]);
                         };
                     })(i));
-                    backend.setActionGroup(menuItem.action);
+                    virtualDesktopsMenu._dynItems.push(menuItem);
+                    virtualDesktopsMenu.addItem(menuItem);
                 }
 
-                menu.newSeparator(virtualDesktopsMenu);
+                var sep2 = menu.newSeparator(virtualDesktopsMenu);
+                virtualDesktopsMenu._dynItems.push(sep2);
+                virtualDesktopsMenu.addItem(sep2);
 
                 menuItem = menu.newMenuItem(virtualDesktopsMenu);
                 menuItem.text = i18n("&New Desktop");
                 menuItem.triggered.connect(function() {
                     tasksModel.requestNewVirtualDesktop(menu.modelIndex);
                 });
+                virtualDesktopsMenu._dynItems.push(menuItem);
+                virtualDesktopsMenu.addItem(menuItem);
             }
 
             Component.onCompleted: refresh()
@@ -438,6 +478,14 @@ PlasmaComponents.Menu {
         PlasmaComponents.Menu {
             id: activitiesDesktopsMenu
 
+            property var _dynItems: []
+            function clearMenuItems() {
+                for (var i = _dynItems.length - 1; i >= 0; i--) {
+                    removeItem(_dynItems[i]);
+                    _dynItems[i].destroy();
+                }
+                _dynItems = [];
+            }
 
             function refresh() {
                 clearMenuItems();
@@ -455,6 +503,8 @@ PlasmaComponents.Menu {
                 menuItem.triggered.connect(function() {
                     tasksModel.requestActivities(menu.modelIndex, menu.visualParent.m.Activities.concat(activityInfo.currentActivity));
                 });
+                activitiesDesktopsMenu._dynItems.push(menuItem);
+                activitiesDesktopsMenu.addItem(menuItem);
 
                 menuItem = menu.newMenuItem(activitiesDesktopsMenu);
                 menuItem.text = i18n("All Activities");
@@ -474,8 +524,12 @@ PlasmaComponents.Menu {
 
                     tasksModel.requestActivities(menu.modelIndex, newActivities);
                 });
+                activitiesDesktopsMenu._dynItems.push(menuItem);
+                activitiesDesktopsMenu.addItem(menuItem);
 
-                menu.newSeparator(activitiesDesktopsMenu);
+                var sep1 = menu.newSeparator(activitiesDesktopsMenu);
+                activitiesDesktopsMenu._dynItems.push(sep1);
+                activitiesDesktopsMenu.addItem(sep1);
 
                 var runningActivities = activityInfo.runningActivities();
                 for (var i = 0; i < runningActivities.length; ++i) {
@@ -504,9 +558,13 @@ PlasmaComponents.Menu {
                             return tasksModel.requestActivities(menu.modelIndex, newActivities);
                         };
                     })(activityId));
+                    activitiesDesktopsMenu._dynItems.push(menuItem);
+                    activitiesDesktopsMenu.addItem(menuItem);
                 }
 
-                menu.newSeparator(activitiesDesktopsMenu);
+                var sep2 = menu.newSeparator(activitiesDesktopsMenu);
+                activitiesDesktopsMenu._dynItems.push(sep2);
+                activitiesDesktopsMenu.addItem(sep2);
             }
 
             Component.onCompleted: refresh()
@@ -697,6 +755,15 @@ PlasmaComponents.Menu {
         PlasmaComponents.Menu {
             id: activitiesLaunchersMenu
 
+            property var _dynItems: []
+            function clearMenuItems() {
+                for (var i = _dynItems.length - 1; i >= 0; i--) {
+                    removeItem(_dynItems[i]);
+                    _dynItems[i].destroy();
+                }
+                _dynItems = [];
+            }
+
             function refresh() {
                 clearMenuItems();
 
@@ -711,7 +778,7 @@ PlasmaComponents.Menu {
 
                     result.checked = activities.some(function(activity) { return activity === id });
 
-                    result.clicked.connect(
+                    result.triggered.connect(
                                 function() {
                                     if (result.checked) {
                                         appletAbilities.launchers.addLauncherToActivity(url,id);

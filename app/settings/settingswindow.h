@@ -15,14 +15,30 @@ class Corona;
 
 namespace Settings {
 
+/**
+ * @class SettingsWindow
+ * @brief The main entry point for the Kirigami-based settings UI.
+ * 
+ * This class is responsible for loading the QML engine and showing the 
+ * modernized settings interface. It replaces the legacy QWidget-based 
+ * settings dialogs to ensure compatibility with Wayland and Plasma 6.
+ */
 class SettingsWindow : public QObject
 {
     Q_OBJECT
 public:
+    /**
+     * @brief Constructs a SettingsWindow.
+     * @param corona The Corona instance.
+     * @param parent The parent QObject.
+     */
     explicit SettingsWindow(Mocha::Corona *corona, QObject *parent = nullptr);
     ~SettingsWindow() override;
 
-    void show();
+    /**
+     * @brief Shows the settings window.
+     */
+    void show(int firstPage = 0);
 
 private:
     Mocha::Corona *m_corona;

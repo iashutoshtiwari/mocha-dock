@@ -229,15 +229,31 @@ QList<QAction *> Menu::contextualActions()
 
     if (iface.isValid()) {
         QDBusReply<QStringList> contextData = iface.call("contextMenuData", containment()->id());
-        m_data = contextData.value();
+        if (contextData.isValid()) {
+            m_data = contextData.value();
+        } else {
+            qWarning() << "contextMenuData D-Bus call failed:" << contextData.error().message();
+        }
 
         QDBusReply<QStringList> templatesData = iface.call("viewTemplatesData");
-        m_viewTemplates = templatesData.value();
+        if (templatesData.isValid()) {
+            m_viewTemplates = templatesData.value();
+        }
+    } else {
+        qWarning() << "D-Bus interface org.kde.mochadock /Mocha is not valid";
     }
 
-    m_actionsAlwaysShown = m_data[ACTIONSALWAYSSHOWN].split(";;");
+    //! Safety: if D-Bus data is incomplete, use safe defaults
+    if (m_data.count() > ACTIONSALWAYSSHOWN) {
+        m_actionsAlwaysShown = m_data[ACTIONSALWAYSSHOWN].split(";;");
+    } else {
+        qWarning() << "contextMenuData returned insufficient data (count:" << m_data.count() << "), using default visible actions";
+        m_actionsAlwaysShown = Mocha::Data::ContextMenu::ACTIONSALWAYSVISIBLE;
+    }
 
-    updateViewData();
+    if (m_data.count() > VIEWTYPEINDEX) {
+        updateViewData();
+    }
 
     QString configureActionText = (m_view.type == DockView) ? i18n("&Edit Dock...") : i18n("&Edit Panel...");
     if (m_view.isCloned) {
@@ -251,7 +267,9 @@ QList<QAction *> Menu::contextualActions()
     const QString exportTemplateText = (m_view.type == DockView) ? i18n("E&xport Dock as Template") : i18n("E&xport Panel as Template");
     m_actions[Mocha::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION]->setText(exportTemplateText);
 
-    m_activeLayoutNames = m_data[ACTIVELAYOUTSINDEX].split(";;");
+    if (m_data.count() > ACTIVELAYOUTSINDEX) {
+        m_activeLayoutNames = m_data[ACTIVELAYOUTSINDEX].split(";;");
+    }
     const QString moveText = (m_view.type == DockView) ? i18n("&Move Dock To Layout") : i18n("&Move Panel To Layout");
     m_actions[Mocha::Data::ContextMenu::MOVEVIEWACTION]->setText(moveText);
 

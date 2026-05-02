@@ -23,61 +23,77 @@ Ability.LaunchersPrivate {
     readonly property var universalLaunchers: mochaView && universalSettings ? universalSettings.launchers : []
 
     function addAbilityClient(client) {
-        layoutsManager.syncedLaunchers.addAbilityClient(client);
+        if (layoutsManager && layoutsManager.syncedLaunchers) {
+            layoutsManager.syncedLaunchers.addAbilityClient(client);
+        }
     }
 
     function removeAbilityClient(client) {
-        layoutsManager.syncedLaunchers.removeAbilityClient(client);
+        if (layoutsManager && layoutsManager.syncedLaunchers) {
+            layoutsManager.syncedLaunchers.removeAbilityClient(client);
+        }
     }
 
     function addSyncedLauncher(senderId, group, groupId, launcherUrl) {
-        layoutsManager.syncedLaunchers.addLauncher(layoutName,
-                                                   senderId,
-                                                   group,
-                                                   groupId,
-                                                   launcherUrl);
+        if (layoutsManager && layoutsManager.syncedLaunchers) {
+            layoutsManager.syncedLaunchers.addLauncher(layoutName,
+                                                       senderId,
+                                                       group,
+                                                       groupId,
+                                                       launcherUrl);
+        }
     }
 
     function removeSyncedLauncher(senderId, group,groupId, launcherUrl) {
-        layoutsManager.syncedLaunchers.removeLauncher(layoutName,
-                                                      senderId,
-                                                      group,
-                                                      groupId,
-                                                      launcherUrl);
+        if (layoutsManager && layoutsManager.syncedLaunchers) {
+            layoutsManager.syncedLaunchers.removeLauncher(layoutName,
+                                                          senderId,
+                                                          group,
+                                                          groupId,
+                                                          launcherUrl);
+        }
     }
 
     function addSyncedLauncherToActivity(senderId, group, groupId, launcherUrl, activityId) {
-        layoutsManager.syncedLaunchers.addLauncherToActivity(layoutName,
-                                                             senderId,
-                                                             group,
-                                                             groupId,
-                                                             launcherUrl,
-                                                             activityId);
+        if (layoutsManager && layoutsManager.syncedLaunchers) {
+            layoutsManager.syncedLaunchers.addLauncherToActivity(layoutName,
+                                                                 senderId,
+                                                                 group,
+                                                                 groupId,
+                                                                 launcherUrl,
+                                                                 activityId);
+        }
     }
 
     function removeSyncedLauncherFromActivity(senderId, group, groupId, launcherUrl, activityId) {
-        layoutsManager.syncedLaunchers.removeLauncherFromActivity(layoutName,
-                                                                  senderId,
-                                                                  group,
-                                                                  groupId,
-                                                                  launcherUrl,
-                                                                  activityId);
+        if (layoutsManager && layoutsManager.syncedLaunchers) {
+            layoutsManager.syncedLaunchers.removeLauncherFromActivity(layoutName,
+                                                                      senderId,
+                                                                      group,
+                                                                      groupId,
+                                                                      launcherUrl,
+                                                                      activityId);
+        }
     }
 
     function addDroppedLaunchers(senderId, group, groupId, urls) {
-        layoutsManager.syncedLaunchers.urlsDropped(layoutName,
-                                                   senderId,
-                                                   group,
-                                                   groupId,
-                                                   urls);
+        if (layoutsManager && layoutsManager.syncedLaunchers) {
+            layoutsManager.syncedLaunchers.urlsDropped(layoutName,
+                                                       senderId,
+                                                       group,
+                                                       groupId,
+                                                       urls);
+        }
     }
 
     function validateSyncedLaunchersOrder(senderId, group, groupId, orderedlaunchers) {
-        layoutsManager.syncedLaunchers.validateLaunchersOrder(layoutName,
-                                                              senderId,
-                                                              group,
-                                                              groupId,
-                                                              orderedlaunchers);
+        if (layoutsManager && layoutsManager.syncedLaunchers) {
+            layoutsManager.syncedLaunchers.validateLaunchersOrder(layoutName,
+                                                                  senderId,
+                                                                  group,
+                                                                  groupId,
+                                                                  orderedlaunchers);
+        }
     }
 
     function addDroppedLaunchersInStealingApplet(launchers) {
