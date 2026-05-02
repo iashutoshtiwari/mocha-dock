@@ -1,9 +1,10 @@
 # Mocha Dock: Plasma 6 Porting Explanation
 
-This document outlines the technical journey of reviving and porting the abandoned Mocha Dock project to KDE Plasma 6 under the new name **Mocha Dock**.
+This document outlines the technical journey of reviving and porting the abandoned Latte Dock project to KDE Plasma 6 under the new name **Mocha Dock**.
 
 ## Project Overview
-Mocha Dock is a Wayland-only fork of Mocha Dock, modernized for Qt6, KDE Frameworks 6 (KF6), and Plasma 6. This porting process focused on stripping legacy X11 dependencies, rebranding the application, and ensuring compatibility with the new Plasma 6 architecture.
+Mocha Dock is a Wayland-only fork of Latte Dock, modernized for Qt6, KDE Frameworks 6 (KF6), and Plasma 6.
+ This porting process focused on stripping legacy X11 dependencies, rebranding the application, and ensuring compatibility with the new Plasma 6 architecture.
 
 ## Phases of Execution
 
@@ -31,6 +32,17 @@ Mocha Dock is a Wayland-only fork of Mocha Dock, modernized for Qt6, KDE Framewo
 - **GitHub Actions:** Replaced stale GitLab CI with a new GitHub Actions workflow to automate builds for Arch Linux and Fedora.
 - **Installation Guide:** Overhauled `INSTALLATION.md` to reflect the specific dependencies of the Plasma 6 ecosystem.
 
+### 6. Extension & Configuration Renaming
+- **File Extensions:** Transitioned from `.layout.latte` and `.view.latte` to `.layout.mocha` and `.view.mocha`.
+- **Config Paths:** The application now stores configuration in `~/.config/mocha/` and uses `mocharc` as its primary settings file.
+- **Templates:** All bundled layout and view templates were renamed and updated to use the new `org.kde.mocha` IDs.
+
+### 7. Cleanup & Versioning (v0.1.0)
+- **Codebase Sanitization:** Removed over 200 unused legacy files, build scripts, and obsolete Nix/Astyle configurations to ensure a lean repository.
+- **New Baseline:** Purged all previous git tags and started a new versioning scheme at **v0.1.0**.
+- **Local Testing:** Introduced `run-mocha.sh`, which sets up a sandboxed environment to allow running the dock flawlessly from a local build.
+- **Packaging:** Added an official `PKGBUILD` for Arch Linux to facilitate easy local installation and testing.
+
 ## Challenges Faced & Solutions
 
 ### Missing Wayland Protocols
@@ -48,6 +60,10 @@ Mocha Dock is a Wayland-only fork of Mocha Dock, modernized for Qt6, KDE Framewo
 ### Meta-Object (MOC) Failures
 **Challenge:** Renaming the `Types` class within the `Mocha` namespace caused `staticMetaObject` link errors.
 **Solution:** Reconfigured the CMake generation for the `mochacontainmentplugin` to ensure the generated headers from `coretypes.h.in` were properly included and linked during the MOC process.
+
+### Legacy Rendering Dependencies
+**Challenge:** Deleting "unused" legacy files broke icon rendering.
+**Solution:** Identified that `ManagedTextureNode` was still a critical dependency for the custom `IconItem` implementation in Qt6; these files were restored and re-integrated.
 
 ## Final Result
 The project now builds a functional `mocha-dock` binary targeting the Plasma 6 desktop. It serves as a zero-debt, Wayland-native foundation for further development.
